@@ -1,5 +1,5 @@
 ## Description
-This is a submodules with the engine function used in all react widget
+This is a submodule with the engine function used in all kiosk flow widgets
 
 ## Table of contents
 - [Description](#description)
@@ -42,7 +42,3 @@ git clone git@github.com:MediaWind/react_kiosk_engine.git
 After that you commit and push like other project
 
 Your modification won't directly impact your widget, you will need to update the engine on the widget for that refer to: [Updating your submodule in your widget](#updating-your-submodule-in-your-widget)
-
-## Interact with shared variable
-
-You just need to use the `useSharedVariable` hook. This hook work like the `useState`, you get the state of the current value of the shared variable and access to a function to set the value of the shared variable
