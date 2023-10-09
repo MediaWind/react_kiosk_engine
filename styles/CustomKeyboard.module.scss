@@ -1,0 +1,149 @@
+$font_color_default: #333333;
+
+.main {
+	position: absolute;
+	z-index: 1;
+
+	animation: keyboard_slide_in 0.5s ease-out;
+	bottom: 0;
+	left: 0.22rem;
+
+	width: 1.34rem;
+	height: 0.357rem;
+
+	padding: 0.01rem 0.016rem;
+
+	border-radius: 0.014rem 0.014rem 0 0;
+	background-color: #eeeeee;
+}
+
+.key {
+	&_row {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+		margin: 0.024rem 0;
+	}
+
+	&_default {
+		display: flex;
+
+		width: 0.0815rem;
+		height: 0.055rem;
+
+		margin: 0 0.0075rem;
+		padding: 0.005rem 0.011rem;
+
+		border-style: none;
+		border-radius: 0.007rem;
+
+		box-shadow: 0 0.0035rem 0 rgba($color: #000000, $alpha: 0.2);
+		background-color: #ffffff;
+
+		cursor: pointer;
+
+		p {
+			color: $font_color_default;
+			font-size: 0.022rem;
+		}
+	}
+
+	&_action {
+		display: flex;
+		justify-content: space-between;
+
+		width: 0.13rem;
+		height: 0.055rem;
+
+		margin: 0 0.02rem;
+		padding: 0.005rem 0.011rem;
+
+		border-style: none;
+		border-radius: 0.007rem;
+
+		box-shadow: 0 0.0035rem 0 rgba($color: #000000, $alpha: 0.2);
+		background-color: #ffffff;
+
+		cursor: pointer;
+
+		p {
+			color: $font_color_default;
+			font-size: 0.022rem;
+		}
+	}
+
+	&_spacebar {
+		display: flex;
+
+		width: 0.6rem;
+		height: 0.055rem;
+
+		margin: 0 0.0075rem;
+		padding: 0.005rem 0.011rem;
+
+		border-style: none;
+		border-radius: 0.007rem;
+
+		box-shadow: 0 0.0035rem 0 rgba($color: #000000, $alpha: 0.2);
+		background-color: #ffffff;
+
+		p {
+			color: $font_color_default;
+			font-size: 0.022rem;
+		}
+	}
+}
+
+.spec_char_box {
+	position: absolute;
+	top: 0;
+	left: 0;
+
+	justify-content: center;
+
+	width: 1.34rem;
+	height: 0.357rem;
+
+	padding: 0.02rem;
+
+	border-radius: 0.014rem 0.014rem 0 0;
+	background-color: rgba($color: #333333, $alpha: 0.3);
+
+	> div {
+		position: relative;
+
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-wrap: wrap;
+
+		padding: 0.05rem;
+
+		width: 50%;
+		height: 100%;
+
+		border-radius: 0.014rem;
+		background-color: #eeeeee;
+
+		#spec_chars_xmark {
+			position: absolute;
+			top: 0.01rem;
+			right: 0.01rem;
+
+			font-size: 0.04rem;
+			color: #777;
+		}
+	}
+}
+
+@keyframes keyboard_slide_in {
+	from {
+		bottom: -30%;
+		opacity: 0;
+	}
+	to {
+		bottom: 0;
+		opacity: 1;
+	}
+}

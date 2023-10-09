@@ -1,0 +1,74 @@
+$font_color: #424246;
+
+.main {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+
+	z-index: 5;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	background-color: rgba($color: #ffffff, $alpha: 0.4);
+
+	.message {
+		position: absolute;
+
+		display: flex;
+		flex-direction: column;
+		justify-content: space-evenly;
+		align-items: center;
+
+		width: 1rem;
+		height: 50%;
+
+		padding: 0.05rem;
+
+		border-radius: 0.01rem;
+		box-shadow: 0 0 30px 10px rgba($color: #000000, $alpha: 0.5);
+		background-color: #ffffff;
+
+		> div {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+
+			h1 {
+				margin-bottom: 0.03rem;
+				font-size: 0.05rem;
+				color: $font_color;
+			}
+
+			p {
+				margin: 0.01rem 0;
+				font-size: 0.03rem;
+				color: $font_color;
+			}
+		}
+
+		button {
+			padding: 0.02rem 0.1rem;
+
+			border-style: none;
+			border-radius: 0.01rem;
+			background-color: #d4d4d4;
+
+			color: $font_color;
+			font-size: 0.02rem;
+
+			cursor: pointer;
+		}
+
+		#error_code {
+			position: absolute;
+			bottom: 0;
+			right: 0;
+
+			padding: 0.015rem;
+		}
+	}
+}
