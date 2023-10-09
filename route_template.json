@@ -1,0 +1,198 @@
+{
+	"name": "name",
+
+	"languages": [
+		"fr", "nl", "en"
+	],
+
+	"scheduling": {
+		"monday": [
+			{
+				"id": "UUID",
+				"startTime": "HH:mm"
+			}
+		],
+		"tuesday": [
+			{
+				"id": "UUID",
+				"startTime": "HH:mm"
+			}
+		],
+		"wednesday": [
+			{
+				"id": "UUID",
+				"startTime": "HH:mm"
+			}
+		],
+		"thursday": [
+			{
+				"id": "UUID",
+				"startTime": "HH:mm"
+			}
+		],
+		"friday": [
+			{
+				"id": "UUID",
+				"startTime": "HH:mm"
+			}
+		],
+		"saturday": [
+			{
+				"id": "UUID",
+				"startTime": "HH:mm"
+			}
+		],
+		"sunday": [
+			{
+				"id": "UUID",
+				"startTime": "HH:mm"
+			}
+		],
+		"publicHolidays": [
+			{
+				"id": "UUID",
+				"startTime": "HH:mm"
+			}
+		]
+	},
+
+	"flows": [
+		{
+			"id": "UUID",
+			"name": "name",
+
+			"homePage": "UUID",
+			"navigateToHomePageAfter": 30,
+
+			"keyboardLayout": "classic|customMade",
+
+			"pages": [
+				{
+					"id": "UUID",
+					"name": "name",
+
+					"backgroundImage": {
+						"default": "required path",
+						"french": "optional path",
+						"dutch": "optional path",
+						"english": "optional path"
+					},
+
+					"navigateToAfter": {
+						"navigateTo": "UUID",
+						"delay": 5,
+						"printTicket": true,
+						"service": {
+							"serviceID": 10,
+							"priority": 0
+						}
+					},
+
+					"medias": [
+						{
+							"type": "video",
+
+							"content": {
+								"name": "name",
+								"src": "path",
+								"type": "video/mp4",
+
+								"controls": false,
+
+								"styles": {
+									"top": "css property",
+									"left": "css property",
+									"bottom": "css property",
+									"right": "css property",
+									"width": "css property",
+									"height": "css property",
+									"padding": "css property",
+									"margin": "css property",
+									"borderWidth": "css property",
+									"borderStyle": "css property",
+									"borderColor": "css property",
+									"borderRadius": "css property",
+									"all": "css property",
+									"cursor": "css property",
+									"backgroundColor": "css property",
+									"textColor": "css property",
+									"fontSize": "css property",
+									"textAlign": "left|right|center"
+								}
+							}
+						},
+						{
+							"type": "image",
+
+							"content": {
+								"name": "name",
+								"src": "path",
+
+								"animate": "rightToLeft|bottomToTop|topToBottm|leftToRight",
+
+								"styles": {
+									"top": "css property",
+									"left": "css property",
+									"bottom": "css property",
+									"right": "css property",
+									"width": "css property",
+									"height": "css property",
+									"padding": "css property",
+									"margin": "css property",
+									"borderWidth": "css property",
+									"borderStyle": "css property",
+									"borderColor": "css property",
+									"borderRadius": "css property",
+									"all": "css property",
+									"cursor": "css property"
+								}
+							}
+						},
+						{
+							"type": "input",
+
+							"content": {
+								"name": "string",
+								"type": "button|text|number|cardReader",
+								"action": {
+									"type": "printticket|savedata|nextpage|previouspage|...",
+
+									"navigateTo": "UUID",
+
+									"service": {
+										"serviceID": 10,
+										"priority": 0
+									}
+								},
+
+								"placeholder": "placeholder",
+								"autoFocus": false,
+								"textInput": {
+									"id": "text_input_id",
+									"value": "default_value"
+								},
+
+								"styles": {
+									"top": "css property",
+									"left": "css property",
+									"bottom": "css property",
+									"right": "css property",
+									"width": "css property",
+									"height": "css property",
+									"padding": "css property",
+									"margin": "css property",
+									"borderWidth": "css property",
+									"borderStyle": "css property",
+									"borderColor": "css property",
+									"borderRadius": "css property",
+									"all": "css property",
+									"cursor": "css property"
+								}
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}
