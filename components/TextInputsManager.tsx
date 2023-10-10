@@ -16,8 +16,8 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 
 	const [content, setContent] = useState<IInputContent[]>([]);
 	const [focusedField, setFocusedField] = useState<string | undefined>();
-	const [values, setValues] = useState<IInputField[]>([]);
-	const [invalidValues, setInvalidValues] = useState<string[]>([]);
+	const [fields, setFields] = useState<IInputField[]>([]);
+	const [invalidFields, setInvalidFields] = useState<string[]>([]);
 
 	const { dispatchTicketState, } = useTicketDataContext();
 
@@ -299,7 +299,7 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 
 		//* Initializes values with text inputs default values
 		//* This also makes sure the ids are already available for sorting
-		setValues(() => {
+		setFields(() => {
 			const initValues: IInputField[] = [];
 			textInputs.forEach((input) => {
 				if (input.textInput) {
@@ -321,29 +321,29 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 
 	useEffect(() => {
 		//* Removes "invalid" highlight from input as soon as user starts typing in
-		values.forEach((value) => {
-			if (value.value.trim() !== "") {
-				const idValue = invalidValues.find(v => v === value.id);
+		fields.forEach((field) => {
+			if (field.value.trim() !== "") {
+				const idValue = invalidFields.find(f => f === field.id);
 
 				if (idValue) {
-					const newInvalidValues = invalidValues.filter(v => v !== idValue);
+					const newInvalidValues = invalidFields.filter(f => f !== idValue);
 
-					setInvalidValues([...newInvalidValues]);
+					setInvalidFields([...newInvalidValues]);
 				}
 			}
 		});
-	}, [values]);
+	}, [fields]);
 
 	function confirmForm() {
 		//* Makes sure to highlight the empty required inputs
 		const invalid: string[] = [];
-		values.forEach((value) => {
-			if (value.value.trim() === "" && value.required) {
-				invalid.push(value.id);
+		fields.forEach((field) => {
+			if (field.value.trim() === "" && field.required) {
+				invalid.push(field.id);
 			}
 		});
 
-		setInvalidValues([...invalid]);
+		setInvalidFields([...invalid]);
 
 		//* Focuses on first empty input
 		if (invalid.length > 0) {
@@ -352,10 +352,10 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 		}
 
 		//? Values are all considered valid now, we can save datas to ticket state
-		values.forEach((value) => {
+		fields.forEach((field) => {
 			dispatchTicketState({
 				type: TicketDataActionType.INPUTTEXTUPDATE,
-				payload: value,
+				payload: field,
 			});
 		});
 
@@ -366,7 +366,7 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 	}
 
 	function changetexthandler(value: string) {
-		setValues(latest => {
+		setFields(latest => {
 			const encodedInput = latest.find(inputField => (inputField.id === focusedField));
 
 			if (encodedInput) {
@@ -389,7 +389,7 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 	}
 
 	function deleteHandler() {
-		setValues(latest => {
+		setFields(latest => {
 			const encodedInput = latest.find(inputField => (inputField.id === focusedField));
 
 			if (encodedInput) {
@@ -415,8 +415,8 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 					<TextInput
 						key={content.textInput.id}
 						id={content.textInput.id}
-						value={values.find(field => field.id === content.textInput?.id)?.value ?? ""}
-						isValid={!invalidValues.includes(content.textInput.id)}
+						value={fields.find(field => field.id === content.textInput?.id)?.value ?? ""}
+						isValid={!invalidFields.includes(content.textInput.id)}
 						focused={focusedField === content.textInput.id}
 						onFocus={(id: string) => setFocusedField(id)}
 						placeholder={content.placeholder ?? ""}
@@ -429,10 +429,10 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 				onChange={changetexthandler}
 				onDelete={deleteHandler}
 				shift={
-					values.find(field => field.id === focusedField) === undefined ||
-					values.find(field => field.id === focusedField)?.value === "" ||
-					values.find(field => field.id === focusedField)?.value.slice(-1) === " " ||
-					values.find(field => field.id === focusedField)?.value.slice(-1) === "-"
+					fields.find(field => field.id === focusedField) === undefined ||
+					fields.find(field => field.id === focusedField)?.value === "" ||
+					fields.find(field => field.id === focusedField)?.value.slice(-1) === " " ||
+					fields.find(field => field.id === focusedField)?.value.slice(-1) === "-"
 				}
 				display={focusedField !== undefined}
 			/>
