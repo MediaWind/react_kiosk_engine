@@ -15,39 +15,36 @@ export interface ICustomError {
 	clearError: CallableFunction;
 }
 
+function getTicketingURL(eIdData: eIdData | null, inputTextData?: IInputField[], service?: IService, lang?: LANGUAGE): URL {
+	const baseURL = `${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/ticket.php?`;
+	let params = `
+	id_project=${Variables.W_ID_PROJECT}
+	&serial=${DefaultVariables.SERIAL_PLAYER}
+	&id_service=${service?.serviceID}
+	&priority=${service?.priority ?? 1}
+	&lang=${lang ?? "fr"}
+	`;
+
+	if (eIdData != null) {
+		params += `&firstname=${encodeURIComponent(eIdData.firstName)}&lastname=${encodeURIComponent(eIdData.lastName)}`;
+		return new URL(baseURL + params);
+	} else if (inputTextData) {
+		//TODO: text input ids must dynamically change
+		//? For now they are hard coded to each specific projet
+		const lastname = inputTextData.find((input) => input.id === "patient_lastname");
+		const firstname = inputTextData.find((input) => input.id === "patient_firstname");
+
+		params += `&firstname=${encodeURIComponent(firstname?.value ?? "")}&lastname=${encodeURIComponent(lastname?.value ?? "")}`;
+	}
+
+	return new URL(baseURL + params);
+}
+
 export default function usePrintTicket(): [CallableFunction, boolean, ICustomError, CallableFunction, CallableFunction] {
 	const [isPrinting, setIsPrinting] = useState<boolean>(false);
 	const [hasError, setHasError] = useState<boolean>(false);
 	const [errorCode, setErrorCode] = useState<ERROR_CODE>(ERROR_CODE.A200);
 	const [message, setMessage] = useState<string>("");
-
-	function getTicketingURL(eIdData: eIdData | null, inputTextData?: IInputField[], service?: IService, lang?: LANGUAGE): URL | void {
-		const baseURL = `${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/ticket.php?`;
-		let params = `
-		id_project=${Variables.W_ID_PROJECT}
-		&serial=${DefaultVariables.SERIAL_PLAYER}
-		&id_service=${service?.serviceID}
-		&priority=${service?.priority ?? 1}
-		&lang=${lang ?? "fr"}
-		`;
-
-		if (eIdData != null) {
-			params += `&firstname=${encodeURIComponent(eIdData.firstName)}&lastname=${encodeURIComponent(eIdData.lastName)}`;
-			return new URL(baseURL + params);
-		} else if (inputTextData) {
-			//TODO: text input ids must dynamically change
-			//? For now they are hard coded to each specific projet
-			const lastname = inputTextData.find((input) => input.id === "patient_lastname");
-			const firstname = inputTextData.find((input) => input.id === "patient_firstname");
-
-			params += `&firstname=${encodeURIComponent(firstname?.value ?? "")}&lastname=${encodeURIComponent(lastname?.value ?? "")}`;
-			return new URL(baseURL + params);
-		} else {
-			setHasError(true);
-			setErrorCode(ERROR_CODE.A400);
-			setMessage("No user data");
-		}
-	}
 
 	function clearError() {
 		setHasError(false);
