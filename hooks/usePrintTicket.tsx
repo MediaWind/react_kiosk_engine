@@ -40,7 +40,7 @@ export default function usePrintTicket(): [CallableFunction, boolean, ICustomErr
 			const lastname = inputTextData.find((input) => input.id === "patient_lastname");
 			const firstname = inputTextData.find((input) => input.id === "patient_firstname");
 
-			params += `&lastname=${encodeURIComponent(lastname?.value ?? "")}&firstname=${encodeURIComponent(firstname?.value ?? "")}`;
+			params += `&firstname=${encodeURIComponent(firstname?.value ?? "")}&lastname=${encodeURIComponent(lastname?.value ?? "")}`;
 			return new URL(baseURL + params);
 		} else {
 			setHasError(true);
