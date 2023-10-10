@@ -335,10 +335,10 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 	}, [values]);
 
 	function confirmForm() {
-		//* Makes sure to highlight the empty inputs
+		//* Makes sure to highlight the empty required inputs
 		const invalid: string[] = [];
 		values.forEach((value) => {
-			if (value.value.trim() === "") {
+			if (value.value.trim() === "" && value.required) {
 				invalid.push(value.id);
 			}
 		});

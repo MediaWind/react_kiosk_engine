@@ -50,7 +50,7 @@ export interface ITicketParameters {
 	phone?: string;
 	email?: string;
 	comment?: string;
-	userAgent?: string;
+	id_userAgent?: string;
 }
 
 export interface IErrorManagement {
@@ -191,6 +191,7 @@ export interface IStyles {
 export interface IInputField {
 	id: string;
 	value: string;
+	required?: boolean;
 	//TODO: adapt to all possible data we might need
 }
 

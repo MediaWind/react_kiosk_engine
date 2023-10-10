@@ -65,13 +65,13 @@
 			"navigateToHomePageAfter": 30,
 
 			"ticketParameters": {
-				"firstname": "optional ID",
-				"lastname": "optional ID",
-				"company": "optional ID",
-				"phone": "optional ID",
-				"email": "optional ID",
-				"comment": "optional ID",
-				"userAgent": "optional ID"
+				"firstname": "text input ID",
+				"lastname": "text input ID",
+				"company": "text input ID",
+				"phone": "text input ID",
+				"email": "text input ID",
+				"comment": "text input ID",
+				"id_userAgent": "text input ID"
 			},
 
 			"keyboardLayout": "classic|customMade",
@@ -179,9 +179,9 @@
 								"autoFocus": false,
 								"textInput": {
 									"id": "text_input_id",
-									"value": "default_value"
+									"value": "default_value",
+									"required": true
 								},
-								"required": true,
 
 								"styles": {
 									"top": "css property",
