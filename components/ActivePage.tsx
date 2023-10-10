@@ -1,12 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 
-import { IBackgroundImage, IInputAction, IInputContent, IMedia, IPage, IService, LANGUAGE, MediaType, TicketDataActionType } from "../interfaces";
+import { IInputAction, IInputContent, IMedia, IPage, IService, MediaType, TicketDataActionType } from "../interfaces";
 
 import { TicketDataContext } from "../contexts/ticketDataContext";
 
 import FlowMedia from "./FlowMedia";
 import BackgroundImage from "./ui/BackgroundImage";
-import { LanguageContext } from "../contexts/languageContext";
 import TextInputsManager from "./TextInputsManager";
 
 interface IActivePageProps {
@@ -15,21 +14,6 @@ interface IActivePageProps {
 	onPrint: CallableFunction
 	onBackPage: CallableFunction
 	onSignIn: CallableFunction
-}
-
-function getBackGroundImage(bgimg: IBackgroundImage, lng: LANGUAGE): string {
-	switch (lng) {
-		case LANGUAGE.FRENCH: {
-			return bgimg.french ? bgimg.french : bgimg.default;
-		}
-		case LANGUAGE.DUTCH: {
-			return bgimg.dutch ? bgimg.dutch : bgimg.default;
-		}
-		case LANGUAGE.ENGLISH: {
-			return bgimg.english ? bgimg.english : bgimg.default;
-		}
-		default: return bgimg.default;
-	}
 }
 
 export default function ActivePage(props: IActivePageProps): JSX.Element {
@@ -42,8 +26,6 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 	} = props;
 
 	const { dispatchTicketState, } = useContext(TicketDataContext);
-	const { language, } = useContext(LanguageContext);
-
 	const [textInputs, setTextInputs] = useState<IMedia[]>([]);
 
 	//* Auto switches to next page without user interaction
@@ -130,7 +112,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 				})
 			}
 			{textInputs.length > 0 && <TextInputsManager inputs={textInputs} onReady={textInputsReadyHandler} />}
-			<BackgroundImage url={getBackGroundImage(page.backgroundImage, language)} />
+			<BackgroundImage image={page.backgroundImage} />
 		</>
 	);
 }

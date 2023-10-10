@@ -8,7 +8,7 @@ import Printer from "../../core/client/printer";
 
 import { ERROR_CODE, IInputField, IService, ITicketDataState, LANGUAGE } from "../interfaces";
 
-interface ICustomError {
+export interface ICustomError {
 	hasError: boolean;
 	errorCode: ERROR_CODE;
 	message?: string;

@@ -1,8 +1,11 @@
+import { useContext } from "react";
+
 import styles from "../../styles/ui/BackgroundImage.module.scss";
 
 import { Variables } from "../../../variables";
+
 import { IBackgroundImage, LANGUAGE } from "../../interfaces";
-import { useContext } from "react";
+
 import { LanguageContext } from "../../contexts/languageContext";
 
 interface IBackgroundImageProps {

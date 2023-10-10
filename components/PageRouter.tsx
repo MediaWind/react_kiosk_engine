@@ -2,8 +2,11 @@ import { useContext, useEffect, useState } from "react";
 
 import { Variables } from "../../variables";
 
-import { TicketDataContext } from "../contexts/ticketDataContext";
 import { FlowContext } from "../contexts/flowContext";
+import { LanguageContext } from "../contexts/languageContext";
+import { TicketDataContext } from "../contexts/ticketDataContext";
+
+import { ICustomError } from "../hooks/usePrintTicket";
 
 import { IFlow, IPage, TicketDataActionType } from "../interfaces";
 
@@ -14,6 +17,7 @@ interface IFlowDispatcherProps {
 	onPrint: CallableFunction
 	isPrinting: boolean
 	onSignIn: CallableFunction
+	error: ICustomError
 }
 
 function getHomePage(flow: IFlow): IPage {
@@ -36,13 +40,21 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 		onPrint,
 		isPrinting,
 		onSignIn,
+		error,
 	} = props;
 
-	const { ticketState, dispatchTicketState, } = useContext(TicketDataContext);
+	const { setLanguage, } = useContext(LanguageContext);
 	const { flow, setReload, } = useContext(FlowContext);
+	const { ticketState, dispatchTicketState, } = useContext(TicketDataContext);
 
 	const homePage = getHomePage(flow);
 	const [router, setRouter] = useState<IPage[]>([homePage]);
+
+	useEffect(() => {
+		if(!error.hasError) {
+			setRouter([homePage]);
+		}
+	} ,[error.hasError]);
 
 	useEffect(() => {
 		if (flow.navigateToHomePageAfter) {
@@ -80,6 +92,7 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 	useEffect(() => {
 		if (!isPrinting) {
 			setRouter([homePage]);
+			setLanguage(undefined);
 		}
 	}, [isPrinting]);
 

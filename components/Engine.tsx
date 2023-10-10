@@ -225,6 +225,7 @@ function Engine(): JSX.Element {
 								onPrint={printHandler}
 								isPrinting={isPrinting}
 								onSignIn={signInHandler}
+								error={error}
 							/>
 						</FlowContext.Provider>
 					</TicketDataContext.Provider>
