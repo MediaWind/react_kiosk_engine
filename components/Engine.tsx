@@ -142,22 +142,25 @@ function Engine(): JSX.Element {
 		}
 	}, [error.hasError]);
 
-	//* ------------------------------------------ *//
-	//* Makes sure data is ready before print/save *//
-	//* ------------------------------------------ *//
+	//* --------------------------- *//
+	//* Manages print/save requests *//
+	//* --------------------------- *//
 	useEffect(() => {
-		if (ticketData.readyToPrint && printRequested) {
-			printTicket(ticketData);
-			resetAllData();
-		}
-	}, [ticketData.readyToPrint, printRequested]);
+		dispatch({
+			type: TicketDataActionType.READYTOPRINTUPDATE,
+			payload: true,
+		});
 
-	useEffect(() => {
-		if (ticketData.readyToPrint && signInRequested) {
-			signInPatient(ticketData);
-			resetAllData();
+		if (printRequested) {
+			printTicket(ticketData);
 		}
-	}, [ticketData.readyToPrint, signInRequested]);
+
+		if (signInRequested) {
+			signInPatient(ticketData);
+		}
+
+		resetAllData();
+	}, [printRequested, signInRequested]);
 
 	//* --------------------------------------------------------------------------- *//
 	//* Flags new flow before changing it to prevent change during user interaction *//

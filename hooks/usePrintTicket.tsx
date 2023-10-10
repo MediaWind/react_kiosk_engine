@@ -94,7 +94,11 @@ export default function usePrintTicket(): [CallableFunction, boolean, ICustomErr
 		}
 
 		setIsPrinting(true);
-		console.log("Printing!", ticketState.eIdDatas, ticketState.textInputDatas, ticketState.service, ticketState.language);
+		console.log("Printing!");
+		console.log("eIdDatas", ticketState.eIdDatas);
+		console.log("textInputDatas", ticketState.textInputDatas);
+		console.log("service", ticketState.service);
+		console.log("language", ticketState.language);
 
 		try {
 			// Fetches ticket PDF
