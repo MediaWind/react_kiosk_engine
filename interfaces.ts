@@ -8,6 +8,7 @@ export type Route = {
 	languages: LANGUAGE[],
 	scheduling: ISchedule,
 	flows: IFlow[]
+	errorManagement?: IErrorManagement
 };
 
 export enum LANGUAGE {
@@ -39,6 +40,14 @@ export interface IFlow {
 	keyboardLayout?: KeyboardLayout;
 	navigateToHomePageAfter?: number;
 	pages: IPage[];
+}
+
+export interface IErrorManagement {
+	genericError: IBackgroundImage;
+	noPaper?: IBackgroundImage;
+	notConnectedToInternet?: IBackgroundImage;
+	serviceClosed?: IBackgroundImage;
+	//TODO: add more error options
 }
 
 export enum KeyboardLayout {

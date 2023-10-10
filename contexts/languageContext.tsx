@@ -3,13 +3,13 @@ import { createContext, useContext } from "react";
 import { LANGUAGE } from "../interfaces";
 
 type languageContext = {
-	language: LANGUAGE,
-	setLanguage: React.Dispatch<React.SetStateAction<LANGUAGE>>
+	language: LANGUAGE | undefined,
+	setLanguage: React.Dispatch<React.SetStateAction<LANGUAGE | undefined>>
 }
 
 export const LanguageContext = createContext<languageContext>({
-	language: LANGUAGE.ENGLISH,
-	setLanguage: () => {return;},
+	language: undefined,
+	setLanguage: () => {return undefined;},
 });
 
 export const useFlowContext = () => useContext(LanguageContext);

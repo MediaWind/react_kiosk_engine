@@ -7,7 +7,7 @@ import useSharedVariables from "../../core/hooks/useSharedVariables";
 import useEId, { eIdData, eIdStatus } from "../../core/hooks/useEId";
 import { setIntervalRange } from "../../core/customInterval";
 
-import { IFlow, LANGUAGE, Route, TicketDataActionType } from "../interfaces";
+import { ERROR_CODE, IFlow, LANGUAGE, Route, TicketDataActionType } from "../interfaces";
 
 import { TicketDataContext } from "../contexts/ticketDataContext";
 import { FlowContext } from "../contexts/flowContext";
@@ -20,19 +20,16 @@ import getRoute from "../utils/getRoute";
 import checkCurrentFlow from "../utils/checkCurrentFlow";
 
 import PageRouter from "../components/PageRouter";
-import BackgroundImage from "../components/ui/BackgroundImage";
 import LoadingScreen from "../components/ui/LoadingScreen";
 import Debugger from "../components/debug/Debugger";
 import DisplayError from "../components/ui/DisplayError";
-
 
 function Engine(): JSX.Element {
 	const [eIdInserted, eIdReaded, eIdRemoved] = useSharedVariables("eid_inserted", "eid_readed", "eid_removed");
 	const [eidStatus, eIdData] = useEId(eIdInserted, eIdReaded, eIdRemoved);
 
 	const [selectedRoute, setSelectedRoute] = useState<Route | null>(null);
-
-	const [language, setLanguage] = useState<LANGUAGE>(LANGUAGE.ENGLISH);
+	const [language, setLanguage] = useState<LANGUAGE | undefined>();
 
 	const [currentFlow, setCurrentFlow] = useState<IFlow>();
 	const [flaggedFlow, setFlaggedFlow] = useState<IFlow>();
@@ -67,22 +64,6 @@ function Engine(): JSX.Element {
 			}
 		}
 	}, []);
-
-	//* --------------------- *//
-	//* Sets initial language *//
-	//* --------------------- *//
-	useEffect(() => {
-		if (selectedRoute) {
-			setLanguage(selectedRoute.languages[0]);
-		}
-	}, [selectedRoute]);
-
-	useEffect(() => {
-		dispatch({
-			type: TicketDataActionType.LANGUAGEUPDATE,
-			payload: language,
-		});
-	}, [language]);
 
 	//* ----------------- *//
 	//* Tracks eId Status *//
@@ -143,13 +124,13 @@ function Engine(): JSX.Element {
 	}, [selectedRoute]);
 
 	//* ------------------------------------------- *//
-	//* Checks printer status every 5 to 10 minutes *//
+	//* Checks printer status every 5 to 10 seconds *//
 	//* ------------------------------------------- *//
 	useEffect(() => {
 		checkPrinterStatus();
 		setIntervalRange(() => {
 			checkPrinterStatus();
-		}, [5 * 60 * 1000, 10 * 60 * 1000]);
+		}, [5 * 1000, 10 * 1000]);
 	}, []);
 
 	//* ----------------------------------------- *//
@@ -229,7 +210,13 @@ function Engine(): JSX.Element {
 							/>
 						)}
 
-						{error.hasError && <DisplayError errorCode={error.errorCode} message={error.message} onClick={clearErrorHandler} />}
+						{error.hasError &&
+							<DisplayError
+								errorCode={error.errorCode}
+								message={error.message}
+								onClick={clearErrorHandler}
+								route={selectedRoute}
+							/>}
 
 						{isLoading && <LoadingScreen />}
 
@@ -245,8 +232,14 @@ function Engine(): JSX.Element {
 			</div>
 		);
 	} else {
-		return <BackgroundImage url="{widget_folder}/images/MLE-Route-201_Ecrans-borne_1920x1080_projet-1_08-2023-9.jpg" />;
-		//* "Kiosk is not working" page's image
+		return (
+			<DisplayError
+				errorCode={ERROR_CODE.D503}
+				message="No flow available"
+				onClick={clearErrorHandler}
+				route={selectedRoute}
+			/>
+		);
 	}
 }
 
