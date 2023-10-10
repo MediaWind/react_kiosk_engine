@@ -40,6 +40,17 @@ export interface IFlow {
 	keyboardLayout?: KeyboardLayout;
 	navigateToHomePageAfter?: number;
 	pages: IPage[];
+	ticketParameters?: ITicketParameters;
+}
+
+export interface ITicketParameters {
+	firstname?: string;
+	lastname?: string;
+	company?: string;
+	phone?: string;
+	email?: string;
+	comment?: string;
+	userAgent?: string;
 }
 
 export interface IErrorManagement {
@@ -205,6 +216,7 @@ export enum TicketDataActionType {
 	INPUTTEXTUPDATE = "inputtextupdate",
 	SERVICEUPDATE = "serviceupdate",
 	LANGUAGEUPDATE = "languageupdate",
+	READYTOPRINTUPDATE = "readytoprintupdate",
 	CLEARDATA = "cleardata"
 }
 

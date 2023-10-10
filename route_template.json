@@ -64,6 +64,16 @@
 			"homePage": "UUID",
 			"navigateToHomePageAfter": 30,
 
+			"ticketParameters": {
+				"firstname": "optional ID",
+				"lastname": "optional ID",
+				"company": "optional ID",
+				"phone": "optional ID",
+				"email": "optional ID",
+				"comment": "optional ID",
+				"userAgent": "optional ID"
+			},
+
 			"keyboardLayout": "classic|customMade",
 
 			"pages": [
@@ -171,6 +181,7 @@
 									"id": "text_input_id",
 									"value": "default_value"
 								},
+								"required": true,
 
 								"styles": {
 									"top": "css property",
