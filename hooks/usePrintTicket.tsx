@@ -2,42 +2,17 @@ import { useState } from "react";
 
 import { Variables } from "../../variables";
 
-import { eIdData } from "../../core/hooks/useEId";
-import { DefaultVariables } from "../../core/variables";
 import Printer from "../../core/client/printer";
 
-import { ERROR_CODE, IInputField, IService, ITicketDataState, LANGUAGE } from "../interfaces";
+import { ERROR_CODE, ITicketDataState } from "../interfaces";
+
+import getTicketingURL from "../utils/getTicketingURL";
 
 export interface ICustomError {
 	hasError: boolean;
 	errorCode: ERROR_CODE;
 	message?: string;
 	clearError: CallableFunction;
-}
-
-function getTicketingURL(eIdData: eIdData | null, inputTextData?: IInputField[], service?: IService, lang?: LANGUAGE): URL {
-	const baseURL = `${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/ticket.php?`;
-	let params = `
-	id_project=${Variables.W_ID_PROJECT}
-	&serial=${DefaultVariables.SERIAL_PLAYER}
-	&id_service=${service?.serviceID}
-	&priority=${service?.priority ?? 1}
-	&lang=${lang ?? "fr"}
-	`;
-
-	if (eIdData != null) {
-		params += `&firstname=${encodeURIComponent(eIdData.firstName)}&lastname=${encodeURIComponent(eIdData.lastName)}`;
-		return new URL(baseURL + params);
-	} else if (inputTextData) {
-		//TODO: text input ids must dynamically change
-		//? For now they are hard coded to each specific projet
-		const lastname = inputTextData.find((input) => input.id === "patient_lastname");
-		const firstname = inputTextData.find((input) => input.id === "patient_firstname");
-
-		params += `&firstname=${encodeURIComponent(firstname?.value ?? "")}&lastname=${encodeURIComponent(lastname?.value ?? "")}`;
-	}
-
-	return new URL(baseURL + params);
 }
 
 export default function usePrintTicket(): [CallableFunction, boolean, ICustomError, CallableFunction, CallableFunction] {
@@ -94,15 +69,11 @@ export default function usePrintTicket(): [CallableFunction, boolean, ICustomErr
 		}
 
 		setIsPrinting(true);
-		console.log("Printing!");
-		console.log("eIdDatas", ticketState.eIdDatas);
-		console.log("textInputDatas", ticketState.textInputDatas);
-		console.log("service", ticketState.service);
-		console.log("language", ticketState.language);
+		console.log("Printing!", ticketState);
 
 		try {
 			// Fetches ticket PDF
-			const response = await fetch(`${getTicketingURL(ticketState.eIdDatas, ticketState.textInputDatas, ticketState.service, ticketState.language)}`);
+			const response = await fetch(`${getTicketingURL(ticketState)}`);
 
 			const data = await response.json();
 
@@ -168,10 +139,7 @@ export default function usePrintTicket(): [CallableFunction, boolean, ICustomErr
 		}
 
 		try {
-			const response = await fetch(`
-				${getTicketingURL(ticketState.eIdDatas, ticketState.textInputDatas, ticketState.service, ticketState.language)}
-				&comment=${encodeURI("No ticket needed")}
-			`);
+			const response = await fetch(`${getTicketingURL(ticketState)}&comment=${encodeURI("No ticket needed")}`);
 			console.log("🚀 ~ file: usePrintTicket.tsx:174 ~ signInPatient ~ response:", response);
 		} catch (err) {
 			console.log(err);
