@@ -1,8 +1,6 @@
-import { useContext } from "react";
-
 import styles from "../../styles/ui/Error.module.scss";
 
-import { LanguageContext } from "../../contexts/languageContext";
+import { useLanguageContext } from "../../contexts/languageContext";
 
 import { ERROR_CODE, IBackgroundImage, IErrorManagement, LANGUAGE, Route } from "../../interfaces";
 
@@ -16,7 +14,7 @@ interface IDisplayErrorProps {
 }
 
 function getTranslatedTitle() {
-	const { language, } = useContext(LanguageContext);
+	const { language, } = useLanguageContext();
 
 	switch (language) {
 		case LANGUAGE.FRENCH: return "Une erreur est survenue";
@@ -27,7 +25,7 @@ function getTranslatedTitle() {
 }
 
 function getTranslatedDefaultMessage() {
-	const { language, } = useContext(LanguageContext);
+	const { language, } = useLanguageContext();
 
 	switch (language) {
 		case LANGUAGE.FRENCH: return "Veuillez réessayer ou vous adresser au guichet";

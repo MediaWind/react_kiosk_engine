@@ -1,8 +1,8 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { IInputAction, IInputContent, IMedia, IPage, IService, MediaType, TicketDataActionType } from "../interfaces";
 
-import { TicketDataContext } from "../contexts/ticketDataContext";
+import {  useTicketDataContext } from "../contexts/ticketDataContext";
 
 import FlowMedia from "./FlowMedia";
 import BackgroundImage from "./ui/BackgroundImage";
@@ -25,7 +25,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 		onSignIn,
 	} = props;
 
-	const { dispatchTicketState, } = useContext(TicketDataContext);
+	const { dispatchTicketState, } = useTicketDataContext();
 	const [textInputs, setTextInputs] = useState<IMedia[]>([]);
 
 	//* Auto switches to next page without user interaction

@@ -1,9 +1,9 @@
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 
 import { ActionType, IInputAction, IInputContent, IService, InputType, TicketDataActionType } from "../../interfaces";
 
-import { TicketDataContext } from "../../contexts/ticketDataContext";
-import { LanguageContext } from "../../contexts/languageContext";
+import { useTicketDataContext } from "../../contexts/ticketDataContext";
+import { useLanguageContext } from "../../contexts/languageContext";
 
 import ButtonInput from "./inputs/ButtonInput";
 import NumberInput from "./inputs/NumberInput";
@@ -23,8 +23,8 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 		onBackPage,
 	} = props;
 
-	const { ticketState, dispatchTicketState, } = useContext(TicketDataContext);
-	const { setLanguage, } = useContext(LanguageContext);
+	const { ticketState, dispatchTicketState, } = useTicketDataContext();
+	const { setLanguage, } = useLanguageContext();
 
 	useEffect(() => {
 		if (content.type === InputType.CARDREADER) {

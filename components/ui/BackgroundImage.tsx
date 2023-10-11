@@ -1,19 +1,17 @@
-import { useContext } from "react";
-
 import styles from "../../styles/ui/BackgroundImage.module.scss";
 
 import { Variables } from "../../../variables";
 
 import { IBackgroundImage, LANGUAGE } from "../../interfaces";
 
-import { LanguageContext } from "../../contexts/languageContext";
+import { useLanguageContext } from "../../contexts/languageContext";
 
 interface IBackgroundImageProps {
 	image: IBackgroundImage,
 }
 
 function getBackGroundImage(bgimg: IBackgroundImage): string {
-	const { language, } = useContext(LanguageContext);
+	const { language, } = useLanguageContext();
 
 	switch (language) {
 		case LANGUAGE.FRENCH: {

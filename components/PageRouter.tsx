@@ -1,10 +1,10 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Variables } from "../../variables";
 
-import { FlowContext } from "../contexts/flowContext";
-import { LanguageContext } from "../contexts/languageContext";
-import { TicketDataContext } from "../contexts/ticketDataContext";
+import { useFlowContext } from "../contexts/flowContext";
+import { useLanguageContext } from "../contexts/languageContext";
+import { useTicketDataContext } from "../contexts/ticketDataContext";
 
 import { ICustomError } from "../hooks/usePrintTicket";
 
@@ -43,9 +43,9 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 		error,
 	} = props;
 
-	const { setLanguage, } = useContext(LanguageContext);
-	const { flow, setReload, } = useContext(FlowContext);
-	const { ticketState, dispatchTicketState, } = useContext(TicketDataContext);
+	const { setLanguage, } = useLanguageContext();
+	const { flow, setReload, } = useFlowContext();
+	const { ticketState, dispatchTicketState, } = useTicketDataContext();
 
 	const homePage = getHomePage(flow);
 	const [router, setRouter] = useState<IPage[]>([homePage]);
