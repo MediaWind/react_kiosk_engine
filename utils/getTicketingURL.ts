@@ -1,6 +1,12 @@
+import { useContext } from "react";
+
 import { Variables } from "../../variables";
 
 import { ITicketDataState } from "../interfaces";
+
+import { FlowContext } from "../contexts/flowContext";
+
+const { flow, } = useContext(FlowContext);
 
 export default function getTicketingURL(ticketState: ITicketDataState): URL {
 	const baseURL = `${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/ticket.php?`;
@@ -14,14 +20,26 @@ export default function getTicketingURL(ticketState: ITicketDataState): URL {
 
 	if (ticketState.eIdDatas != null) {
 		params += `&firstname=${encodeURIComponent(ticketState.eIdDatas.firstName)}&lastname=${encodeURIComponent(ticketState.eIdDatas.lastName)}`;
-		return new URL(baseURL + params);
 	} else if (ticketState.textInputDatas) {
-		//TODO: text input ids must dynamically change
-		//? For now they are hard coded to each specific projet
-		const lastname = ticketState.textInputDatas.find((input) => input.id === "patient_lastname");
-		const firstname = ticketState.textInputDatas.find((input) => input.id === "patient_firstname");
+		// const firstname = ticketState.textInputDatas.find((input) => input.id === "patient_firstname");
+		// const lastname = ticketState.textInputDatas.find((input) => input.id === "patient_lastname");
+		const firstname = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.firstname);
+		const lastname = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.lastname);
+		const email = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.email);
+		const phone = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.phone);
+		const company = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.company);
+		const comment = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.comment);
+		const idUserAgent = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.id_userAgent);
 
-		params += `&firstname=${encodeURIComponent(firstname?.value ?? "")}&lastname=${encodeURIComponent(lastname?.value ?? "")}`;
+		params += `
+		&firstname=${encodeURIComponent(firstname?.value ?? "")}
+		&lastname=${encodeURIComponent(lastname?.value ?? "")}
+		&email=${encodeURIComponent(email?.value ?? "")}
+		&phone=${encodeURIComponent(phone?.value ?? "")}
+		&company=${encodeURIComponent(company?.value ?? "")}
+		&comment=${encodeURIComponent(comment?.value ?? "")}
+		&id_userAgent=${encodeURIComponent(idUserAgent?.value ?? "")}
+		`;
 	}
 
 	return new URL(baseURL + params);

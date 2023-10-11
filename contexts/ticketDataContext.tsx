@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 
-import { IInputField, ITicketDataAction, ITicketDataState } from "../interfaces";
+import { ITicketDataAction, ITicketDataState } from "../interfaces";
 
 export type ticketDataContent = {
 	ticketState: ITicketDataState
@@ -12,7 +12,7 @@ export const TicketDataContext = createContext<ticketDataContent>({
 		eIdDatas: null,
 		pageIsListeningToEId: false,
 		eIdRead: false,
-		textInputDatas: [] as IInputField[],
+		textInputDatas: [],
 		service: undefined,
 		readyToPrint: false,
 		language: undefined,

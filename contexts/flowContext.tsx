@@ -14,7 +14,7 @@ export const FlowContext = createContext<flowContext>({
 		homePage: "",
 		pages: [],
 	},
-	setReload: () => {return;},
+	setReload: () => false,
 });
 
 export const useFlowContext = () => useContext(FlowContext);

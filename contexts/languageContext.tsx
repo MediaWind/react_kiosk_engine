@@ -9,7 +9,7 @@ type languageContext = {
 
 export const LanguageContext = createContext<languageContext>({
 	language: undefined,
-	setLanguage: () => {return undefined;},
+	setLanguage: () => undefined,
 });
 
 export const useFlowContext = () => useContext(LanguageContext);
