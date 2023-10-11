@@ -72,3 +72,38 @@ $font_color: #424246;
 		}
 	}
 }
+
+.error_management_main {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+
+	z-index: 5;
+
+	display: flex;
+	justify-content: center;
+	align-items: flex-end;
+
+	overflow: hidden;
+
+	.error_management_message {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+
+		z-index: 10;
+
+		width: 70%;
+		height: 10%;
+
+		margin: 1%;
+
+		border-radius: 0.03rem;
+		box-shadow: 0 0 10px 0 #949494;
+
+		background-color: #ffffff;
+	}
+}
