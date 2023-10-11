@@ -12,9 +12,12 @@ import { IFlow, LANGUAGE, Route, TicketDataActionType } from "../interfaces";
 import { TicketDataContext } from "../contexts/ticketDataContext";
 import { FlowContext } from "../contexts/flowContext";
 import { LanguageContext } from "../contexts/languageContext";
+import { ErrorContext } from "../contexts/errorContext";
+
+import ticketDataReducer, { initialState } from "../reducers/ticketDataReducer";
+import errorReducer, { initialErrorState } from "../reducers/errorReducer";
 
 import usePrintTicket from "../hooks/usePrintTicket";
-import ticketDataReducer, { initialState } from "../reducers/ticketDataReducer";
 
 import getRoute from "../utils/getRoute";
 import checkCurrentFlow from "../utils/checkCurrentFlow";
@@ -23,8 +26,7 @@ import PageRouter from "../components/PageRouter";
 import LoadingScreen from "../components/ui/LoadingScreen";
 import Debugger from "../components/debug/Debugger";
 import DisplayError from "../components/ui/DisplayError";
-import errorReducer, { initialErrorState } from "../reducers/errorReducer";
-import { ErrorContext } from "../contexts/errorContext";
+import checkPrinterStatus from "../utils/checkPrinterStatus";
 
 function Engine(): JSX.Element {
 	const [eIdInserted, eIdReaded, eIdRemoved] = useSharedVariables("eid_inserted", "eid_readed", "eid_removed");
@@ -44,7 +46,7 @@ function Engine(): JSX.Element {
 	const [ticketData, dispatchTicketState] = useReducer(ticketDataReducer, initialState);
 	const [error, dispatchError] = useReducer(errorReducer, initialErrorState);
 
-	const [printTicket, isPrinting, signInPatient, checkPrinterStatus] = usePrintTicket(dispatchError);
+	const [printTicket, isPrinting, signInPatient] = usePrintTicket(dispatchError);
 
 	useEffect(() => {
 		getRoute().then((route) => {
@@ -130,9 +132,9 @@ function Engine(): JSX.Element {
 	//* Checks printer status every 5 to 10 seconds *//
 	//* ------------------------------------------- *//
 	useEffect(() => {
-		checkPrinterStatus();
+		checkPrinterStatus(dispatchError);
 		setIntervalRange(() => {
-			checkPrinterStatus();
+			checkPrinterStatus(dispatchError);
 		}, [5 * 1000, 10 * 1000]);
 	}, []);
 
