@@ -230,10 +230,6 @@ export enum ERROR_CODE {
 	 */
 	A200 = "200",
 	/**
-	 * 400-A: No user data defined
-	 */
-	A400 = "400-A",
-	/**
 	 * 500-A: Something went wrong when trying to print ticket
 	 */
 	A500 = "500-A",
