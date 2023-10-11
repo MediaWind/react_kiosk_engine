@@ -1,8 +1,6 @@
 import { createContext, useContext } from "react";
 
-import { ERROR_CODE } from "../interfaces";
-
-import { IErrorAction, IErrorState } from "../reducers/errorReducer";
+import { ERROR_CODE, IErrorAction, IErrorState } from "../interfaces";
 
 type errorContext = {
 	errorState: IErrorState

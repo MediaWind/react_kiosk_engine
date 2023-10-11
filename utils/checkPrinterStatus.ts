@@ -1,8 +1,6 @@
 import { Variables } from "../../variables";
 
-import { ERROR_ACTION_TYPE, IErrorAction, IErrorState } from "../reducers/errorReducer";
-
-import { ERROR_CODE } from "../interfaces";
+import { ERROR_ACTION_TYPE, ERROR_CODE, IErrorAction, IErrorState } from "../interfaces";
 
 export default async function checkPrinterStatus(dispatchError: React.Dispatch<IErrorAction>) {
 	if (!Variables.PREVIEW) {

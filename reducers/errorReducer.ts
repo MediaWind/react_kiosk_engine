@@ -1,20 +1,4 @@
-import { ERROR_CODE } from "../interfaces";
-
-export interface IErrorState {
-	hasError: boolean;
-	errorCode: ERROR_CODE;
-	message: string;
-}
-
-export interface IErrorAction {
-	type: ERROR_ACTION_TYPE;
-	payload: IErrorState | undefined;
-}
-
-export enum ERROR_ACTION_TYPE {
-	SETERROR = "setError",
-	CLEARERROR = "clearError"
-}
+import { ERROR_ACTION_TYPE, ERROR_CODE, IErrorAction, IErrorState } from "../interfaces";
 
 export default function errorReducer(errorState: IErrorState, action: IErrorAction): IErrorState {
 	if (action.type === ERROR_ACTION_TYPE.SETERROR) {

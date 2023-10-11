@@ -2,11 +2,10 @@ import styles from "../../styles/ui/Error.module.scss";
 
 import { useLanguageContext } from "../../contexts/languageContext";
 
-import { ERROR_CODE, IBackgroundImage, IErrorManagement, LANGUAGE, Route } from "../../interfaces";
+import { ERROR_ACTION_TYPE, ERROR_CODE, IBackgroundImage, IErrorManagement, LANGUAGE, Route } from "../../interfaces";
 
 import BackgroundImage from "./BackgroundImage";
 import { useErrorContext } from "../../contexts/errorContext";
-import { ERROR_ACTION_TYPE } from "../../reducers/errorReducer";
 
 interface IDisplayErrorProps {
 	route: Route | null

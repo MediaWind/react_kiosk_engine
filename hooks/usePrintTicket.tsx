@@ -1,12 +1,10 @@
 import { useState } from "react";
 
-import { ERROR_ACTION_TYPE, IErrorAction } from "../reducers/errorReducer";
-
 import { Variables } from "../../variables";
 
 import Printer from "../../core/client/printer";
 
-import { ERROR_CODE, IFlow, ITicketDataState } from "../interfaces";
+import { ERROR_ACTION_TYPE, ERROR_CODE, IErrorAction, IFlow, ITicketDataState } from "../interfaces";
 
 import getTicketingURL from "../utils/getTicketingURL";
 
