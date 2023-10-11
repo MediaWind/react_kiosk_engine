@@ -171,6 +171,16 @@ function Engine(): JSX.Element {
 		}
 	}, [flaggedFlow, readyToChangeFlow]);
 
+	//* ------------------------------------------- *//
+	//* Updates language in the ticket data reducer *//
+	//* ------------------------------------------- *//
+	useEffect(() => {
+		dispatch({
+			type: TicketDataActionType.LANGUAGEUPDATE,
+			payload: language as LANGUAGE,
+		});
+	}, [language]);
+
 	//* ----- Handlers ----- *//
 	const printHandler = () => {
 		setPrintRequested(true);

@@ -54,7 +54,7 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 		if(!error.hasError) {
 			setRouter([homePage]);
 		}
-	} ,[error.hasError]);
+	}, [error.hasError]);
 
 	useEffect(() => {
 		if (flow.navigateToHomePageAfter) {
@@ -86,6 +86,12 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 			setReload(true);
 		} else {
 			setReload(false);
+		}
+	}, [router]);
+
+	useEffect(() => {
+		if (router.slice(-1)[0] === homePage) {
+			setLanguage(undefined);
 		}
 	}, [router]);
 

@@ -3,7 +3,6 @@ import { Variables } from "../../variables";
 import { IFlow, ITicketDataState } from "../interfaces";
 
 export default function getTicketingURL(ticketState: ITicketDataState, flow: IFlow): URL {
-	console.log("🚀 ~ file: getTicketingURL.ts:6 ~ getTicketingURL ~ flow:", flow);
 	const baseURL = `${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/ticket.php?`;
 	let params = `
 	id_project=${Variables.W_ID_PROJECT}
@@ -34,8 +33,6 @@ export default function getTicketingURL(ticketState: ITicketDataState, flow: IFl
 		&id_userAgent=${encodeURIComponent(idUserAgent?.value ?? "")}
 		`;
 	}
-
-	console.log(baseURL + params);
 
 	return new URL(baseURL + params);
 }
