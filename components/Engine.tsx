@@ -152,11 +152,11 @@ function Engine(): JSX.Element {
 		});
 
 		if (printRequested) {
-			printTicket(ticketData);
+			printTicket(ticketData, currentFlow);
 		}
 
 		if (signInRequested) {
-			signInPatient(ticketData);
+			signInPatient(ticketData, currentFlow);
 		}
 
 		resetAllData();
@@ -198,22 +198,23 @@ function Engine(): JSX.Element {
 			<div onContextMenu={(e: any) => e.preventDefault()}>
 				<LanguageContext.Provider value={{ language, setLanguage, }}>
 					<TicketDataContext.Provider value={{ ticketState: ticketData, dispatchTicketState: dispatch, }}>
-						{Variables.W_DEBUG && (
+						<FlowContext.Provider value={{ flow: currentFlow, setReload: setReadyToChangeFlow, }}>
+							{Variables.W_DEBUG && (
 							//! Don't forget to false debug variable before prod
-							<Debugger
-								eidData={ticketData.eIdDatas}
-								messages={[
-									`eidstatus: ${eidStatus}`,
-									`firstname from eiddata: ${eIdData?.firstName}`,
-									`eidread: ${ticketData.eIdRead}`,
-									`page is listening to eid: ${ticketData.pageIsListeningToEId}`,
-									isPrinting ? "Printing!" : "",
-									error.hasError ? "Error!" : ""
-								]}
-							/>
-						)}
+								<Debugger
+									eidData={ticketData.eIdDatas}
+									messages={[
+										`eidstatus: ${eidStatus}`,
+										`firstname from eiddata: ${eIdData?.firstName}`,
+										`eidread: ${ticketData.eIdRead}`,
+										`page is listening to eid: ${ticketData.pageIsListeningToEId}`,
+										isPrinting ? "Printing!" : "",
+										error.hasError ? "Error!" : ""
+									]}
+								/>
+							)}
 
-						{error.hasError &&
+							{error.hasError &&
 							<DisplayError
 								errorCode={error.errorCode}
 								message={error.message}
@@ -221,9 +222,8 @@ function Engine(): JSX.Element {
 								route={selectedRoute}
 							/>}
 
-						{isLoading && <LoadingScreen />}
+							{isLoading && <LoadingScreen />}
 
-						<FlowContext.Provider value={{ flow: currentFlow, setReload: setReadyToChangeFlow, }}>
 							<PageRouter
 								onPrint={printHandler}
 								isPrinting={isPrinting}

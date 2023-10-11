@@ -4,7 +4,7 @@ import { Variables } from "../../variables";
 
 import Printer from "../../core/client/printer";
 
-import { ERROR_CODE, ITicketDataState } from "../interfaces";
+import { ERROR_CODE, IFlow, ITicketDataState } from "../interfaces";
 
 import getTicketingURL from "../utils/getTicketingURL";
 
@@ -56,7 +56,7 @@ export default function usePrintTicket(): [CallableFunction, boolean, ICustomErr
 		}
 	}
 
-	async function printTicket(ticketState: ITicketDataState) {
+	async function printTicket(ticketState: ITicketDataState, flow: IFlow) {
 		if(!navigator.onLine) {
 			setHasError(true);
 			setErrorCode(ERROR_CODE.A503);
@@ -73,7 +73,7 @@ export default function usePrintTicket(): [CallableFunction, boolean, ICustomErr
 
 		try {
 			// Fetches ticket PDF
-			const response = await fetch(`${getTicketingURL(ticketState)}`);
+			const response = await fetch(`${getTicketingURL(ticketState, flow)}`);
 
 			const data = await response.json();
 
@@ -126,7 +126,7 @@ export default function usePrintTicket(): [CallableFunction, boolean, ICustomErr
 		}
 	}
 
-	async function signInPatient(ticketState: ITicketDataState) {
+	async function signInPatient(ticketState: ITicketDataState, flow: IFlow) {
 		if(!navigator.onLine) {
 			setHasError(true);
 			setErrorCode(ERROR_CODE.A503);
@@ -139,7 +139,7 @@ export default function usePrintTicket(): [CallableFunction, boolean, ICustomErr
 		}
 
 		try {
-			const response = await fetch(`${getTicketingURL(ticketState)}&comment=${encodeURI("No ticket needed")}`);
+			const response = await fetch(`${getTicketingURL(ticketState, flow)}&comment=${encodeURI("No ticket needed")}`);
 			console.log("🚀 ~ file: usePrintTicket.tsx:174 ~ signInPatient ~ response:", response);
 		} catch (err) {
 			console.log(err);
