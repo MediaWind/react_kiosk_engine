@@ -8,12 +8,6 @@ import { ERROR_ACTION_TYPE, ERROR_CODE, IErrorAction, IFlow, ITicketDataState } 
 
 import getTicketingURL from "../utils/getTicketingURL";
 
-export interface ICustomError {
-	hasError: boolean;
-	errorCode: ERROR_CODE;
-	message?: string;
-}
-
 export default function usePrintTicket(dispatchError: React.Dispatch<IErrorAction>): [CallableFunction, boolean, CallableFunction] {
 	const [isPrinting, setIsPrinting] = useState<boolean>(false);
 

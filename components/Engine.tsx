@@ -21,12 +21,12 @@ import usePrintTicket from "../hooks/usePrintTicket";
 
 import getRoute from "../utils/getRoute";
 import checkCurrentFlow from "../utils/checkCurrentFlow";
+import checkPrinterStatus from "../utils/checkPrinterStatus";
 
 import PageRouter from "../components/PageRouter";
 import LoadingScreen from "../components/ui/LoadingScreen";
 import Debugger from "../components/debug/Debugger";
 import DisplayError from "../components/ui/DisplayError";
-import checkPrinterStatus from "../utils/checkPrinterStatus";
 
 function Engine(): JSX.Element {
 	const [eIdInserted, eIdReaded, eIdRemoved] = useSharedVariables("eid_inserted", "eid_readed", "eid_removed");
