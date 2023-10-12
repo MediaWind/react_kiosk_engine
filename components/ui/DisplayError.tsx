@@ -1,15 +1,13 @@
 import styles from "../../styles/ui/Error.module.scss";
 
 import { useLanguageContext } from "../../contexts/languageContext";
+import { useErrorContext } from "../../contexts/errorContext";
 
-import { ERROR_CODE, IBackgroundImage, IErrorManagement, LANGUAGE, Route } from "../../interfaces";
+import { ERROR_ACTION_TYPE, ERROR_CODE, IBackgroundImage, IErrorManagement, LANGUAGE, Route } from "../../interfaces";
 
 import BackgroundImage from "./BackgroundImage";
 
 interface IDisplayErrorProps {
-	errorCode?: ERROR_CODE
-	message?: string
-	onClick: CallableFunction
 	route: Route | null
 }
 
@@ -45,16 +43,25 @@ function getErrorImage(image: IErrorManagement, errorCode?: ERROR_CODE): IBackgr
 }
 
 export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
-	const { errorCode, message, onClick, route, } = props;
+	const { route, } = props;
+
+	const { errorState, dispatchErrorState, } = useErrorContext();
+
+	function clickHandler() {
+		dispatchErrorState({
+			type: ERROR_ACTION_TYPE.CLEARERROR,
+			payload: undefined,
+		});
+	}
 
 	if (route?.errorManagement) {
-		const image = getErrorImage(route.errorManagement, errorCode);
+		const image = getErrorImage(route.errorManagement, errorState.errorCode);
 		return (
 			<div className={styles.error_management_main}>
 				{image === route.errorManagement.genericError &&
 					<div className={styles.error_management_message}>
-						<p>{message ? message : "An unexpected error occured"}</p>
-						{errorCode && <p id={styles.error_code}>Error code: <b>{errorCode}</b></p>}
+						<p>{errorState.message ? errorState.message : "An unexpected error occured"}</p>
+						{errorState.errorCode && <p id={styles.error_code}>Error code: <b>{errorState.errorCode}</b></p>}
 					</div>
 				}
 				<BackgroundImage image={image} />
@@ -66,10 +73,10 @@ export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 				<div className={styles.message}>
 					<div>
 						<h1>{getTranslatedTitle()}</h1>
-						<p>{message ? "Message: " + message : getTranslatedDefaultMessage()}</p>
+						<p>{errorState.message ? "Message: " + errorState.message : getTranslatedDefaultMessage()}</p>
 					</div>
-					{errorCode !== ERROR_CODE.C503 && <button onClick={() => onClick()}>OK</button>}
-					{errorCode && <p id={styles.error_code}>Error code: <b>{errorCode}</b></p>}
+					{errorState.errorCode !== ERROR_CODE.C503 && <button onClick={clickHandler}>OK</button>}
+					{errorState.errorCode && <p id={styles.error_code}>Error code: <b>{errorState.errorCode}</b></p>}
 				</div>
 			</div>
 		);

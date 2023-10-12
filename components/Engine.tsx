@@ -7,17 +7,21 @@ import useSharedVariables from "../../core/hooks/useSharedVariables";
 import useEId, { eIdData, eIdStatus } from "../../core/hooks/useEId";
 import { setIntervalRange } from "../../core/customInterval";
 
-import { ERROR_CODE, IFlow, LANGUAGE, Route, TicketDataActionType } from "../interfaces";
+import { IFlow, LANGUAGE, Route, TicketDataActionType } from "../interfaces";
 
 import { TicketDataContext } from "../contexts/ticketDataContext";
 import { FlowContext } from "../contexts/flowContext";
 import { LanguageContext } from "../contexts/languageContext";
+import { ErrorContext } from "../contexts/errorContext";
+
+import ticketDataReducer, { initialState } from "../reducers/ticketDataReducer";
+import errorReducer, { initialErrorState } from "../reducers/errorReducer";
 
 import usePrintTicket from "../hooks/usePrintTicket";
-import ticketDataReducer, { initialState } from "../reducers/ticketDataReducer";
 
 import getRoute from "../utils/getRoute";
 import checkCurrentFlow from "../utils/checkCurrentFlow";
+import checkPrinterStatus from "../utils/checkPrinterStatus";
 
 import PageRouter from "../components/PageRouter";
 import LoadingScreen from "../components/ui/LoadingScreen";
@@ -39,9 +43,10 @@ function Engine(): JSX.Element {
 	const [printRequested, setPrintRequested] = useState<boolean>(false);
 	const [signInRequested, setSignInRequested] = useState<boolean>(false);
 
-	const [printTicket, isPrinting, error, signInPatient, checkPrinterStatus] = usePrintTicket();
+	const [ticketData, dispatchTicketState] = useReducer(ticketDataReducer, initialState);
+	const [error, dispatchError] = useReducer(errorReducer, initialErrorState);
 
-	const [ticketData, dispatch] = useReducer(ticketDataReducer, initialState);
+	const [printTicket, isPrinting, signInPatient] = usePrintTicket(dispatchError);
 
 	useEffect(() => {
 		getRoute().then((route) => {
@@ -85,7 +90,7 @@ function Engine(): JSX.Element {
 		console.log("current eid data is:", eIdData);
 
 		if (ticketData.pageIsListeningToEId && eIdData != null) {
-			dispatch({
+			dispatchTicketState({
 				type: TicketDataActionType.EIDUPDATE,
 				payload: eIdData as eIdData,
 			});
@@ -94,7 +99,7 @@ function Engine(): JSX.Element {
 
 	useEffect(() => {
 		if (ticketData.pageIsListeningToEId && eIdData != null && eidStatus === eIdStatus.READ) {
-			dispatch({
+			dispatchTicketState({
 				type: TicketDataActionType.EIDREADUPDATE,
 				payload: true,
 			});
@@ -127,9 +132,9 @@ function Engine(): JSX.Element {
 	//* Checks printer status every 5 to 10 seconds *//
 	//* ------------------------------------------- *//
 	useEffect(() => {
-		checkPrinterStatus();
+		checkPrinterStatus(dispatchError);
 		setIntervalRange(() => {
-			checkPrinterStatus();
+			checkPrinterStatus(dispatchError);
 		}, [5 * 1000, 10 * 1000]);
 	}, []);
 
@@ -146,7 +151,7 @@ function Engine(): JSX.Element {
 	//* Manages print/save requests *//
 	//* --------------------------- *//
 	useEffect(() => {
-		dispatch({
+		dispatchTicketState({
 			type: TicketDataActionType.READYTOPRINTUPDATE,
 			payload: true,
 		});
@@ -175,7 +180,7 @@ function Engine(): JSX.Element {
 	//* Updates language in the ticket data reducer *//
 	//* ------------------------------------------- *//
 	useEffect(() => {
-		dispatch({
+		dispatchTicketState({
 			type: TicketDataActionType.LANGUAGEUPDATE,
 			payload: language as LANGUAGE,
 		});
@@ -193,67 +198,53 @@ function Engine(): JSX.Element {
 	const resetAllData = () => {
 		setPrintRequested(false);
 		setSignInRequested(false);
-		dispatch({
+		dispatchTicketState({
 			type: TicketDataActionType.CLEARDATA,
 			payload: undefined,
 		});
-	};
-
-	const clearErrorHandler = () => {
-		error.clearError();
 	};
 
 	if (currentFlow) {
 		return (
 			<div onContextMenu={(e: any) => e.preventDefault()}>
 				<LanguageContext.Provider value={{ language, setLanguage, }}>
-					<TicketDataContext.Provider value={{ ticketState: ticketData, dispatchTicketState: dispatch, }}>
+					<TicketDataContext.Provider value={{ ticketState: ticketData, dispatchTicketState, }}>
 						<FlowContext.Provider value={{ flow: currentFlow, setReload: setReadyToChangeFlow, }}>
-							{Variables.W_DEBUG && (
-							//! Don't forget to false debug variable before prod
-								<Debugger
-									eidData={ticketData.eIdDatas}
-									messages={[
-										`eidstatus: ${eidStatus}`,
-										`firstname from eiddata: ${eIdData?.firstName}`,
-										`eidread: ${ticketData.eIdRead}`,
-										`page is listening to eid: ${ticketData.pageIsListeningToEId}`,
-										isPrinting ? "Printing!" : "",
-										error.hasError ? "Error!" : ""
-									]}
+							<ErrorContext.Provider value={{ errorState: error, dispatchErrorState: dispatchError, }}>
+
+								{Variables.W_DEBUG && (
+								//! Don't forget to false debug variable before prod
+									<Debugger
+										eidData={ticketData.eIdDatas}
+										messages={[
+											`eidstatus: ${eidStatus}`,
+											`firstname from eiddata: ${eIdData?.firstName}`,
+											`eidread: ${ticketData.eIdRead}`,
+											`page is listening to eid: ${ticketData.pageIsListeningToEId}`,
+											isPrinting ? "Printing!" : "",
+											error.hasError ? "Error!" : ""
+										]}
+									/>
+								)}
+
+								{error.hasError && <DisplayError route={selectedRoute} />}
+
+								{isLoading && <LoadingScreen />}
+
+								<PageRouter
+									onPrint={printHandler}
+									isPrinting={isPrinting}
+									onSignIn={signInHandler}
 								/>
-							)}
 
-							{error.hasError &&
-							<DisplayError
-								errorCode={error.errorCode}
-								message={error.message}
-								onClick={clearErrorHandler}
-								route={selectedRoute}
-							/>}
-
-							{isLoading && <LoadingScreen />}
-
-							<PageRouter
-								onPrint={printHandler}
-								isPrinting={isPrinting}
-								onSignIn={signInHandler}
-								error={error}
-							/>
+							</ErrorContext.Provider>
 						</FlowContext.Provider>
 					</TicketDataContext.Provider>
 				</LanguageContext.Provider>
 			</div>
 		);
 	} else {
-		return (
-			<DisplayError
-				errorCode={ERROR_CODE.D503}
-				message="No flow available"
-				onClick={clearErrorHandler}
-				route={selectedRoute}
-			/>
-		);
+		return <DisplayError route={selectedRoute} />;
 	}
 }
 

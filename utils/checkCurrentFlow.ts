@@ -1,4 +1,5 @@
 import { IScheduleItem, Route } from "../interfaces";
+
 import isPublicHoliday from "./publicHolidays";
 
 export default function checkCurrentFlow(route: Route): IScheduleItem | undefined {

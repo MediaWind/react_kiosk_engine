@@ -221,18 +221,30 @@ export enum TicketDataActionType {
 	CLEARDATA = "cleardata"
 }
 
-//* ---------------- *//
-//* Error management *//
-//* ---------------- *//
+//* ------------- *//
+//* Error reducer *//
+//* ------------- *//
+export interface IErrorState {
+	hasError: boolean;
+	errorCode: ERROR_CODE;
+	message: string;
+}
+
+export interface IErrorAction {
+	type: ERROR_ACTION_TYPE;
+	payload: IErrorState | undefined;
+}
+
+export enum ERROR_ACTION_TYPE {
+	SETERROR = "setError",
+	CLEARERROR = "clearError"
+}
+
 export enum ERROR_CODE {
 	/**
 	 * 200: All good!
 	 */
 	A200 = "200",
-	/**
-	 * 400-A: No user data defined
-	 */
-	A400 = "400-A",
 	/**
 	 * 500-A: Something went wrong when trying to print ticket
 	 */

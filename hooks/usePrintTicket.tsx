@@ -4,63 +4,23 @@ import { Variables } from "../../variables";
 
 import Printer from "../../core/client/printer";
 
-import { ERROR_CODE, IFlow, ITicketDataState } from "../interfaces";
+import { ERROR_ACTION_TYPE, ERROR_CODE, IErrorAction, IFlow, ITicketDataState } from "../interfaces";
 
 import getTicketingURL from "../utils/getTicketingURL";
 
-export interface ICustomError {
-	hasError: boolean;
-	errorCode: ERROR_CODE;
-	message?: string;
-	clearError: CallableFunction;
-}
-
-export default function usePrintTicket(): [CallableFunction, boolean, ICustomError, CallableFunction, CallableFunction] {
+export default function usePrintTicket(dispatchError: React.Dispatch<IErrorAction>): [CallableFunction, boolean, CallableFunction] {
 	const [isPrinting, setIsPrinting] = useState<boolean>(false);
-	const [hasError, setHasError] = useState<boolean>(false);
-	const [errorCode, setErrorCode] = useState<ERROR_CODE>(ERROR_CODE.A200);
-	const [message, setMessage] = useState<string>("");
-
-	function clearError() {
-		setHasError(false);
-		setErrorCode(ERROR_CODE.A200);
-		setMessage("");
-	}
-
-	async function checkPrinterStatus() {
-		if (!Variables.PREVIEW) {
-			const response = await fetch("http://localhost:5000/?random=" + Math.random() + "&action&infos_printer");
-			const data = await response.json();
-
-			if (data.connected == "yes") {
-				if (data.status == undefined || data.status.status == 0) {
-					setHasError(true);
-
-					if (data.status.array_alerts.includes("No paper")) {
-						setErrorCode(ERROR_CODE.C503);
-						setMessage("No paper in the printer");
-					} else {
-						setErrorCode(ERROR_CODE.D503);
-						setMessage("Printer error: " + data.status.array_alerts.join(", "));
-					}
-				} else {
-					setHasError(false);
-					setErrorCode(ERROR_CODE.A200);
-					setMessage("");
-				}
-			} else {
-				setHasError(true);
-				setErrorCode(ERROR_CODE.B503);
-				setMessage("Printer is not connected");
-			}
-		}
-	}
 
 	async function printTicket(ticketState: ITicketDataState, flow: IFlow) {
 		if(!navigator.onLine) {
-			setHasError(true);
-			setErrorCode(ERROR_CODE.A503);
-			setMessage("Kiosk is not connected to internet");
+			dispatchError({
+				type: ERROR_ACTION_TYPE.SETERROR,
+				payload: {
+					hasError: true,
+					errorCode: ERROR_CODE.A503,
+					message: "Kiosk is not connected to internet",
+				},
+			});
 			return;
 		}
 
@@ -92,9 +52,15 @@ export default function usePrintTicket(): [CallableFunction, boolean, ICustomErr
 					console.log(error);
 
 					setIsPrinting(false);
-					setHasError(true);
-					setErrorCode(ERROR_CODE.A500);
-					setMessage("Could not print ticket");
+
+					dispatchError({
+						type: ERROR_ACTION_TYPE.SETERROR,
+						payload: {
+							hasError: true,
+							errorCode: ERROR_CODE.A500,
+							message: "Could not print ticket",
+						},
+					});
 				}
 			} else {
 				if (Variables.PREVIEW) {
@@ -103,16 +69,27 @@ export default function usePrintTicket(): [CallableFunction, boolean, ICustomErr
 					}, 5000);
 				} else {
 					setIsPrinting(false);
-					setHasError(true);
 
 					switch (data.status_reason) {
 						case "service_closed":
-							setErrorCode(ERROR_CODE.C500);
-							setMessage("Service is closed");
+							dispatchError({
+								type: ERROR_ACTION_TYPE.SETERROR,
+								payload: {
+									hasError: true,
+									errorCode: ERROR_CODE.C500,
+									message: "Service is closed",
+								},
+							});
 							break;
 						default:
-							setErrorCode(ERROR_CODE.B500);
-							setMessage("Something went wrong");
+							dispatchError({
+								type: ERROR_ACTION_TYPE.SETERROR,
+								payload: {
+									hasError: true,
+									errorCode: ERROR_CODE.B500,
+									message: "Something went wrong when trying to fetch ticket PDF",
+								},
+							});
 							break;
 					}
 				}
@@ -120,17 +97,28 @@ export default function usePrintTicket(): [CallableFunction, boolean, ICustomErr
 		} catch (error) {
 			console.log(error);
 			setIsPrinting(false);
-			setHasError(true);
-			setErrorCode(ERROR_CODE.B500);
-			setMessage("Could not fetch ticket PDF");
+
+			dispatchError({
+				type: ERROR_ACTION_TYPE.SETERROR,
+				payload: {
+					hasError: true,
+					errorCode: ERROR_CODE.B500,
+					message: "Could not fetch ticket PDF",
+				},
+			});
 		}
 	}
 
 	async function signInPatient(ticketState: ITicketDataState, flow: IFlow) {
 		if(!navigator.onLine) {
-			setHasError(true);
-			setErrorCode(ERROR_CODE.A503);
-			setMessage("Kiosk is not connected to internet");
+			dispatchError({
+				type: ERROR_ACTION_TYPE.SETERROR,
+				payload: {
+					hasError: true,
+					errorCode: ERROR_CODE.A503,
+					message: "Kiosk is not connected to internet",
+				},
+			});
 			return;
 		}
 
@@ -143,22 +131,20 @@ export default function usePrintTicket(): [CallableFunction, boolean, ICustomErr
 			console.log("🚀 ~ file: usePrintTicket.tsx:174 ~ signInPatient ~ response:", response);
 		} catch (err) {
 			console.log(err);
-			setHasError(true);
-			setErrorCode(ERROR_CODE.B500);
-			setMessage("Could not save data");
+			dispatchError({
+				type: ERROR_ACTION_TYPE.SETERROR,
+				payload: {
+					hasError: true,
+					errorCode: ERROR_CODE.B500,
+					message: "Could not save data",
+				},
+			});
 		}
 	}
 
 	return [
 		printTicket,
 		isPrinting,
-		{
-			hasError: hasError,
-			errorCode: errorCode,
-			message: message,
-			clearError: clearError,
-		},
-		signInPatient,
-		checkPrinterStatus
+		signInPatient
 	];
 }

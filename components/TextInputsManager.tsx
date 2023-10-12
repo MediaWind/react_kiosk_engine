@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 
 import { IInputContent, IInputField, IMedia, TicketDataActionType } from "../interfaces";
 
+import { useTicketDataContext } from "../contexts/ticketDataContext";
+
 import TextInput from "./ui/inputs/TextInput";
 import CustomKeyboard, { IKeyboard, KeyAction } from "./ui/keyboard/CustomKeyboard";
-import { useTicketDataContext } from "../contexts/ticketDataContext";
 
 interface ITextInputsManagerProps {
 	inputs: IMedia[]
