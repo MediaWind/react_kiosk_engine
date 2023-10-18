@@ -19,7 +19,6 @@ import errorReducer, { initialErrorState } from "../reducers/errorReducer";
 
 import usePrintTicket from "../hooks/usePrintTicket";
 
-import getRoute from "../utils/getRoute";
 import checkCurrentFlow from "../utils/checkCurrentFlow";
 import checkPrinterStatus from "../utils/checkPrinterStatus";
 
@@ -28,11 +27,14 @@ import LoadingScreen from "../components/ui/LoadingScreen";
 import Debugger from "../components/debug/Debugger";
 import DisplayError from "../components/ui/DisplayError";
 
-function Engine(): JSX.Element {
+interface IEngineProps {
+	route: Route
+}
+
+function Engine(props: IEngineProps): JSX.Element {
 	const [eIdInserted, eIdReaded, eIdRemoved] = useSharedVariables("eid_inserted", "eid_readed", "eid_removed");
 	const [eidStatus, eIdData] = useEId(eIdInserted, eIdReaded, eIdRemoved);
 
-	const [selectedRoute, setSelectedRoute] = useState<Route | null>(null);
 	const [language, setLanguage] = useState<LANGUAGE | undefined>();
 
 	const [currentFlow, setCurrentFlow] = useState<IFlow>();
@@ -47,12 +49,6 @@ function Engine(): JSX.Element {
 	const [error, dispatchError] = useReducer(errorReducer, initialErrorState);
 
 	const [printTicket, isPrinting, signInPatient] = usePrintTicket(dispatchError);
-
-	useEffect(() => {
-		getRoute().then((route) => {
-			setSelectedRoute(route);
-		});
-	},[]);
 
 	useEffect(() => {
 		if (Variables.C_ORIENTATION() === ORIENTATION.HORIZONTAL) {
@@ -110,12 +106,12 @@ function Engine(): JSX.Element {
 	//* Checks flow every 5 to 6 minutes *//
 	//* -------------------------------- *//
 	useEffect(() => {
-		if (selectedRoute) {
+		if (props.route) {
 			const updateFlow = () => {
-				const currentScheduleItem = checkCurrentFlow(selectedRoute);
+				const currentScheduleItem = checkCurrentFlow(props.route);
 
 				if (currentScheduleItem) {
-					const flow = selectedRoute.flows.find((flow) => flow.id === currentScheduleItem.id);
+					const flow = props.route.flows.find((flow) => flow.id === currentScheduleItem.id);
 					setFlaggedFlow(flow);
 				}
 			};
@@ -126,7 +122,7 @@ function Engine(): JSX.Element {
 				updateFlow();
 			}, [5 * 60 * 1000, 6 * 60 * 1000]);
 		}
-	}, [selectedRoute]);
+	}, [props.route]);
 
 	//* ------------------------------------------- *//
 	//* Checks printer status every 5 to 10 seconds *//
@@ -227,7 +223,7 @@ function Engine(): JSX.Element {
 									/>
 								)}
 
-								{error.hasError && <DisplayError route={selectedRoute} />}
+								{error.hasError && <DisplayError route={props.route} />}
 
 								{isLoading && <LoadingScreen />}
 
@@ -244,7 +240,7 @@ function Engine(): JSX.Element {
 			</div>
 		);
 	} else {
-		return <DisplayError route={selectedRoute} />;
+		return <DisplayError route={props.route} />;
 	}
 }
 
