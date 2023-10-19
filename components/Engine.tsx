@@ -29,6 +29,7 @@ import DisplayError from "../components/ui/DisplayError";
 
 interface IEngineProps {
 	route: Route
+	debug?: boolean
 }
 
 function Engine(props: IEngineProps): JSX.Element {
@@ -208,8 +209,7 @@ function Engine(props: IEngineProps): JSX.Element {
 						<FlowContext.Provider value={{ flow: currentFlow, setReload: setReadyToChangeFlow, }}>
 							<ErrorContext.Provider value={{ errorState: error, dispatchErrorState: dispatchError, }}>
 
-								{Variables.W_DEBUG && (
-								//! Don't forget to false debug variable before prod
+								{props.debug && (
 									<Debugger
 										eidData={ticketData.eIdDatas}
 										messages={[
