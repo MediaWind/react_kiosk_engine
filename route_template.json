@@ -205,5 +205,32 @@
 				}
 			]
 		}
-	]
+	],
+
+	"errorManagement": {
+		"genericError": {
+			"default": "required path",
+			"french": "optional path",
+			"dutch": "optional path",
+			"english": "optional path"
+		},
+		"noPaper": {
+			"default": "required path",
+			"french": "optional path",
+			"dutch": "optional path",
+			"english": "optional path"
+		},
+		"notConnectedToInternet": {
+			"default": "required path",
+			"french": "optional path",
+			"dutch": "optional path",
+			"english": "optional path"
+		},
+		"serviceClosed": {
+			"default": "required path",
+			"french": "optional path",
+			"dutch": "optional path",
+			"english": "optional path"
+		}
+	}
 }
