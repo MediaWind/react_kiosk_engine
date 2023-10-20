@@ -165,7 +165,7 @@
 								"name": "string",
 								"type": "button|text|number|cardReader",
 								"action": {
-									"type": "printticket|savedata|nextpage|previouspage|...",
+									"type": "printticket|savedata|nextpage|previouspage|changelanguage|...",
 
 									"navigateTo": "UUID",
 
