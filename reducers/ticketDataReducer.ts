@@ -14,7 +14,6 @@ export default function ticketDataReducer(ticketData: ITicketDataState, action: 
 		case TicketDataActionType.EIDUPDATE: return {
 			...ticketData,
 			eIdDatas: action.payload as eIdData,
-			// readyToPrint: ticketData.service !== undefined,
 		};
 		case TicketDataActionType.EIDLISTENINGUPDATE: return {
 			...ticketData,
@@ -27,20 +26,14 @@ export default function ticketDataReducer(ticketData: ITicketDataState, action: 
 		case TicketDataActionType.INPUTTEXTUPDATE: return {
 			...ticketData,
 			textInputDatas: [...ticketData.textInputDatas, action.payload as IInputField],
-			// readyToPrint: ticketData.service !== undefined,
 		};
 		case TicketDataActionType.SERVICEUPDATE: return {
 			...ticketData,
 			service: action.payload as IService,
-			// readyToPrint: (ticketData.eIdDatas !== null || ticketData.textInputDatas.length > 0),
 		};
 		case TicketDataActionType.LANGUAGEUPDATE: return {
 			...ticketData,
 			language: action.payload as LANGUAGE,
-		};
-		case TicketDataActionType.READYTOPRINTUPDATE: return {
-			...ticketData,
-			readyToPrint: action.payload as boolean,
 		};
 		case TicketDataActionType.CLEARDATA: return initialState;
 		default: return {
@@ -55,6 +48,5 @@ export const initialState: ITicketDataState = {
 	pageIsListeningToEId: true,
 	eIdRead: false,
 	service: undefined,
-	readyToPrint: false,
 	language: undefined,
 };

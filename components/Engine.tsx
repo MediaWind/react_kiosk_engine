@@ -43,9 +43,6 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [readyToChangeFlow, setReadyToChangeFlow] = useState<boolean>(true);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 
-	const [printRequested, setPrintRequested] = useState<boolean>(false);
-	const [signInRequested, setSignInRequested] = useState<boolean>(false);
-
 	const [ticketData, dispatchTicketState] = useReducer(ticketDataReducer, initialState);
 	const [error, dispatchError] = useReducer(errorReducer, initialErrorState);
 
@@ -144,26 +141,6 @@ function Engine(props: IEngineProps): JSX.Element {
 		}
 	}, [error.hasError]);
 
-	//* --------------------------- *//
-	//* Manages print/save requests *//
-	//* --------------------------- *//
-	useEffect(() => {
-		dispatchTicketState({
-			type: TicketDataActionType.READYTOPRINTUPDATE,
-			payload: true,
-		});
-
-		if (printRequested) {
-			printTicket(ticketData, currentFlow);
-		}
-
-		if (signInRequested) {
-			signInPatient(ticketData, currentFlow);
-		}
-
-		resetAllData();
-	}, [printRequested, signInRequested]);
-
 	//* --------------------------------------------------------------------------- *//
 	//* Flags new flow before changing it to prevent change during user interaction *//
 	//* --------------------------------------------------------------------------- *//
@@ -185,16 +162,14 @@ function Engine(props: IEngineProps): JSX.Element {
 
 	//* ----- Handlers ----- *//
 	const printHandler = () => {
-		setPrintRequested(true);
+		printTicket(ticketData, currentFlow);
 	};
 
 	const signInHandler = () => {
-		setSignInRequested(true);
+		signInPatient(ticketData, currentFlow);
 	};
 
 	const resetAllData = () => {
-		setPrintRequested(false);
-		setSignInRequested(false);
 		dispatchTicketState({
 			type: TicketDataActionType.CLEARDATA,
 			payload: undefined,

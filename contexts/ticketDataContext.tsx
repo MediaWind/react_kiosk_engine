@@ -14,7 +14,6 @@ export const TicketDataContext = createContext<ticketDataContent>({
 		eIdRead: false,
 		textInputDatas: [],
 		service: undefined,
-		readyToPrint: false,
 		language: undefined,
 	},
 	dispatchTicketState: () => null,

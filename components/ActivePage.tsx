@@ -43,12 +43,12 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 						type: TicketDataActionType.SERVICEUPDATE,
 						payload: page.navigateToAfter.service as IService,
 					});
+				}
 
-					if (page.navigateToAfter.printTicket) {
-						onPrint();
-					} else {
-						onSignIn();
-					}
+				if (page.navigateToAfter.printTicket) {
+					onPrint();
+				} else {
+					onSignIn();
 				}
 
 				onChangePage(page.navigateToAfter.navigateTo);

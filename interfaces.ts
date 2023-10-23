@@ -217,7 +217,6 @@ export interface ITicketDataState {
 	pageIsListeningToEId: boolean,
 	textInputDatas: IInputField[],
 	service: IService | undefined,
-	readyToPrint: boolean,
 	language: LANGUAGE | undefined
 }
 
