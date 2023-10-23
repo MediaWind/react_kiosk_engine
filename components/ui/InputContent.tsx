@@ -13,6 +13,7 @@ interface IInputContentProps {
 	onNavigate: CallableFunction
 	onPrint: CallableFunction
 	onBackPage: CallableFunction
+	onHomePage: CallableFunction
 }
 
 export default function InputContent(props: IInputContentProps): JSX.Element {
@@ -21,6 +22,7 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 		onNavigate,
 		onPrint,
 		onBackPage,
+		onHomePage,
 	} = props;
 
 	const { ticketState, dispatchTicketState, } = useTicketDataContext();
@@ -61,6 +63,9 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 					break;
 				case ActionType.PREVIOUSPAGE:
 					onBackPage();
+					break;
+				case ActionType.HOMEPAGE:
+					onHomePage();
 					break;
 				case ActionType.SAVEDATA:
 					dispatchTicketState({

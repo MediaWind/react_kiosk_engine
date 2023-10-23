@@ -84,14 +84,10 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 			});
 
 			setReload(true);
+
+			setLanguage(undefined);
 		} else {
 			setReload(false);
-		}
-	}, [router]);
-
-	useEffect(() => {
-		if (router.slice(-1)[0] === homePage) {
-			setLanguage(undefined);
 		}
 	}, [router]);
 
@@ -121,6 +117,10 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 		});
 	};
 
+	const homePageHandler = () => {
+		setRouter([homePage]);
+	};
+
 	const signInHandler = () => {
 		onSignIn();
 	};
@@ -138,6 +138,7 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 				onPrint={printHandler}
 				onBackPage={backPageHandler}
 				onSignIn={signInHandler}
+				onHomePage={homePageHandler}
 			/>
 		</>
 	);

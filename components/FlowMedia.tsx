@@ -10,6 +10,7 @@ interface IFlowMediaProps {
 	onNavigate: CallableFunction
 	onPrint: CallableFunction
 	onBackPage: CallableFunction
+	onHomePage: CallableFunction
 }
 
 export default function FlowMedia(props: IFlowMediaProps): JSX.Element {
@@ -19,6 +20,7 @@ export default function FlowMedia(props: IFlowMediaProps): JSX.Element {
 		onNavigate,
 		onPrint,
 		onBackPage,
+		onHomePage,
 	} = props;
 
 	const navigationHandler = (pageID: string) => {
@@ -31,6 +33,10 @@ export default function FlowMedia(props: IFlowMediaProps): JSX.Element {
 
 	const backPageHandler = () => {
 		onBackPage();
+	};
+
+	const homePageHandler = () => {
+		onHomePage();
 	};
 
 	if (media.type === MediaType.IMAGE) {
@@ -48,6 +54,7 @@ export default function FlowMedia(props: IFlowMediaProps): JSX.Element {
 				onNavigate={navigationHandler}
 				onPrint={printHandler}
 				onBackPage={backPageHandler}
+				onHomePage={homePageHandler}
 			/>
 		);
 	}

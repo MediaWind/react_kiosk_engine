@@ -14,6 +14,7 @@ interface IActivePageProps {
 	onPrint: CallableFunction
 	onBackPage: CallableFunction
 	onSignIn: CallableFunction
+	onHomePage: CallableFunction
 }
 
 export default function ActivePage(props: IActivePageProps): JSX.Element {
@@ -23,6 +24,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 		onPrint,
 		onBackPage,
 		onSignIn,
+		onHomePage,
 	} = props;
 
 	const { dispatchTicketState, } = useTicketDataContext();
@@ -86,6 +88,10 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 		onBackPage();
 	};
 
+	const homePageHandler = () => {
+		onHomePage();
+	};
+
 	const textInputsReadyHandler = (action: IInputAction) => {
 		const nextPageId = action.navigateTo;
 
@@ -107,6 +113,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 							onNavigate={changePageHandler}
 							onPrint={printHandler}
 							onBackPage={backPageHandler}
+							onHomePage={homePageHandler}
 						/>
 					);
 				})

@@ -148,6 +148,7 @@ export interface IInputAction {
 export enum ActionType {
 	NEXTPAGE = "nextpage",
 	PREVIOUSPAGE = "previouspage",
+	HOMEPAGE = "homepage",
 	PRINTTICKET = "printticket",
 	SAVEDATA = "savedata",
 	CHANGELANGUAGE = "changelanguage",
