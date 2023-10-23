@@ -212,7 +212,7 @@
 								"name": "string",
 								"type": "button|text|number|cardReader",
 								"action": {
-									"type": "printticket|savedata|nextpage|previouspage|changelanguage|...",
+									"type": "printticket|savedata|saveservice|nextpage|previouspage|changelanguage|...",
 
 									"navigateTo": "UUID",
 

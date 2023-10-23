@@ -68,6 +68,7 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 					onHomePage();
 					break;
 				case ActionType.SAVEDATA:
+				case ActionType.SAVESERVICE:
 					dispatchTicketState({
 						type: TicketDataActionType.SERVICEUPDATE,
 						payload: action.service as IService,
