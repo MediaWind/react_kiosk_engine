@@ -173,6 +173,8 @@ function Engine(props: IEngineProps): JSX.Element {
 		if (signInRequested) {
 			signInPatient(ticketData, currentFlow);
 		}
+
+		resetAllData();
 	}, [printRequested, signInRequested]);
 
 	//* ----- Handlers ----- *//
