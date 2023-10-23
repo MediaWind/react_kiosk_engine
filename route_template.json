@@ -219,7 +219,9 @@
 									"service": {
 										"serviceID": 10,
 										"priority": 0
-									}
+									},
+
+									"language": "fr"
 								},
 
 								"placeholder": "placeholder",
