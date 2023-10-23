@@ -11,6 +11,8 @@ import { IFlow, IPage, TicketDataActionType } from "../interfaces";
 
 import ActivePage from "./ActivePage";
 import Debugger from "./debug/Debugger";
+import Date from "./ui/Date";
+import Time from "./ui/Time";
 
 interface IFlowDispatcherProps {
 	onPrint: CallableFunction
@@ -126,6 +128,10 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 	return (
 		<>
 			{(Variables.W_DEBUG && ticketState.eIdRead) && <Debugger messages={["eidread from page router"]} />}
+
+			{flow.displayDate && <Date format={flow.displayDate.format} style={flow.displayDate.style} />}
+			{flow.displayTime && <Time format={flow.displayTime.format} style={flow.displayTime.style} />}
+
 			<ActivePage
 				page={router.slice(-1)[0]}
 				onChangePage={changePageHandler}

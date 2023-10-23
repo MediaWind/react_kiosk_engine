@@ -41,6 +41,8 @@ export interface IFlow {
 	navigateToHomePageAfter?: number;
 	pages: IPage[];
 	ticketParameters?: ITicketParameters;
+	displayDate?: IDateTime;
+	displayTime?: IDateTime;
 }
 
 export interface ITicketParameters {
@@ -51,6 +53,11 @@ export interface ITicketParameters {
 	email?: string;
 	comment?: string;
 	id_userAgent?: string;
+}
+
+export interface IDateTime {
+	format?: string
+	style: IStyles
 }
 
 export interface IErrorManagement {
@@ -164,22 +171,29 @@ export enum InputType {
 }
 
 export interface IStyles {
+	all?: "initial" | "inherit" | "unset" | "revert";
+
 	top: string;
 	left: string;
 	bottom?: string;
 	right?: string;
+
 	width: string;
 	height: string;
+
 	padding?: string;
 	margin?: string;
+
 	borderWidth?: string;
 	borderStyle?: string;
 	borderColor?: string;
 	borderRadius?: string;
-	all?: "initial" | "inherit" | "unset" | "revert";
+
 	cursor?: string;
 
 	backgroundColor?: string;
+
+	fontFamily?: string;
 	textColor?: string;
 	fontSize?: string;
 	textAlign?: "left" | "right" | "center";

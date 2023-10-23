@@ -1,5 +1,7 @@
 import { IStyles } from "../../../interfaces";
 
+import getFontSize from "../../../utils/getFontSize";
+
 interface ITextInputProps {
 	id: string
 	value: string
@@ -8,18 +10,6 @@ interface ITextInputProps {
 	onFocus: CallableFunction
 	placeholder: string
 	styles: IStyles
-}
-
-function getFontSize(string: string): string {
-	const match = string.match(/([0-9]*[.])?[0-9]+/g);
-
-	if (match) {
-		const value = parseFloat(match[0].toString());
-
-		return `${value / 100 * 0.6753}rem`;
-	} else {
-		return "";
-	}
 }
 
 export default function TextInput(props: ITextInputProps) {
