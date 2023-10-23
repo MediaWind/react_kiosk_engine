@@ -46,6 +46,9 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [ticketData, dispatchTicketState] = useReducer(ticketDataReducer, initialState);
 	const [error, dispatchError] = useReducer(errorReducer, initialErrorState);
 
+	const [printRequested, setPrintRequested] = useState<boolean>(false);
+	const [signInRequested, setSignInRequested] = useState<boolean>(false);
+
 	const [printTicket, isPrinting, signInPatient] = usePrintTicket(dispatchError);
 
 	useEffect(() => {
@@ -160,16 +163,30 @@ function Engine(props: IEngineProps): JSX.Element {
 		});
 	}, [language]);
 
+	//* ------------------- *//
+	//* Send print requests *//
+	//* ------------------- *//
+	useEffect(() => {
+		if (printRequested) {
+			printTicket(ticketData, currentFlow);
+		}
+		if (signInRequested) {
+			signInPatient(ticketData, currentFlow);
+		}
+	}, [printRequested, signInRequested]);
+
 	//* ----- Handlers ----- *//
 	const printHandler = () => {
-		printTicket(ticketData, currentFlow);
+		setPrintRequested(true);
 	};
 
 	const signInHandler = () => {
-		signInPatient(ticketData, currentFlow);
+		setSignInRequested(true);
 	};
 
 	const resetAllData = () => {
+		setPrintRequested(false);
+		setSignInRequested(false);
 		dispatchTicketState({
 			type: TicketDataActionType.CLEARDATA,
 			payload: undefined,
