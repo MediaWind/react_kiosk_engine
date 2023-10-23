@@ -68,11 +68,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 				return false;
 			});
 
-			if (textInputMedias.length > 0) {
-				setTextInputs(textInputMedias);
-			} else {
-				setTextInputs([]);
-			}
+			setTextInputs(textInputMedias);
 		}
 	}, [page]);
 
