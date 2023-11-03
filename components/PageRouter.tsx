@@ -47,8 +47,14 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 	const { ticketState, dispatchTicketState, } = useTicketDataContext();
 	const { errorState, } = useErrorContext();
 
-	const homePage = getHomePage(flow);
+	// const homePage = getHomePage(flow);
+	const [homePage, setHomePage] = useState<IPage>(getHomePage(flow));
 	const [router, setRouter] = useState<IPage[]>([homePage]);
+
+	useEffect(() => {
+		setHomePage(getHomePage(flow));
+		setRouter([getHomePage(flow)]);
+	}, [flow]);
 
 	useEffect(() => {
 		if(!errorState.hasError) {

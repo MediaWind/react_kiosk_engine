@@ -103,9 +103,9 @@ function Engine(props: IEngineProps): JSX.Element {
 		}
 	}, [ticketData.pageIsListeningToEId, eIdData, eidStatus]);
 
-	//* -------------------------------- *//
-	//* Checks flow every 5 to 6 minutes *//
-	//* -------------------------------- *//
+	//* ------------------------ *//
+	//* Checks flow every minute *//
+	//* ------------------------ *//
 	useEffect(() => {
 		if (props.route) {
 			const updateFlow = () => {
@@ -119,9 +119,9 @@ function Engine(props: IEngineProps): JSX.Element {
 
 			updateFlow();
 
-			setIntervalRange(() => {
+			setInterval(() => {
 				updateFlow();
-			}, [5 * 60 * 1000, 6 * 60 * 1000]);
+			}, 60 * 1000);
 		}
 	}, [props.route]);
 
