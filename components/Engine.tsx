@@ -129,11 +129,16 @@ function Engine(props: IEngineProps): JSX.Element {
 	//* Checks printer status every 5 to 10 seconds *//
 	//* ------------------------------------------- *//
 	useEffect(() => {
-		checkPrinterStatus(dispatchError);
-		setIntervalRange(() => {
-			checkPrinterStatus(dispatchError);
+		// checkPrinterStatus(dispatchError, error.errorCode);
+		const delay = setIntervalRange(() => {
+			//TODO separate printer status error from "regular" error
+			checkPrinterStatus(dispatchError, error.errorCode);
 		}, [5 * 1000, 10 * 1000]);
-	}, []);
+
+		return () => {
+			clearInterval(delay);
+		};
+	}, [error]);
 
 	//* ----------------------------------------- *//
 	//* Makes sure any error wipe all saved datas *//
@@ -212,7 +217,7 @@ function Engine(props: IEngineProps): JSX.Element {
 											`eidread: ${ticketData.eIdRead}`,
 											`page is listening to eid: ${ticketData.pageIsListeningToEId}`,
 											isPrinting ? "Printing!" : "",
-											error.hasError ? "Error!" : ""
+											error.hasError ? `Error ${error.errorCode}: ${error.message}` : ""
 										]}
 									/>
 								)}
