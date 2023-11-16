@@ -57,7 +57,7 @@ export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 	if (route?.errorManagement) {
 		const image = getErrorImage(route.errorManagement, errorState.errorCode);
 		return (
-			<div className={styles.error_management_main}>
+			<div className={styles.error_management_main} onClick={clickHandler}>
 				{image === route.errorManagement.genericError &&
 					<div className={styles.error_management_message}>
 						<p>{errorState.message ? errorState.message : "An unexpected error occured"}</p>

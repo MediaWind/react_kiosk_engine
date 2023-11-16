@@ -33,7 +33,7 @@ export default function Time(props: ITimeProps) {
 			style= {{
 				all: style.all,
 				position: "absolute",
-				zIndex: 10,
+				zIndex: 5,
 
 				top: style.top,
 				left: style.left,
