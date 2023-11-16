@@ -13,7 +13,11 @@ export default function getTicketingURL(ticketState: ITicketDataState, flow: IFl
 	`;
 
 	if (ticketState.eIdDatas != null) {
-		params += `&firstname=${encodeURIComponent(ticketState.eIdDatas.firstName)}&lastname=${encodeURIComponent(ticketState.eIdDatas.lastName)}`;
+		params += `
+		&firstname=${encodeURIComponent(ticketState.eIdDatas.firstName)}
+		&lastname=${encodeURIComponent(ticketState.eIdDatas.lastName)}
+		&registre_national=${encodeURIComponent(ticketState.eIdDatas.nationalNumber)}
+		`;
 	} else if (ticketState.textInputDatas) {
 		const firstname = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.firstname);
 		const lastname = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.lastname);
