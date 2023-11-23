@@ -7,7 +7,7 @@ import useSharedVariables from "../../core/hooks/useSharedVariables";
 import useEId, { eIdData, eIdStatus } from "../../core/hooks/useEId";
 import { setIntervalRange } from "../../core/customInterval";
 
-import { IFlow, LANGUAGE, Route, TicketDataActionType } from "../interfaces";
+import { ERROR_ACTION_TYPE, ERROR_CODE, IFlow, LANGUAGE, Route, TicketDataActionType } from "../interfaces";
 
 import { TicketDataContext } from "../contexts/ticketDataContext";
 import { FlowContext } from "../contexts/flowContext";
@@ -139,6 +139,30 @@ function Engine(props: IEngineProps): JSX.Element {
 			clearInterval(delay);
 		};
 	}, [error]);
+
+	useEffect(() => {
+		const delay = setIntervalRange(() => {
+			if (!navigator.onLine) {
+				dispatchError({
+					type: ERROR_ACTION_TYPE.SETERROR,
+					payload: {
+						hasError: true,
+						errorCode: ERROR_CODE.A503,
+						message: "Kiosk is not connected to internet",
+					},
+				});
+			} else {
+				dispatchError({
+					type: ERROR_ACTION_TYPE.CLEARERROR,
+					payload: undefined,
+				});
+			}
+		}, [5 * 1000, 10 * 1000]);
+
+		return () => {
+			clearInterval(delay);
+		};
+	}, []);
 
 	//* ----------------------------------------- *//
 	//* Makes sure any error wipe all saved datas *//
