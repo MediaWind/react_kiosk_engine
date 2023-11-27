@@ -60,7 +60,6 @@ export default function TextInput(props: ITextInputProps) {
 					backgroundColor: styles.backgroundColor ?? "#ffffff",
 
 					caretColor: "auto",
-					cursor: styles.cursor,
 				}}
 			/>
 		</>

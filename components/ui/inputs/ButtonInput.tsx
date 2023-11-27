@@ -37,8 +37,6 @@ export default function ButtonInput(props: IButtonInputProps) {
 
 				borderColor: styles.borderColor,
 				borderRadius: styles.borderRadius,
-
-				cursor: styles.cursor,
 			}}
 		></button>
 	);

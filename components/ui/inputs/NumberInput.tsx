@@ -27,8 +27,6 @@ export default function NumberInput(props: INumberInputProps) {
 
 				borderColor: styles.borderColor,
 				borderRadius: styles.borderRadius,
-
-				cursor: styles.cursor,
 			}}
 		/>
 	);

@@ -51,8 +51,6 @@ export default function Time(props: ITimeProps) {
 				borderColor: style.borderColor,
 				borderRadius: style.borderRadius,
 
-				cursor: style.cursor,
-
 				backgroundColor: style.backgroundColor,
 			}}
 		>

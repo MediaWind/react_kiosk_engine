@@ -191,8 +191,6 @@ export interface IStyles {
 	borderColor?: string;
 	borderRadius?: string;
 
-	cursor?: string;
-
 	backgroundColor?: string;
 
 	fontFamily?: string;

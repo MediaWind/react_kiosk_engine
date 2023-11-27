@@ -48,8 +48,6 @@ export default function Date(props: IDateProps): JSX.Element {
 				borderColor: style.borderColor,
 				borderRadius: style.borderRadius,
 
-				cursor: style.cursor,
-
 				backgroundColor: style.backgroundColor,
 			}}
 		>

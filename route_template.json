@@ -92,7 +92,6 @@
 					"borderColor": "css property",
 					"borderRadius": "css property",
 					"all": "css property",
-					"cursor": "css property",
 					"backgroundColor": "css property",
 					"textColor": "css property",
 					"fontSize": "css property",
@@ -115,7 +114,6 @@
 					"borderColor": "css property",
 					"borderRadius": "css property",
 					"all": "css property",
-					"cursor": "css property",
 					"backgroundColor": "css property",
 					"textColor": "css property",
 					"fontSize": "css property",
@@ -170,7 +168,6 @@
 									"borderColor": "css property",
 									"borderRadius": "css property",
 									"all": "css property",
-									"cursor": "css property",
 									"backgroundColor": "css property",
 									"textColor": "css property",
 									"fontSize": "css property",
@@ -200,8 +197,7 @@
 									"borderStyle": "css property",
 									"borderColor": "css property",
 									"borderRadius": "css property",
-									"all": "css property",
-									"cursor": "css property"
+									"all": "css property"
 								}
 							}
 						},
@@ -245,8 +241,7 @@
 									"borderStyle": "css property",
 									"borderColor": "css property",
 									"borderRadius": "css property",
-									"all": "css property",
-									"cursor": "css property"
+									"all": "css property"
 								}
 							}
 						}
