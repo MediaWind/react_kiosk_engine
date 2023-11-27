@@ -64,7 +64,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 			return (
 				<div
 					className={styles.key_action}
-					onClick={shiftClickHandler}
+					onTouchEnd={shiftClickHandler}
 				>
 					{text ? text.defaultValue : <FontAwesomeIcon icon={faUp} style={{ color: "#999999", fontSize: "0.03rem", }} />}
 					<FontAwesomeIcon icon={faCircle} style={{ color: capslock ? "#00dd00" : "#999999", fontSize: "0.01rem", marginTop: "0.004rem", }} />
@@ -76,7 +76,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 			return (
 				<div
 					className={styles.key_action}
-					onClick={displaySpecCharsHandler}
+					onTouchEnd={displaySpecCharsHandler}
 				>
 					<p>{text ? text.defaultValue : "#+="}</p>
 					<FontAwesomeIcon icon={faCircle} style={{ color: specChars ? "#00dd00" : "#999999", fontSize: "0.01rem", marginTop: "0.004rem", }} />
@@ -88,7 +88,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 			return (
 				<div
 					className={styles.key_spacebar}
-					onClick={() => onChangeText(" ")}
+					onTouchEnd={() => onChangeText(" ")}
 				>
 					<p>{text ? text.defaultValue : "Space"}</p>
 				</div>
@@ -99,7 +99,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 			return (
 				<div
 					className={styles.key_action}
-					onClick={() => onChangeText("\n")}
+					onTouchEnd={() => onChangeText("\n")}
 					style={{
 						backgroundColor: style?.backgroundColor ? style.backgroundColor : "",
 						justifyContent: style?.textAlign ? style.textAlign : "",
@@ -121,7 +121,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 			return (
 				<div
 					className={styles.key_action}
-					onClick={() => {
+					onTouchEnd={() => {
 						if (onDeleteText) {
 							onDeleteText();
 						}
@@ -145,7 +145,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 			return (
 				<div
 					className={styles.key_action}
-					onClick={() => action()}
+					onTouchEnd={() => action()}
 					style={{
 						backgroundColor: style?.backgroundColor ? style.backgroundColor : "",
 						justifyContent: style?.textAlign ? style.textAlign : "",
@@ -176,7 +176,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 	return (
 		<div
 			className={styles.key_default}
-			onClick={changetexthandler}
+			onTouchEnd={changetexthandler}
 		>
 			<p>
 				{displayedText}

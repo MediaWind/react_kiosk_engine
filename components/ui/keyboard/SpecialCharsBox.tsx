@@ -35,7 +35,7 @@ export default function SpecialCharsBox(props: ISpecialCharsBoxProps): JSX.Eleme
 			style={{ display: visible ? "flex" : "none", }}
 		>
 			<div>
-				<FontAwesomeIcon id={styles.spec_chars_xmark} icon={faCircleXmark} onClick={closeBoxHandler} />
+				<FontAwesomeIcon id={styles.spec_chars_xmark} icon={faCircleXmark} onTouchEnd={closeBoxHandler} />
 				{chars.map((char, index) => {
 					return (
 						<Key
