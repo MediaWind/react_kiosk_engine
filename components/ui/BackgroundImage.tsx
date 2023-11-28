@@ -23,6 +23,9 @@ function getBackGroundImage(bgimg: IBackgroundImage): string {
 		case LANGUAGE.ENGLISH: {
 			return bgimg.english ? bgimg.english : bgimg.default;
 		}
+		case LANGUAGE.SPANISH: {
+			return bgimg.spanish ? bgimg.spanish : bgimg.default;
+		}
 		default: return bgimg.default;
 	}
 }
