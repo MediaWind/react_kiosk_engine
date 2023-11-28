@@ -14,6 +14,7 @@ export default function ButtonInput(props: IButtonInputProps) {
 
 	return (
 		<button
+			onClick={clickHandler}
 			onTouchEnd={clickHandler}
 			style={{
 				all: styles.all,

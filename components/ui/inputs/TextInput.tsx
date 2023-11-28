@@ -31,6 +31,7 @@ export default function TextInput(props: ITextInputProps) {
 				value={value}
 				readOnly
 				type="text"
+				onClick={() => onFocus(id)}
 				onTouchEnd={() => onFocus(id)}
 				style={{
 					all: styles.all,

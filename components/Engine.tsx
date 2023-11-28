@@ -1,5 +1,7 @@
 import { useEffect, useReducer, useState } from "react";
 
+import "../styles/index.scss";
+
 import { Variables } from "../../variables";
 
 import { ORIENTATION } from "../../core/variables";
@@ -71,8 +73,6 @@ function Engine(props: IEngineProps): JSX.Element {
 	//* Tracks eId Status *//
 	//* ----------------- *//
 	useEffect(() => {
-		console.log("eid status has changed to:", eidStatus);
-
 		if (ticketData.pageIsListeningToEId && eidStatus === eIdStatus.INSERTED) {
 			setIsLoading(true);
 		} else {
@@ -84,8 +84,6 @@ function Engine(props: IEngineProps): JSX.Element {
 	//* Tracks eId Data *//
 	//* --------------- *//
 	useEffect(() => {
-		console.log("current eid data is:", eIdData);
-
 		if (ticketData.pageIsListeningToEId && eIdData != null) {
 			dispatchTicketState({
 				type: TicketDataActionType.EIDUPDATE,
@@ -226,7 +224,13 @@ function Engine(props: IEngineProps): JSX.Element {
 
 	if (currentFlow) {
 		return (
-			<div onContextMenu={(e: any) => e.preventDefault()}>
+			<div
+				onContextMenu={(e: any) => e.preventDefault()}
+				style={{
+					// cursor: "none !important",
+					userSelect: "none",
+				}}
+			>
 				<LanguageContext.Provider value={{ language, setLanguage, }}>
 					<TicketDataContext.Provider value={{ ticketState: ticketData, dispatchTicketState, }}>
 						<FlowContext.Provider value={{ flow: currentFlow, setReload: setReadyToChangeFlow, }}>

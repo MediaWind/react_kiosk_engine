@@ -64,6 +64,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 			return (
 				<div
 					className={styles.key_action}
+					onClick={shiftClickHandler}
 					onTouchEnd={shiftClickHandler}
 				>
 					{text ? text.defaultValue : <FontAwesomeIcon icon={faUp} style={{ color: "#999999", fontSize: "0.03rem", }} />}
@@ -76,6 +77,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 			return (
 				<div
 					className={styles.key_action}
+					onClick={displaySpecCharsHandler}
 					onTouchEnd={displaySpecCharsHandler}
 				>
 					<p>{text ? text.defaultValue : "#+="}</p>
@@ -88,6 +90,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 			return (
 				<div
 					className={styles.key_spacebar}
+					onClick={() => onChangeText(" ")}
 					onTouchEnd={() => onChangeText(" ")}
 				>
 					<p>{text ? text.defaultValue : "Space"}</p>
@@ -99,6 +102,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 			return (
 				<div
 					className={styles.key_action}
+					onClick={() => onChangeText("\n")}
 					onTouchEnd={() => onChangeText("\n")}
 					style={{
 						backgroundColor: style?.backgroundColor ? style.backgroundColor : "",
@@ -121,6 +125,11 @@ export default function Key(props: IKeyProps): JSX.Element {
 			return (
 				<div
 					className={styles.key_action}
+					onClick={() => {
+						if (onDeleteText) {
+							onDeleteText();
+						}
+					}}
 					onTouchEnd={() => {
 						if (onDeleteText) {
 							onDeleteText();
@@ -145,6 +154,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 			return (
 				<div
 					className={styles.key_action}
+					onClick={() => action()}
 					onTouchEnd={() => action()}
 					style={{
 						backgroundColor: style?.backgroundColor ? style.backgroundColor : "",
@@ -176,6 +186,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 	return (
 		<div
 			className={styles.key_default}
+			onClick={changetexthandler}
 			onTouchEnd={changetexthandler}
 		>
 			<p>
