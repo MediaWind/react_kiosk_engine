@@ -14,7 +14,8 @@ export type Route = {
 export enum LANGUAGE {
 	FRENCH = "fr",
 	DUTCH = "nl",
-	ENGLISH = "en"
+	ENGLISH = "en",
+	SPANISH = "es"
 }
 
 export interface ISchedule {
@@ -94,6 +95,7 @@ export interface IBackgroundImage {
 	french?: string;
 	dutch?: string;
 	english?: string
+	spanish?: string;
 }
 
 export interface IMedia {
