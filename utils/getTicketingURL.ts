@@ -26,6 +26,7 @@ export default function getTicketingURL(ticketState: ITicketDataState, flow: IFl
 		const company = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.company);
 		const comment = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.comment);
 		const idUserAgent = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.id_userAgent);
+		const registre_national = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.registre_national);
 
 		params += `
 		&firstname=${encodeURIComponent(firstname?.value ?? "")}
@@ -35,6 +36,7 @@ export default function getTicketingURL(ticketState: ITicketDataState, flow: IFl
 		&company=${encodeURIComponent(company?.value ?? "")}
 		&comment=${encodeURIComponent(comment?.value ?? "")}
 		&id_userAgent=${encodeURIComponent(idUserAgent?.value ?? "")}
+		&registre_national=${encodeURIComponent(registre_national?.value ?? "")}
 		`;
 	}
 

@@ -290,7 +290,7 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 	} as IKeyboard;
 
 	useEffect(() => {
-		//* Extract text inputs from 'inputs" prop
+		//* Extract text inputs from "inputs" prop
 		const textInputs: IInputContent[] = [];
 		inputs.map((input) => {
 			textInputs.push(input.content as IInputContent);

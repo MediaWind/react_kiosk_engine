@@ -53,6 +53,7 @@ export interface ITicketParameters {
 	email?: string;
 	comment?: string;
 	id_userAgent?: string;
+	registre_national?: string;
 }
 
 export interface IDateTime {
