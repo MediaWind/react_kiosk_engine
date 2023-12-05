@@ -27,6 +27,7 @@ export default function ButtonInput(props: IButtonInputProps) {
 			onTouchEnd={clickHandler}
 			style={{
 				all: styles.all,
+				outline: "none",
 
 				position: "absolute",
 				top: styles.top,
