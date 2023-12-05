@@ -1,3 +1,5 @@
+import { Variables } from "../../../../variables";
+
 import { IStyles } from "../../../interfaces";
 
 interface IButtonInputProps {
@@ -13,7 +15,7 @@ export default function ButtonInput(props: IButtonInputProps) {
 	};
 
 	function devClick() {
-		if (process.env.NODE_ENV === "production") {
+		if (!Variables.PREVIEW) {
 			return;
 		}
 		clickHandler();

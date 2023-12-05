@@ -3,6 +3,8 @@ import { faCircleXmark } from "@fortawesome/pro-solid-svg-icons";
 
 import styles from "../../../styles/CustomKeyboard.module.scss";
 
+import { Variables } from "../../../../variables";
+
 import Key from "./Key";
 
 interface ISpecialCharsBoxProps {
@@ -30,7 +32,7 @@ export default function SpecialCharsBox(props: ISpecialCharsBoxProps): JSX.Eleme
 	};
 
 	function devClick() {
-		if (process.env.NODE_ENV === "production") {
+		if (!Variables.PREVIEW) {
 			return;
 		}
 		closeBoxHandler();

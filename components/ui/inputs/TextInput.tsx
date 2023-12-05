@@ -1,3 +1,5 @@
+import { Variables } from "../../../../variables";
+
 import { IStyles } from "../../../interfaces";
 
 import getFontSize from "../../../utils/getFontSize";
@@ -24,7 +26,7 @@ export default function TextInput(props: ITextInputProps) {
 	} = props;
 
 	function devClick() {
-		if (process.env.NODE_ENV === "production") {
+		if (!Variables.PREVIEW) {
 			return;
 		}
 		onFocus(id);

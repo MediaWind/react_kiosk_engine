@@ -7,6 +7,7 @@ import { faArrowTurnDownLeft } from "@fortawesome/pro-solid-svg-icons";
 import styles from "../../../styles/CustomKeyboard.module.scss";
 
 import { IKeyStyling, KeyAction } from "./CustomKeyboard";
+import { Variables } from "../../../../variables";
 
 interface IKeyProps {
 	text?: {
@@ -48,7 +49,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 	};
 
 	function changetexthandlerDev() {
-		if (process.env.NODE_ENV === "production") {
+		if (!Variables.PREVIEW) {
 			return;
 		}
 		changetexthandler();
@@ -61,7 +62,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 	};
 
 	function displaySpecCharsHandlerDev() {
-		if (process.env.NODE_ENV === "production") {
+		if (!Variables.PREVIEW) {
 			return;
 		}
 		displaySpecCharsHandler();
@@ -76,7 +77,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 			};
 
 			const devClick = () => {
-				if (process.env.NODE_ENV === "production") {
+				if (!Variables.PREVIEW) {
 					return;
 				}
 				shiftClickHandler();
@@ -111,7 +112,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 			return (
 				<div
 					className={styles.key_spacebar}
-					onClick={() => process.env.NODE_ENV === "production" ? "" : onChangeText(" ")}
+					onClick={() => Variables.PREVIEW ? onChangeText(" ") : ""}
 					onTouchEnd={() => onChangeText(" ")}
 				>
 					<p>{text ? text.defaultValue : "Space"}</p>
@@ -123,7 +124,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 			return (
 				<div
 					className={styles.key_action}
-					onClick={() => process.env.NODE_ENV === "production" ? "" : onChangeText("\n")}
+					onClick={() => Variables.PREVIEW ? onChangeText("\n") : ""}
 					onTouchEnd={() => onChangeText("\n")}
 					style={{
 						backgroundColor: style?.backgroundColor ? style.backgroundColor : "",
@@ -147,7 +148,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 				<div
 					className={styles.key_action}
 					onClick={() => {
-						if (process.env.NODE_ENV === "production") {
+						if (!Variables.PREVIEW) {
 							return;
 						}
 						if (onDeleteText) {
@@ -178,7 +179,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 			return (
 				<div
 					className={styles.key_action}
-					onClick={() => process.env.NODE_ENV === "production" ? "" : action()}
+					onClick={() => Variables.PREVIEW ? action() : ""}
 					onTouchEnd={() => action()}
 					style={{
 						backgroundColor: style?.backgroundColor ? style.backgroundColor : "",

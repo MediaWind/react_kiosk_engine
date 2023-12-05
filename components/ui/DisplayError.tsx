@@ -1,5 +1,7 @@
 import styles from "../../styles/ui/Error.module.scss";
 
+import { Variables } from "../../../variables";
+
 import { useLanguageContext } from "../../contexts/languageContext";
 import { useErrorContext } from "../../contexts/errorContext";
 
@@ -55,7 +57,7 @@ export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 	}
 
 	function devClick() {
-		if (process.env.NODE_ENV === "production") {
+		if (!Variables.PREVIEW) {
 			return;
 		}
 		clickHandler();
