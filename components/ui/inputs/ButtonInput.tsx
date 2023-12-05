@@ -12,9 +12,16 @@ export default function ButtonInput(props: IButtonInputProps) {
 		onClick();
 	};
 
+	function devClick() {
+		if (process.env.NODE_ENV === "production") {
+			return;
+		}
+		clickHandler();
+	}
+
 	return (
 		<button
-			onClick={clickHandler}
+			onClick={devClick}
 			onTouchEnd={clickHandler}
 			style={{
 				all: styles.all,

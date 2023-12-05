@@ -47,11 +47,25 @@ export default function Key(props: IKeyProps): JSX.Element {
 		}
 	};
 
+	function changetexthandlerDev() {
+		if (process.env.NODE_ENV === "production") {
+			return;
+		}
+		changetexthandler();
+	}
+
 	const displaySpecCharsHandler = () => {
 		if (onDisplaySpecChars) {
 			onDisplaySpecChars();
 		}
 	};
+
+	function displaySpecCharsHandlerDev() {
+		if (process.env.NODE_ENV === "production") {
+			return;
+		}
+		displaySpecCharsHandler();
+	}
 
 	if (action) {
 		if (action === KeyAction.SHIFT) {
@@ -61,10 +75,17 @@ export default function Key(props: IKeyProps): JSX.Element {
 				}
 			};
 
+			const devClick = () => {
+				if (process.env.NODE_ENV === "production") {
+					return;
+				}
+				shiftClickHandler();
+			};
+
 			return (
 				<div
 					className={styles.key_action}
-					onClick={shiftClickHandler}
+					onClick={devClick}
 					onTouchEnd={shiftClickHandler}
 				>
 					{text ? text.defaultValue : <FontAwesomeIcon icon={faUp} style={{ color: "#999999", fontSize: "0.03rem", }} />}
@@ -77,7 +98,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 			return (
 				<div
 					className={styles.key_action}
-					onClick={displaySpecCharsHandler}
+					onClick={displaySpecCharsHandlerDev}
 					onTouchEnd={displaySpecCharsHandler}
 				>
 					<p>{text ? text.defaultValue : "#+="}</p>
@@ -90,7 +111,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 			return (
 				<div
 					className={styles.key_spacebar}
-					onClick={() => onChangeText(" ")}
+					onClick={() => process.env.NODE_ENV === "production" ? "" : onChangeText(" ")}
 					onTouchEnd={() => onChangeText(" ")}
 				>
 					<p>{text ? text.defaultValue : "Space"}</p>
@@ -102,7 +123,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 			return (
 				<div
 					className={styles.key_action}
-					onClick={() => onChangeText("\n")}
+					onClick={() => process.env.NODE_ENV === "production" ? "" : onChangeText("\n")}
 					onTouchEnd={() => onChangeText("\n")}
 					style={{
 						backgroundColor: style?.backgroundColor ? style.backgroundColor : "",
@@ -126,6 +147,9 @@ export default function Key(props: IKeyProps): JSX.Element {
 				<div
 					className={styles.key_action}
 					onClick={() => {
+						if (process.env.NODE_ENV === "production") {
+							return;
+						}
 						if (onDeleteText) {
 							onDeleteText();
 						}
@@ -154,7 +178,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 			return (
 				<div
 					className={styles.key_action}
-					onClick={() => action()}
+					onClick={() => process.env.NODE_ENV === "production" ? "" : action()}
 					onTouchEnd={() => action()}
 					style={{
 						backgroundColor: style?.backgroundColor ? style.backgroundColor : "",
@@ -186,7 +210,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 	return (
 		<div
 			className={styles.key_default}
-			onClick={changetexthandler}
+			onClick={changetexthandlerDev}
 			onTouchEnd={changetexthandler}
 		>
 			<p>

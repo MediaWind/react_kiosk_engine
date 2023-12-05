@@ -23,6 +23,13 @@ export default function TextInput(props: ITextInputProps) {
 		styles,
 	} = props;
 
+	function devClick() {
+		if (process.env.NODE_ENV === "production") {
+			return;
+		}
+		onFocus(id);
+	}
+
 	return (
 		<>
 			<input
@@ -31,7 +38,7 @@ export default function TextInput(props: ITextInputProps) {
 				value={value}
 				readOnly
 				type="text"
-				onClick={() => onFocus(id)}
+				onClick={devClick}
 				onTouchEnd={() => onFocus(id)}
 				style={{
 					all: styles.all,

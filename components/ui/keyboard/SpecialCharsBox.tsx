@@ -29,13 +29,20 @@ export default function SpecialCharsBox(props: ISpecialCharsBoxProps): JSX.Eleme
 		onClose();
 	};
 
+	function devClick() {
+		if (process.env.NODE_ENV === "production") {
+			return;
+		}
+		closeBoxHandler();
+	}
+
 	return (
 		<div
 			className={styles.spec_char_box}
 			style={{ display: visible ? "flex" : "none", }}
 		>
 			<div>
-				<FontAwesomeIcon id={styles.spec_chars_xmark} icon={faCircleXmark} onTouchEnd={closeBoxHandler} onClick={closeBoxHandler} />
+				<FontAwesomeIcon id={styles.spec_chars_xmark} icon={faCircleXmark} onTouchEnd={closeBoxHandler} onClick={devClick} />
 				{chars.map((char, index) => {
 					return (
 						<Key

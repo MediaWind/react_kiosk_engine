@@ -54,10 +54,17 @@ export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 		});
 	}
 
+	function devClick() {
+		if (process.env.NODE_ENV === "production") {
+			return;
+		}
+		clickHandler();
+	}
+
 	if (route?.errorManagement) {
 		const image = getErrorImage(route.errorManagement, errorState.errorCode);
 		return (
-			<div className={styles.error_management_main} onTouchEnd={clickHandler} onClick={clickHandler}>
+			<div className={styles.error_management_main} onTouchEnd={clickHandler} onClick={devClick}>
 				{image === route.errorManagement.genericError &&
 					<div className={styles.error_management_message}>
 						<p>{errorState.message ? errorState.message : "An unexpected error occured"}</p>
@@ -75,7 +82,7 @@ export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 						<h1>{getTranslatedTitle()}</h1>
 						<p>{errorState.message ? "Message: " + errorState.message : getTranslatedDefaultMessage()}</p>
 					</div>
-					{errorState.errorCode !== ERROR_CODE.C503 && <button onTouchEnd={clickHandler} onClick={clickHandler}>OK</button>}
+					{errorState.errorCode !== ERROR_CODE.C503 && <button onTouchEnd={clickHandler} onClick={devClick}>OK</button>}
 					{errorState.errorCode && <p id={styles.error_code}>Error code: <b>{errorState.errorCode}</b></p>}
 				</div>
 			</div>
