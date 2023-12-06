@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 
-import { IInputContent, IInputField, IMedia, TicketDataActionType } from "../interfaces";
+import { IInputContent, IInputField, IMedia, KeyboardLayout, TicketDataActionType } from "../interfaces";
 
 import { useTicketDataContext } from "../contexts/ticketDataContext";
 
 import TextInput from "./ui/inputs/TextInput";
 import CustomKeyboard, { IKeyboard, KeyAction } from "./ui/keyboard/CustomKeyboard";
+import { useFlowContext } from "../contexts/flowContext";
 
 interface ITextInputsManagerProps {
 	inputs: IMedia[]
@@ -14,6 +15,7 @@ interface ITextInputsManagerProps {
 
 export default function TextInputsManager(props: ITextInputsManagerProps): JSX.Element {
 	const { inputs, onReady, } = props;
+	const { flow, } = useFlowContext();
 
 	const [content, setContent] = useState<IInputContent[]>([]);
 	const [focusedField, setFocusedField] = useState<string | undefined>();
@@ -289,6 +291,277 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 		],
 	} as IKeyboard;
 
+	const classicPattern = {
+		rows: [
+			{
+				keys: [
+					{
+						text: {
+							defaultValue: "0",
+							specCharsValue: "-",
+						},
+					},
+					{
+						text: {
+							defaultValue: "1",
+							specCharsValue: "à",
+						},
+					},
+					{
+						text: {
+							defaultValue: "2",
+							specCharsValue: "â",
+						},
+					},
+					{
+						text: {
+							defaultValue: "3",
+							specCharsValue: "ç",
+						},
+					},
+					{
+						text: {
+							defaultValue: "4",
+							specCharsValue: "é",
+						},
+					},
+					{
+						text: {
+							defaultValue: "5",
+							specCharsValue: "è",
+						},
+					},
+					{
+						text: {
+							defaultValue: "6",
+							specCharsValue: "ê",
+						},
+					},
+					{
+						text: {
+							defaultValue: "7",
+							specCharsValue: "ë",
+						},
+					},
+					{
+						text: {
+							defaultValue: "8",
+							specCharsValue: "ù",
+						},
+					},
+					{
+						text: {
+							defaultValue: "9",
+							specCharsValue: "û",
+						},
+					}
+				],
+			},
+			{
+				keys: [
+					{
+						text: {
+							defaultValue: "a",
+							capslockValue: "A",
+						},
+					},
+					{
+						text: {
+							defaultValue: "z",
+							capslockValue: "Z",
+						},
+					},
+					{
+						text: {
+							defaultValue: "e",
+							capslockValue: "E",
+						},
+					},
+					{
+						text: {
+							defaultValue: "r",
+							capslockValue: "R",
+						},
+					},
+					{
+						text: {
+							defaultValue: "t",
+							capslockValue: "T",
+						},
+					},
+					{
+						text: {
+							defaultValue: "y",
+							capslockValue: "Y",
+						},
+					},
+					{
+						text: {
+							defaultValue: "u",
+							capslockValue: "U",
+						},
+					},
+					{
+						text: {
+							defaultValue: "i",
+							capslockValue: "I",
+						},
+					},
+					{
+						text: {
+							defaultValue: "o",
+							capslockValue: "O",
+						},
+					},
+					{
+						text: {
+							defaultValue: "p",
+							capslockValue: "P",
+						},
+					}
+				],
+			},
+			{
+				keys: [
+					{
+						text: {
+							defaultValue: "q",
+							capslockValue: "Q",
+						},
+					},
+					{
+						text: {
+							defaultValue: "s",
+							capslockValue: "S",
+						},
+					},
+					{
+						text: {
+							defaultValue: "d",
+							capslockValue: "D",
+						},
+					},
+					{
+						text: {
+							defaultValue: "f",
+							capslockValue: "F",
+						},
+					},
+					{
+						text: {
+							defaultValue: "g",
+							capslockValue: "G",
+						},
+					},
+					{
+						text: {
+							defaultValue: "h",
+							capslockValue: "H",
+						},
+					},
+					{
+						text: {
+							defaultValue: "j",
+							capslockValue: "J",
+						},
+					},
+					{
+						text: {
+							defaultValue: "k",
+							capslockValue: "K",
+						},
+					},
+					{
+						text: {
+							defaultValue: "l",
+							capslockValue: "L",
+						},
+					},
+					{
+						text: {
+							defaultValue: "m",
+							capslockValue: "M",
+						},
+					}
+				],
+			},
+			{
+				keys: [
+					{
+						text: {
+							defaultValue: "w",
+							capslockValue: "W",
+						},
+					},
+					{
+						text: {
+							defaultValue: "x",
+							capslockValue: "X",
+						},
+					},
+					{
+						text: {
+							defaultValue: "c",
+							capslockValue: "C",
+						},
+					},
+					{
+						text: {
+							defaultValue: "v",
+							capslockValue: "V",
+						},
+					},
+					{
+						text: {
+							defaultValue: "b",
+							capslockValue: "B",
+						},
+					},
+					{
+						text: {
+							defaultValue: "n",
+							capslockValue: "N",
+						},
+					}
+				],
+			},
+			{
+				keys: [
+					{
+						action: KeyAction.SHIFT,
+					},
+					{
+						text: {
+							defaultValue: "-^´",
+						},
+						action: KeyAction.SPECIALCHARS,
+					},
+					{
+						text: {
+							defaultValue: "Espace",
+						},
+						action: KeyAction.SPACEBAR,
+					},
+					{
+						text: {
+							defaultValue: "Valider",
+						},
+						action: confirmForm,
+						style: {
+							backgroundColor: "#117a31",
+							textColor: "#ffffff",
+							fontSize: "0.032rem",
+							textAlign: "center",
+						},
+					},
+					{
+						action: KeyAction.BACKSPACE,
+					}
+				],
+			}
+		],
+	} as IKeyboard;
+
 	useEffect(() => {
 		//* Extract text inputs from "inputs" prop
 		const textInputs: IInputContent[] = [];
@@ -426,7 +699,7 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 				);
 			})}
 			<CustomKeyboard
-				pattern={customPattern}
+				pattern={(flow.keyboardLayout && flow.keyboardLayout === KeyboardLayout.CUSTOMMADE) ? customPattern : classicPattern}
 				onChange={changetexthandler}
 				onDelete={deleteHandler}
 				shift={
