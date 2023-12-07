@@ -43,8 +43,8 @@ export default function ButtonInput(props: IButtonInputProps) {
 				padding: styles.padding,
 
 				borderStyle: "none",
-				backgroundColor: "transparent",
-				opacity: 0.5,
+				backgroundColor: styles.backgroundColor ?? "transparent",
+				opacity: styles.opacity,
 
 				borderColor: styles.borderColor,
 				borderRadius: styles.borderRadius,
