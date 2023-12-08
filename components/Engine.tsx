@@ -20,6 +20,7 @@ import ticketDataReducer, { initialState } from "../reducers/ticketDataReducer";
 import errorReducer, { initialErrorState } from "../reducers/errorReducer";
 
 import usePrintTicket from "../hooks/usePrintTicket";
+import useQrCode from "../hooks/useQrCode";
 
 import checkCurrentFlow from "../utils/checkCurrentFlow";
 import checkPrinterStatus from "../utils/checkPrinterStatus";
@@ -52,6 +53,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [signInRequested, setSignInRequested] = useState<boolean>(false);
 
 	const [printTicket, isPrinting, signInPatient] = usePrintTicket(dispatchError);
+	const qrCodeWrite = useQrCode();
 
 	useEffect(() => {
 		if (Variables.C_ORIENTATION() === ORIENTATION.HORIZONTAL) {
@@ -222,6 +224,10 @@ function Engine(props: IEngineProps): JSX.Element {
 		});
 	};
 
+	const keydownHandler = (e: any) => {
+		qrCodeWrite(e.key);
+	};
+
 	if (currentFlow) {
 		return (
 			<div
@@ -230,6 +236,8 @@ function Engine(props: IEngineProps): JSX.Element {
 					// cursor: "none !important",
 					userSelect: "none",
 				}}
+				onKeyDown={keydownHandler}
+				tabIndex={0}
 			>
 				<LanguageContext.Provider value={{ language, setLanguage, }}>
 					<TicketDataContext.Provider value={{ ticketState: ticketData, dispatchTicketState, }}>
