@@ -1,6 +1,10 @@
 import { APPOINTMENT_ACTION_TYPE, IAppointmentAction, IAppointmentState } from "../interfaces";
 
 export default function appointmentReducer(appointmentState: IAppointmentState, action: IAppointmentAction): IAppointmentState {
+	if (!action.payload) {
+		return initialAppointmentState;
+	}
+
 	switch (action.type) {
 		case APPOINTMENT_ACTION_TYPE.UPDATECHECKIN: {
 			return {
@@ -15,11 +19,11 @@ export default function appointmentReducer(appointmentState: IAppointmentState, 
 			};
 		}
 		case APPOINTMENT_ACTION_TYPE.CLEARALL:
-		default: return initialState;
+		default: return initialAppointmentState;
 	}
 }
 
-export const initialState: IAppointmentState = {
+export const initialAppointmentState: IAppointmentState = {
 	isCheckingIn: false,
 	isCheckingOut: false,
 };

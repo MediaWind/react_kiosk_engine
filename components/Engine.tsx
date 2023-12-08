@@ -16,7 +16,8 @@ import { FlowContext } from "../contexts/flowContext";
 import { LanguageContext } from "../contexts/languageContext";
 import { ErrorContext } from "../contexts/errorContext";
 
-import ticketDataReducer, { initialState } from "../reducers/ticketDataReducer";
+import ticketDataReducer, { initialTicketState } from "../reducers/ticketDataReducer";
+import appointmentReducer, { initialAppointmentState } from "../reducers/appointmentReducer";
 import errorReducer, { initialErrorState } from "../reducers/errorReducer";
 
 import usePrintTicket from "../hooks/usePrintTicket";
@@ -29,6 +30,7 @@ import PageRouter from "../components/PageRouter";
 import LoadingScreen from "../components/ui/LoadingScreen";
 import Debugger from "../components/debug/Debugger";
 import DisplayError from "../components/ui/DisplayError";
+import { AppointmentContext } from "../contexts/appointmentContext";
 
 interface IEngineProps {
 	route: Route
@@ -46,14 +48,15 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [readyToChangeFlow, setReadyToChangeFlow] = useState<boolean>(true);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 
-	const [ticketData, dispatchTicketState] = useReducer(ticketDataReducer, initialState);
+	const [ticketData, dispatchTicketState] = useReducer(ticketDataReducer, initialTicketState);
+	const [appointmentState, dispatchAppointmentState] = useReducer(appointmentReducer, initialAppointmentState);
 	const [error, dispatchError] = useReducer(errorReducer, initialErrorState);
 
 	const [printRequested, setPrintRequested] = useState<boolean>(false);
 	const [signInRequested, setSignInRequested] = useState<boolean>(false);
 
 	const [printTicket, isPrinting, signInPatient] = usePrintTicket(dispatchError);
-	const qrCodeWrite = useQrCode();
+	const [qrCodeWrite] = useQrCode();
 
 	useEffect(() => {
 		if (Variables.C_ORIENTATION() === ORIENTATION.HORIZONTAL) {
@@ -225,7 +228,9 @@ function Engine(props: IEngineProps): JSX.Element {
 	};
 
 	const keydownHandler = (e: any) => {
-		qrCodeWrite(e.key);
+		if (appointmentState.isCheckingIn || appointmentState.isCheckingOut) {
+			qrCodeWrite(e.key, appointmentState.isCheckingIn, appointmentState.isCheckingOut);
+		}
 	};
 
 	if (currentFlow) {
@@ -241,35 +246,37 @@ function Engine(props: IEngineProps): JSX.Element {
 			>
 				<LanguageContext.Provider value={{ language, setLanguage, }}>
 					<TicketDataContext.Provider value={{ ticketState: ticketData, dispatchTicketState, }}>
-						<FlowContext.Provider value={{ flow: currentFlow, setReload: setReadyToChangeFlow, }}>
-							<ErrorContext.Provider value={{ errorState: error, dispatchErrorState: dispatchError, }}>
+						<AppointmentContext.Provider value={{ appointmentState, dispatchAppointmentState, }}>
+							<FlowContext.Provider value={{ flow: currentFlow, setReload: setReadyToChangeFlow, }}>
+								<ErrorContext.Provider value={{ errorState: error, dispatchErrorState: dispatchError, }}>
 
-								{props.debug && (
-									<Debugger
-										eidData={ticketData.eIdDatas}
-										messages={[
-											`eidstatus: ${eidStatus}`,
-											`firstname from eiddata: ${eIdData?.firstName}`,
-											`eidread: ${ticketData.eIdRead}`,
-											`page is listening to eid: ${ticketData.pageIsListeningToEId}`,
-											isPrinting ? "Printing!" : "",
-											error.hasError ? `Error ${error.errorCode}: ${error.message}` : ""
-										]}
+									{props.debug && (
+										<Debugger
+											eidData={ticketData.eIdDatas}
+											messages={[
+												`eidstatus: ${eidStatus}`,
+												`firstname from eiddata: ${eIdData?.firstName}`,
+												`eidread: ${ticketData.eIdRead}`,
+												`page is listening to eid: ${ticketData.pageIsListeningToEId}`,
+												isPrinting ? "Printing!" : "",
+												error.hasError ? `Error ${error.errorCode}: ${error.message}` : ""
+											]}
+										/>
+									)}
+
+									{error.hasError && <DisplayError route={props.route} />}
+
+									{isLoading && <LoadingScreen />}
+
+									<PageRouter
+										onPrint={printHandler}
+										isPrinting={isPrinting}
+										onSignIn={signInHandler}
 									/>
-								)}
 
-								{error.hasError && <DisplayError route={props.route} />}
-
-								{isLoading && <LoadingScreen />}
-
-								<PageRouter
-									onPrint={printHandler}
-									isPrinting={isPrinting}
-									onSignIn={signInHandler}
-								/>
-
-							</ErrorContext.Provider>
-						</FlowContext.Provider>
+								</ErrorContext.Provider>
+							</FlowContext.Provider>
+						</AppointmentContext.Provider>
 					</TicketDataContext.Provider>
 				</LanguageContext.Provider>
 			</div>

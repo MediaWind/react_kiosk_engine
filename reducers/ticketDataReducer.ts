@@ -35,14 +35,14 @@ export default function ticketDataReducer(ticketData: ITicketDataState, action: 
 			...ticketData,
 			language: action.payload as LANGUAGE,
 		};
-		case TicketDataActionType.CLEARDATA: return initialState;
+		case TicketDataActionType.CLEARDATA: return initialTicketState;
 		default: return {
 			...ticketData,
 		};
 	}
 }
 
-export const initialState: ITicketDataState = {
+export const initialTicketState: ITicketDataState = {
 	eIdDatas: null,
 	textInputDatas: [],
 	pageIsListeningToEId: true,

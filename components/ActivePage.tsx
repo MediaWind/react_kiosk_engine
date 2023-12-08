@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { isArray } from "lodash";
 
-import { IInputAction, IInputContent, IMedia, IPage, IService, MediaType, TicketDataActionType } from "../interfaces";
+import { APPOINTMENT_ACTION_TYPE, ActionType, IInputAction, IInputContent, IMedia, IPage, IService, MediaType, TicketDataActionType } from "../interfaces";
 
-import {  useTicketDataContext } from "../contexts/ticketDataContext";
+import { useTicketDataContext } from "../contexts/ticketDataContext";
+import { useAppointmentContext } from "../contexts/appointmentContext";
 
 import FlowMedia from "./FlowMedia";
 import BackgroundImage from "./ui/BackgroundImage";
@@ -28,6 +30,8 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 	} = props;
 
 	const { dispatchTicketState, } = useTicketDataContext();
+	const { dispatchAppointmentState, } = useAppointmentContext();
+
 	const [textInputs, setTextInputs] = useState<IMedia[]>([]);
 
 	//* Auto switches to next page without user interaction
@@ -69,6 +73,39 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 			});
 
 			setTextInputs(textInputMedias);
+		}
+	}, [page]);
+
+	//* If page reads QR codes, update context with either we are checking in or checking out
+	useEffect(() => {
+		if (page.medias) {
+			const inputs = page.medias.filter(media => media.type === MediaType.INPUT);
+
+			inputs.map((input: IMedia) => {
+				const content = input.content as IInputContent;
+
+				if (isArray(content.actions)) {
+					content.actions.map(action => {
+						if (action.type === ActionType.CHECKIN) {
+							dispatchAppointmentState({
+								type: APPOINTMENT_ACTION_TYPE.CLEARALL,
+							});
+							dispatchAppointmentState({
+								type: APPOINTMENT_ACTION_TYPE.UPDATECHECKIN,
+								payload: true,
+							});
+						} else if (action.type === ActionType.CHECKOUT) {
+							dispatchAppointmentState({
+								type: APPOINTMENT_ACTION_TYPE.CLEARALL,
+							});
+							dispatchAppointmentState({
+								type: APPOINTMENT_ACTION_TYPE.UPDATECHECKOUT,
+								payload: true,
+							});
+						}
+					});
+				}
+			});
 		}
 	}, [page]);
 
