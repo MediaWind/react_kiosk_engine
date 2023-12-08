@@ -88,8 +88,8 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 		onHomePage();
 	};
 
-	const textInputsReadyHandler = (action: IInputAction) => {
-		const nextPageId = action.navigateTo;
+	const textInputsReadyHandler = (actions: IInputAction[]) => {
+		const nextPageId = actions.find(action => action.navigateTo)?.navigateTo;
 
 		if (nextPageId) {
 			onChangePage(nextPageId);

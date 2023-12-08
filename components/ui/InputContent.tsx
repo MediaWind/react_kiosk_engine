@@ -44,17 +44,13 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 
 	useEffect(() => {
 		//? When eId is read, automatically navigates to services page
-		if (content.type === InputType.CARDREADER && ticketState.eIdRead && content.action) {
+		if (content.type === InputType.CARDREADER && ticketState.eIdRead && content.actions) {
 			actionHandler();
 		}
 	}, [ticketState.eIdRead]);
 
 	const actionHandler = () => {
-		if (Array.isArray(content.action)) {
-			content.action.map((action) => doAction(action));
-		} else {
-			doAction(content.action);
-		}
+		content.actions.map((action) => doAction(action));
 
 		function doAction(action: IInputAction) {
 			switch (action.type) {

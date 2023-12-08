@@ -635,8 +635,8 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 
 		//* Signals to Active Page that we are ready to move on
 		const contents = inputs.map(input => input.content as IInputContent);
-		const action = contents.find(content => content.action)?.action;
-		onReady(action);
+		const actions = contents.find(content => content.actions)?.actions;
+		onReady(actions);
 	}
 
 	function changetexthandler(value: string) {

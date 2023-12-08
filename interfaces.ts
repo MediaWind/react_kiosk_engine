@@ -134,7 +134,7 @@ export enum AnimationType {
 export interface IInputContent {
 	name: string;
 	type: InputType;
-	action: IInputAction | IInputAction[];
+	actions: IInputAction[];
 	placeholder?: string;
 	autoFocus?: boolean;
 	textInput?: IInputField;
@@ -305,7 +305,7 @@ export interface IAppointmentState {
 
 export interface IAppointmentAction {
 	type: string
-	payload: boolean
+	payload?: boolean
 }
 
 export enum APPOINTMENT_ACTION_TYPE {
