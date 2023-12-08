@@ -141,6 +141,14 @@ export interface IInputContent {
 	styles: IStyles;
 }
 
+export enum InputType {
+	BUTTON = "button",
+	TEXT = "text",
+	NUMBER = "number",
+	CARDREADER = "cardReader",
+	QRCODE = "qrcode",
+}
+
 export interface IInputAction {
 	type: ActionType;
 	navigateTo?: string;
@@ -153,9 +161,11 @@ export enum ActionType {
 	PREVIOUSPAGE = "previouspage",
 	HOMEPAGE = "homepage",
 	PRINTTICKET = "printticket",
-	SAVESERVICE = "saveservice",
 	SAVEDATA = "savedata",
+	SAVESERVICE = "saveservice",
 	CHANGELANGUAGE = "changelanguage",
+	CHECKIN = "checkin",
+	CHECKOUT = "checkout",
 }
 
 export interface IService {
@@ -166,13 +176,6 @@ export interface IService {
  * 3 = urgent
  */
 	priority?: 1 | 2 | 3
-}
-
-export enum InputType {
-	BUTTON = "button",
-	TEXT = "text",
-	NUMBER = "number",
-	CARDREADER = "cardReader"
 }
 
 export interface IStyles {

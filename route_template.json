@@ -2,7 +2,7 @@
 	"name": "name",
 
 	"languages": [
-		"fr", "nl", "en"
+		"fr", "nl", "en", "es"
 	],
 
 	"scheduling": {
@@ -130,7 +130,8 @@
 						"default": "required path",
 						"french": "optional path",
 						"dutch": "optional path",
-						"english": "optional path"
+						"english": "optional path",
+						"spanish": "optional path"
 					},
 
 					"navigateToAfter": {
@@ -144,6 +145,50 @@
 					},
 
 					"medias": [
+						{
+							"type": "input",
+
+							"content": {
+								"name": "string",
+								"type": "button|text|number|cardReader|qrCode",
+								"action": {
+									"type": "nextpage|previouspage|homepage|printticket|savedata|saveservice|changelanguage|checkin|checkout...",
+
+									"navigateTo": "UUID",
+
+									"service": {
+										"serviceID": 10,
+										"priority": 0
+									},
+
+									"language": "fr|nl|en|es"
+								},
+
+								"placeholder": "placeholder",
+								"autoFocus": false,
+								"textInput": {
+									"id": "text_input_id",
+									"value": "Default value",
+									"required": true
+								},
+
+								"styles": {
+									"top": "css property",
+									"left": "css property",
+									"bottom": "css property",
+									"right": "css property",
+									"width": "css property",
+									"height": "css property",
+									"padding": "css property",
+									"margin": "css property",
+									"borderWidth": "css property",
+									"borderStyle": "css property",
+									"borderColor": "css property",
+									"borderRadius": "css property",
+									"all": "css property"
+								}
+							}
+						},
 						{
 							"type": "video",
 
@@ -183,50 +228,6 @@
 								"src": "path",
 
 								"animate": "rightToLeft|bottomToTop|topToBottm|leftToRight",
-
-								"styles": {
-									"top": "css property",
-									"left": "css property",
-									"bottom": "css property",
-									"right": "css property",
-									"width": "css property",
-									"height": "css property",
-									"padding": "css property",
-									"margin": "css property",
-									"borderWidth": "css property",
-									"borderStyle": "css property",
-									"borderColor": "css property",
-									"borderRadius": "css property",
-									"all": "css property"
-								}
-							}
-						},
-						{
-							"type": "input",
-
-							"content": {
-								"name": "string",
-								"type": "button|text|number|cardReader",
-								"action": {
-									"type": "printticket|savedata|saveservice|nextpage|previouspage|changelanguage|...",
-
-									"navigateTo": "UUID",
-
-									"service": {
-										"serviceID": 10,
-										"priority": 0
-									},
-
-									"language": "fr|nl|en|..."
-								},
-
-								"placeholder": "placeholder",
-								"autoFocus": false,
-								"textInput": {
-									"id": "text_input_id",
-									"value": "default_value",
-									"required": true
-								},
 
 								"styles": {
 									"top": "css property",
