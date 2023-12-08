@@ -294,3 +294,22 @@ export enum ERROR_CODE {
 	 */
 	D503 = "503-D"
 }
+
+//* ------------------- *//
+//* Appointment Reducer *//
+//* ------------------- *//
+export interface IAppointmentState {
+	isCheckingIn: boolean
+	isCheckingOut: boolean
+}
+
+export interface IAppointmentAction {
+	type: string
+	payload: boolean
+}
+
+export enum APPOINTMENT_ACTION_TYPE {
+	UPDATECHECKIN = "updateCheckIn",
+	UPDATECHECKOUT = "updateCheckOut",
+	CLEARALL = "clearAll",
+}
