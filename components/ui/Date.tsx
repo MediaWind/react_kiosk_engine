@@ -30,7 +30,7 @@ export default function Date(props: IDateProps): JSX.Element {
 			style= {{
 				all: style.all,
 				position: "absolute",
-				zIndex: 5,
+				zIndex: 1,
 
 				top: style.top,
 				left: style.left,
