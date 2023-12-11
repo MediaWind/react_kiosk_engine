@@ -56,7 +56,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [signInRequested, setSignInRequested] = useState<boolean>(false);
 
 	const [printTicket, isPrinting, signInPatient] = usePrintTicket(dispatchError);
-	const [qrCodeWrite] = useQrCode();
+	const [qrCodeWrite] = useQrCode(dispatchAppointmentState);
 
 	useEffect(() => {
 		if (Variables.C_ORIENTATION() === ORIENTATION.HORIZONTAL) {

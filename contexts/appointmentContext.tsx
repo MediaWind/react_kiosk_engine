@@ -11,6 +11,8 @@ export const AppointmentContext = createContext<appointmentContext>({
 	appointmentState: {
 		isCheckingIn: false,
 		isCheckingOut: false,
+		isCheckedIn: false,
+		isCheckedOut: false,
 	},
 	dispatchAppointmentState: () => null,
 });

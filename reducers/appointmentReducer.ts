@@ -6,16 +6,28 @@ export default function appointmentReducer(appointmentState: IAppointmentState, 
 	}
 
 	switch (action.type) {
-		case APPOINTMENT_ACTION_TYPE.UPDATECHECKIN: {
+		case APPOINTMENT_ACTION_TYPE.UPDATECHECKINGIN: {
 			return {
 				...appointmentState,
 				isCheckingIn: action.payload,
 			};
 		}
-		case APPOINTMENT_ACTION_TYPE.UPDATECHECKOUT: {
+		case APPOINTMENT_ACTION_TYPE.UPDATECHECKINGOUT: {
 			return {
 				...appointmentState,
 				isCheckingOut: action.payload,
+			};
+		}
+		case APPOINTMENT_ACTION_TYPE.UPDATECHECKEDIN: {
+			return {
+				...appointmentState,
+				isCheckedIn: action.payload,
+			};
+		}
+		case APPOINTMENT_ACTION_TYPE.UPDATECHECKEDOUT: {
+			return {
+				...appointmentState,
+				isCheckedOut: action.payload,
 			};
 		}
 		case APPOINTMENT_ACTION_TYPE.CLEARALL:
@@ -26,4 +38,6 @@ export default function appointmentReducer(appointmentState: IAppointmentState, 
 export const initialAppointmentState: IAppointmentState = {
 	isCheckingIn: false,
 	isCheckingOut: false,
+	isCheckedIn: false,
+	isCheckedOut: false,
 };

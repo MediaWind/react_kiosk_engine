@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 
-import { Variables } from "../../variables";
-
 import { useFlowContext } from "../contexts/flowContext";
 import { useLanguageContext } from "../contexts/languageContext";
 import { useTicketDataContext } from "../contexts/ticketDataContext";
@@ -10,7 +8,6 @@ import { useErrorContext } from "../contexts/errorContext";
 import { IFlow, IPage, TicketDataActionType } from "../interfaces";
 
 import ActivePage from "./ActivePage";
-import Debugger from "./debug/Debugger";
 import Date from "./ui/Date";
 import Time from "./ui/Time";
 
@@ -44,7 +41,7 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 
 	const { setLanguage, } = useLanguageContext();
 	const { flow, setReload, } = useFlowContext();
-	const { ticketState, dispatchTicketState, } = useTicketDataContext();
+	const { dispatchTicketState, } = useTicketDataContext();
 	const { errorState, } = useErrorContext();
 
 	const [homePage, setHomePage] = useState<IPage>(getHomePage(flow));
@@ -107,7 +104,7 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 		const page = flow.pages.find(page => page.id === pageID);
 
 		if (page) {
-			setRouter((latest) => [... latest, page]);
+			setRouter((latest) => [...latest, page]);
 		}
 	};
 
@@ -132,8 +129,6 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 
 	return (
 		<>
-			{(Variables.W_DEBUG && ticketState.eIdRead) && <Debugger messages={["eidread from page router"]} />}
-
 			{flow.displayDate && <Date format={flow.displayDate.format} style={flow.displayDate.style} />}
 			{flow.displayTime && <Time format={flow.displayTime.format} style={flow.displayTime.style} />}
 

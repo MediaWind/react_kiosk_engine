@@ -301,6 +301,8 @@ export enum ERROR_CODE {
 export interface IAppointmentState {
 	isCheckingIn: boolean
 	isCheckingOut: boolean
+	isCheckedIn: boolean
+	isCheckedOut: boolean
 }
 
 export interface IAppointmentAction {
@@ -309,7 +311,9 @@ export interface IAppointmentAction {
 }
 
 export enum APPOINTMENT_ACTION_TYPE {
-	UPDATECHECKIN = "updateCheckIn",
-	UPDATECHECKOUT = "updateCheckOut",
+	UPDATECHECKINGIN = "updateCheckIn",
+	UPDATECHECKINGOUT = "updateCheckOut",
+	UPDATECHECKEDIN = "updateCheckedIn",
+	UPDATECHECKEDOUT = "updateCheckedOut",
 	CLEARALL = "clearAll",
 }

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { isArray } from "lodash";
 
 import { APPOINTMENT_ACTION_TYPE, ActionType, IInputAction, IInputContent, IMedia, IPage, IService, MediaType, TicketDataActionType } from "../interfaces";
 
@@ -30,9 +29,32 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 	} = props;
 
 	const { dispatchTicketState, } = useTicketDataContext();
-	const { dispatchAppointmentState, } = useAppointmentContext();
+	const { appointmentState, dispatchAppointmentState, } = useAppointmentContext();
 
+	const [pageMedias, setPageMedias] = useState<IMedia[]>([]);
+	const [pageInputs, setPageInputs] = useState<IInputContent[]>([]);
 	const [textInputs, setTextInputs] = useState<IMedia[]>([]);
+
+	useEffect(() => {
+		if (page.medias) {
+			setPageMedias(page.medias);
+		} else {
+			setPageMedias([]);
+		}
+	}, [page]);
+
+	useEffect(() => {
+		if (pageMedias.length > 0) {
+			const inputs: IInputContent[] = [];
+			pageMedias.map(media => {
+				if (media.type === MediaType.INPUT) {
+					inputs.push(media.content as IInputContent);
+				}
+			});
+
+			setPageInputs([...inputs]);
+		}
+	}, [pageMedias]);
 
 	//* Auto switches to next page without user interaction
 	useEffect(() => {
@@ -74,65 +96,80 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 
 			setTextInputs(textInputMedias);
 		}
+		//TODO: replace with this code, adapt text manager and test if nothing breaks
+		// if (pageInputs.length > 0) {
+		// 	const textInputs = pageInputs.filter(input => {
+		// 		if (input.textInput) {
+		// 			return true;
+		// 		}
+		// 		return false;
+		// 	});
+
+		// 	setTextInputs([...textInputs]);
+		// }
 	}, [page]);
 
 	//* If page reads QR codes, update context with either we are checking in or checking out
 	useEffect(() => {
-		if (page.medias) {
-			const inputs = page.medias.filter(media => media.type === MediaType.INPUT);
-
-			inputs.map((input: IMedia) => {
-				const content = input.content as IInputContent;
-
-				if (isArray(content.actions)) {
-					content.actions.map(action => {
-						if (action.type === ActionType.CHECKIN) {
-							dispatchAppointmentState({
-								type: APPOINTMENT_ACTION_TYPE.CLEARALL,
-							});
-							dispatchAppointmentState({
-								type: APPOINTMENT_ACTION_TYPE.UPDATECHECKIN,
-								payload: true,
-							});
-						} else if (action.type === ActionType.CHECKOUT) {
-							dispatchAppointmentState({
-								type: APPOINTMENT_ACTION_TYPE.CLEARALL,
-							});
-							dispatchAppointmentState({
-								type: APPOINTMENT_ACTION_TYPE.UPDATECHECKOUT,
-								payload: true,
-							});
-						}
-					});
-				}
+		if (pageInputs.length > 0) {
+			pageInputs.map(input => {
+				input.actions.map(action => {
+					if (action.type === ActionType.CHECKIN) {
+						dispatchAppointmentState({
+							type: APPOINTMENT_ACTION_TYPE.UPDATECHECKINGIN,
+							payload: true,
+						});
+					} else if (action.type === ActionType.CHECKOUT) {
+						dispatchAppointmentState({
+							type: APPOINTMENT_ACTION_TYPE.UPDATECHECKINGOUT,
+							payload: true,
+						});
+					}
+				});
 			});
 		}
-	}, [page]);
+	}, [pageInputs]);
 
-	const changePageHandler = (pageID: string) => {
+	useEffect(() => {
+		if (pageInputs.length > 0) {
+			pageInputs.map(input => {
+				input.actions.map(action => {
+					if (
+						(action.type === ActionType.CHECKIN || action.type === ActionType.CHECKOUT) &&
+						action.navigateTo &&
+						(appointmentState.isCheckedIn || appointmentState.isCheckedOut)
+					) {
+						onChangePage(action.navigateTo);
+					}
+				});
+			});
+		}
+	}, [appointmentState]);
+
+	function changePageHandler(pageID: string) {
 		onChangePage(pageID);
-	};
+	}
 
-	const printHandler = () => {
+	function printHandler() {
 		onPrint();
-	};
+	}
 
-	const backPageHandler = () => {
+	function backPageHandler() {
 		onBackPage();
-	};
+	}
 
-	const homePageHandler = () => {
+	function homePageHandler() {
 		onHomePage();
-	};
+	}
 
-	const textInputsReadyHandler = (actions: IInputAction[]) => {
+	function textInputsReadyHandler(actions: IInputAction[]) {
 		const nextPageId = actions.find(action => action.navigateTo)?.navigateTo;
 
 		if (nextPageId) {
 			onChangePage(nextPageId);
 			setTextInputs([]);
 		}
-	};
+	}
 
 	return (
 		<>

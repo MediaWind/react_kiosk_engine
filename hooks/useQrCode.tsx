@@ -1,11 +1,10 @@
 import { useState } from "react";
 
 import { Variables } from "../../variables";
+import { APPOINTMENT_ACTION_TYPE, IAppointmentAction } from "../interfaces";
 
-export default function useQrCode(): [CallableFunction, boolean, boolean] {
+export default function useQrCode(dispatchAppointment: React.Dispatch<IAppointmentAction>): [CallableFunction] {
 	const [qrCodeText, setQrCodeText] = useState<string>("");
-	const [isCheckingIn, setIsCheckingIn] = useState<boolean>(false);
-	const [isCheckingOut, setIsCheckingOut] = useState<boolean>(false);
 
 	function qrCodeWrite(key: string, isCheckingIn: boolean, isCheckingOut: boolean) {
 		if (key === "Enter") {
@@ -24,26 +23,43 @@ export default function useQrCode(): [CallableFunction, boolean, boolean] {
 	}
 
 	async function checkIn() {
-		setIsCheckingIn(true);
 		const checkinURL = `${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/checkinAppointment.php?id_project=${Variables.W_ID_PROJECT}&serial=${Variables.SERIAL}&qrcode=${qrCodeText}&pdf_ticket=base_64`;
 
 		try {
 			const response = await fetch(checkinURL);
 			const data = await response.json();
 
-			if (data.status == 1) {
-				//TODO
+			if (data.status != 1) {
+				console.log("🚀 ~ file: useQrCode.tsx:32 ~ checkIn ~ data:", data);
+
+				if (Variables.PREVIEW) {
+					dispatchAppointment({
+						type: APPOINTMENT_ACTION_TYPE.UPDATECHECKEDIN,
+						payload: true,
+					});
+				} else {
+					//TODO: add error management
+				}
+			} else {
+				dispatchAppointment({
+					type: APPOINTMENT_ACTION_TYPE.UPDATECHECKEDIN,
+					payload: true,
+				});
 			}
 		} catch (err) {
 			console.log(err);
 		} finally {
 			setQrCodeText("");
-			setIsCheckingIn(false);
+
+			setTimeout(() => {
+				dispatchAppointment({
+					type: APPOINTMENT_ACTION_TYPE.CLEARALL,
+				});
+			}, 10 * 1000);
 		}
 	}
 
 	async function checkOut() {
-		setIsCheckingOut(true);
 		const checkoutURL = `${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/checkout.php?id_project=${Variables.W_ID_PROJECT}&serial=${Variables.SERIAL}&qrcode=${qrCodeText}`;
 
 		try {
@@ -51,20 +67,34 @@ export default function useQrCode(): [CallableFunction, boolean, boolean] {
 			const data = await response.json();
 
 			if (data.status != 1) {
-				//* Something went wrong,
-				//TODO: add error management
+				if (Variables.PREVIEW) {
+					dispatchAppointment({
+						type: APPOINTMENT_ACTION_TYPE.UPDATECHECKEDOUT,
+						payload: true,
+					});
+				} else {
+					//TODO: add error management
+				}
+			} else {
+				dispatchAppointment({
+					type: APPOINTMENT_ACTION_TYPE.UPDATECHECKEDOUT,
+					payload: true,
+				});
 			}
 		} catch (err) {
 			console.log(err);
 		} finally {
 			setQrCodeText("");
-			setIsCheckingOut(false);
+
+			setTimeout(() => {
+				dispatchAppointment({
+					type: APPOINTMENT_ACTION_TYPE.CLEARALL,
+				});
+			}, 10 * 1000);
 		}
 	}
 
 	return [
-		qrCodeWrite,
-		isCheckingIn,
-		isCheckingOut
+		qrCodeWrite
 	];
 }
