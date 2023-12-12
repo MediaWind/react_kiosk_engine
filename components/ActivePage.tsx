@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 
-import { ActionType, IInputAction, IInputContent, IMedia, IPage, IService, MediaType, TicketDataActionType } from "../interfaces";
+import { ActionType, IInputAction, IInputContent, IMedia, IPage, IService, MediaType, PRINT_ACTION_TYPE, TicketDataActionType } from "../interfaces";
 
 import { useTicketDataContext } from "../contexts/ticketDataContext";
 import { useAppointmentContext } from "../contexts/appointmentContext";
+import { usePrintContext } from "../contexts/printContext";
 
 import FlowMedia from "./FlowMedia";
 import BackgroundImage from "./ui/BackgroundImage";
@@ -12,9 +13,7 @@ import TextInputsManager from "./TextInputsManager";
 interface IActivePageProps {
 	page: IPage
 	onChangePage: CallableFunction
-	onPrint: CallableFunction
 	onBackPage: CallableFunction
-	onSignIn: CallableFunction
 	onHomePage: CallableFunction
 }
 
@@ -22,14 +21,13 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 	const {
 		page,
 		onChangePage,
-		onPrint,
 		onBackPage,
-		onSignIn,
 		onHomePage,
 	} = props;
 
 	const { dispatchTicketState, } = useTicketDataContext();
 	const { appointmentState, } = useAppointmentContext();
+	const { dispatchPrintState, } = usePrintContext();
 
 	const [pageMedias, setPageMedias] = useState<IMedia[]>([]);
 	const [pageInputs, setPageInputs] = useState<IInputContent[]>([]);
@@ -74,9 +72,8 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 				}
 
 				if (page.navigateToAfter.printTicket) {
-					onPrint();
-				} else {
-					onSignIn();
+					dispatchPrintState({ type: PRINT_ACTION_TYPE.REQUESTTICKETCREATION, payload: true, });
+					dispatchPrintState({ type: PRINT_ACTION_TYPE.REQUESTPRINT, payload: true, });
 				}
 
 				onChangePage(page.navigateToAfter.navigateTo);
@@ -131,10 +128,6 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 		onChangePage(pageID);
 	}
 
-	function printHandler() {
-		onPrint();
-	}
-
 	function backPageHandler() {
 		onBackPage();
 	}
@@ -145,21 +138,11 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 
 	function textInputsReadyHandler(actions: IInputAction[]) {
 		const nextPageId = actions.find(action => action.navigateTo)?.navigateTo;
-		// const print = actions.find(action => action.type === ActionType.PRINTTICKET);
 
 		if (nextPageId) {
 			onChangePage(nextPageId);
 			setTextInputs([]);
 		}
-
-		// if (print) {
-		// 	dispatchTicketState({
-		// 		type: TicketDataActionType.SERVICEUPDATE,
-		// 		payload: print.service,
-		// 	});
-
-		// 	onPrint();
-		// }
 	}
 
 	return (
@@ -172,7 +155,6 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 							id={`${page.id}__${index}`}
 							media={media}
 							onNavigate={changePageHandler}
-							onPrint={printHandler}
 							onBackPage={backPageHandler}
 							onHomePage={homePageHandler}
 						/>

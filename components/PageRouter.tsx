@@ -12,9 +12,7 @@ import Date from "./ui/Date";
 import Time from "./ui/Time";
 
 interface IFlowDispatcherProps {
-	onPrint: CallableFunction
 	isPrinting: boolean
-	onSignIn: CallableFunction
 }
 
 function getHomePage(flow: IFlow): IPage {
@@ -34,9 +32,7 @@ function getHomePage(flow: IFlow): IPage {
 
 export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 	const {
-		onPrint,
 		isPrinting,
-		onSignIn,
 	} = props;
 
 	const { setLanguage, } = useLanguageContext();
@@ -108,10 +104,6 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 		}
 	};
 
-	const printHandler = () => {
-		onPrint();
-	};
-
 	const backPageHandler = () => {
 		setRouter((latest) => {
 			const popped = latest.slice(0, latest.length - 1);
@@ -123,10 +115,6 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 		setRouter([homePage]);
 	};
 
-	const signInHandler = () => {
-		onSignIn();
-	};
-
 	return (
 		<>
 			{flow.displayDate && <Date format={flow.displayDate.format} style={flow.displayDate.style} />}
@@ -135,9 +123,7 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 			<ActivePage
 				page={router.slice(-1)[0]}
 				onChangePage={changePageHandler}
-				onPrint={printHandler}
 				onBackPage={backPageHandler}
-				onSignIn={signInHandler}
 				onHomePage={homePageHandler}
 			/>
 		</>

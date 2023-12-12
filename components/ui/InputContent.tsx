@@ -13,7 +13,6 @@ import NumberInput from "./inputs/NumberInput";
 interface IInputContentProps {
 	content: IInputContent
 	onNavigate: CallableFunction
-	onPrint: CallableFunction
 	onBackPage: CallableFunction
 	onHomePage: CallableFunction
 }
@@ -22,7 +21,6 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 	const {
 		content,
 		onNavigate,
-		// onPrint,
 		onBackPage,
 		onHomePage,
 	} = props;
@@ -74,6 +72,12 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 					onHomePage();
 					break;
 				case ActionType.SAVEDATA:
+					dispatchTicketState({
+						type: TicketDataActionType.SERVICEUPDATE,
+						payload: action.service as IService,
+					});
+					dispatchPrintState({ type: PRINT_ACTION_TYPE.REQUESTTICKETCREATION, payload: true, });
+					break;
 				case ActionType.SAVESERVICE:
 					dispatchTicketState({
 						type: TicketDataActionType.SERVICEUPDATE,
@@ -87,7 +91,6 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 					});
 					dispatchPrintState({ type: PRINT_ACTION_TYPE.REQUESTTICKETCREATION, payload: true, });
 					dispatchPrintState({ type: PRINT_ACTION_TYPE.REQUESTPRINT, payload: true, });
-					// onPrint();
 					break;
 				case ActionType.CHANGELANGUAGE:
 					setLanguage(latest => action.language ?? latest);

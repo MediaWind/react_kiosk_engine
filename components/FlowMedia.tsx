@@ -8,7 +8,6 @@ interface IFlowMediaProps {
 	id: string
 	media: IMedia
 	onNavigate: CallableFunction
-	onPrint: CallableFunction
 	onBackPage: CallableFunction
 	onHomePage: CallableFunction
 }
@@ -18,17 +17,12 @@ export default function FlowMedia(props: IFlowMediaProps): JSX.Element {
 		id,
 		media,
 		onNavigate,
-		onPrint,
 		onBackPage,
 		onHomePage,
 	} = props;
 
 	const navigationHandler = (pageID: string) => {
 		onNavigate(pageID);
-	};
-
-	const printHandler = () => {
-		onPrint();
 	};
 
 	const backPageHandler = () => {
@@ -52,7 +46,6 @@ export default function FlowMedia(props: IFlowMediaProps): JSX.Element {
 			<InputContent
 				content={media.content as IInputContent}
 				onNavigate={navigationHandler}
-				onPrint={printHandler}
 				onBackPage={backPageHandler}
 				onHomePage={homePageHandler}
 			/>

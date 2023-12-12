@@ -51,17 +51,17 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [flaggedFlow, setFlaggedFlow] = useState<IFlow>();
 	const [readyToChangeFlow, setReadyToChangeFlow] = useState<boolean>(true);
 
-	const [printRequested, setPrintRequested] = useState<boolean>(false);
-	const [signInRequested, setSignInRequested] = useState<boolean>(false);
+	// const [printRequested, setPrintRequested] = useState<boolean>(false);
+	// const [signInRequested, setSignInRequested] = useState<boolean>(false);
 
 	const [ticketData, dispatchTicketState] = useReducer(ticketDataReducer, initialTicketState);
 	const [appointmentState, dispatchAppointmentState] = useReducer(appointmentReducer, initialAppointmentState);
 	const [printState, dispatchPrintState] = useReducer(printReducer, initialPrintState);
 	const [error, dispatchError] = useReducer(errorReducer, initialErrorState);
 
-	const [printTicket, isPrinting, signInPatient, createTicket, ticketPDF] = useTicket(dispatchError);
+	const [createTicket, ticketPDF] = useTicket(dispatchError);
 	const [qrCodeWrite] = useQrCode(dispatchAppointmentState);
-	const [printTicketNEW, , checkPrinterStatus] = usePrinter(dispatchError);
+	const [printTicketNEW, isPrinting , checkPrinterStatus] = usePrinter(dispatchError);
 
 	useEffect(() => {
 		if (Variables.C_ORIENTATION() === ORIENTATION.HORIZONTAL) {
@@ -176,26 +176,14 @@ function Engine(props: IEngineProps): JSX.Element {
 	// Makes sure any error wipe all saved datas
 	useEffect(() => {
 		if (error.hasError) {
-			resetAllData();
+			resetTicketData();
 		}
 	}, [error.hasError]);
 
-	//* ------------------- *//
-	//* Send print requests *//
-	//* ------------------- *//
-	useEffect(() => {
-		if (printRequested) {
-			printTicket(ticketData, currentFlow);
-		}
-		if (signInRequested) {
-			signInPatient(ticketData, currentFlow);
-		}
-
-		resetAllData();
-	}, [printRequested, signInRequested]);
-
-
-
+	//* -------------- *//
+	//* Print requests *//
+	//* -------------- *//
+	// Monitors printState to trigger ticket creation/print
 	useEffect(() => {
 		if (printState.ticketCreationRequested) {
 			createTicket(ticketData, currentFlow);
@@ -212,7 +200,7 @@ function Engine(props: IEngineProps): JSX.Element {
 			dispatchPrintState({ type: PRINT_ACTION_TYPE.CLEARALL,});
 		}
 	}, [printState]);
-
+	// Monitors ticket PDF and updates printReducer
 	useEffect(() => {
 		if (ticketPDF !== null) {
 			dispatchPrintState({
@@ -222,21 +210,8 @@ function Engine(props: IEngineProps): JSX.Element {
 		}
 	}, [ticketPDF]);
 
-
-
-
-	//* ----- Handlers ----- *//
-	const printHandler = () => {
-		setPrintRequested(true);
-	};
-
-	const signInHandler = () => {
-		setSignInRequested(true);
-	};
-
-	const resetAllData = () => {
-		setPrintRequested(false);
-		setSignInRequested(false);
+	// ---------- Handlers ---------- //
+	const resetTicketData = () => {
 		dispatchTicketState({
 			type: TicketDataActionType.CLEARDATA,
 			payload: undefined,
@@ -283,9 +258,7 @@ function Engine(props: IEngineProps): JSX.Element {
 										{isLoading && <LoadingScreen />}
 
 										<PageRouter
-											onPrint={printHandler}
 											isPrinting={isPrinting}
-											onSignIn={signInHandler}
 										/>
 
 									</PrintContext.Provider>
