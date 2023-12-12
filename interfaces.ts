@@ -213,7 +213,6 @@ export interface IInputField {
 	id: string;
 	value: string;
 	required?: boolean;
-	//TODO: adapt to all possible data we might need
 }
 
 export interface ITicketDataState {
@@ -310,7 +309,7 @@ export interface IAppointmentState {
 }
 
 export interface IAppointmentAction {
-	type: string
+	type: APPOINTMENT_ACTION_TYPE
 	payload?: boolean
 }
 
@@ -319,5 +318,26 @@ export enum APPOINTMENT_ACTION_TYPE {
 	UPDATECHECKINGOUT = "updateCheckOut",
 	UPDATECHECKEDIN = "updateCheckedIn",
 	UPDATECHECKEDOUT = "updateCheckedOut",
+	CLEARALL = "clearAll",
+}
+
+//* --------------- *//
+//* Printer reducer *//
+//* --------------- *//
+export interface IPrintState {
+	ticketPDF: string | null
+	ticketCreationRequested: boolean
+	printRequested: boolean
+}
+
+export interface IPrintAction {
+	type: string
+	payload?: boolean | string | null
+}
+
+export enum PRINTER_ACTION_TYPE {
+	REQUESTPRINT = "requestPrint",
+	REQUESTTICKETCREATION = "requestTicketCreation",
+	UPDATETICKETPDF = "updateTicketPDF",
 	CLEARALL = "clearAll",
 }
