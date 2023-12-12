@@ -1,20 +1,20 @@
-import { IPrintAction, IPrintState, PRINTER_ACTION_TYPE } from "../interfaces";
+import { IPrintAction, IPrintState, PRINT_ACTION_TYPE } from "../interfaces";
 
 export default function printReducer(printState: IPrintState, action: IPrintAction): IPrintState {
 	switch (action.type) {
-		case PRINTER_ACTION_TYPE.REQUESTPRINT: {
+		case PRINT_ACTION_TYPE.REQUESTPRINT: {
 			return {
 				...printState,
-				printRequested: true,
+				printRequested: action.payload as boolean,
 			};
 		}
-		case PRINTER_ACTION_TYPE.REQUESTTICKETCREATION: {
+		case PRINT_ACTION_TYPE.REQUESTTICKETCREATION: {
 			return {
 				...printState,
-				ticketCreationRequested: true,
+				ticketCreationRequested: action.payload as boolean,
 			};
 		}
-		case PRINTER_ACTION_TYPE.UPDATETICKETPDF: {
+		case PRINT_ACTION_TYPE.UPDATETICKETPDF: {
 			return {
 				...printState,
 				ticketPDF: action.payload as string,

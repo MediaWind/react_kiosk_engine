@@ -144,8 +144,10 @@ export default function useTicket(dispatchError: React.Dispatch<IErrorAction>): 
 	}
 
 	async function createTicket(ticketState: ITicketDataState, flow: IFlow) {
+		console.log("Creating ticket: ", ticketState);
+
 		try {
-			const response = await fetch(`${getTicketingURL(ticketState, flow)}&comment=${encodeURI("No ticket needed")}`);
+			const response = await fetch(getTicketingURL(ticketState, flow));
 			const data = await response.json();
 
 			if (data.status == 1) {

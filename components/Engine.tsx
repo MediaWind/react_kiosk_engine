@@ -9,7 +9,7 @@ import useSharedVariables from "../../core/hooks/useSharedVariables";
 import useEId, { eIdData, eIdStatus } from "../../core/hooks/useEId";
 import { setIntervalRange } from "../../core/customInterval";
 
-import { IFlow, LANGUAGE, Route, TicketDataActionType } from "../interfaces";
+import { IFlow, LANGUAGE, PRINT_ACTION_TYPE, Route, TicketDataActionType } from "../interfaces";
 
 import { TicketDataContext } from "../contexts/ticketDataContext";
 import { FlowContext } from "../contexts/flowContext";
@@ -59,9 +59,9 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [printState, dispatchPrintState] = useReducer(printReducer, initialPrintState);
 	const [error, dispatchError] = useReducer(errorReducer, initialErrorState);
 
-	const [printTicket, isPrinting, signInPatient] = useTicket(dispatchError);
+	const [printTicket, isPrinting, signInPatient, createTicket, ticketPDF] = useTicket(dispatchError);
 	const [qrCodeWrite] = useQrCode(dispatchAppointmentState);
-	const [, , checkPrinterStatus] = usePrinter(dispatchError);
+	const [printTicketNEW, , checkPrinterStatus] = usePrinter(dispatchError);
 
 	useEffect(() => {
 		if (Variables.C_ORIENTATION() === ORIENTATION.HORIZONTAL) {
@@ -193,6 +193,34 @@ function Engine(props: IEngineProps): JSX.Element {
 
 		resetAllData();
 	}, [printRequested, signInRequested]);
+
+
+
+	useEffect(() => {
+		if (printState.ticketCreationRequested) {
+			createTicket(ticketData, currentFlow);
+
+			dispatchPrintState({
+				type: PRINT_ACTION_TYPE.REQUESTTICKETCREATION,
+				payload: false,
+			});
+		}
+
+		if (printState.printRequested && printState.ticketPDF) {
+			printTicketNEW(printState.ticketPDF);
+
+			dispatchPrintState({ type: PRINT_ACTION_TYPE.CLEARALL,});
+		}
+	}, [printState]);
+
+	useEffect(() => {
+		if (ticketPDF !== null) {
+			dispatchPrintState({
+				type: PRINT_ACTION_TYPE.UPDATETICKETPDF,
+				payload: ticketPDF,
+			});
+		}
+	}, [ticketPDF]);
 
 
 

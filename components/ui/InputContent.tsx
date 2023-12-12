@@ -1,13 +1,14 @@
 import { useEffect } from "react";
 
-import { APPOINTMENT_ACTION_TYPE, ActionType, IInputAction, IInputContent, IService, InputType, TicketDataActionType } from "../../interfaces";
+import { APPOINTMENT_ACTION_TYPE, ActionType, IInputAction, IInputContent, IService, InputType, PRINT_ACTION_TYPE, TicketDataActionType } from "../../interfaces";
 
-import { useTicketDataContext } from "../../contexts/ticketDataContext";
 import { useLanguageContext } from "../../contexts/languageContext";
+import { useTicketDataContext } from "../../contexts/ticketDataContext";
+import { useAppointmentContext } from "../../contexts/appointmentContext";
+import { usePrintContext } from "../../contexts/printContext";
 
 import ButtonInput from "./inputs/ButtonInput";
 import NumberInput from "./inputs/NumberInput";
-import { useAppointmentContext } from "../../contexts/appointmentContext";
 
 interface IInputContentProps {
 	content: IInputContent
@@ -21,7 +22,7 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 	const {
 		content,
 		onNavigate,
-		onPrint,
+		// onPrint,
 		onBackPage,
 		onHomePage,
 	} = props;
@@ -29,6 +30,7 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 	const { setLanguage, } = useLanguageContext();
 	const { ticketState, dispatchTicketState, } = useTicketDataContext();
 	const { dispatchAppointmentState, } = useAppointmentContext();
+	const { dispatchPrintState, } = usePrintContext();
 
 	useEffect(() => {
 		if (content.type === InputType.CARDREADER) {
@@ -83,7 +85,9 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 						type: TicketDataActionType.SERVICEUPDATE,
 						payload: action.service as IService,
 					});
-					onPrint();
+					dispatchPrintState({ type: PRINT_ACTION_TYPE.REQUESTTICKETCREATION, payload: true, });
+					dispatchPrintState({ type: PRINT_ACTION_TYPE.REQUESTPRINT, payload: true, });
+					// onPrint();
 					break;
 				case ActionType.CHANGELANGUAGE:
 					setLanguage(latest => action.language ?? latest);

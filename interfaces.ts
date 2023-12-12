@@ -335,7 +335,7 @@ export interface IPrintAction {
 	payload?: boolean | string | null
 }
 
-export enum PRINTER_ACTION_TYPE {
+export enum PRINT_ACTION_TYPE {
 	REQUESTPRINT = "requestPrint",
 	REQUESTTICKETCREATION = "requestTicketCreation",
 	UPDATETICKETPDF = "updateTicketPDF",

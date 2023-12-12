@@ -82,26 +82,29 @@ export default function usePrinter(dispatchError: React.Dispatch<IErrorAction>):
 
 	async function print(pdf: string) {
 		if (isPrinting) {
-			setTimeout(() => {
-				print(pdf);
-			}, 1000);
+			// setTimeout(() => {
+			// 	print(pdf);
+			// }, 1000);
+			return;
 		}
 
 		console.log("Printing!", pdf);
 		setIsPrinting(true);
 
 		try {
-			const result = await Printer.print(pdf);
+			if (!Variables.PREVIEW) {
+				const result = await Printer.print(pdf);
 
-			if (!result && !Variables.PREVIEW) {
-				dispatchError({
-					type: ERROR_ACTION_TYPE.SETERROR,
-					payload: {
-						hasError: true,
-						errorCode: ERROR_CODE.A500,
-						message: "Unable to print ticket PDF",
-					} as IErrorState,
-				});
+				if (!result) {
+					dispatchError({
+						type: ERROR_ACTION_TYPE.SETERROR,
+						payload: {
+							hasError: true,
+							errorCode: ERROR_CODE.A500,
+							message: "Unable to print ticket PDF",
+						} as IErrorState,
+					});
+				}
 			}
 		} catch (err) {
 			console.log(err);
