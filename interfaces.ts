@@ -146,7 +146,7 @@ export enum InputType {
 	TEXT = "text",
 	NUMBER = "number",
 	CARDREADER = "cardReader",
-	QRCODE = "qrcode",
+	QRCODE = "qrCode",
 }
 
 export interface IInputAction {
@@ -265,6 +265,10 @@ export enum ERROR_CODE {
 	 * 200: All good!
 	 */
 	A200 = "200",
+	/**
+	 * 404-A: Appointment not found
+	 */
+	A404 = "404-A",
 	/**
 	 * 500-A: Something went wrong when trying to print ticket
 	 */

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { APPOINTMENT_ACTION_TYPE, ActionType, IInputAction, IInputContent, IMedia, IPage, IService, MediaType, TicketDataActionType } from "../interfaces";
+import { ActionType, IInputAction, IInputContent, IMedia, IPage, IService, MediaType, TicketDataActionType } from "../interfaces";
 
 import { useTicketDataContext } from "../contexts/ticketDataContext";
 import { useAppointmentContext } from "../contexts/appointmentContext";
@@ -29,7 +29,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 	} = props;
 
 	const { dispatchTicketState, } = useTicketDataContext();
-	const { appointmentState, dispatchAppointmentState, } = useAppointmentContext();
+	const { appointmentState, } = useAppointmentContext();
 
 	const [pageMedias, setPageMedias] = useState<IMedia[]>([]);
 	const [pageInputs, setPageInputs] = useState<IInputContent[]>([]);
@@ -53,6 +53,8 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 			});
 
 			setPageInputs([...inputs]);
+		} else {
+			setPageInputs([]);
 		}
 	}, [pageMedias]);
 
@@ -109,27 +111,6 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 		// }
 	}, [page]);
 
-	//* If page reads QR codes, update context with either we are checking in or checking out
-	useEffect(() => {
-		if (pageInputs.length > 0) {
-			pageInputs.map(input => {
-				input.actions.map(action => {
-					if (action.type === ActionType.CHECKIN) {
-						dispatchAppointmentState({
-							type: APPOINTMENT_ACTION_TYPE.UPDATECHECKINGIN,
-							payload: true,
-						});
-					} else if (action.type === ActionType.CHECKOUT) {
-						dispatchAppointmentState({
-							type: APPOINTMENT_ACTION_TYPE.UPDATECHECKINGOUT,
-							payload: true,
-						});
-					}
-				});
-			});
-		}
-	}, [pageInputs]);
-
 	useEffect(() => {
 		if (pageInputs.length > 0) {
 			pageInputs.map(input => {
@@ -164,11 +145,21 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 
 	function textInputsReadyHandler(actions: IInputAction[]) {
 		const nextPageId = actions.find(action => action.navigateTo)?.navigateTo;
+		// const print = actions.find(action => action.type === ActionType.PRINTTICKET);
 
 		if (nextPageId) {
 			onChangePage(nextPageId);
 			setTextInputs([]);
 		}
+
+		// if (print) {
+		// 	dispatchTicketState({
+		// 		type: TicketDataActionType.SERVICEUPDATE,
+		// 		payload: print.service,
+		// 	});
+
+		// 	onPrint();
+		// }
 	}
 
 	return (

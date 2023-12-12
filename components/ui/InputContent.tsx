@@ -1,12 +1,13 @@
 import { useEffect } from "react";
 
-import { ActionType, IInputAction, IInputContent, IService, InputType, TicketDataActionType } from "../../interfaces";
+import { APPOINTMENT_ACTION_TYPE, ActionType, IInputAction, IInputContent, IService, InputType, TicketDataActionType } from "../../interfaces";
 
 import { useTicketDataContext } from "../../contexts/ticketDataContext";
 import { useLanguageContext } from "../../contexts/languageContext";
 
 import ButtonInput from "./inputs/ButtonInput";
 import NumberInput from "./inputs/NumberInput";
+import { useAppointmentContext } from "../../contexts/appointmentContext";
 
 interface IInputContentProps {
 	content: IInputContent
@@ -25,8 +26,9 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 		onHomePage,
 	} = props;
 
-	const { ticketState, dispatchTicketState, } = useTicketDataContext();
 	const { setLanguage, } = useLanguageContext();
+	const { ticketState, dispatchTicketState, } = useTicketDataContext();
+	const { dispatchAppointmentState, } = useAppointmentContext();
 
 	useEffect(() => {
 		if (content.type === InputType.CARDREADER) {
@@ -43,8 +45,14 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 	}, []);
 
 	useEffect(() => {
+		if (content.type === InputType.QRCODE) {
+			actionHandler();
+		}
+	}, []);
+
+	useEffect(() => {
 		//? When eId is read, automatically navigates to services page
-		if (content.type === InputType.CARDREADER && ticketState.eIdRead && content.actions) {
+		if (content.type === InputType.CARDREADER && ticketState.eIdRead && content.actions.length > 0) {
 			actionHandler();
 		}
 	}, [ticketState.eIdRead]);
@@ -79,6 +87,18 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 					break;
 				case ActionType.CHANGELANGUAGE:
 					setLanguage(latest => action.language ?? latest);
+					break;
+				case ActionType.CHECKIN:
+					dispatchAppointmentState({
+						type: APPOINTMENT_ACTION_TYPE.UPDATECHECKINGIN,
+						payload: true,
+					});
+					break;
+				case ActionType.CHECKOUT:
+					dispatchAppointmentState({
+						type: APPOINTMENT_ACTION_TYPE.UPDATECHECKINGOUT,
+						payload: true,
+					});
 					break;
 				default:
 					break;

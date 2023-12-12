@@ -5,12 +5,14 @@ import { Variables } from "../../variables";
 import { APPOINTMENT_ACTION_TYPE, IAppointmentAction } from "../interfaces";
 import Printer from "../../core/client/printer";
 
-export default function useQrCode(dispatchAppointment: React.Dispatch<IAppointmentAction>): [CallableFunction] {
+export default function useQrCode(dispatchAppointment: React.Dispatch<IAppointmentAction>): [CallableFunction, string | null] {
 	const [qrCodeText, setQrCodeText] = useState<string>("");
+	const [appointmentTicketPDF, setAppointmentTicketPDF] = useState<string | null>(null);
 
 	function qrCodeWrite(key: string, isCheckingIn: boolean, isCheckingOut: boolean) {
 		if (key === "Enter") {
 			console.log("QR Code Ready:", qrCodeText);
+			setAppointmentTicketPDF("");
 
 			if (isCheckingIn) {
 				checkIn();
@@ -27,13 +29,14 @@ export default function useQrCode(dispatchAppointment: React.Dispatch<IAppointme
 	async function checkIn() {
 		const checkinURL = `${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/checkinAppointment.php?id_project=${Variables.W_ID_PROJECT}&serial=${Variables.SERIAL}&qrcode=${qrCodeText}&pdf_ticket=base_64`;
 
+		console.log("🚀 ~ file: useQrCode.tsx:32 ~ checkIn ~ checkinURL:", checkinURL);
 		try {
 			const response = await fetch(checkinURL);
 			const data = await response.json();
+			console.log("🚀 ~ file: useQrCode.tsx:32 ~ checkIn ~ data:", data);
 
 			if (data.status != 1) {
-				console.log("🚀 ~ file: useQrCode.tsx:32 ~ checkIn ~ data:", data);
-
+				//* Error
 				if (Variables.PREVIEW) {
 					dispatchAppointment({
 						type: APPOINTMENT_ACTION_TYPE.UPDATECHECKEDIN,
@@ -43,10 +46,13 @@ export default function useQrCode(dispatchAppointment: React.Dispatch<IAppointme
 					//TODO: add error management
 				}
 			} else {
+				//* Ok, can print
 				dispatchAppointment({
 					type: APPOINTMENT_ACTION_TYPE.UPDATECHECKEDIN,
 					payload: true,
 				});
+
+				setAppointmentTicketPDF(data.pdf);
 
 				try {
 					const result = await Printer.print(data.pdf);
@@ -89,6 +95,7 @@ export default function useQrCode(dispatchAppointment: React.Dispatch<IAppointme
 		try {
 			const response = await fetch(checkoutURL);
 			const data = await response.json();
+			console.log("🚀 ~ file: useQrCode.tsx:99 ~ checkOut ~ data:", data);
 
 			if (data.status != 1) {
 				if (Variables.PREVIEW) {
@@ -119,6 +126,7 @@ export default function useQrCode(dispatchAppointment: React.Dispatch<IAppointme
 	}
 
 	return [
-		qrCodeWrite
+		qrCodeWrite,
+		appointmentTicketPDF
 	];
 }
