@@ -252,7 +252,7 @@ export interface IErrorState {
 
 export interface IErrorAction {
 	type: ERROR_ACTION_TYPE;
-	payload: IErrorState | undefined;
+	payload?: IErrorState;
 }
 
 export enum ERROR_ACTION_TYPE {

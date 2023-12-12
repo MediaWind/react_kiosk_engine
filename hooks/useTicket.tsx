@@ -8,8 +8,9 @@ import { ERROR_ACTION_TYPE, ERROR_CODE, IErrorAction, IFlow, ITicketDataState } 
 
 import getTicketingURL from "../utils/getTicketingURL";
 
-export default function usePrintTicket(dispatchError: React.Dispatch<IErrorAction>): [CallableFunction, boolean, CallableFunction] {
+export default function useTicket(dispatchError: React.Dispatch<IErrorAction>): [CallableFunction, boolean, CallableFunction, CallableFunction, string | null] {
 	const [isPrinting, setIsPrinting] = useState<boolean>(false);
+	const [ticketPDF, setTicketPDF] = useState<string | null>(null);
 
 	async function printTicket(ticketState: ITicketDataState, flow: IFlow) {
 		if(!navigator.onLine) {
@@ -142,9 +143,42 @@ export default function usePrintTicket(dispatchError: React.Dispatch<IErrorActio
 		}
 	}
 
+	async function createTicket(ticketState: ITicketDataState, flow: IFlow) {
+		try {
+			const response = await fetch(`${getTicketingURL(ticketState, flow)}&comment=${encodeURI("No ticket needed")}`);
+			const data = await response.json();
+
+			if (data.status == 1) {
+				setTicketPDF(data.pdf);
+			} else {
+				console.log("Error: unable to create ticket. Data:", data);
+				dispatchError({
+					type: ERROR_ACTION_TYPE.SETERROR,
+					payload: {
+						hasError: true,
+						errorCode: ERROR_CODE.B500,
+						message: "Unable to create ticket",
+					},
+				});
+			}
+		} catch (err) {
+			console.log(err);
+			dispatchError({
+				type: ERROR_ACTION_TYPE.SETERROR,
+				payload: {
+					hasError: true,
+					errorCode: ERROR_CODE.B500,
+					message: "Unable to create ticket",
+				},
+			});
+		}
+	}
+
 	return [
 		printTicket,
 		isPrinting,
-		signInPatient
+		signInPatient,
+		createTicket,
+		ticketPDF
 	];
 }

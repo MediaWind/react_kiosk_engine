@@ -9,7 +9,7 @@ import useSharedVariables from "../../core/hooks/useSharedVariables";
 import useEId, { eIdData, eIdStatus } from "../../core/hooks/useEId";
 import { setIntervalRange } from "../../core/customInterval";
 
-import { ERROR_ACTION_TYPE, ERROR_CODE, IFlow, LANGUAGE, Route, TicketDataActionType } from "../interfaces";
+import { IFlow, LANGUAGE, Route, TicketDataActionType } from "../interfaces";
 
 import { TicketDataContext } from "../contexts/ticketDataContext";
 import { FlowContext } from "../contexts/flowContext";
@@ -20,17 +20,17 @@ import ticketDataReducer, { initialTicketState } from "../reducers/ticketDataRed
 import appointmentReducer, { initialAppointmentState } from "../reducers/appointmentReducer";
 import errorReducer, { initialErrorState } from "../reducers/errorReducer";
 
-import usePrintTicket from "../hooks/usePrintTicket";
+import useTicket from "../hooks/useTicket";
 import useQrCode from "../hooks/useQrCode";
 
 import checkCurrentFlow from "../utils/checkCurrentFlow";
-import checkPrinterStatus from "../utils/checkPrinterStatus";
 
 import PageRouter from "../components/PageRouter";
 import LoadingScreen from "../components/ui/LoadingScreen";
 import Debugger from "../components/debug/Debugger";
 import DisplayError from "../components/ui/DisplayError";
 import { AppointmentContext } from "../contexts/appointmentContext";
+import usePrinter from "../hooks/usePrinter";
 
 interface IEngineProps {
 	route: Route
@@ -55,8 +55,9 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [printRequested, setPrintRequested] = useState<boolean>(false);
 	const [signInRequested, setSignInRequested] = useState<boolean>(false);
 
-	const [printTicket, isPrinting, signInPatient] = usePrintTicket(dispatchError);
+	const [printTicket, isPrinting, signInPatient] = useTicket(dispatchError);
 	const [qrCodeWrite] = useQrCode(dispatchAppointmentState);
+	const [, , checkPrinterStatus] = usePrinter(dispatchError);
 
 	useEffect(() => {
 		if (Variables.C_ORIENTATION() === ORIENTATION.HORIZONTAL) {
@@ -132,40 +133,18 @@ function Engine(props: IEngineProps): JSX.Element {
 	//* Checks printer status every 5 to 10 seconds *//
 	//* ------------------------------------------- *//
 	useEffect(() => {
-		// checkPrinterStatus(dispatchError, error.errorCode);
-		const delay = setIntervalRange(() => {
-			//TODO separate printer status error from "regular" error
-			checkPrinterStatus(dispatchError, error.errorCode);
-		}, [5 * 1000, 10 * 1000]);
+		if (!Variables.PREVIEW) {
+			checkPrinterStatus(error.errorCode);
+			const delay = setIntervalRange(() => {
+				//TODO separate printer status error from "regular" error?
+				checkPrinterStatus(error.errorCode);
+			}, [5 * 1000, 10 * 1000]);
 
-		return () => {
-			clearInterval(delay);
-		};
+			return () => {
+				clearInterval(delay);
+			};
+		}
 	}, [error]);
-
-	useEffect(() => {
-		const delay = setIntervalRange(() => {
-			if (!navigator.onLine) {
-				dispatchError({
-					type: ERROR_ACTION_TYPE.SETERROR,
-					payload: {
-						hasError: true,
-						errorCode: ERROR_CODE.A503,
-						message: "Kiosk is not connected to internet",
-					},
-				});
-			} else {
-				dispatchError({
-					type: ERROR_ACTION_TYPE.CLEARERROR,
-					payload: undefined,
-				});
-			}
-		}, [5 * 1000, 10 * 1000]);
-
-		return () => {
-			clearInterval(delay);
-		};
-	}, []);
 
 	//* ----------------------------------------- *//
 	//* Makes sure any error wipe all saved datas *//
