@@ -151,18 +151,20 @@
 							"content": {
 								"name": "string",
 								"type": "button|text|number|cardReader|qrCode",
-								"action": {
-									"type": "nextpage|previouspage|homepage|printticket|savedata|saveservice|changelanguage|checkin|checkout...",
+								"actions": [
+									{
+										"type": "nextpage|previouspage|homepage|printticket|savedata|saveservice|changelanguage|checkin|checkout...",
 
-									"navigateTo": "UUID",
+										"navigateTo": "UUID",
 
-									"service": {
-										"serviceID": 10,
-										"priority": 0
-									},
+										"service": {
+											"serviceID": 10,
+											"priority": 0
+										},
 
-									"language": "fr|nl|en|es"
-								},
+										"language": "fr|nl|en|es"
+									}
+								],
 
 								"placeholder": "placeholder",
 								"autoFocus": false,
