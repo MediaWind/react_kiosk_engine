@@ -51,17 +51,14 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [flaggedFlow, setFlaggedFlow] = useState<IFlow>();
 	const [readyToChangeFlow, setReadyToChangeFlow] = useState<boolean>(true);
 
-	// const [printRequested, setPrintRequested] = useState<boolean>(false);
-	// const [signInRequested, setSignInRequested] = useState<boolean>(false);
-
 	const [ticketData, dispatchTicketState] = useReducer(ticketDataReducer, initialTicketState);
 	const [appointmentState, dispatchAppointmentState] = useReducer(appointmentReducer, initialAppointmentState);
 	const [printState, dispatchPrintState] = useReducer(printReducer, initialPrintState);
 	const [error, dispatchError] = useReducer(errorReducer, initialErrorState);
 
 	const [createTicket, ticketPDF] = useTicket(dispatchError);
-	const [qrCodeWrite] = useQrCode(dispatchAppointmentState);
-	const [printTicketNEW, isPrinting , checkPrinterStatus] = usePrinter(dispatchError);
+	const [qrCodeWrite, appointmentTicketPDF] = useQrCode(dispatchAppointmentState);
+	const [printTicket, isPrinting , checkPrinterStatus] = usePrinter(dispatchError);
 
 	useEffect(() => {
 		if (Variables.C_ORIENTATION() === ORIENTATION.HORIZONTAL) {
@@ -195,7 +192,7 @@ function Engine(props: IEngineProps): JSX.Element {
 		}
 
 		if (printState.printRequested && printState.ticketPDF) {
-			printTicketNEW(printState.ticketPDF);
+			printTicket(printState.ticketPDF);
 
 			dispatchPrintState({ type: PRINT_ACTION_TYPE.CLEARALL,});
 		}
@@ -208,7 +205,23 @@ function Engine(props: IEngineProps): JSX.Element {
 				payload: ticketPDF,
 			});
 		}
-	}, [ticketPDF]);
+
+		if (appointmentTicketPDF !== null) {
+			dispatchPrintState({
+				type: PRINT_ACTION_TYPE.UPDATETICKETPDF,
+				payload: appointmentTicketPDF,
+			});
+		}
+	}, [ticketPDF, appointmentTicketPDF]);
+
+	//* ------------ *//
+	//* Appointments *//
+	//* ------------ *//
+	useEffect(() => {
+		if (appointmentState.isCheckedIn) {
+			//
+		}
+	}, [appointmentState]);
 
 	// ---------- Handlers ---------- //
 	const resetTicketData = () => {

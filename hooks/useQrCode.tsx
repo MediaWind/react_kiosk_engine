@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Variables } from "../../variables";
 
 import { APPOINTMENT_ACTION_TYPE, IAppointmentAction } from "../interfaces";
-import Printer from "../../core/client/printer";
 
 export default function useQrCode(dispatchAppointment: React.Dispatch<IAppointmentAction>): [CallableFunction, string | null] {
 	const [qrCodeText, setQrCodeText] = useState<string>("");
@@ -12,7 +11,7 @@ export default function useQrCode(dispatchAppointment: React.Dispatch<IAppointme
 	function qrCodeWrite(key: string, isCheckingIn: boolean, isCheckingOut: boolean) {
 		if (key === "Enter") {
 			console.log("QR Code Ready:", qrCodeText);
-			setAppointmentTicketPDF("");
+			setAppointmentTicketPDF(null);
 
 			if (isCheckingIn) {
 				checkIn();
@@ -53,28 +52,6 @@ export default function useQrCode(dispatchAppointment: React.Dispatch<IAppointme
 				});
 
 				setAppointmentTicketPDF(data.pdf);
-
-				try {
-					const result = await Printer.print(data.pdf);
-
-					if (result) {
-						// setTimeout(() => {
-						// 	setIsPrinting(false);
-						// }, 5000);
-					}
-				} catch (err) {
-					// setIsPrinting(false);
-
-					console.log(err);
-					// dispatchError({
-					// 	type: ERROR_ACTION_TYPE.SETERROR,
-					// 	payload: {
-					// 		hasError: true,
-					// 		errorCode: ERROR_CODE.A500,
-					// 		message: "Could not print ticket",
-					// 	},
-					// });
-				}
 			}
 		} catch (err) {
 			console.log(err);

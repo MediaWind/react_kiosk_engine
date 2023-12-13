@@ -85,11 +85,11 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 					});
 					break;
 				case ActionType.PRINTTICKET:
-					dispatchTicketState({
-						type: TicketDataActionType.SERVICEUPDATE,
-						payload: action.service as IService,
-					});
-					dispatchPrintState({ type: PRINT_ACTION_TYPE.REQUESTTICKETCREATION, payload: true, });
+					// dispatchTicketState({
+					// 	type: TicketDataActionType.SERVICEUPDATE,
+					// 	payload: action.service as IService,
+					// });
+					// dispatchPrintState({ type: PRINT_ACTION_TYPE.REQUESTTICKETCREATION, payload: true, });
 					dispatchPrintState({ type: PRINT_ACTION_TYPE.REQUESTPRINT, payload: true, });
 					break;
 				case ActionType.CHANGELANGUAGE:
