@@ -33,6 +33,7 @@ import PageRouter from "../components/PageRouter";
 import LoadingScreen from "../components/ui/LoadingScreen";
 import Debugger from "../components/debug/Debugger";
 import DisplayError from "../components/ui/DisplayError";
+import getUserAgents from "../reducers/getUserAgents";
 
 interface IEngineProps {
 	route: Route
@@ -212,16 +213,14 @@ function Engine(props: IEngineProps): JSX.Element {
 				payload: appointmentTicketPDF,
 			});
 		}
-	}, [ticketPDF, appointmentTicketPDF]);
 
-	//* ------------ *//
-	//* Appointments *//
-	//* ------------ *//
-	useEffect(() => {
-		if (appointmentState.isCheckedIn) {
-			//
+		if (ticketPDF === null && appointmentTicketPDF === null) {
+			dispatchPrintState({
+				type: PRINT_ACTION_TYPE.UPDATETICKETPDF,
+				payload: null,
+			});
 		}
-	}, [appointmentState]);
+	}, [ticketPDF, appointmentTicketPDF]);
 
 	// ---------- Handlers ---------- //
 	const resetTicketData = () => {
