@@ -33,7 +33,6 @@ import PageRouter from "../components/PageRouter";
 import LoadingScreen from "../components/ui/LoadingScreen";
 import Debugger from "../components/debug/Debugger";
 import DisplayError from "../components/ui/DisplayError";
-import getUserAgents from "../reducers/getUserAgents";
 
 interface IEngineProps {
 	route: Route
