@@ -161,7 +161,7 @@ export enum ActionType {
 	PREVIOUSPAGE = "previouspage",
 	HOMEPAGE = "homepage",
 	PRINTTICKET = "printticket",
-	SAVEDATA = "savedata",
+	CREATETICKET = "createticket",
 	SAVESERVICE = "saveservice",
 	CHANGELANGUAGE = "changelanguage",
 	CHECKIN = "checkin",
