@@ -2,9 +2,9 @@ import { useState } from "react";
 
 import { Variables } from "../../variables";
 
-import { APPOINTMENT_ACTION_TYPE, IAppointmentAction } from "../interfaces";
+import { APPOINTMENT_ACTION_TYPE, ERROR_ACTION_TYPE, ERROR_CODE, IAppointmentAction, IErrorAction, IErrorState } from "../interfaces";
 
-export default function useQrCode(dispatchAppointment: React.Dispatch<IAppointmentAction>): [CallableFunction, string | null] {
+export default function useQrCode(dispatchError: React.Dispatch<IErrorAction>, dispatchAppointment: React.Dispatch<IAppointmentAction>): [CallableFunction, string | null] {
 	const [qrCodeText, setQrCodeText] = useState<string>("");
 	const [appointmentTicketPDF, setAppointmentTicketPDF] = useState<string | null>(null);
 
@@ -14,25 +14,27 @@ export default function useQrCode(dispatchAppointment: React.Dispatch<IAppointme
 			setAppointmentTicketPDF(null);
 
 			if (isCheckingIn) {
-				checkIn();
+				checkIn(qrCodeText);
 			}
 
 			if (isCheckingOut) {
-				checkOut();
+				checkOut(qrCodeText);
 			}
+
+			setQrCodeText("");
 		} else {
 			setQrCodeText(latest => latest + key);
 		}
 	}
 
-	async function checkIn() {
-		const checkinURL = `${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/checkinAppointment.php?id_project=${Variables.W_ID_PROJECT}&serial=${Variables.SERIAL}&qrcode=${qrCodeText}&pdf_ticket=base_64`;
+	async function checkIn(qrCode: string) {
+		const checkinURL = `${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/checkinAppointment.php?id_project=${Variables.W_ID_PROJECT}&serial=${Variables.SERIAL}&qrcode=${qrCode}&pdf_ticket=base_64`;
+		// console.log("🚀 ~ file: useQrCode.tsx:30 ~ checkIn ~ checkinURL:", checkinURL);
 
-		console.log("🚀 ~ file: useQrCode.tsx:32 ~ checkIn ~ checkinURL:", checkinURL);
 		try {
 			const response = await fetch(checkinURL);
 			const data = await response.json();
-			console.log("🚀 ~ file: useQrCode.tsx:32 ~ checkIn ~ data:", data);
+			// console.log("🚀 ~ file: useQrCode.tsx:35 ~ checkIn ~ data:", data);
 
 			if (data.status != 1) {
 				//* Error
@@ -42,16 +44,34 @@ export default function useQrCode(dispatchAppointment: React.Dispatch<IAppointme
 						payload: true,
 					});
 				} else {
-					//TODO: add error management
+					dispatchError({
+						type: ERROR_ACTION_TYPE.SETERROR,
+						payload: {
+							hasError: true,
+							errorCode: ERROR_CODE.B500,
+							message: "Unable to fetch ticket PDF",
+						} as IErrorState,
+					});
 				}
 			} else {
-				//* Ok, can print
-				dispatchAppointment({
-					type: APPOINTMENT_ACTION_TYPE.UPDATECHECKEDIN,
-					payload: true,
-				});
+				if (data.pdf !== null) {
+					//* Ok, can print
+					dispatchAppointment({
+						type: APPOINTMENT_ACTION_TYPE.UPDATECHECKEDIN,
+						payload: true,
+					});
 
-				setAppointmentTicketPDF(data.pdf);
+					setAppointmentTicketPDF(data.pdf);
+				} else {
+					dispatchError({
+						type: ERROR_ACTION_TYPE.SETERROR,
+						payload: {
+							hasError: true,
+							errorCode: ERROR_CODE.A400,
+							message: "Ticket PDF is null",
+						},
+					});
+				}
 			}
 		} catch (err) {
 			console.log(err);
@@ -66,8 +86,8 @@ export default function useQrCode(dispatchAppointment: React.Dispatch<IAppointme
 		}
 	}
 
-	async function checkOut() {
-		const checkoutURL = `${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/checkout.php?id_project=${Variables.W_ID_PROJECT}&serial=${Variables.SERIAL}&qrcode=${qrCodeText}`;
+	async function checkOut(qrCode: string) {
+		const checkoutURL = `${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/checkout.php?id_project=${Variables.W_ID_PROJECT}&serial=${Variables.SERIAL}&qrcode=${qrCode}`;
 
 		try {
 			const response = await fetch(checkoutURL);

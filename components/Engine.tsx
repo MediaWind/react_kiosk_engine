@@ -57,7 +57,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [error, dispatchError] = useReducer(errorReducer, initialErrorState);
 
 	const [createTicket, ticketPDF] = useTicket(dispatchError);
-	const [qrCodeWrite, appointmentTicketPDF] = useQrCode(dispatchAppointmentState);
+	const [qrCodeWrite, appointmentTicketPDF] = useQrCode(dispatchError, dispatchAppointmentState);
 	const [printTicket, isPrinting , checkPrinterStatus] = usePrinter(dispatchError);
 
 	useEffect(() => {

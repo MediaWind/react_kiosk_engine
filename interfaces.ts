@@ -265,6 +265,10 @@ export enum ERROR_CODE {
 	 */
 	A200 = "200",
 	/**
+	 * 400-A: Ticket PDF is null
+	 */
+	A400 = "400-A",
+	/**
 	 * 404-A: Appointment not found
 	 */
 	A404 = "404-A",
