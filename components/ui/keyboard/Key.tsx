@@ -8,6 +8,7 @@ import styles from "../../../styles/CustomKeyboard.module.scss";
 
 import { IKeyStyling, KeyAction } from "./CustomKeyboard";
 import { Variables } from "../../../../variables";
+import { useState } from "react";
 
 interface IKeyProps {
 	text?: {
@@ -37,6 +38,8 @@ export default function Key(props: IKeyProps): JSX.Element {
 		onDisplaySpecChars,
 		specChars,
 	} = props;
+
+	const [pressed, setPressed] = useState<boolean>(false);
 
 	const changetexthandler = () => {
 		if (capslock && text?.capslockValue !== undefined) {
@@ -85,9 +88,15 @@ export default function Key(props: IKeyProps): JSX.Element {
 
 			return (
 				<div
-					className={styles.key_action}
+					className={`${styles.key_action} ${pressed ? styles.pressed : ""}`}
 					onClick={devClick}
-					onTouchEnd={shiftClickHandler}
+					onMouseDown={() => setPressed(true)}
+					onMouseUp={() => setPressed(false)}
+					onTouchStart={() => setPressed(true)}
+					onTouchEnd={() => {
+						shiftClickHandler();
+						setPressed(false);
+					}}
 				>
 					{text ? text.defaultValue : <FontAwesomeIcon icon={faUp} style={{ color: "#999999", fontSize: "0.03rem", }} />}
 					<FontAwesomeIcon icon={faCircle} style={{ color: capslock ? "#00dd00" : "#999999", fontSize: "0.01rem", marginTop: "0.004rem", }} />
@@ -98,9 +107,15 @@ export default function Key(props: IKeyProps): JSX.Element {
 		if (action === KeyAction.SPECIALCHARS) {
 			return (
 				<div
-					className={styles.key_action}
+					className={`${styles.key_action} ${pressed ? styles.pressed : ""}`}
 					onClick={displaySpecCharsHandlerDev}
-					onTouchEnd={displaySpecCharsHandler}
+					onMouseDown={() => setPressed(true)}
+					onMouseUp={() => setPressed(false)}
+					onTouchStart={() => setPressed(true)}
+					onTouchEnd={() => {
+						displaySpecCharsHandler();
+						setPressed(false);
+					}}
 				>
 					<p>{text ? text.defaultValue : "#+="}</p>
 					<FontAwesomeIcon icon={faCircle} style={{ color: specChars ? "#00dd00" : "#999999", fontSize: "0.01rem", marginTop: "0.004rem", }} />
@@ -111,9 +126,15 @@ export default function Key(props: IKeyProps): JSX.Element {
 		if (action === KeyAction.SPACEBAR) {
 			return (
 				<div
-					className={styles.key_spacebar}
+					className={`${styles.key_spacebar} ${pressed ? styles.pressed : ""}`}
 					onClick={() => Variables.PREVIEW ? onChangeText(" ") : ""}
-					onTouchEnd={() => onChangeText(" ")}
+					onMouseDown={() => setPressed(true)}
+					onMouseUp={() => setPressed(false)}
+					onTouchStart={() => setPressed(true)}
+					onTouchEnd={() => {
+						onChangeText(" ");
+						setPressed(false);
+					}}
 				>
 					<p>{text ? text.defaultValue : "Space"}</p>
 				</div>
@@ -123,9 +144,15 @@ export default function Key(props: IKeyProps): JSX.Element {
 		if (action === KeyAction.ENTER) {
 			return (
 				<div
-					className={styles.key_action}
+					className={`${styles.key_action} ${pressed ? styles.pressed : ""}`}
 					onClick={() => Variables.PREVIEW ? onChangeText("\n") : ""}
-					onTouchEnd={() => onChangeText("\n")}
+					onMouseDown={() => setPressed(true)}
+					onMouseUp={() => setPressed(false)}
+					onTouchStart={() => setPressed(true)}
+					onTouchEnd={() => {
+						onChangeText("\n");
+						setPressed(false);
+					}}
 					style={{
 						backgroundColor: style?.backgroundColor ? style.backgroundColor : "",
 						justifyContent: style?.textAlign ? style.textAlign : "",
@@ -146,7 +173,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 		if (action === KeyAction.BACKSPACE) {
 			return (
 				<div
-					className={styles.key_action}
+					className={`${styles.key_action} ${pressed ? styles.pressed : ""}`}
 					onClick={() => {
 						if (!Variables.PREVIEW) {
 							return;
@@ -155,7 +182,11 @@ export default function Key(props: IKeyProps): JSX.Element {
 							onDeleteText();
 						}
 					}}
+					onMouseDown={() => setPressed(true)}
+					onMouseUp={() => setPressed(false)}
+					onTouchStart={() => setPressed(true)}
 					onTouchEnd={() => {
+						setPressed(false);
 						if (onDeleteText) {
 							onDeleteText();
 						}
@@ -178,9 +209,15 @@ export default function Key(props: IKeyProps): JSX.Element {
 
 			return (
 				<div
-					className={styles.key_action}
+					className={`${styles.key_action} ${pressed ? styles.pressed : ""}`}
 					onClick={() => Variables.PREVIEW ? action() : ""}
-					onTouchEnd={() => action()}
+					onMouseDown={() => setPressed(true)}
+					onMouseUp={() => setPressed(false)}
+					onTouchStart={() => setPressed(true)}
+					onTouchEnd={() => {
+						action();
+						setPressed(false);
+					}}
 					style={{
 						backgroundColor: style?.backgroundColor ? style.backgroundColor : "",
 						justifyContent: style?.textAlign ? style.textAlign : "",
@@ -210,9 +247,15 @@ export default function Key(props: IKeyProps): JSX.Element {
 
 	return (
 		<div
-			className={styles.key_default}
+			className={`${styles.key_default} ${pressed ? styles.pressed : ""}`}
 			onClick={changetexthandlerDev}
-			onTouchEnd={changetexthandler}
+			onMouseDown={() => setPressed(true)}
+			onMouseUp={() => setPressed(false)}
+			onTouchStart={() => setPressed(true)}
+			onTouchEnd={() => {
+				changetexthandler();
+				setPressed(false);
+			}}
 		>
 			<p>
 				{displayedText}

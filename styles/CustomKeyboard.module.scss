@@ -90,6 +90,11 @@ $font_color_default: #333333;
 	}
 }
 
+.pressed {
+	transform: translateY(5%);
+	transition: transform 0.1s;
+}
+
 .spec_char_box {
 	position: absolute;
 	top: 0;
