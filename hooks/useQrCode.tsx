@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Variables } from "../../variables";
 
 import { APPOINTMENT_ACTION_TYPE, ERROR_ACTION_TYPE, ERROR_CODE, IAppointmentAction, IErrorAction, IErrorState } from "../interfaces";
+import { testPDF } from "../utils/testPDF";
 
 export default function useQrCode(dispatchError: React.Dispatch<IErrorAction>, dispatchAppointment: React.Dispatch<IAppointmentAction>): [CallableFunction, string | null] {
 	const [qrCodeText, setQrCodeText] = useState<string>("");
@@ -34,7 +35,7 @@ export default function useQrCode(dispatchError: React.Dispatch<IErrorAction>, d
 		try {
 			const response = await fetch(checkinURL);
 			const data = await response.json();
-			// console.log("🚀 ~ file: useQrCode.tsx:35 ~ checkIn ~ data:", data);
+			console.log("🚀 ~ file: useQrCode.tsx:35 ~ checkIn ~ data:", data);
 
 			if (data.status != 1) {
 				//* Error
@@ -43,6 +44,7 @@ export default function useQrCode(dispatchError: React.Dispatch<IErrorAction>, d
 						type: APPOINTMENT_ACTION_TYPE.UPDATECHECKEDIN,
 						payload: true,
 					});
+					setAppointmentTicketPDF(testPDF);
 				} else {
 					dispatchError({
 						type: ERROR_ACTION_TYPE.SETERROR,
