@@ -5,7 +5,7 @@ import { useLanguageContext } from "../contexts/languageContext";
 import { useTicketDataContext } from "../contexts/ticketDataContext";
 import { useErrorContext } from "../contexts/errorContext";
 
-import { IFlow, IPage, TicketDataActionType } from "../interfaces";
+import { IFlow, IPage, TICKET_DATA_ACTION_TYPE } from "../interfaces";
 
 import ActivePage from "./ActivePage";
 import Date from "./ui/Date";
@@ -62,7 +62,7 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 					setReload(true);
 
 					dispatchTicketState({
-						type: TicketDataActionType.CLEARDATA,
+						type: TICKET_DATA_ACTION_TYPE.CLEARDATA,
 						payload: undefined,
 					});
 				}
@@ -77,7 +77,7 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 	useEffect(() => {
 		if (router.slice(-1)[0] === homePage) {
 			dispatchTicketState({
-				type: TicketDataActionType.CLEARDATA,
+				type: TICKET_DATA_ACTION_TYPE.CLEARDATA,
 				payload: undefined,
 			});
 

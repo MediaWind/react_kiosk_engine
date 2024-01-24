@@ -38,7 +38,7 @@ export interface IFlow {
 	id: string;
 	name: string;
 	homePage: string;
-	keyboardLayout?: KeyboardLayout;
+	keyboardLayout?: KEYBOARD_LAYOUT;
 	navigateToHomePageAfter?: number;
 	pages: IPage[];
 	ticketParameters?: ITicketParameters;
@@ -70,7 +70,7 @@ export interface IErrorManagement {
 	//TODO: add more error options
 }
 
-export enum KeyboardLayout {
+export enum KEYBOARD_LAYOUT {
 	CLASSIC = "classic",
 	CUSTOMMADE = "customMade"
 }
@@ -99,11 +99,11 @@ export interface IBackgroundImage {
 }
 
 export interface IMedia {
-	type: MediaType;
+	type: MEDIA_TYPE;
 	content: IVideoContent | IImageContent | IInputContent;
 }
 
-export enum MediaType {
+export enum MEDIA_TYPE {
 	VIDEO = "video",
 	IMAGE = "image",
 	INPUT = "input"
@@ -120,11 +120,11 @@ export interface IVideoContent {
 export interface IImageContent {
 	name: string;
 	src: string;
-	animate?: AnimationType;
+	animate?: ANIMATION_TYPE;
 	styles: IStyles;
 }
 
-export enum AnimationType {
+export enum ANIMATION_TYPE {
 	RIGHTLEFT = "rightToLeft",
 	BOTTOMTOP = "bottomToTop",
 	TOPBOTTOM = "topToBottom",
@@ -133,7 +133,7 @@ export enum AnimationType {
 
 export interface IInputContent {
 	name: string;
-	type: InputType;
+	type: INPUT_TYPE;
 	actions: IInputAction[];
 	placeholder?: string;
 	autoFocus?: boolean;
@@ -141,7 +141,7 @@ export interface IInputContent {
 	styles: IStyles;
 }
 
-export enum InputType {
+export enum INPUT_TYPE {
 	BUTTON = "button",
 	TEXT = "text",
 	NUMBER = "number",
@@ -150,13 +150,13 @@ export enum InputType {
 }
 
 export interface IInputAction {
-	type: ActionType;
+	type: ACTION_TYPE;
 	navigateTo?: string;
 	service?: IService;
 	language?: LANGUAGE;
 }
 
-export enum ActionType {
+export enum ACTION_TYPE {
 	NEXTPAGE = "nextpage",
 	PREVIOUSPAGE = "previouspage",
 	HOMEPAGE = "homepage",
@@ -225,11 +225,11 @@ export interface ITicketDataState {
 }
 
 export interface ITicketDataAction {
-	type: TicketDataActionType
+	type: TICKET_DATA_ACTION_TYPE
 	payload: eIdData | IInputField | IService | boolean | LANGUAGE | undefined
 }
 
-export enum TicketDataActionType {
+export enum TICKET_DATA_ACTION_TYPE {
 	EIDUPDATE = "eidupdate",
 	EIDLISTENINGUPDATE = "eidlisteningupdate",
 	EIDREADUPDATE = "eidreadupdate",

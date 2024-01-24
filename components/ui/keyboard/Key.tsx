@@ -6,7 +6,7 @@ import { faArrowTurnDownLeft } from "@fortawesome/pro-solid-svg-icons";
 
 import styles from "../../../styles/CustomKeyboard.module.scss";
 
-import { IKeyStyling, KeyAction } from "./CustomKeyboard";
+import { IKeyStyling, KEY_ACTION } from "./CustomKeyboard";
 import { Variables } from "../../../../variables";
 import { useState } from "react";
 
@@ -17,7 +17,7 @@ interface IKeyProps {
 		specCharsValue?: string
 	}
 	style?: IKeyStyling
-	action?: KeyAction | CallableFunction
+	action?: KEY_ACTION | CallableFunction
 	onChangeText: CallableFunction
 	onDeleteText?: CallableFunction
 	onShiftToggle?: CallableFunction
@@ -72,7 +72,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 	}
 
 	if (action) {
-		if (action === KeyAction.SHIFT) {
+		if (action === KEY_ACTION.SHIFT) {
 			const shiftClickHandler = () => {
 				if (onShiftToggle) {
 					onShiftToggle();
@@ -104,7 +104,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 			);
 		}
 
-		if (action === KeyAction.SPECIALCHARS) {
+		if (action === KEY_ACTION.SPECIALCHARS) {
 			return (
 				<div
 					className={`${styles.key_action} ${pressed ? styles.pressed : ""}`}
@@ -123,7 +123,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 			);
 		}
 
-		if (action === KeyAction.SPACEBAR) {
+		if (action === KEY_ACTION.SPACEBAR) {
 			return (
 				<div
 					className={`${styles.key_spacebar} ${pressed ? styles.pressed : ""}`}
@@ -141,7 +141,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 			);
 		}
 
-		if (action === KeyAction.ENTER) {
+		if (action === KEY_ACTION.ENTER) {
 			return (
 				<div
 					className={`${styles.key_action} ${pressed ? styles.pressed : ""}`}
@@ -170,7 +170,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 			);
 		}
 
-		if (action === KeyAction.BACKSPACE) {
+		if (action === KEY_ACTION.BACKSPACE) {
 			return (
 				<div
 					className={`${styles.key_action} ${pressed ? styles.pressed : ""}`}

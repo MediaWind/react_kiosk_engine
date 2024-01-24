@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import { APPOINTMENT_ACTION_TYPE, ActionType, IInputAction, IInputContent, IService, InputType, PRINT_ACTION_TYPE, TicketDataActionType } from "../../interfaces";
+import { APPOINTMENT_ACTION_TYPE, ACTION_TYPE, IInputAction, IInputContent, IService, INPUT_TYPE, PRINT_ACTION_TYPE, TICKET_DATA_ACTION_TYPE } from "../../interfaces";
 
 import { useLanguageContext } from "../../contexts/languageContext";
 import { useTicketDataContext } from "../../contexts/ticketDataContext";
@@ -31,28 +31,28 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 	const { dispatchPrintState, } = usePrintContext();
 
 	useEffect(() => {
-		if (content.type === InputType.CARDREADER) {
+		if (content.type === INPUT_TYPE.CARDREADER) {
 			dispatchTicketState({
-				type: TicketDataActionType.EIDLISTENINGUPDATE,
+				type: TICKET_DATA_ACTION_TYPE.EIDLISTENINGUPDATE,
 				payload: true,
 			});
 		} else {
 			dispatchTicketState({
-				type: TicketDataActionType.EIDLISTENINGUPDATE,
+				type: TICKET_DATA_ACTION_TYPE.EIDLISTENINGUPDATE,
 				payload: false,
 			});
 		}
 	}, []);
 
 	useEffect(() => {
-		if (content.type === InputType.QRCODE) {
+		if (content.type === INPUT_TYPE.QRCODE) {
 			actionHandler();
 		}
 	}, []);
 
 	useEffect(() => {
 		//? When eId is read, automatically navigates to services page
-		if (content.type === InputType.CARDREADER && ticketState.eIdRead && content.actions.length > 0) {
+		if (content.type === INPUT_TYPE.CARDREADER && ticketState.eIdRead && content.actions.length > 0) {
 			actionHandler();
 		}
 	}, [ticketState.eIdRead]);
@@ -62,37 +62,37 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 
 		function doAction(action: IInputAction) {
 			switch (action.type) {
-				case ActionType.NEXTPAGE:
+				case ACTION_TYPE.NEXTPAGE:
 					onNavigate(action.navigateTo);
 					break;
-				case ActionType.PREVIOUSPAGE:
+				case ACTION_TYPE.PREVIOUSPAGE:
 					onBackPage();
 					break;
-				case ActionType.HOMEPAGE:
+				case ACTION_TYPE.HOMEPAGE:
 					onHomePage();
 					break;
-				case ActionType.CREATETICKET:
+				case ACTION_TYPE.CREATETICKET:
 					dispatchPrintState({ type: PRINT_ACTION_TYPE.REQUESTTICKETCREATION, payload: true, });
 					break;
-				case ActionType.SAVESERVICE:
+				case ACTION_TYPE.SAVESERVICE:
 					dispatchTicketState({
-						type: TicketDataActionType.SERVICEUPDATE,
+						type: TICKET_DATA_ACTION_TYPE.SERVICEUPDATE,
 						payload: action.service as IService,
 					});
 					break;
-				case ActionType.PRINTTICKET:
+				case ACTION_TYPE.PRINTTICKET:
 					dispatchPrintState({ type: PRINT_ACTION_TYPE.REQUESTPRINT, payload: true, });
 					break;
-				case ActionType.CHANGELANGUAGE:
+				case ACTION_TYPE.CHANGELANGUAGE:
 					setLanguage(latest => action.language ?? latest);
 					break;
-				case ActionType.CHECKIN:
+				case ACTION_TYPE.CHECKIN:
 					dispatchAppointmentState({
 						type: APPOINTMENT_ACTION_TYPE.UPDATECHECKINGIN,
 						payload: true,
 					});
 					break;
-				case ActionType.CHECKOUT:
+				case ACTION_TYPE.CHECKOUT:
 					dispatchAppointmentState({
 						type: APPOINTMENT_ACTION_TYPE.UPDATECHECKINGOUT,
 						payload: true,
@@ -104,16 +104,16 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 		}
 	};
 
-	if (content.type === InputType.BUTTON) {
+	if (content.type === INPUT_TYPE.BUTTON) {
 		return (
 			<ButtonInput onClick={actionHandler} styles={content.styles} />
 		);
-	} else if (content.type === InputType.NUMBER) {
+	} else if (content.type === INPUT_TYPE.NUMBER) {
 		return (
 			<NumberInput styles={content.styles} />
 		);
 	} else {
-		//? InputType.TEXT is managed from ActivePage with TextInputsManager component
+		//? INPUT_TYPE.TEXT is managed from ActivePage with TextInputsManager component
 		return (
 			<>
 			</>

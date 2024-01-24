@@ -20,11 +20,11 @@ export interface IKeyOptions {
 		capslockValue?: string
 		specCharsValue?: string
 	}
-	action?: KeyAction | CallableFunction
+	action?: KEY_ACTION | CallableFunction
 	style?: IKeyStyling
 }
 
-export enum KeyAction {
+export enum KEY_ACTION {
 	SHIFT = "shift",
 	ALT = "alt",
 	CTRL = "ctrl",
@@ -82,7 +82,7 @@ export default function CustomKeyboard(props: ICustomKeyboardProps): JSX.Element
 	};
 
 	return (
-		<div className={styles.main} style={{ display: display ? "" : "none", }}>
+		<div className={styles.main} style={{ display: display ? "" : "none", zIndex: 5, }}>
 			{pattern.rows.map((row, index) => {
 				return (
 					<KeyRow

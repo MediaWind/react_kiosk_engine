@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { ActionType, IInputAction, IInputContent, IMedia, IPage, IService, MediaType, PRINT_ACTION_TYPE, TicketDataActionType } from "../interfaces";
+import { ACTION_TYPE, IInputAction, IInputContent, IMedia, IPage, IService, MEDIA_TYPE, PRINT_ACTION_TYPE, TICKET_DATA_ACTION_TYPE } from "../interfaces";
 
 import { useTicketDataContext } from "../contexts/ticketDataContext";
 import { useAppointmentContext } from "../contexts/appointmentContext";
@@ -45,7 +45,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 		if (pageMedias.length > 0) {
 			const inputs: IInputContent[] = [];
 			pageMedias.map(media => {
-				if (media.type === MediaType.INPUT) {
+				if (media.type === MEDIA_TYPE.INPUT) {
 					inputs.push(media.content as IInputContent);
 				}
 			});
@@ -66,7 +66,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 			if (page.navigateToAfter) {
 				if (page.navigateToAfter.service) {
 					dispatchTicketState({
-						type: TicketDataActionType.SERVICEUPDATE,
+						type: TICKET_DATA_ACTION_TYPE.SERVICEUPDATE,
 						payload: page.navigateToAfter.service as IService,
 					});
 				}
@@ -84,7 +84,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 	//* Checks if page contains text inputs and if so, forwards them to text input manager
 	useEffect(() => {
 		if (page.medias) {
-			const inputs = page.medias.filter(media => media.type === MediaType.INPUT);
+			const inputs = page.medias.filter(media => media.type === MEDIA_TYPE.INPUT);
 			const textInputMedias = inputs.filter((media) => {
 				const content = media.content as IInputContent;
 				if (content.textInput) {
@@ -113,7 +113,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 			pageInputs.map(input => {
 				input.actions.map(action => {
 					if (
-						(action.type === ActionType.CHECKIN || action.type === ActionType.CHECKOUT) &&
+						(action.type === ACTION_TYPE.CHECKIN || action.type === ACTION_TYPE.CHECKOUT) &&
 						action.navigateTo &&
 						(appointmentState.isCheckedIn || appointmentState.isCheckedOut)
 					) {

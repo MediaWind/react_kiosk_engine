@@ -1,4 +1,4 @@
-import { IImageContent, IInputContent, IMedia, IVideoContent, MediaType } from "../interfaces";
+import { IImageContent, IInputContent, IMedia, IVideoContent, MEDIA_TYPE } from "../interfaces";
 
 import ImageContent from "./ui/ImageContent";
 import InputContent from "./ui/InputContent";
@@ -33,11 +33,11 @@ export default function FlowMedia(props: IFlowMediaProps): JSX.Element {
 		onHomePage();
 	};
 
-	if (media.type === MediaType.IMAGE) {
+	if (media.type === MEDIA_TYPE.IMAGE) {
 		return (
 			<ImageContent id={id} content={media.content as IImageContent} />
 		);
-	} else if (media.type === MediaType.VIDEO) {
+	} else if (media.type === MEDIA_TYPE.VIDEO) {
 		return (
 			<VideoContent id={id} content={media.content as IVideoContent} />
 		);

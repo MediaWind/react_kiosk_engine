@@ -9,7 +9,7 @@ import useSharedVariables from "../../core/hooks/useSharedVariables";
 import useEId, { eIdData, eIdStatus } from "../../core/hooks/useEId";
 import { setIntervalRange } from "../../core/customInterval";
 
-import { IFlow, LANGUAGE, PRINT_ACTION_TYPE, Route, TicketDataActionType } from "../interfaces";
+import { IFlow, LANGUAGE, PRINT_ACTION_TYPE, Route, TICKET_DATA_ACTION_TYPE } from "../interfaces";
 
 import { TicketDataContext } from "../contexts/ticketDataContext";
 import { FlowContext } from "../contexts/flowContext";
@@ -130,7 +130,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	// Updates language in the ticket data reducer
 	useEffect(() => {
 		dispatchTicketState({
-			type: TicketDataActionType.LANGUAGEUPDATE,
+			type: TICKET_DATA_ACTION_TYPE.LANGUAGEUPDATE,
 			payload: language,
 		});
 	}, [language]);
@@ -151,7 +151,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	useEffect(() => {
 		if (ticketData.pageIsListeningToEId && eIdData != null) {
 			dispatchTicketState({
-				type: TicketDataActionType.EIDUPDATE,
+				type: TICKET_DATA_ACTION_TYPE.EIDUPDATE,
 				payload: eIdData as eIdData,
 			});
 		}
@@ -161,7 +161,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	useEffect(() => {
 		if (ticketData.pageIsListeningToEId && eIdData != null && eidStatus === eIdStatus.READ) {
 			dispatchTicketState({
-				type: TicketDataActionType.EIDREADUPDATE,
+				type: TICKET_DATA_ACTION_TYPE.EIDREADUPDATE,
 				payload: true,
 			});
 		}
@@ -224,7 +224,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	// ---------- Handlers ---------- //
 	const resetTicketData = () => {
 		dispatchTicketState({
-			type: TicketDataActionType.CLEARDATA,
+			type: TICKET_DATA_ACTION_TYPE.CLEARDATA,
 			payload: undefined,
 		});
 	};
