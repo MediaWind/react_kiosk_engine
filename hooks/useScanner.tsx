@@ -5,7 +5,7 @@ import { Variables } from "../../variables";
 import { APPOINTMENT_ACTION_TYPE, ERROR_ACTION_TYPE, ERROR_CODE, IAppointmentAction, IErrorAction, IErrorState } from "../interfaces";
 import { testPDF } from "../utils/testPDF";
 
-export default function useQrCode(dispatchError: React.Dispatch<IErrorAction>, dispatchAppointment: React.Dispatch<IAppointmentAction>): [CallableFunction, string | null] {
+export default function useScanner(dispatchError: React.Dispatch<IErrorAction>, dispatchAppointment: React.Dispatch<IAppointmentAction>): [CallableFunction, string | null] {
 	const [qrCodeText, setQrCodeText] = useState<string>("");
 	const [appointmentTicketPDF, setAppointmentTicketPDF] = useState<string | null>(null);
 
@@ -30,12 +30,12 @@ export default function useQrCode(dispatchError: React.Dispatch<IErrorAction>, d
 
 	async function checkIn(qrCode: string) {
 		const checkinURL = `${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/checkinAppointment.php?id_project=${Variables.W_ID_PROJECT}&serial=${Variables.SERIAL}&qrcode=${qrCode}&pdf_ticket=base_64`;
-		// console.log("🚀 ~ file: useQrCode.tsx:30 ~ checkIn ~ checkinURL:", checkinURL);
+		// console.log("🚀 ~ file: useScanner.tsx:30 ~ checkIn ~ checkinURL:", checkinURL);
 
 		try {
 			const response = await fetch(checkinURL);
 			const data = await response.json();
-			console.log("🚀 ~ file: useQrCode.tsx:35 ~ checkIn ~ data:", data);
+			console.log("🚀 ~ file: useScanner.tsx:35 ~ checkIn ~ data:", data);
 
 			if (data.status != 1) {
 				//* Error
@@ -94,7 +94,7 @@ export default function useQrCode(dispatchError: React.Dispatch<IErrorAction>, d
 		try {
 			const response = await fetch(checkoutURL);
 			const data = await response.json();
-			console.log("🚀 ~ file: useQrCode.tsx:99 ~ checkOut ~ data:", data);
+			console.log("🚀 ~ file: useScanner.tsx:99 ~ checkOut ~ data:", data);
 
 			if (data.status != 1) {
 				if (Variables.PREVIEW) {

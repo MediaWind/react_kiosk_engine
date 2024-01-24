@@ -25,7 +25,7 @@ import errorReducer, { initialErrorState } from "../reducers/errorReducer";
 
 import usePrinter from "../hooks/usePrinter";
 import useTicket from "../hooks/useTicket";
-import useQrCode from "../hooks/useQrCode";
+import useScanner from "../hooks/useScanner";
 
 import checkCurrentFlow from "../utils/checkCurrentFlow";
 
@@ -57,7 +57,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [error, dispatchError] = useReducer(errorReducer, initialErrorState);
 
 	const [createTicket, ticketPDF] = useTicket(dispatchError);
-	const [qrCodeWrite, appointmentTicketPDF] = useQrCode(dispatchError, dispatchAppointmentState);
+	const [qrCodeWrite, appointmentTicketPDF] = useScanner(dispatchError, dispatchAppointmentState);
 	const [printTicket, isPrinting , checkPrinterStatus] = usePrinter(dispatchError);
 
 	useEffect(() => {
