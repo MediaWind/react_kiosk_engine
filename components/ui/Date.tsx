@@ -23,6 +23,7 @@ export default function Date(props: IDateProps): JSX.Element {
 	const { language, } = useLanguageContext();
 
 	const [date, setDate] = useState<string>("");
+	dayjs.locale("fr");
 
 	useEffect(() => {
 		dayjs.locale(language);
