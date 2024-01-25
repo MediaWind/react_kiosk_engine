@@ -21,22 +21,22 @@ export default function getTicketingURL(ticketState: ITicketDataState, flow: IFl
 	} else if (ticketState.textInputDatas) {
 		const firstname = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.firstname);
 		const lastname = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.lastname);
+		const nationalNumber = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.nationalNumber);
 		const email = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.email);
 		const phone = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.phone);
 		const company = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.company);
 		const comment = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.comment);
-		const idUserAgent = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.id_userAgent);
-		const registre_national = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.registre_national);
+		const idUserAgent = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.idUserAgent);
 
 		params += `
 		&firstname=${encodeURIComponent(firstname?.value ?? "")}
 		&lastname=${encodeURIComponent(lastname?.value ?? "")}
+		&registre_national=${encodeURIComponent(nationalNumber?.value ?? "")}
 		&email=${encodeURIComponent(email?.value ?? "")}
 		&phone=${encodeURIComponent(phone?.value ?? "")}
 		&company=${encodeURIComponent(company?.value ?? "")}
 		&comment=${encodeURIComponent(comment?.value ?? "")}
 		&id_userAgent=${encodeURIComponent(idUserAgent?.value ?? "")}
-		&registre_national=${encodeURIComponent(registre_national?.value ?? "")}
 		`;
 	}
 

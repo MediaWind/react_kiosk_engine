@@ -49,12 +49,12 @@ export interface IFlow {
 export interface ITicketParameters {
 	firstname?: string;
 	lastname?: string;
-	company?: string;
-	phone?: string;
+	nationalNumber?: string;
 	email?: string;
+	phone?: string;
+	company?: string;
 	comment?: string;
-	id_userAgent?: string;
-	registre_national?: string;
+	idUserAgent?: string;
 }
 
 export interface IDateTime {

@@ -67,11 +67,12 @@
 			"ticketParameters": {
 				"firstname": "text input ID",
 				"lastname": "text input ID",
-				"company": "text input ID",
-				"phone": "text input ID",
+				"nationalNumber": "text input ID",
 				"email": "text input ID",
+				"phone": "text input ID",
+				"company": "text input ID",
 				"comment": "text input ID",
-				"id_userAgent": "text input ID"
+				"idUserAgent": "text input ID"
 			},
 
 			"keyboardLayout": "classic|customMade",
