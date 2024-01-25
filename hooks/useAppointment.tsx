@@ -1,35 +1,28 @@
 import { useState } from "react";
-
 import { Variables } from "../../variables";
-
 import { APPOINTMENT_ACTION_TYPE, ERROR_ACTION_TYPE, ERROR_CODE, IAppointmentAction, IErrorAction, IErrorState } from "../interfaces";
 import { testPDF } from "../utils/testPDF";
 
-export default function useScanner(dispatchError: React.Dispatch<IErrorAction>, dispatchAppointment: React.Dispatch<IAppointmentAction>): [CallableFunction, string | null] {
-	const [qrCodeText, setQrCodeText] = useState<string>("");
-	const [appointmentTicketPDF, setAppointmentTicketPDF] = useState<string | null>(null);
+export default function useAppointment(dispatchAppointment: React.Dispatch<IAppointmentAction>, dispatchError: React.Dispatch<IErrorAction>) {
+	const [appointmentTicketPdf, setAppointmentTicketPDF] = useState<string>("");
 
-	function qrCodeWrite(key: string, isCheckingIn: boolean, isCheckingOut: boolean) {
-		if (key === "Enter") {
-			console.log("QR Code Ready:", qrCodeText);
-			setAppointmentTicketPDF(null);
+	const [isCheckingIn, setIsCheckingIn] = useState<boolean>(false);
+	const [isCheckingOut, setIsCheckingOut] = useState<boolean>(false);
 
-			if (isCheckingIn) {
-				checkIn(qrCodeText);
-			}
-
-			if (isCheckingOut) {
-				checkOut(qrCodeText);
-			}
-
-			setQrCodeText("");
-		} else {
-			setQrCodeText(latest => latest + key);
-		}
-	}
+	// const [isCheckedIn, setIsCheckedIn] = useState<boolean>(false);
+	// const [isCheckedOut, setIsCheckedOut] = useState<boolean>(false);
 
 	async function checkIn(qrCode: string) {
-		const checkinURL = `${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/checkinAppointment.php?id_project=${Variables.W_ID_PROJECT}&serial=${Variables.SERIAL}&qrcode=${qrCode}&pdf_ticket=base_64`;
+		setIsCheckingIn(true);
+		setAppointmentTicketPDF("");
+
+		const checkinURL = `
+			${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/checkinAppointment.php?
+			id_project=${Variables.W_ID_PROJECT}
+			&serial=${Variables.SERIAL}
+			&qrcode=${qrCode}
+			pdf_ticket=base_64
+		`;
 		// console.log("🚀 ~ checkIn ~ checkinURL:", checkinURL);
 
 		try {
@@ -57,7 +50,6 @@ export default function useScanner(dispatchError: React.Dispatch<IErrorAction>, 
 				}
 			} else {
 				if (data.pdf !== null) {
-					//* Ok, can print
 					dispatchAppointment({
 						type: APPOINTMENT_ACTION_TYPE.UPDATECHECKEDIN,
 						payload: true,
@@ -78,7 +70,7 @@ export default function useScanner(dispatchError: React.Dispatch<IErrorAction>, 
 		} catch (err) {
 			console.log(err);
 		} finally {
-			setQrCodeText("");
+			setIsCheckingIn(false);
 
 			setTimeout(() => {
 				dispatchAppointment({
@@ -89,7 +81,15 @@ export default function useScanner(dispatchError: React.Dispatch<IErrorAction>, 
 	}
 
 	async function checkOut(qrCode: string) {
-		const checkoutURL = `${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/checkout.php?id_project=${Variables.W_ID_PROJECT}&serial=${Variables.SERIAL}&qrcode=${qrCode}`;
+		setIsCheckingOut(true);
+		setAppointmentTicketPDF("");
+
+		const checkoutURL = `
+			${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/checkout.php?
+			id_project=${Variables.W_ID_PROJECT}
+			&serial=${Variables.SERIAL}
+			&qrcode=${qrCode}
+		`;
 
 		try {
 			const response = await fetch(checkoutURL);
@@ -114,7 +114,7 @@ export default function useScanner(dispatchError: React.Dispatch<IErrorAction>, 
 		} catch (err) {
 			console.log(err);
 		} finally {
-			setQrCodeText("");
+			setIsCheckingOut(false);
 
 			setTimeout(() => {
 				dispatchAppointment({
@@ -125,7 +125,10 @@ export default function useScanner(dispatchError: React.Dispatch<IErrorAction>, 
 	}
 
 	return [
-		qrCodeWrite,
-		appointmentTicketPDF
+		appointmentTicketPdf,
+		checkIn,
+		checkOut,
+		isCheckingIn,
+		isCheckingOut
 	];
 }
