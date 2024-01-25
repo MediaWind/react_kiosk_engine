@@ -3,17 +3,10 @@ import { Variables } from "../../variables";
 import { APPOINTMENT_ACTION_TYPE, ERROR_ACTION_TYPE, ERROR_CODE, IAppointmentAction, IErrorAction, IErrorState } from "../interfaces";
 import { testPDF } from "../utils/testPDF";
 
-export default function useAppointment(dispatchAppointment: React.Dispatch<IAppointmentAction>, dispatchError: React.Dispatch<IErrorAction>) {
+export default function useAppointment(dispatchAppointment: React.Dispatch<IAppointmentAction>, dispatchError: React.Dispatch<IErrorAction>): [string, CallableFunction, CallableFunction] {
 	const [appointmentTicketPdf, setAppointmentTicketPDF] = useState<string>("");
 
-	const [isCheckingIn, setIsCheckingIn] = useState<boolean>(false);
-	const [isCheckingOut, setIsCheckingOut] = useState<boolean>(false);
-
-	// const [isCheckedIn, setIsCheckedIn] = useState<boolean>(false);
-	// const [isCheckedOut, setIsCheckedOut] = useState<boolean>(false);
-
 	async function checkIn(qrCode: string) {
-		setIsCheckingIn(true);
 		setAppointmentTicketPDF("");
 
 		const checkinURL = `
@@ -70,18 +63,15 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 		} catch (err) {
 			console.log(err);
 		} finally {
-			setIsCheckingIn(false);
-
 			setTimeout(() => {
 				dispatchAppointment({
 					type: APPOINTMENT_ACTION_TYPE.CLEARALL,
 				});
-			}, 10 * 1000);
+			}, 1000);
 		}
 	}
 
 	async function checkOut(qrCode: string) {
-		setIsCheckingOut(true);
 		setAppointmentTicketPDF("");
 
 		const checkoutURL = `
@@ -114,21 +104,17 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 		} catch (err) {
 			console.log(err);
 		} finally {
-			setIsCheckingOut(false);
-
 			setTimeout(() => {
 				dispatchAppointment({
 					type: APPOINTMENT_ACTION_TYPE.CLEARALL,
 				});
-			}, 10 * 1000);
+			}, 1000);
 		}
 	}
 
 	return [
 		appointmentTicketPdf,
 		checkIn,
-		checkOut,
-		isCheckingIn,
-		isCheckingOut
+		checkOut
 	];
 }

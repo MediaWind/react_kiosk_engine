@@ -23,9 +23,10 @@ import appointmentReducer, { initialAppointmentState } from "../reducers/appoint
 import printReducer, { initialPrintState } from "../reducers/printReducer";
 import errorReducer, { initialErrorState } from "../reducers/errorReducer";
 
+import useScanner from "../hooks/useScanner";
 import usePrinter from "../hooks/usePrinter";
 import useTicket from "../hooks/useTicket";
-import useScanner from "../hooks/useScanner";
+import useAppointment from "../hooks/useAppointment";
 
 import checkCurrentFlow from "../utils/checkCurrentFlow";
 
@@ -51,14 +52,15 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [flaggedFlow, setFlaggedFlow] = useState<IFlow>();
 	const [readyToChangeFlow, setReadyToChangeFlow] = useState<boolean>(true);
 
-	const [ticketData, dispatchTicketState] = useReducer(ticketDataReducer, initialTicketState);
+	const [ticketState, dispatchTicketState] = useReducer(ticketDataReducer, initialTicketState);
 	const [appointmentState, dispatchAppointmentState] = useReducer(appointmentReducer, initialAppointmentState);
 	const [printState, dispatchPrintState] = useReducer(printReducer, initialPrintState);
 	const [error, dispatchError] = useReducer(errorReducer, initialErrorState);
 
-	const [createTicket, ticketPDF] = useTicket(dispatchError);
-	const [qrCodeWrite, appointmentTicketPDF] = useScanner(dispatchError, dispatchAppointmentState);
+	const [qrCode, writeQrCode, resetQrCode] = useScanner();
 	const [printTicket, isPrinting , checkPrinterStatus] = usePrinter(dispatchError);
+	const [createTicket, ticketPDF] = useTicket(dispatchError);
+	const [appointmentTicketPDF, checkIn, checkOut] = useAppointment(dispatchAppointmentState, dispatchError);
 
 	useEffect(() => {
 		if (Variables.C_ORIENTATION() === ORIENTATION.HORIZONTAL) {
@@ -140,7 +142,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	//* --- *//
 	//Loading on eId inserted
 	useEffect(() => {
-		if (ticketData.pageIsListeningToEId && eidStatus === eIdStatus.INSERTED) {
+		if (ticketState.pageIsListeningToEId && eidStatus === eIdStatus.INSERTED) {
 			setIsLoading(true);
 		} else {
 			setIsLoading(false);
@@ -149,7 +151,7 @@ function Engine(props: IEngineProps): JSX.Element {
 
 	// Updates eId Data in reducer
 	useEffect(() => {
-		if (ticketData.pageIsListeningToEId && eIdData != null) {
+		if (ticketState.pageIsListeningToEId && eIdData != null) {
 			dispatchTicketState({
 				type: TICKET_DATA_ACTION_TYPE.EIDUPDATE,
 				payload: eIdData as eIdData,
@@ -159,13 +161,13 @@ function Engine(props: IEngineProps): JSX.Element {
 
 	// Updates eId read in reducer
 	useEffect(() => {
-		if (ticketData.pageIsListeningToEId && eIdData != null && eidStatus === eIdStatus.READ) {
+		if (ticketState.pageIsListeningToEId && eIdData != null && eidStatus === eIdStatus.READ) {
 			dispatchTicketState({
 				type: TICKET_DATA_ACTION_TYPE.EIDREADUPDATE,
 				payload: true,
 			});
 		}
-	}, [ticketData.pageIsListeningToEId, eIdData, eidStatus]);
+	}, [ticketState.pageIsListeningToEId, eIdData, eidStatus]);
 
 	//* ------ *//
 	//* Errors *//
@@ -183,7 +185,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	// Monitors printState to trigger ticket creation/print
 	useEffect(() => {
 		if (printState.ticketCreationRequested) {
-			createTicket(ticketData, currentFlow);
+			createTicket(ticketState, currentFlow);
 
 			dispatchPrintState({
 				type: PRINT_ACTION_TYPE.REQUESTTICKETCREATION,
@@ -221,19 +223,44 @@ function Engine(props: IEngineProps): JSX.Element {
 		}
 	}, [ticketPDF, appointmentTicketPDF]);
 
+	//* ------------ *//
+	//* Appointments *//
+	//* ------------ *//
+	// Sends checkin/checkout requests when qrCode is ready then resets it
+	useEffect(() => {
+		console.log("🚀 ~ Engine ~ qrCode:", qrCode);
+		if ((appointmentState.isCheckingIn || appointmentState.isCheckingOut) && qrCode !== "") {
+			if (appointmentState.isCheckingIn) {
+				checkIn(qrCode);
+			}
+
+			if (appointmentState.isCheckingOut) {
+				checkOut(qrCode);
+			}
+
+			writeQrCode("Enter");
+		}
+	}, [qrCode, appointmentState.isCheckingIn, appointmentState.isCheckingOut]);
+
 	// ---------- Handlers ---------- //
-	const resetTicketData = () => {
+	function resetTicketData() {
 		dispatchTicketState({
 			type: TICKET_DATA_ACTION_TYPE.CLEARDATA,
 			payload: undefined,
 		});
-	};
+	}
 
-	const keydownHandler = (e: any) => {
-		if (appointmentState.isCheckingIn || appointmentState.isCheckingOut) {
-			qrCodeWrite(e.key, appointmentState.isCheckingIn, appointmentState.isCheckingOut);
-		}
-	};
+	function keydownHandler(e: any) {
+		writeQrCode(e.key);
+	}
+
+	function resetAll() {
+		resetTicketData();
+		resetQrCode();
+
+		setReadyToChangeFlow(true);
+		setLanguage(undefined);
+	}
 
 	if (currentFlow) {
 		return (
@@ -244,7 +271,7 @@ function Engine(props: IEngineProps): JSX.Element {
 				tabIndex={0}
 			>
 				<LanguageContext.Provider value={{ language, setLanguage, }}>
-					<TicketDataContext.Provider value={{ ticketState: ticketData, dispatchTicketState, }}>
+					<TicketDataContext.Provider value={{ ticketState, dispatchTicketState, }}>
 						<AppointmentContext.Provider value={{ appointmentState, dispatchAppointmentState, }}>
 							<FlowContext.Provider value={{ flow: currentFlow, setReload: setReadyToChangeFlow, }}>
 								<ErrorContext.Provider value={{ errorState: error, dispatchErrorState: dispatchError, }}>
@@ -252,12 +279,12 @@ function Engine(props: IEngineProps): JSX.Element {
 
 										{props.debug && (
 											<Debugger
-												eidData={ticketData.eIdDatas}
+												eidData={ticketState.eIdDatas}
 												messages={[
 													`eidstatus: ${eidStatus}`,
 													`firstname from eiddata: ${eIdData?.firstName}`,
-													`eidread: ${ticketData.eIdRead}`,
-													`page is listening to eid: ${ticketData.pageIsListeningToEId}`,
+													`eidread: ${ticketState.eIdRead}`,
+													`page is listening to eid: ${ticketState.pageIsListeningToEId}`,
 													isPrinting ? "Printing!" : "",
 													error.hasError ? `Error ${error.errorCode}: ${error.message}` : ""
 												]}
@@ -268,9 +295,7 @@ function Engine(props: IEngineProps): JSX.Element {
 
 										{isLoading && <LoadingScreen />}
 
-										<PageRouter
-											isPrinting={isPrinting}
-										/>
+										<PageRouter isPrinting={isPrinting} onReset={resetAll} />
 
 									</PrintContext.Provider>
 								</ErrorContext.Provider>

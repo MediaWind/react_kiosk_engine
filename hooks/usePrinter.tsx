@@ -82,9 +82,6 @@ export default function usePrinter(dispatchError: React.Dispatch<IErrorAction>):
 
 	async function print(pdf: string) {
 		if (isPrinting) {
-			// setTimeout(() => {
-			// 	print(pdf);
-			// }, 1000);
 			return;
 		}
 

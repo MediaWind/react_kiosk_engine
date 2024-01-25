@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 
+import { IFlow, IPage } from "../interfaces";
+
 import { useFlowContext } from "../contexts/flowContext";
 import { useLanguageContext } from "../contexts/languageContext";
-import { useTicketDataContext } from "../contexts/ticketDataContext";
 import { useErrorContext } from "../contexts/errorContext";
 
-import { IFlow, IPage, TICKET_DATA_ACTION_TYPE } from "../interfaces";
 
 import ActivePage from "./ActivePage";
 import Date from "./ui/Date";
@@ -13,11 +13,13 @@ import Time from "./ui/Time";
 
 interface IFlowDispatcherProps {
 	isPrinting: boolean
+	onReset: CallableFunction
 }
 
 function getHomePage(flow: IFlow): IPage {
 	if (flow.pages.length === 0) {
 		throw new Error;
+		//TODO: use error reducer
 	}
 
 	const homeId = flow.homePage;
@@ -31,13 +33,10 @@ function getHomePage(flow: IFlow): IPage {
 }
 
 export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
-	const {
-		isPrinting,
-	} = props;
+	const { isPrinting, onReset, } = props;
 
-	const { setLanguage, } = useLanguageContext();
 	const { flow, setReload, } = useFlowContext();
-	const { dispatchTicketState, } = useTicketDataContext();
+	const { setLanguage, } = useLanguageContext();
 	const { errorState, } = useErrorContext();
 
 	const [homePage, setHomePage] = useState<IPage>(getHomePage(flow));
@@ -59,12 +58,7 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 			const delay = setTimeout(() => {
 				if (router.slice(-1)[0] !== homePage) {
 					setRouter([homePage]);
-					setReload(true);
-
-					dispatchTicketState({
-						type: TICKET_DATA_ACTION_TYPE.CLEARDATA,
-						payload: undefined,
-					});
+					onReset();
 				}
 			}, flow.navigateToHomePageAfter * 1000);
 
@@ -76,14 +70,7 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 
 	useEffect(() => {
 		if (router.slice(-1)[0] === homePage) {
-			dispatchTicketState({
-				type: TICKET_DATA_ACTION_TYPE.CLEARDATA,
-				payload: undefined,
-			});
-
-			setReload(true);
-
-			setLanguage(undefined);
+			onReset();
 		} else {
 			setReload(false);
 		}
