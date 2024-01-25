@@ -2,6 +2,7 @@ import { useEffect } from "react";
 
 import { APPOINTMENT_ACTION_TYPE, ACTION_TYPE, IInputAction, IInputContent, IService, INPUT_TYPE, PRINT_ACTION_TYPE, TICKET_DATA_ACTION_TYPE } from "../../interfaces";
 
+import { useRouterContext } from "../../contexts/routerContext";
 import { useLanguageContext } from "../../contexts/languageContext";
 import { useTicketDataContext } from "../../contexts/ticketDataContext";
 import { useAppointmentContext } from "../../contexts/appointmentContext";
@@ -12,19 +13,12 @@ import NumberInput from "./inputs/NumberInput";
 
 interface IInputContentProps {
 	content: IInputContent
-	onNavigate: CallableFunction
-	onBackPage: CallableFunction
-	onHomePage: CallableFunction
 }
 
 export default function InputContent(props: IInputContentProps): JSX.Element {
-	const {
-		content,
-		onNavigate,
-		onBackPage,
-		onHomePage,
-	} = props;
+	const { content, } = props;
 
+	const { nextPage, previousPage, homePage, } = useRouterContext();
 	const { setLanguage, } = useLanguageContext();
 	const { ticketState, dispatchTicketState, } = useTicketDataContext();
 	const { dispatchAppointmentState, } = useAppointmentContext();
@@ -63,13 +57,13 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 		function doAction(action: IInputAction) {
 			switch (action.type) {
 				case ACTION_TYPE.NEXTPAGE:
-					onNavigate(action.navigateTo);
+					nextPage(action.navigateTo);
 					break;
 				case ACTION_TYPE.PREVIOUSPAGE:
-					onBackPage();
+					previousPage();
 					break;
 				case ACTION_TYPE.HOMEPAGE:
-					onHomePage();
+					homePage();
 					break;
 				case ACTION_TYPE.CREATETICKET:
 					dispatchPrintState({ type: PRINT_ACTION_TYPE.REQUESTTICKETCREATION, payload: true, });

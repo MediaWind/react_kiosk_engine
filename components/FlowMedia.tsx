@@ -7,31 +7,10 @@ import VideoContent from "./ui/VideoContent";
 interface IFlowMediaProps {
 	id: string
 	media: IMedia
-	onNavigate: CallableFunction
-	onBackPage: CallableFunction
-	onHomePage: CallableFunction
 }
 
 export default function FlowMedia(props: IFlowMediaProps): JSX.Element {
-	const {
-		id,
-		media,
-		onNavigate,
-		onBackPage,
-		onHomePage,
-	} = props;
-
-	const navigationHandler = (pageID: string) => {
-		onNavigate(pageID);
-	};
-
-	const backPageHandler = () => {
-		onBackPage();
-	};
-
-	const homePageHandler = () => {
-		onHomePage();
-	};
+	const { id, media, } = props;
 
 	if (media.type === MEDIA_TYPE.IMAGE) {
 		return (
@@ -43,12 +22,7 @@ export default function FlowMedia(props: IFlowMediaProps): JSX.Element {
 		);
 	} else {
 		return (
-			<InputContent
-				content={media.content as IInputContent}
-				onNavigate={navigationHandler}
-				onBackPage={backPageHandler}
-				onHomePage={homePageHandler}
-			/>
+			<InputContent content={media.content as IInputContent} />
 		);
 	}
 }

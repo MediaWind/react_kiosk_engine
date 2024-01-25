@@ -228,7 +228,6 @@ function Engine(props: IEngineProps): JSX.Element {
 	//* ------------ *//
 	// Sends checkin/checkout requests when qrCode is ready then resets it
 	useEffect(() => {
-		console.log("🚀 ~ Engine ~ qrCode:", qrCode);
 		if ((appointmentState.isCheckingIn || appointmentState.isCheckingOut) && qrCode !== "") {
 			if (appointmentState.isCheckingIn) {
 				checkIn(qrCode);

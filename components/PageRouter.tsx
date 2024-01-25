@@ -10,6 +10,7 @@ import { useErrorContext } from "../contexts/errorContext";
 import ActivePage from "./ActivePage";
 import Date from "./ui/Date";
 import Time from "./ui/Time";
+import { RouterContext } from "../contexts/routerContext";
 
 interface IFlowDispatcherProps {
 	isPrinting: boolean
@@ -83,36 +84,33 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 		}
 	}, [isPrinting]);
 
-	const changePageHandler = (pageID: string) => {
+	function nextPageHandler(pageID: string) {
 		const page = flow.pages.find(page => page.id === pageID);
 
 		if (page) {
 			setRouter((latest) => [...latest, page]);
 		}
-	};
+	}
 
-	const backPageHandler = () => {
+	function previousPageHandler() {
 		setRouter((latest) => {
 			const popped = latest.slice(0, latest.length - 1);
 			return [...popped];
 		});
-	};
+	}
 
-	const homePageHandler = () => {
+	function homePageHandler() {
 		setRouter([homePage]);
-	};
+	}
 
 	return (
 		<>
 			{flow.displayDate && <Date format={flow.displayDate.format} style={flow.displayDate.style} />}
 			{flow.displayTime && <Time format={flow.displayTime.format} style={flow.displayTime.style} />}
 
-			<ActivePage
-				page={router.slice(-1)[0]}
-				onChangePage={changePageHandler}
-				onBackPage={backPageHandler}
-				onHomePage={homePageHandler}
-			/>
+			<RouterContext.Provider value={{ nextPage: nextPageHandler, previousPage: previousPageHandler, homePage: homePageHandler, }}>
+				<ActivePage page={router.slice(-1)[0]} />
+			</RouterContext.Provider>
 		</>
 	);
 }

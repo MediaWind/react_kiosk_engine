@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { ACTION_TYPE, IInputAction, IInputContent, IMedia, IPage, IService, MEDIA_TYPE, PRINT_ACTION_TYPE, TICKET_DATA_ACTION_TYPE } from "../interfaces";
 
+import { useRouterContext } from "../contexts/routerContext";
 import { useTicketDataContext } from "../contexts/ticketDataContext";
 import { useAppointmentContext } from "../contexts/appointmentContext";
 import { usePrintContext } from "../contexts/printContext";
@@ -12,19 +13,12 @@ import TextInputsManager from "./TextInputsManager";
 
 interface IActivePageProps {
 	page: IPage
-	onChangePage: CallableFunction
-	onBackPage: CallableFunction
-	onHomePage: CallableFunction
 }
 
 export default function ActivePage(props: IActivePageProps): JSX.Element {
-	const {
-		page,
-		onChangePage,
-		onBackPage,
-		onHomePage,
-	} = props;
+	const { page, } = props;
 
+	const { nextPage, } = useRouterContext();
 	const { dispatchTicketState, } = useTicketDataContext();
 	const { appointmentState, } = useAppointmentContext();
 	const { dispatchPrintState, } = usePrintContext();
@@ -76,7 +70,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 					dispatchPrintState({ type: PRINT_ACTION_TYPE.REQUESTPRINT, payload: true, });
 				}
 
-				onChangePage(page.navigateToAfter.navigateTo);
+				nextPage(page.navigateToAfter.navigateTo);
 			}
 		}, page.navigateToAfter.delay * 1000);
 	}, [page]);
@@ -117,30 +111,18 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 						action.navigateTo &&
 						(appointmentState.isCheckedIn || appointmentState.isCheckedOut)
 					) {
-						onChangePage(action.navigateTo);
+						nextPage(action.navigateTo);
 					}
 				});
 			});
 		}
 	}, [appointmentState]);
 
-	function changePageHandler(pageID: string) {
-		onChangePage(pageID);
-	}
-
-	function backPageHandler() {
-		onBackPage();
-	}
-
-	function homePageHandler() {
-		onHomePage();
-	}
-
 	function textInputsReadyHandler(actions: IInputAction[]) {
 		const nextPageId = actions.find(action => action.navigateTo)?.navigateTo;
 
 		if (nextPageId) {
-			onChangePage(nextPageId);
+			nextPage(nextPageId);
 			setTextInputs([]);
 		}
 	}
@@ -150,14 +132,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 			{(page.medias && page.medias.length > 0) &&
 				page.medias.map((media, index) => {
 					return (
-						<FlowMedia
-							key={`${page.id}__${index}`}
-							id={`${page.id}__${index}`}
-							media={media}
-							onNavigate={changePageHandler}
-							onBackPage={backPageHandler}
-							onHomePage={homePageHandler}
-						/>
+						<FlowMedia key={`${page.id}__${index}`} id={`${page.id}__${index}`} media={media} />
 					);
 				})
 			}
