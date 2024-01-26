@@ -1,5 +1,7 @@
 import { Variables } from "../../variables";
 
+type Days = "0" | "1" | "2" | "3" | "4" | "5" | "6";
+
 interface IService {
 	id: string;
 	key_language: string;
@@ -29,14 +31,12 @@ interface IService {
 	service_is_disabled: number;
 	service_is_open: boolean;
 	label: string;
-	array_translations: {
-		en: {
-			idProject: string;
-			keyLang: string;
-			lang: string;
-			value: string
-		}
-	}
+	array_translations: Record<string, {
+		idProject: string;
+		keyLang: string;
+		lang: string;
+		value: string
+	}>
 	is_closed_day: number;
 	nbr_agent: string;
 	nbTicketWait: number;
@@ -56,21 +56,11 @@ interface IService {
 		ref_external: string;
 		id_bms: string
 	}
-	schedule: {
-		0: IServiceSchedule[];
-		1: IServiceSchedule[];
-		2: IServiceSchedule[];
-		3: IServiceSchedule[];
-		4: IServiceSchedule[];
-		5: IServiceSchedule[];
-		6: IServiceSchedule[];
-	}
+	schedule: Record<Days, {
+		hour_start: string;
+		hour_end: string;
+	}>
 	reasons: string[]
-}
-
-interface IServiceSchedule {
-	hour_start: string;
-	hour_end: string;
 }
 
 export default async function getServices() {
