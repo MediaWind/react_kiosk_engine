@@ -45,7 +45,7 @@ export default function usePrintTicket(dispatchError: React.Dispatch<IErrorActio
 					if (result) {
 						setTimeout(() => {
 							setIsPrinting(false);
-						}, 5000);
+						}, Variables.W_WAIT_TIME_AFTER_PRINT * 1000);
 					}
 				}
 				catch (error) {
@@ -66,7 +66,7 @@ export default function usePrintTicket(dispatchError: React.Dispatch<IErrorActio
 				if (Variables.PREVIEW) {
 					setTimeout(() => {
 						setIsPrinting(false);
-					}, 5000);
+					}, Variables.W_WAIT_TIME_AFTER_PRINT * 1000);
 				} else {
 					setIsPrinting(false);
 
