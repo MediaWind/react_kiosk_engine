@@ -269,9 +269,13 @@ export enum ERROR_CODE {
 	 */
 	A400 = "400-A",
 	/**
-	 * 404-A: Appointment not found
+	 * 404-A: Flow not found
 	 */
 	A404 = "404-A",
+	/**
+	 * 404-B: Appointment not found
+	 */
+	B404 = "404-B",
 	/**
 	 * 500-A: Something went wrong when trying to print ticket
 	 */

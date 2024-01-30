@@ -21,7 +21,7 @@ interface IUserInputsState {
 	eIdData?: eIdData
 }
 
-export interface IUserInputsAction {
+interface IUserInputsAction {
 	type: USER_INPUTS_ACTION_TYPE;
 	payload?: any;
 }
