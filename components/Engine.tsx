@@ -197,6 +197,7 @@ function Engine(props: IEngineProps): JSX.Element {
 			printTicket(printState.ticketPDF);
 
 			dispatchPrintState({ type: PRINT_ACTION_TYPE.CLEARALL,});
+			resetTicketData();
 		}
 	}, [printState]);
 	// Monitors ticket PDF and updates printReducer

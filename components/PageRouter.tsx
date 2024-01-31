@@ -81,6 +81,7 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 		if (!isPrinting) {
 			setRouter([homePage]);
 			setLanguage(undefined);
+			onReset();
 		}
 	}, [isPrinting]);
 
