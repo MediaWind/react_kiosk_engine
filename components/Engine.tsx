@@ -59,7 +59,7 @@ function Engine(props: IEngineProps): JSX.Element {
 
 	const [qrCode, writeQrCode, resetQrCode] = useScanner();
 	const [printTicket, isPrinting , checkPrinterStatus] = usePrinter(dispatchError);
-	const [createTicket, ticketPDF] = useTicket(dispatchError);
+	const [createTicket] = useTicket(dispatchPrintState, dispatchError);
 	const [appointmentTicketPDF, checkIn, checkOut] = useAppointment(dispatchAppointmentState, dispatchError);
 
 	useEffect(() => {
@@ -197,31 +197,23 @@ function Engine(props: IEngineProps): JSX.Element {
 			printTicket(printState.ticketPDF);
 
 			dispatchPrintState({ type: PRINT_ACTION_TYPE.CLEARALL,});
+			resetTicketData();
 		}
 	}, [printState]);
 	// Monitors ticket PDF and updates printReducer
 	useEffect(() => {
-		if (ticketPDF !== null) {
-			dispatchPrintState({
-				type: PRINT_ACTION_TYPE.UPDATETICKETPDF,
-				payload: ticketPDF,
-			});
-		}
-
 		if (appointmentTicketPDF !== null) {
 			dispatchPrintState({
 				type: PRINT_ACTION_TYPE.UPDATETICKETPDF,
 				payload: appointmentTicketPDF,
 			});
-		}
-
-		if (ticketPDF === null && appointmentTicketPDF === null) {
+		} else {
 			dispatchPrintState({
 				type: PRINT_ACTION_TYPE.UPDATETICKETPDF,
 				payload: null,
 			});
 		}
-	}, [ticketPDF, appointmentTicketPDF]);
+	}, [appointmentTicketPDF]);
 
 	//* ------------ *//
 	//* Appointments *//

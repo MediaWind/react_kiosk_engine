@@ -1,16 +1,8 @@
-import { useState } from "react";
-
-// import { Variables } from "../../variables";
-
-// import Printer from "../../core/client/printer";
-
-import { ERROR_ACTION_TYPE, ERROR_CODE, IErrorAction, IFlow, ITicketDataState } from "../interfaces";
+import { ERROR_ACTION_TYPE, ERROR_CODE, IErrorAction, IFlow, IPrintAction, ITicketDataState, PRINT_ACTION_TYPE } from "../interfaces";
 
 import getTicketingURL from "../utils/getTicketingURL";
 
-export default function useTicket(dispatchError: React.Dispatch<IErrorAction>): [CallableFunction, string | null] {
-	const [ticketPDF, setTicketPDF] = useState<string | null>(null);
-
+export default function useTicket(dispatchPrintState: React.Dispatch<IPrintAction>, dispatchError: React.Dispatch<IErrorAction>): [CallableFunction] {
 	async function createTicket(ticketState: ITicketDataState, flow: IFlow) {
 		console.log("Creating ticket: ", ticketState);
 
@@ -19,7 +11,10 @@ export default function useTicket(dispatchError: React.Dispatch<IErrorAction>): 
 			const data = await response.json();
 
 			if (data.status == 1) {
-				setTicketPDF(data.pdf);
+				dispatchPrintState({
+					type: PRINT_ACTION_TYPE.UPDATETICKETPDF,
+					payload: data.pdf,
+				});
 			} else {
 				console.log("Error: unable to create ticket. Data:", data);
 
@@ -57,8 +52,5 @@ export default function useTicket(dispatchError: React.Dispatch<IErrorAction>): 
 		}
 	}
 
-	return [
-		createTicket,
-		ticketPDF
-	];
+	return [createTicket];
 }
