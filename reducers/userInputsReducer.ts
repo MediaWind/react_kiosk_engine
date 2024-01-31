@@ -18,7 +18,7 @@ interface IUserInputsState {
 	scannerData: {
 		qrCode: string;
 	}
-	eIdData?: eIdData
+	eIdData: eIdData | null
 }
 
 interface IUserInputsAction {
@@ -56,6 +56,7 @@ export const initialUserInputsState: IUserInputsState = {
 		},
 	},
 	scannerData: { qrCode: "", },
+	eIdData: null,
 };
 
 export default function userInputsReducer(userInputsState: IUserInputsState, action: IUserInputsAction): IUserInputsState {
@@ -63,7 +64,7 @@ export default function userInputsReducer(userInputsState: IUserInputsState, act
 		case USER_INPUTS_ACTION_TYPE.UPDATE_EID_DATA: {
 			return {
 				...userInputsState,
-				eIdData: action.payload as eIdData,
+				eIdData: action.payload as eIdData ?? null,
 			};
 		}
 
@@ -188,7 +189,7 @@ export default function userInputsReducer(userInputsState: IUserInputsState, act
 			};
 		}
 
-		case USER_INPUTS_ACTION_TYPE.CLEAR_ALL:
-		default: return initialUserInputsState;
+		case USER_INPUTS_ACTION_TYPE.CLEAR_ALL: return initialUserInputsState;
+		default: return userInputsState;
 	}
 }
