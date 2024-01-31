@@ -1,10 +1,17 @@
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 
+import { setIntervalSync } from "../../../core/customInterval";
+
+import { useLanguageContext } from "../../contexts/languageContext";
+
 import { IStyles } from "../../interfaces";
 import getFontSize from "../../utils/getFontSize";
 
 require("dayjs/locale/fr");
+require("dayjs/locale/en");
+require("dayjs/locale/nl");
+require("dayjs/locale/es");
 
 interface IDateProps {
 	format?: string
@@ -13,17 +20,24 @@ interface IDateProps {
 
 export default function Date(props: IDateProps): JSX.Element {
 	const { format, style, } = props;
+	const { language, } = useLanguageContext();
 
 	const [date, setDate] = useState<string>("");
 	dayjs.locale("fr");
 
 	useEffect(() => {
+		dayjs.locale(language);
+
 		setDate(dayjs().format(format ?? "DD/MM/YYYY"));
 
-		setInterval(() => {
+		const delay = setIntervalSync(() => {
 			setDate(dayjs().format(format ?? "DD/MM/YYYY"));
 		}, 30 * 60 * 1000);
-	}, []);
+
+		return () => {
+			clearInterval(delay);
+		};
+	}, [language]);
 
 	return (
 		<div

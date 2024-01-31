@@ -9,20 +9,26 @@ import useSharedVariables from "../../core/hooks/useSharedVariables";
 import useEId, { eIdData, eIdStatus } from "../../core/hooks/useEId";
 import { setIntervalRange } from "../../core/customInterval";
 
-import { ERROR_ACTION_TYPE, ERROR_CODE, IFlow, LANGUAGE, Route, TicketDataActionType } from "../interfaces";
+import { IFlow, LANGUAGE, PRINT_ACTION_TYPE, Route, TICKET_DATA_ACTION_TYPE } from "../interfaces";
 
 import { TicketDataContext } from "../contexts/ticketDataContext";
 import { FlowContext } from "../contexts/flowContext";
 import { LanguageContext } from "../contexts/languageContext";
 import { ErrorContext } from "../contexts/errorContext";
+import { PrintContext } from "../contexts/printContext";
+import { AppointmentContext } from "../contexts/appointmentContext";
 
-import ticketDataReducer, { initialState } from "../reducers/ticketDataReducer";
+import ticketDataReducer, { initialTicketState } from "../reducers/ticketDataReducer";
+import appointmentReducer, { initialAppointmentState } from "../reducers/appointmentReducer";
+import printReducer, { initialPrintState } from "../reducers/printReducer";
 import errorReducer, { initialErrorState } from "../reducers/errorReducer";
 
-import usePrintTicket from "../hooks/usePrintTicket";
+import useScanner from "../hooks/useScanner";
+import usePrinter from "../hooks/usePrinter";
+import useTicket from "../hooks/useTicket";
+import useAppointment from "../hooks/useAppointment";
 
 import checkCurrentFlow from "../utils/checkCurrentFlow";
-import checkPrinterStatus from "../utils/checkPrinterStatus";
 
 import PageRouter from "../components/PageRouter";
 import LoadingScreen from "../components/ui/LoadingScreen";
@@ -38,20 +44,23 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [eIdInserted, eIdReaded, eIdRemoved] = useSharedVariables("eid_inserted", "eid_readed", "eid_removed");
 	const [eidStatus, eIdData] = useEId(eIdInserted, eIdReaded, eIdRemoved);
 
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+
 	const [language, setLanguage] = useState<LANGUAGE | undefined>();
 
 	const [currentFlow, setCurrentFlow] = useState<IFlow>();
 	const [flaggedFlow, setFlaggedFlow] = useState<IFlow>();
 	const [readyToChangeFlow, setReadyToChangeFlow] = useState<boolean>(true);
-	const [isLoading, setIsLoading] = useState<boolean>(false);
 
-	const [ticketData, dispatchTicketState] = useReducer(ticketDataReducer, initialState);
+	const [ticketState, dispatchTicketState] = useReducer(ticketDataReducer, initialTicketState);
+	const [appointmentState, dispatchAppointmentState] = useReducer(appointmentReducer, initialAppointmentState);
+	const [printState, dispatchPrintState] = useReducer(printReducer, initialPrintState);
 	const [error, dispatchError] = useReducer(errorReducer, initialErrorState);
 
-	const [printRequested, setPrintRequested] = useState<boolean>(false);
-	const [signInRequested, setSignInRequested] = useState<boolean>(false);
-
-	const [printTicket, isPrinting, signInPatient] = usePrintTicket(dispatchError);
+	const [qrCode, writeQrCode, resetQrCode] = useScanner();
+	const [printTicket, isPrinting , checkPrinterStatus] = usePrinter(dispatchError);
+	const [createTicket, ticketPDF] = useTicket(dispatchError);
+	const [appointmentTicketPDF, checkIn, checkOut] = useAppointment(dispatchAppointmentState, dispatchError);
 
 	useEffect(() => {
 		if (Variables.C_ORIENTATION() === ORIENTATION.HORIZONTAL) {
@@ -69,41 +78,10 @@ function Engine(props: IEngineProps): JSX.Element {
 		}
 	}, []);
 
-	//* ----------------- *//
-	//* Tracks eId Status *//
-	//* ----------------- *//
-	useEffect(() => {
-		if (ticketData.pageIsListeningToEId && eidStatus === eIdStatus.INSERTED) {
-			setIsLoading(true);
-		} else {
-			setIsLoading(false);
-		}
-	}, [eidStatus]);
-
-	//* --------------- *//
-	//* Tracks eId Data *//
-	//* --------------- *//
-	useEffect(() => {
-		if (ticketData.pageIsListeningToEId && eIdData != null) {
-			dispatchTicketState({
-				type: TicketDataActionType.EIDUPDATE,
-				payload: eIdData as eIdData,
-			});
-		}
-	}, [eIdData]);
-
-	useEffect(() => {
-		if (ticketData.pageIsListeningToEId && eIdData != null && eidStatus === eIdStatus.READ) {
-			dispatchTicketState({
-				type: TicketDataActionType.EIDREADUPDATE,
-				payload: true,
-			});
-		}
-	}, [ticketData.pageIsListeningToEId, eIdData, eidStatus]);
-
-	//* ------------------------ *//
-	//* Checks flow every minute *//
-	//* ------------------------ *//
+	//* ---- *//
+	//* Flow *//
+	//* ---- *//
+	// Checks flow every minute
 	useEffect(() => {
 		if (props.route) {
 			const updateFlow = () => {
@@ -123,145 +101,205 @@ function Engine(props: IEngineProps): JSX.Element {
 		}
 	}, [props.route]);
 
-	//* ------------------------------------------- *//
-	//* Checks printer status every 5 to 10 seconds *//
-	//* ------------------------------------------- *//
-	useEffect(() => {
-		// checkPrinterStatus(dispatchError, error.errorCode);
-		const delay = setIntervalRange(() => {
-			//TODO separate printer status error from "regular" error
-			checkPrinterStatus(dispatchError, error.errorCode);
-		}, [5 * 1000, 10 * 1000]);
-
-		return () => {
-			clearInterval(delay);
-		};
-	}, [error]);
-
-	useEffect(() => {
-		const delay = setIntervalRange(() => {
-			if (!navigator.onLine) {
-				dispatchError({
-					type: ERROR_ACTION_TYPE.SETERROR,
-					payload: {
-						hasError: true,
-						errorCode: ERROR_CODE.A503,
-						message: "Kiosk is not connected to internet",
-					},
-				});
-			} else {
-				dispatchError({
-					type: ERROR_ACTION_TYPE.CLEARERROR,
-					payload: undefined,
-				});
-			}
-		}, [5 * 1000, 10 * 1000]);
-
-		return () => {
-			clearInterval(delay);
-		};
-	}, []);
-
-	//* ----------------------------------------- *//
-	//* Makes sure any error wipe all saved datas *//
-	//* ----------------------------------------- *//
-	useEffect(() => {
-		if (error.hasError) {
-			resetAllData();
-		}
-	}, [error.hasError]);
-
-	//* --------------------------------------------------------------------------- *//
-	//* Flags new flow before changing it to prevent change during user interaction *//
-	//* --------------------------------------------------------------------------- *//
+	// Change current with flagged flow if no user interaction
 	useEffect(() => {
 		if (flaggedFlow !== currentFlow && readyToChangeFlow) {
 			setCurrentFlow(flaggedFlow);
 		}
 	}, [flaggedFlow, readyToChangeFlow]);
 
-	//* ------------------------------------------- *//
-	//* Updates language in the ticket data reducer *//
-	//* ------------------------------------------- *//
+	//* -------------- *//
+	//* Printer status *//
+	//* -------------- *//
+	// Checks printer status every 5-10 seconds
+	useEffect(() => {
+		if (!Variables.PREVIEW) {
+			checkPrinterStatus(error.errorCode);
+			const delay = setIntervalRange(() => {
+				//TODO separate printer status error from "regular" error?
+				checkPrinterStatus(error.errorCode);
+			}, [5 * 1000, 10 * 1000]);
+
+			return () => {
+				clearInterval(delay);
+			};
+		}
+	}, [error]);
+
+	//* -------- *//
+	//* Language *//
+	//* -------- *//
+	// Updates language in the ticket data reducer
 	useEffect(() => {
 		dispatchTicketState({
-			type: TicketDataActionType.LANGUAGEUPDATE,
-			payload: language as LANGUAGE,
+			type: TICKET_DATA_ACTION_TYPE.LANGUAGEUPDATE,
+			payload: language,
 		});
 	}, [language]);
 
-	//* ------------------- *//
-	//* Send print requests *//
-	//* ------------------- *//
+	//* --- *//
+	//* eId *//
+	//* --- *//
+	//Loading on eId inserted
 	useEffect(() => {
-		if (printRequested) {
-			printTicket(ticketData, currentFlow);
+		if (ticketState.pageIsListeningToEId && eidStatus === eIdStatus.INSERTED) {
+			setIsLoading(true);
+		} else {
+			setIsLoading(false);
 		}
-		if (signInRequested) {
-			signInPatient(ticketData, currentFlow);
+	}, [eidStatus]);
+
+	// Updates eId Data in reducer
+	useEffect(() => {
+		if (ticketState.pageIsListeningToEId && eIdData != null) {
+			dispatchTicketState({
+				type: TICKET_DATA_ACTION_TYPE.EIDUPDATE,
+				payload: eIdData as eIdData,
+			});
+		}
+	}, [eIdData]);
+
+	// Updates eId read in reducer
+	useEffect(() => {
+		if (ticketState.pageIsListeningToEId && eIdData != null && eidStatus === eIdStatus.READ) {
+			dispatchTicketState({
+				type: TICKET_DATA_ACTION_TYPE.EIDREADUPDATE,
+				payload: true,
+			});
+		}
+	}, [ticketState.pageIsListeningToEId, eIdData, eidStatus]);
+
+	//* ------ *//
+	//* Errors *//
+	//* ------ *//
+	// Makes sure any error wipe all saved datas
+	useEffect(() => {
+		if (error.hasError) {
+			resetTicketData();
+		}
+	}, [error.hasError]);
+
+	//* -------------- *//
+	//* Print requests *//
+	//* -------------- *//
+	// Monitors printState to trigger ticket creation/print
+	useEffect(() => {
+		if (printState.ticketCreationRequested) {
+			createTicket(ticketState, currentFlow);
+
+			dispatchPrintState({
+				type: PRINT_ACTION_TYPE.REQUESTTICKETCREATION,
+				payload: false,
+			});
 		}
 
-		resetAllData();
-	}, [printRequested, signInRequested]);
+		if (printState.printRequested && printState.ticketPDF) {
+			printTicket(printState.ticketPDF);
 
-	//* ----- Handlers ----- *//
-	const printHandler = () => {
-		setPrintRequested(true);
-	};
+			dispatchPrintState({ type: PRINT_ACTION_TYPE.CLEARALL,});
+		}
+	}, [printState]);
+	// Monitors ticket PDF and updates printReducer
+	useEffect(() => {
+		if (ticketPDF !== null) {
+			dispatchPrintState({
+				type: PRINT_ACTION_TYPE.UPDATETICKETPDF,
+				payload: ticketPDF,
+			});
+		}
 
-	const signInHandler = () => {
-		setSignInRequested(true);
-	};
+		if (appointmentTicketPDF !== null) {
+			dispatchPrintState({
+				type: PRINT_ACTION_TYPE.UPDATETICKETPDF,
+				payload: appointmentTicketPDF,
+			});
+		}
 
-	const resetAllData = () => {
-		setPrintRequested(false);
-		setSignInRequested(false);
+		if (ticketPDF === null && appointmentTicketPDF === null) {
+			dispatchPrintState({
+				type: PRINT_ACTION_TYPE.UPDATETICKETPDF,
+				payload: null,
+			});
+		}
+	}, [ticketPDF, appointmentTicketPDF]);
+
+	//* ------------ *//
+	//* Appointments *//
+	//* ------------ *//
+	// Sends checkin/checkout requests when qrCode is ready then resets it
+	useEffect(() => {
+		if ((appointmentState.isCheckingIn || appointmentState.isCheckingOut) && qrCode !== "") {
+			if (appointmentState.isCheckingIn) {
+				checkIn(qrCode);
+			}
+
+			if (appointmentState.isCheckingOut) {
+				checkOut(qrCode);
+			}
+
+			writeQrCode("Enter");
+		}
+	}, [qrCode, appointmentState.isCheckingIn, appointmentState.isCheckingOut]);
+
+	// ---------- Handlers ---------- //
+	function resetTicketData() {
 		dispatchTicketState({
-			type: TicketDataActionType.CLEARDATA,
+			type: TICKET_DATA_ACTION_TYPE.CLEARDATA,
 			payload: undefined,
 		});
-	};
+	}
+
+	function keydownHandler(e: any) {
+		writeQrCode(e.key);
+	}
+
+	function resetAll() {
+		resetTicketData();
+		resetQrCode();
+
+		setReadyToChangeFlow(true);
+		setLanguage(undefined);
+	}
 
 	if (currentFlow) {
 		return (
 			<div
 				onContextMenu={(e: any) => e.preventDefault()}
-				style={{
-					// cursor: "none !important",
-					userSelect: "none",
-				}}
+				style={{ userSelect: "none", }}
+				onKeyDown={keydownHandler}
+				tabIndex={0}
 			>
 				<LanguageContext.Provider value={{ language, setLanguage, }}>
-					<TicketDataContext.Provider value={{ ticketState: ticketData, dispatchTicketState, }}>
-						<FlowContext.Provider value={{ flow: currentFlow, setReload: setReadyToChangeFlow, }}>
-							<ErrorContext.Provider value={{ errorState: error, dispatchErrorState: dispatchError, }}>
+					<TicketDataContext.Provider value={{ ticketState, dispatchTicketState, }}>
+						<AppointmentContext.Provider value={{ appointmentState, dispatchAppointmentState, }}>
+							<FlowContext.Provider value={{ flow: currentFlow, setReload: setReadyToChangeFlow, }}>
+								<ErrorContext.Provider value={{ errorState: error, dispatchErrorState: dispatchError, }}>
+									<PrintContext.Provider value={{ printState, dispatchPrintState, }}>
 
-								{props.debug && (
-									<Debugger
-										eidData={ticketData.eIdDatas}
-										messages={[
-											`eidstatus: ${eidStatus}`,
-											`firstname from eiddata: ${eIdData?.firstName}`,
-											`eidread: ${ticketData.eIdRead}`,
-											`page is listening to eid: ${ticketData.pageIsListeningToEId}`,
-											isPrinting ? "Printing!" : "",
-											error.hasError ? `Error ${error.errorCode}: ${error.message}` : ""
-										]}
-									/>
-								)}
+										{props.debug && (
+											<Debugger
+												eidData={ticketState.eIdDatas}
+												messages={[
+													`eidstatus: ${eidStatus}`,
+													`firstname from eiddata: ${eIdData?.firstName}`,
+													`eidread: ${ticketState.eIdRead}`,
+													`page is listening to eid: ${ticketState.pageIsListeningToEId}`,
+													isPrinting ? "Printing!" : "",
+													error.hasError ? `Error ${error.errorCode}: ${error.message}` : ""
+												]}
+											/>
+										)}
 
-								{error.hasError && <DisplayError route={props.route} />}
+										{error.hasError && <DisplayError route={props.route} />}
 
-								{isLoading && <LoadingScreen />}
+										{isLoading && <LoadingScreen />}
 
-								<PageRouter
-									onPrint={printHandler}
-									isPrinting={isPrinting}
-									onSignIn={signInHandler}
-								/>
+										<PageRouter isPrinting={isPrinting} onReset={resetAll} />
 
-							</ErrorContext.Provider>
-						</FlowContext.Provider>
+									</PrintContext.Provider>
+								</ErrorContext.Provider>
+							</FlowContext.Provider>
+						</AppointmentContext.Provider>
 					</TicketDataContext.Provider>
 				</LanguageContext.Provider>
 			</div>

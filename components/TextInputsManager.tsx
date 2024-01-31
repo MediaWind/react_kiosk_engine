@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 
-import { IInputContent, IInputField, IMedia, KeyboardLayout, TicketDataActionType } from "../interfaces";
+import { IInputContent, IInputField, IMedia, KEYBOARD_LAYOUT, TICKET_DATA_ACTION_TYPE } from "../interfaces";
 
 import { useTicketDataContext } from "../contexts/ticketDataContext";
 
 import TextInput from "./ui/inputs/TextInput";
-import CustomKeyboard, { IKeyboard, KeyAction } from "./ui/keyboard/CustomKeyboard";
+import CustomKeyboard, { IKeyboard, KEY_ACTION } from "./ui/keyboard/CustomKeyboard";
 import { useFlowContext } from "../contexts/flowContext";
 
 interface ITextInputsManagerProps {
@@ -257,19 +257,19 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 			{
 				keys: [
 					{
-						action: KeyAction.SHIFT,
+						action: KEY_ACTION.SHIFT,
 					},
 					{
 						text: {
 							defaultValue: "-^´",
 						},
-						action: KeyAction.SPECIALCHARS,
+						action: KEY_ACTION.SPECIALCHARS,
 					},
 					{
 						text: {
 							defaultValue: "Espace",
 						},
-						action: KeyAction.SPACEBAR,
+						action: KEY_ACTION.SPACEBAR,
 					},
 					{
 						text: {
@@ -284,7 +284,7 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 						},
 					},
 					{
-						action: KeyAction.BACKSPACE,
+						action: KEY_ACTION.BACKSPACE,
 					}
 				],
 			}
@@ -528,19 +528,19 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 			{
 				keys: [
 					{
-						action: KeyAction.SHIFT,
+						action: KEY_ACTION.SHIFT,
 					},
 					{
 						text: {
 							defaultValue: "-^´",
 						},
-						action: KeyAction.SPECIALCHARS,
+						action: KEY_ACTION.SPECIALCHARS,
 					},
 					{
 						text: {
 							defaultValue: "Espace",
 						},
-						action: KeyAction.SPACEBAR,
+						action: KEY_ACTION.SPACEBAR,
 					},
 					{
 						text: {
@@ -555,7 +555,7 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 						},
 					},
 					{
-						action: KeyAction.BACKSPACE,
+						action: KEY_ACTION.BACKSPACE,
 					}
 				],
 			}
@@ -628,15 +628,15 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 		//? Values are all considered valid now, we can save datas to ticket state
 		fields.forEach((field) => {
 			dispatchTicketState({
-				type: TicketDataActionType.INPUTTEXTUPDATE,
+				type: TICKET_DATA_ACTION_TYPE.INPUTTEXTUPDATE,
 				payload: field,
 			});
 		});
 
 		//* Signals to Active Page that we are ready to move on
 		const contents = inputs.map(input => input.content as IInputContent);
-		const action = contents.find(content => content.action)?.action;
-		onReady(action);
+		const actions = contents.find(content => content.actions)?.actions;
+		onReady(actions);
 	}
 
 	function changetexthandler(value: string) {
@@ -699,7 +699,7 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 				);
 			})}
 			<CustomKeyboard
-				pattern={(flow.keyboardLayout && flow.keyboardLayout === KeyboardLayout.CUSTOMMADE) ? customPattern : classicPattern}
+				pattern={(flow.keyboardLayout && flow.keyboardLayout === KEYBOARD_LAYOUT.CUSTOMMADE) ? customPattern : classicPattern}
 				onChange={changetexthandler}
 				onDelete={deleteHandler}
 				shift={

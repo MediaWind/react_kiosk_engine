@@ -1,28 +1,26 @@
 import { useEffect, useState } from "react";
 
-import { Variables } from "../../variables";
+import { IFlow, IPage } from "../interfaces";
 
 import { useFlowContext } from "../contexts/flowContext";
 import { useLanguageContext } from "../contexts/languageContext";
-import { useTicketDataContext } from "../contexts/ticketDataContext";
 import { useErrorContext } from "../contexts/errorContext";
 
-import { IFlow, IPage, TicketDataActionType } from "../interfaces";
 
 import ActivePage from "./ActivePage";
-import Debugger from "./debug/Debugger";
 import Date from "./ui/Date";
 import Time from "./ui/Time";
+import { RouterContext } from "../contexts/routerContext";
 
 interface IFlowDispatcherProps {
-	onPrint: CallableFunction
 	isPrinting: boolean
-	onSignIn: CallableFunction
+	onReset: CallableFunction
 }
 
 function getHomePage(flow: IFlow): IPage {
 	if (flow.pages.length === 0) {
 		throw new Error;
+		//TODO: use error reducer
 	}
 
 	const homeId = flow.homePage;
@@ -36,15 +34,10 @@ function getHomePage(flow: IFlow): IPage {
 }
 
 export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
-	const {
-		onPrint,
-		isPrinting,
-		onSignIn,
-	} = props;
+	const { isPrinting, onReset, } = props;
 
-	const { setLanguage, } = useLanguageContext();
 	const { flow, setReload, } = useFlowContext();
-	const { ticketState, dispatchTicketState, } = useTicketDataContext();
+	const { setLanguage, } = useLanguageContext();
 	const { errorState, } = useErrorContext();
 
 	const [homePage, setHomePage] = useState<IPage>(getHomePage(flow));
@@ -66,12 +59,7 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 			const delay = setTimeout(() => {
 				if (router.slice(-1)[0] !== homePage) {
 					setRouter([homePage]);
-					setReload(true);
-
-					dispatchTicketState({
-						type: TicketDataActionType.CLEARDATA,
-						payload: undefined,
-					});
+					onReset();
 				}
 			}, flow.navigateToHomePageAfter * 1000);
 
@@ -83,14 +71,7 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 
 	useEffect(() => {
 		if (router.slice(-1)[0] === homePage) {
-			dispatchTicketState({
-				type: TicketDataActionType.CLEARDATA,
-				payload: undefined,
-			});
-
-			setReload(true);
-
-			setLanguage(undefined);
+			onReset();
 		} else {
 			setReload(false);
 		}
@@ -103,48 +84,33 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 		}
 	}, [isPrinting]);
 
-	const changePageHandler = (pageID: string) => {
+	function nextPageHandler(pageID: string) {
 		const page = flow.pages.find(page => page.id === pageID);
 
 		if (page) {
-			setRouter((latest) => [... latest, page]);
+			setRouter((latest) => [...latest, page]);
 		}
-	};
+	}
 
-	const printHandler = () => {
-		onPrint();
-	};
-
-	const backPageHandler = () => {
+	function previousPageHandler() {
 		setRouter((latest) => {
 			const popped = latest.slice(0, latest.length - 1);
 			return [...popped];
 		});
-	};
+	}
 
-	const homePageHandler = () => {
+	function homePageHandler() {
 		setRouter([homePage]);
-	};
-
-	const signInHandler = () => {
-		onSignIn();
-	};
+	}
 
 	return (
 		<>
-			{(Variables.W_DEBUG && ticketState.eIdRead) && <Debugger messages={["eidread from page router"]} />}
-
 			{flow.displayDate && <Date format={flow.displayDate.format} style={flow.displayDate.style} />}
 			{flow.displayTime && <Time format={flow.displayTime.format} style={flow.displayTime.style} />}
 
-			<ActivePage
-				page={router.slice(-1)[0]}
-				onChangePage={changePageHandler}
-				onPrint={printHandler}
-				onBackPage={backPageHandler}
-				onSignIn={signInHandler}
-				onHomePage={homePageHandler}
-			/>
+			<RouterContext.Provider value={{ nextPage: nextPageHandler, previousPage: previousPageHandler, homePage: homePageHandler, }}>
+				<ActivePage page={router.slice(-1)[0]} />
+			</RouterContext.Provider>
 		</>
 	);
 }

@@ -38,7 +38,7 @@ export interface IFlow {
 	id: string;
 	name: string;
 	homePage: string;
-	keyboardLayout?: KeyboardLayout;
+	keyboardLayout?: KEYBOARD_LAYOUT;
 	navigateToHomePageAfter?: number;
 	pages: IPage[];
 	ticketParameters?: ITicketParameters;
@@ -49,12 +49,12 @@ export interface IFlow {
 export interface ITicketParameters {
 	firstname?: string;
 	lastname?: string;
-	company?: string;
-	phone?: string;
+	nationalNumber?: string;
 	email?: string;
+	phone?: string;
+	company?: string;
 	comment?: string;
-	id_userAgent?: string;
-	registre_national?: string;
+	idUserAgent?: string;
 }
 
 export interface IDateTime {
@@ -70,7 +70,7 @@ export interface IErrorManagement {
 	//TODO: add more error options
 }
 
-export enum KeyboardLayout {
+export enum KEYBOARD_LAYOUT {
 	CLASSIC = "classic",
 	CUSTOMMADE = "customMade"
 }
@@ -99,11 +99,11 @@ export interface IBackgroundImage {
 }
 
 export interface IMedia {
-	type: MediaType;
+	type: MEDIA_TYPE;
 	content: IVideoContent | IImageContent | IInputContent;
 }
 
-export enum MediaType {
+export enum MEDIA_TYPE {
 	VIDEO = "video",
 	IMAGE = "image",
 	INPUT = "input"
@@ -120,11 +120,11 @@ export interface IVideoContent {
 export interface IImageContent {
 	name: string;
 	src: string;
-	animate?: AnimationType;
+	animate?: ANIMATION_TYPE;
 	styles: IStyles;
 }
 
-export enum AnimationType {
+export enum ANIMATION_TYPE {
 	RIGHTLEFT = "rightToLeft",
 	BOTTOMTOP = "bottomToTop",
 	TOPBOTTOM = "topToBottom",
@@ -133,29 +133,39 @@ export enum AnimationType {
 
 export interface IInputContent {
 	name: string;
-	type: InputType;
-	action: IInputAction | IInputAction[];
+	type: INPUT_TYPE;
+	actions: IInputAction[];
 	placeholder?: string;
 	autoFocus?: boolean;
 	textInput?: IInputField;
 	styles: IStyles;
 }
 
+export enum INPUT_TYPE {
+	BUTTON = "button",
+	TEXT = "text",
+	NUMBER = "number",
+	CARDREADER = "cardReader",
+	QRCODE = "qrCode",
+}
+
 export interface IInputAction {
-	type: ActionType;
+	type: ACTION_TYPE;
 	navigateTo?: string;
 	service?: IService;
 	language?: LANGUAGE;
 }
 
-export enum ActionType {
+export enum ACTION_TYPE {
 	NEXTPAGE = "nextpage",
 	PREVIOUSPAGE = "previouspage",
 	HOMEPAGE = "homepage",
 	PRINTTICKET = "printticket",
+	CREATETICKET = "createticket",
 	SAVESERVICE = "saveservice",
-	SAVEDATA = "savedata",
 	CHANGELANGUAGE = "changelanguage",
+	CHECKIN = "checkin",
+	CHECKOUT = "checkout",
 }
 
 export interface IService {
@@ -166,13 +176,6 @@ export interface IService {
  * 3 = urgent
  */
 	priority?: 1 | 2 | 3
-}
-
-export enum InputType {
-	BUTTON = "button",
-	TEXT = "text",
-	NUMBER = "number",
-	CARDREADER = "cardReader"
 }
 
 export interface IStyles {
@@ -210,7 +213,6 @@ export interface IInputField {
 	id: string;
 	value: string;
 	required?: boolean;
-	//TODO: adapt to all possible data we might need
 }
 
 export interface ITicketDataState {
@@ -223,11 +225,11 @@ export interface ITicketDataState {
 }
 
 export interface ITicketDataAction {
-	type: TicketDataActionType
+	type: TICKET_DATA_ACTION_TYPE
 	payload: eIdData | IInputField | IService | boolean | LANGUAGE | undefined
 }
 
-export enum TicketDataActionType {
+export enum TICKET_DATA_ACTION_TYPE {
 	EIDUPDATE = "eidupdate",
 	EIDLISTENINGUPDATE = "eidlisteningupdate",
 	EIDREADUPDATE = "eidreadupdate",
@@ -249,7 +251,7 @@ export interface IErrorState {
 
 export interface IErrorAction {
 	type: ERROR_ACTION_TYPE;
-	payload: IErrorState | undefined;
+	payload?: IErrorState;
 }
 
 export enum ERROR_ACTION_TYPE {
@@ -262,6 +264,18 @@ export enum ERROR_CODE {
 	 * 200: All good!
 	 */
 	A200 = "200",
+	/**
+	 * 400-A: Ticket PDF is null
+	 */
+	A400 = "400-A",
+	/**
+	 * 404-A: Flow not found
+	 */
+	A404 = "404-A",
+	/**
+	 * 404-B: Appointment not found
+	 */
+	B404 = "404-B",
 	/**
 	 * 500-A: Something went wrong when trying to print ticket
 	 */
@@ -290,4 +304,48 @@ export enum ERROR_CODE {
 	 * 503-D: Printer has an unsupported error
 	 */
 	D503 = "503-D"
+}
+
+//* ------------------- *//
+//* Appointment Reducer *//
+//* ------------------- *//
+export interface IAppointmentState {
+	isCheckingIn: boolean
+	isCheckingOut: boolean
+	isCheckedIn: boolean
+	isCheckedOut: boolean
+}
+
+export interface IAppointmentAction {
+	type: APPOINTMENT_ACTION_TYPE
+	payload?: boolean
+}
+
+export enum APPOINTMENT_ACTION_TYPE {
+	UPDATECHECKINGIN = "updateCheckIn",
+	UPDATECHECKINGOUT = "updateCheckOut",
+	UPDATECHECKEDIN = "updateCheckedIn",
+	UPDATECHECKEDOUT = "updateCheckedOut",
+	CLEARALL = "clearAll",
+}
+
+//* --------------- *//
+//* Printer reducer *//
+//* --------------- *//
+export interface IPrintState {
+	ticketPDF: string | null
+	ticketCreationRequested: boolean
+	printRequested: boolean
+}
+
+export interface IPrintAction {
+	type: string
+	payload?: boolean | string | null
+}
+
+export enum PRINT_ACTION_TYPE {
+	REQUESTPRINT = "requestPrint",
+	REQUESTTICKETCREATION = "requestTicketCreation",
+	UPDATETICKETPDF = "updateTicketPDF",
+	CLEARALL = "clearAll",
 }
