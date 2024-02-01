@@ -111,7 +111,7 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 		);
 	}
 
-	if (content.type === INPUT_TYPE.USE_AGENT_SELECT) {
+	if (content.type === INPUT_TYPE.USER_AGENT_SELECT) {
 		return (
 			<UserAgentSelect styles={content.styles} />
 		);

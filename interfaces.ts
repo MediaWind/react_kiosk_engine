@@ -147,7 +147,7 @@ export enum INPUT_TYPE {
 	NUMBER = "number",
 	CARDREADER = "cardReader",
 	QRCODE = "qrCode",
-	USE_AGENT_SELECT = "useAgentSelect",
+	USER_AGENT_SELECT = "userAgentSelect",
 }
 
 export interface IInputAction {

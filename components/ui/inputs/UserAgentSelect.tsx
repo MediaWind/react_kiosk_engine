@@ -4,10 +4,15 @@ import { faChevronDown } from "@fortawesome/pro-solid-svg-icons";
 
 import style from "../../../styles/ui/UserAgentSelect.module.scss";
 
-import { AgentData, IStyles, LANGUAGE } from "../../../interfaces";
+import { AgentData, IStyles, LANGUAGE, TICKET_DATA_ACTION_TYPE } from "../../../interfaces";
 
 import useAgents from "../../../hooks/useAgents";
+
 import { useLanguageContext } from "../../../contexts/languageContext";
+import { useFlowContext } from "../../../contexts/flowContext";
+
+import UserAgentSelectItem from "./UserAgentSelectItem";
+import { useTicketDataContext } from "../../../contexts/ticketDataContext";
 
 interface IUserAgentSelectProps {
 	styles: IStyles
@@ -15,7 +20,7 @@ interface IUserAgentSelectProps {
 
 function getDefaultText(lng?: LANGUAGE) {
 	switch (lng) {
-		case LANGUAGE.DUTCH: return "Selecteer een host";
+		case LANGUAGE.DUTCH: return "Selecteer een gastheer";
 		case LANGUAGE.FRENCH: return "Sélectionnez un hôte";
 		case LANGUAGE.SPANISH: return "Seleccione un host";
 		case LANGUAGE.ENGLISH:
@@ -59,17 +64,32 @@ export default function UserAgentSelect(props: IUserAgentSelectProps): JSX.Eleme
 	const [agents, getUserAgents] = useAgents();
 
 	const { language, } = useLanguageContext();
+	const { flow, } = useFlowContext();
+	const { dispatchTicketState, } = useTicketDataContext();
 
 	useEffect(() => {
 		getUserAgents();
 	}, []);
 
-	useEffect(() => {
-		// console.log("🚀 ~ UserAgentSelect ~ agents:", agents);
-	}, [agents]);
-
 	function toggleDropdown() {
 		setShowDropdown(latest => !latest);
+	}
+
+	function selectAgentHandler(agent: AgentData) {
+		setSelectedAgent(agent);
+		setShowDropdown(false);
+
+		const ticketParamId = flow.ticketParameters?.idUserAgent;
+
+		if (ticketParamId) {
+			dispatchTicketState({
+				type: TICKET_DATA_ACTION_TYPE.INPUTTEXTUPDATE,
+				payload: {
+					id: ticketParamId,
+					value: agent.id_user,
+				},
+			});
+		}
 	}
 
 	return (
@@ -148,7 +168,7 @@ export default function UserAgentSelect(props: IUserAgentSelectProps): JSX.Eleme
 					}}
 				>
 					<div className={style.agents_list}>
-
+						{agents.map((agent, index) => <UserAgentSelectItem key={index} agent={agent} onSelect={selectAgentHandler} borderColor={styles.borderColor} />)}
 					</div>
 				</div>
 			)}

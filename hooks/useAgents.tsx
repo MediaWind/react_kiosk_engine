@@ -16,7 +16,21 @@ export default function useAgents(): [AgentData[], CallableFunction] {
 			// console.log("🚀 ~ getAgents ~ data:", data);
 
 			if (data.status == 1) {
-				setAgents(data.userAgent);
+				const sorted = data.userAgent;
+
+				sorted.sort((agent1: AgentData, agent2: AgentData) => {
+					if (agent1.name.lastname > agent2.name.lastname) {
+						return 1;
+					}
+
+					if (agent1.name.lastname < agent2.name.lastname) {
+						return -1;
+					}
+
+					return 0;
+				});
+
+				setAgents(sorted);
 			}
 		} catch (err) {
 			console.log(err);

@@ -12,3 +12,19 @@
 
 	overflow: auto;
 }
+
+.item {
+	padding: 0.015rem;
+
+	border-top: 1px solid;
+
+	p {
+		font-size: 200%;
+
+		white-space: nowrap;
+	}
+
+	&:first-child {
+		border-top: none;
+	}
+}
