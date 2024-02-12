@@ -55,12 +55,12 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [ticketState, dispatchTicketState] = useReducer(ticketDataReducer, initialTicketState);
 	const [appointmentState, dispatchAppointmentState] = useReducer(appointmentReducer, initialAppointmentState);
 	const [printState, dispatchPrintState] = useReducer(printReducer, initialPrintState);
-	const [error, dispatchError] = useReducer(errorReducer, initialErrorState);
+	const [error, dispatchErrorState] = useReducer(errorReducer, initialErrorState);
 
 	const [qrCode, writeQrCode, resetQrCode] = useScanner();
-	const [printTicket, isPrinting , checkPrinterStatus] = usePrinter(dispatchError);
-	const [createTicket] = useTicket(dispatchPrintState, dispatchError);
-	const [appointmentTicketPDF, checkIn, checkOut] = useAppointment(dispatchAppointmentState, dispatchError);
+	const [printTicket, isPrinting , checkPrinterStatus] = usePrinter(dispatchErrorState);
+	const [createTicket] = useTicket(dispatchPrintState, dispatchErrorState);
+	const [appointmentTicketPDF, checkIn, checkOut] = useAppointment(dispatchAppointmentState, dispatchErrorState);
 
 	useEffect(() => {
 		if (Variables.C_ORIENTATION() === ORIENTATION.HORIZONTAL) {
@@ -265,7 +265,7 @@ function Engine(props: IEngineProps): JSX.Element {
 					<TicketDataContext.Provider value={{ ticketState, dispatchTicketState, }}>
 						<AppointmentContext.Provider value={{ appointmentState, dispatchAppointmentState, }}>
 							<FlowContext.Provider value={{ flow: currentFlow, setReload: setReadyToChangeFlow, }}>
-								<ErrorContext.Provider value={{ errorState: error, dispatchErrorState: dispatchError, }}>
+								<ErrorContext.Provider value={{ errorState: error, dispatchErrorState: dispatchErrorState, }}>
 									<PrintContext.Provider value={{ printState, dispatchPrintState, }}>
 
 										{props.debug && (
