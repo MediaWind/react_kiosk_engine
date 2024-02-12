@@ -7,6 +7,7 @@ import { useLanguageContext } from "../../contexts/languageContext";
 import { useTicketDataContext } from "../../contexts/ticketDataContext";
 import { useAppointmentContext } from "../../contexts/appointmentContext";
 import { usePrintContext } from "../../contexts/printContext";
+import { useCustomActionContext } from "../../contexts/customActionContext";
 
 import ButtonInput from "./inputs/ButtonInput";
 import NumberInput from "./inputs/NumberInput";
@@ -24,6 +25,7 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 	const { ticketState, dispatchTicketState, } = useTicketDataContext();
 	const { dispatchAppointmentState, } = useAppointmentContext();
 	const { dispatchPrintState, } = usePrintContext();
+	const { triggerAction, } = useCustomActionContext();
 
 	useEffect(() => {
 		if (content.type === INPUT_TYPE.CARDREADER) {
@@ -92,6 +94,9 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 						type: APPOINTMENT_ACTION_TYPE.UPDATECHECKINGOUT,
 						payload: true,
 					});
+					break;
+				case ACTION_TYPE.CUSTOM:
+					triggerAction();
 					break;
 				default:
 					break;

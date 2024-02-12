@@ -28,6 +28,8 @@ import usePrinter from "../hooks/usePrinter";
 import useTicket from "../hooks/useTicket";
 import useAppointment from "../hooks/useAppointment";
 
+import { CustomActionContext } from "../contexts/customActionContext";
+
 import checkCurrentFlow from "../utils/checkCurrentFlow";
 
 import PageRouter from "../components/PageRouter";
@@ -37,6 +39,7 @@ import DisplayError from "../components/ui/DisplayError";
 
 interface IEngineProps {
 	route: Route
+	onCustomAction?: CallableFunction
 	debug?: boolean
 }
 
@@ -253,6 +256,35 @@ function Engine(props: IEngineProps): JSX.Element {
 		setLanguage(undefined);
 	}
 
+	function triggerCustomActionHandler() {
+		if (props.onCustomAction) {
+			const result = props.onCustomAction({
+				language: {
+					state: language,
+					dispatcher: setLanguage,
+				},
+				ticket: {
+					state: ticketState,
+					dispatcher: dispatchTicketState,
+				},
+				appointment: {
+					state: appointmentState,
+					dispatcher: dispatchAppointmentState,
+				},
+				print: {
+					state: printState,
+					dispatcher: dispatchPrintState,
+				},
+				error: {
+					state: error,
+					dispatcher: dispatchErrorState,
+				},
+			});
+
+			console.log("🚀 ~ triggerCustomActionHandler ~ result:", result);
+		}
+	}
+
 	if (currentFlow) {
 		return (
 			<div
@@ -267,27 +299,29 @@ function Engine(props: IEngineProps): JSX.Element {
 							<FlowContext.Provider value={{ flow: currentFlow, setReload: setReadyToChangeFlow, }}>
 								<ErrorContext.Provider value={{ errorState: error, dispatchErrorState: dispatchErrorState, }}>
 									<PrintContext.Provider value={{ printState, dispatchPrintState, }}>
+										<CustomActionContext.Provider value={{ triggerAction: triggerCustomActionHandler, }}>
 
-										{props.debug && (
-											<Debugger
-												eidData={ticketState.eIdDatas}
-												messages={[
-													`eidstatus: ${eidStatus}`,
-													`firstname from eiddata: ${eIdData?.firstName}`,
-													`eidread: ${ticketState.eIdRead}`,
-													`page is listening to eid: ${ticketState.pageIsListeningToEId}`,
-													isPrinting ? "Printing!" : "",
-													error.hasError ? `Error ${error.errorCode}: ${error.message}` : ""
-												]}
-											/>
-										)}
+											{props.debug && (
+												<Debugger
+													eidData={ticketState.eIdDatas}
+													messages={[
+														`eidstatus: ${eidStatus}`,
+														`firstname from eiddata: ${eIdData?.firstName}`,
+														`eidread: ${ticketState.eIdRead}`,
+														`page is listening to eid: ${ticketState.pageIsListeningToEId}`,
+														isPrinting ? "Printing!" : "",
+														error.hasError ? `Error ${error.errorCode}: ${error.message}` : ""
+													]}
+												/>
+											)}
 
-										{error.hasError && <DisplayError route={props.route} />}
+											{error.hasError && <DisplayError route={props.route} />}
 
-										{isLoading && <LoadingScreen />}
+											{isLoading && <LoadingScreen />}
 
-										<PageRouter isPrinting={isPrinting} onReset={resetAll} />
+											<PageRouter isPrinting={isPrinting} onReset={resetAll} />
 
+										</CustomActionContext.Provider>
 									</PrintContext.Provider>
 								</ErrorContext.Provider>
 							</FlowContext.Provider>

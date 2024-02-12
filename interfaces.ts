@@ -190,6 +190,7 @@ export enum ACTION_TYPE {
 	CHANGELANGUAGE = "changelanguage",
 	CHECKIN = "checkin",
 	CHECKOUT = "checkout",
+	CUSTOM = "custom",
 }
 
 export interface IService {
