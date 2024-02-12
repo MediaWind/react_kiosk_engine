@@ -63,7 +63,7 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 				setAgentOptions([]);
 				break;
 			case SELECT_PROVIDER.USER_AGENTS:
-				getUserAgents();
+				getUserAgents(config.filterIds);
 				setCustomOptions([]);
 				setServiceOptions([]);
 				break;
@@ -79,8 +79,6 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 	}, [userAgents]);
 
 	useEffect(() => {
-		console.log(services);
-
 		setServiceOptions(services);
 	}, [services]);
 

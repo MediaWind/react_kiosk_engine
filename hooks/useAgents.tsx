@@ -7,13 +7,13 @@ import { AgentData } from "../interfaces";
 export default function useAgents(): [AgentData[], CallableFunction] {
 	const [agents, setAgents] = useState<AgentData[]>([]);
 
-	async function getUserAgents() {
+	async function getUserAgents(filterIds?: string[]) {
+		//TODO: filter unavailable agents? don't know if that's available in the module yet
 		const url = `${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/listUserAgent.php?id_project=${Variables.W_ID_PROJECT}&serial=${Variables.SERIAL}`;
 
 		try {
 			const response = await fetch(url);
 			const data = await response.json();
-			// console.log("🚀 ~ getAgents ~ data:", data);
 
 			if (data.status == 1) {
 				const sorted = data.userAgent;
@@ -30,7 +30,15 @@ export default function useAgents(): [AgentData[], CallableFunction] {
 					return 0;
 				});
 
-				setAgents(sorted);
+				setAgents(() => {
+					let returnedAgents = sorted;
+
+					if (filterIds) {
+						returnedAgents = returnedAgents.filter((agent: AgentData) => filterIds.includes(agent.id_user));
+					}
+
+					return returnedAgents;
+				});
 			}
 		} catch (err) {
 			console.log(err);
