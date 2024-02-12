@@ -4,6 +4,8 @@ import { faChevronDown } from "@fortawesome/pro-solid-svg-icons";
 
 import styles from "../../../styles/ui/SelectInput.module.scss";
 
+import { Variables } from "../../../../variables";
+
 import { AgentData, IOption, ISelectConfig, IStyles, LANGUAGE, SELECT_PROVIDER, ServiceData, TICKET_DATA_ACTION_TYPE } from "../../../interfaces";
 
 import { useLanguageContext } from "../../../contexts/languageContext";
@@ -16,7 +18,6 @@ import useServices from "../../../hooks/useServices";
 import getFontSize from "../../../utils/getFontSize";
 
 import SelectOption from "./SelectOption";
-import { Variables } from "../../../../variables";
 
 interface ISelectInputProps {
 	selectStyles: IStyles
@@ -34,7 +35,6 @@ function getDefaultText(lng: LANGUAGE | undefined): string {
 }
 
 export default function SelectInput(props: ISelectInputProps): JSX.Element {
-	//TODO: add filters (services/agents unavailable or id list)
 	const { selectStyles, config, } = props;
 
 	const { language, } = useLanguageContext();
@@ -94,7 +94,6 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 	}
 
 	function changeHandler(label: string, value: string) {
-		console.log("🚀 ~ changeHandler ~ value:", value);
 		setSelectedValue(label);
 		setShowDropdown(false);
 

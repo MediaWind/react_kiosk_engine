@@ -1,7 +1,8 @@
-import { Variables } from "../../../../variables";
-import { IStyles } from "../../../interfaces";
-
 import style from "../../../styles/ui/SelectInput.module.scss";
+
+import { Variables } from "../../../../variables";
+
+import { IStyles } from "../../../interfaces";
 
 interface ISelectOptionProps {
 	label: string
