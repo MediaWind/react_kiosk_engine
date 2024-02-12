@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 
 import "../styles/index.scss";
 
@@ -9,7 +9,7 @@ import useSharedVariables from "../../core/hooks/useSharedVariables";
 import useEId, { eIdData, eIdStatus } from "../../core/hooks/useEId";
 import { setIntervalRange } from "../../core/customInterval";
 
-import { IFlow, LANGUAGE, PRINT_ACTION_TYPE, Route, TICKET_DATA_ACTION_TYPE } from "../interfaces";
+import { IFlow, IPage, LANGUAGE, PRINT_ACTION_TYPE, Route, TICKET_DATA_ACTION_TYPE } from "../interfaces";
 
 import { TicketDataContext } from "../contexts/ticketDataContext";
 import { FlowContext } from "../contexts/flowContext";
@@ -27,8 +27,6 @@ import useScanner from "../hooks/useScanner";
 import usePrinter from "../hooks/usePrinter";
 import useTicket from "../hooks/useTicket";
 import useAppointment from "../hooks/useAppointment";
-
-import { CustomActionContext } from "../contexts/customActionContext";
 
 import checkCurrentFlow from "../utils/checkCurrentFlow";
 
@@ -236,6 +234,10 @@ function Engine(props: IEngineProps): JSX.Element {
 		}
 	}, [qrCode, appointmentState.isCheckingIn, appointmentState.isCheckingOut]);
 
+	// useEffect(() => {
+	// 	console.log(ticketState);
+	// }, [ticketState]);
+
 	// ---------- Handlers ---------- //
 	function resetTicketData() {
 		dispatchTicketState({
@@ -256,9 +258,10 @@ function Engine(props: IEngineProps): JSX.Element {
 		setLanguage(undefined);
 	}
 
-	function triggerCustomActionHandler() {
+	function triggerCustomActionHandler(routerState: { router: { state: IPage[], dispatcher: React.Dispatch<React.SetStateAction<IPage[]>> }}) {
 		if (props.onCustomAction) {
 			const result = props.onCustomAction({
+				...routerState,
 				language: {
 					state: language,
 					dispatcher: setLanguage,
@@ -299,29 +302,27 @@ function Engine(props: IEngineProps): JSX.Element {
 							<FlowContext.Provider value={{ flow: currentFlow, setReload: setReadyToChangeFlow, }}>
 								<ErrorContext.Provider value={{ errorState: error, dispatchErrorState: dispatchErrorState, }}>
 									<PrintContext.Provider value={{ printState, dispatchPrintState, }}>
-										<CustomActionContext.Provider value={{ triggerAction: triggerCustomActionHandler, }}>
 
-											{props.debug && (
-												<Debugger
-													eidData={ticketState.eIdDatas}
-													messages={[
-														`eidstatus: ${eidStatus}`,
-														`firstname from eiddata: ${eIdData?.firstName}`,
-														`eidread: ${ticketState.eIdRead}`,
-														`page is listening to eid: ${ticketState.pageIsListeningToEId}`,
-														isPrinting ? "Printing!" : "",
-														error.hasError ? `Error ${error.errorCode}: ${error.message}` : ""
-													]}
-												/>
-											)}
+										{props.debug && (
+											<Debugger
+												eidData={ticketState.eIdDatas}
+												messages={[
+													`eidstatus: ${eidStatus}`,
+													`firstname from eiddata: ${eIdData?.firstName}`,
+													`eidread: ${ticketState.eIdRead}`,
+													`page is listening to eid: ${ticketState.pageIsListeningToEId}`,
+													isPrinting ? "Printing!" : "",
+													error.hasError ? `Error ${error.errorCode}: ${error.message}` : ""
+												]}
+											/>
+										)}
 
-											{error.hasError && <DisplayError route={props.route} />}
+										{error.hasError && <DisplayError route={props.route} />}
 
-											{isLoading && <LoadingScreen />}
+										{isLoading && <LoadingScreen />}
 
-											<PageRouter isPrinting={isPrinting} onReset={resetAll} />
+										<PageRouter isPrinting={isPrinting} onReset={resetAll} onCustomAction={triggerCustomActionHandler} />
 
-										</CustomActionContext.Provider>
 									</PrintContext.Provider>
 								</ErrorContext.Provider>
 							</FlowContext.Provider>
