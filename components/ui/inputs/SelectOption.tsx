@@ -1,5 +1,7 @@
 import { IStyles } from "../../../interfaces";
 
+import style from "../../../styles/ui/SelectInput.module.scss";
+
 interface ISelectOptionProps {
 	label: string
 	value: string
@@ -15,10 +17,8 @@ export default function SelectOption(props: ISelectOptionProps): JSX.Element {
 	}
 
 	return (
-		<div onClick={clickHandler} style={{
+		<div onClick={clickHandler} className={style.option} style={{
 			all: styles?.all,
-
-			position: "relative",
 
 			width: styles?.width,
 			height: styles?.height,

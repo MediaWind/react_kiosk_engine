@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/pro-solid-svg-icons";
 
+import styles from "../../../styles/ui/SelectInput.module.scss";
+
 import { AgentData, IOption, ISelectConfig, IStyles, LANGUAGE, SELECT_PROVIDER, TICKET_DATA_ACTION_TYPE } from "../../../interfaces";
 
 import { useLanguageContext } from "../../../contexts/languageContext";
@@ -107,13 +109,10 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 		<>
 			<div
 				onClick={toggleDropdown}
+				className={styles.main}
 				style={{
 					all: selectStyles.all,
-					display: "flex",
-					justifyContent: "space-between",
-					alignItems: "center",
 
-					position: "absolute",
 					top: selectStyles.top,
 					bottom: selectStyles.bottom,
 					right: selectStyles.right,
@@ -153,11 +152,10 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 
 			{showDropdown &&
 				<div
+					className={styles.dropdown}
 					style={{
 						all: config?.dropdownStyles?.all,
-						outline: "none",
 
-						position: "absolute",
 						top: config?.dropdownStyles?.top,
 						bottom: config?.dropdownStyles?.bottom,
 						right: config?.dropdownStyles?.right,
@@ -169,8 +167,6 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 
 						margin: config?.dropdownStyles?.margin,
 						padding: config?.dropdownStyles?.padding,
-
-						overflow: "auto",
 
 						backgroundColor: config?.dropdownStyles?.backgroundColor ?? "transparent",
 						opacity: config?.dropdownStyles?.opacity,
