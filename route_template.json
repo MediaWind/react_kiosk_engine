@@ -154,7 +154,7 @@
 								"type": "button|text|number|cardReader|qrCode",
 								"actions": [
 									{
-										"type": "nextpage|previouspage|homepage|printticket|savedata|saveservice|changelanguage|checkin|checkout...",
+										"type": "nextpage|previouspage|homepage|printticket|saveservice|changelanguage|checkin|checkout...",
 
 										"navigateTo": "UUID",
 
@@ -189,6 +189,49 @@
 									"borderColor": "css property",
 									"borderRadius": "css property",
 									"all": "css property"
+								}
+							}
+						},
+						{
+							"type": "input",
+
+							"content": {
+								"name": "string",
+								"type": "select",
+								"actions": ["..."],
+
+								"styles": {
+									"top": "css property",
+									"left": "css property",
+									"bottom": "css property",
+									"right": "css property",
+									"width": "css property",
+									"height": "css property",
+									"padding": "css property",
+									"margin": "css property",
+									"borderWidth": "css property",
+									"borderStyle": "css property",
+									"borderColor": "css property",
+									"borderRadius": "css property",
+									"all": "css property"
+								},
+
+								"selectConfig": {
+									"provider": "custom|userAgents|services",
+									"placeholders": {
+										"fr|en|nl|es": "placeholder"
+									},
+									"options": [
+										{
+											"key": "option id",
+											"label": "option label",
+											"value": "option value"
+										}
+									],
+									"dropdownStyles": { "...": "css properties" },
+									"optionStyles": { "...": "css properties" },
+									"filterUnavailable": false,
+									"filterIds": ["service or agent ids"]
 								}
 							}
 						},

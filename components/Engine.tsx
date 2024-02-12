@@ -257,7 +257,7 @@ function Engine(props: IEngineProps): JSX.Element {
 		return (
 			<div
 				onContextMenu={(e: any) => e.preventDefault()}
-				style={{ userSelect: "none", }}
+				style={{ userSelect: "none", cursor: Variables.PREVIEW ? "auto" : "none", }}
 				onKeyDown={keydownHandler}
 				tabIndex={0}
 			>

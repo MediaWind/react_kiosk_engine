@@ -15,10 +15,9 @@ export default function ButtonInput(props: IButtonInputProps) {
 	};
 
 	function devClick() {
-		if (!Variables.PREVIEW) {
-			return;
+		if (Variables.PREVIEW) {
+			clickHandler();
 		}
-		clickHandler();
 	}
 
 	return (

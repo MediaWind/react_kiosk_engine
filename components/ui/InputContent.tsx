@@ -10,6 +10,7 @@ import { usePrintContext } from "../../contexts/printContext";
 
 import ButtonInput from "./inputs/ButtonInput";
 import NumberInput from "./inputs/NumberInput";
+import SelectInput from "./inputs/SelectInput";
 
 interface IInputContentProps {
 	content: IInputContent
@@ -102,15 +103,23 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 		return (
 			<ButtonInput onClick={actionHandler} styles={content.styles} />
 		);
-	} else if (content.type === INPUT_TYPE.NUMBER) {
+	}
+
+	if (content.type === INPUT_TYPE.NUMBER) {
 		return (
 			<NumberInput styles={content.styles} />
 		);
-	} else {
-		//? INPUT_TYPE.TEXT is managed from ActivePage with TextInputsManager component
+	}
+
+	if (content.type === INPUT_TYPE.SELECT) {
 		return (
-			<>
-			</>
+			<SelectInput selectStyles={content.styles} config={content.selectConfig} />
 		);
 	}
+
+	//? INPUT_TYPE.TEXT is managed from ActivePage with TextInputsManager component
+	return (
+		<>
+		</>
+	);
 }

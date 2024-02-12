@@ -1,0 +1,22 @@
+.main {
+	position: absolute;
+
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.dropdown {
+	position: absolute;
+	overflow: auto;
+}
+
+.option {
+	&:first-of-type {
+		border-top: none !important;
+	}
+
+	&:last-of-type {
+		border-bottom: none !important;
+	}
+}
