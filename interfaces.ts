@@ -149,7 +149,6 @@ export enum INPUT_TYPE {
 	CARDREADER = "cardReader",
 	QRCODE = "qrCode",
 	SELECT = "select",
-	USER_AGENT_SELECT = "userAgentSelect",
 }
 
 export interface ISelectConfig {
