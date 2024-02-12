@@ -51,10 +51,6 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 	const [serviceOptions, setServiceOptions] = useState<ServiceData[]>([]);
 
 	useEffect(() => {
-		getServices();
-	}, []);
-
-	useEffect(() => {
 		switch (config?.provider) {
 			case SELECT_PROVIDER.CUSTOM:
 				setCustomOptions(config.options ?? []);
@@ -62,7 +58,7 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 				setServiceOptions([]);
 				break;
 			case SELECT_PROVIDER.SERVICES:
-				getServices();
+				getServices(config.filterUnavailable, config.filterIds);
 				setCustomOptions([]);
 				setAgentOptions([]);
 				break;
@@ -83,6 +79,8 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 	}, [userAgents]);
 
 	useEffect(() => {
+		console.log(services);
+
 		setServiceOptions(services);
 	}, [services]);
 
