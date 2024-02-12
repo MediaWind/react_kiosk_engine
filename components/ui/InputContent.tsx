@@ -11,6 +11,7 @@ import { usePrintContext } from "../../contexts/printContext";
 import ButtonInput from "./inputs/ButtonInput";
 import NumberInput from "./inputs/NumberInput";
 import UserAgentSelect from "./inputs/UserAgentSelect";
+import SelectInput from "./inputs/SelectInput";
 
 interface IInputContentProps {
 	content: IInputContent
@@ -114,6 +115,12 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 	if (content.type === INPUT_TYPE.USER_AGENT_SELECT) {
 		return (
 			<UserAgentSelect styles={content.styles} />
+		);
+	}
+
+	if (content.type === INPUT_TYPE.SELECT) {
+		return (
+			<SelectInput selectStyles={content.styles} config={content.selectConfig} placeholder={content.placeholder} />
 		);
 	}
 
