@@ -139,6 +139,7 @@ export interface IInputContent {
 	autoFocus?: boolean;
 	textInput?: IInputField;
 	styles: IStyles;
+	selectConfig?: ISelectConfig
 }
 
 export enum INPUT_TYPE {
@@ -147,7 +148,29 @@ export enum INPUT_TYPE {
 	NUMBER = "number",
 	CARDREADER = "cardReader",
 	QRCODE = "qrCode",
+	SELECT = "select",
 	USER_AGENT_SELECT = "userAgentSelect",
+}
+
+export interface ISelectConfig {
+	provider: SELECT_PROVIDER;
+	options?: IOption[];
+	dropdownStyles?: IStyles;
+	optionStyles?: IStyles;
+	filterUnavailable?: boolean;
+	filterIds?: string[];
+}
+
+export enum SELECT_PROVIDER {
+	CUSTOM = "custom",
+	USER_AGENTS = "userAgents",
+	SERVICES = "services"
+}
+
+export interface IOption {
+	key: string;
+	label: string;
+	value: string;
 }
 
 export interface IInputAction {

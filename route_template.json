@@ -154,7 +154,7 @@
 								"type": "button|text|number|cardReader|qrCode",
 								"actions": [
 									{
-										"type": "nextpage|previouspage|homepage|printticket|savedata|saveservice|changelanguage|checkin|checkout...",
+										"type": "nextpage|previouspage|homepage|printticket|saveservice|changelanguage|checkin|checkout...",
 
 										"navigateTo": "UUID",
 
