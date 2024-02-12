@@ -23,10 +23,15 @@ export default function ticketDataReducer(ticketData: ITicketDataState, action: 
 			...ticketData,
 			eIdRead: action.payload as boolean,
 		};
-		case TICKET_DATA_ACTION_TYPE.INPUTTEXTUPDATE: return {
-			...ticketData,
-			textInputDatas: [...ticketData.textInputDatas, action.payload as IInputField],
-		};
+		case TICKET_DATA_ACTION_TYPE.INPUTTEXTUPDATE: {
+			const actionInput = action.payload as IInputField;
+			const filteredData = ticketData.textInputDatas.filter(input => input.id !== actionInput.id);
+
+			return {
+				...ticketData,
+				textInputDatas: [...filteredData, action.payload as IInputField],
+			};
+		}
 		case TICKET_DATA_ACTION_TYPE.SERVICEUPDATE: return {
 			...ticketData,
 			service: action.payload as IService,
