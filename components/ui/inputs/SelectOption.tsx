@@ -1,3 +1,4 @@
+import { Variables } from "../../../../variables";
 import { IStyles } from "../../../interfaces";
 
 import style from "../../../styles/ui/SelectInput.module.scss";
@@ -16,8 +17,14 @@ export default function SelectOption(props: ISelectOptionProps): JSX.Element {
 		onChange(label, value);
 	}
 
+	function devClick() {
+		if (Variables.PREVIEW) {
+			clickHandler();
+		}
+	}
+
 	return (
-		<div onClick={clickHandler} className={style.option} style={{
+		<div onTouchEnd={clickHandler} onClick={devClick} className={style.option} style={{
 			all: styles?.all,
 
 			width: styles?.width,

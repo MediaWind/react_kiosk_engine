@@ -16,9 +16,7 @@ export default function useAgents(): [AgentData[], CallableFunction] {
 			const data = await response.json();
 
 			if (data.status == 1) {
-				const sorted = data.userAgent;
-
-				sorted.sort((agent1: AgentData, agent2: AgentData) => {
+				const sorted = data.userAgent.sort((agent1: AgentData, agent2: AgentData) => {
 					if (agent1.name.lastname > agent2.name.lastname) {
 						return 1;
 					}

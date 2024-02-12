@@ -16,6 +16,7 @@ import useServices from "../../../hooks/useServices";
 import getFontSize from "../../../utils/getFontSize";
 
 import SelectOption from "./SelectOption";
+import { Variables } from "../../../../variables";
 
 interface ISelectInputProps {
 	selectStyles: IStyles
@@ -86,7 +87,14 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 		setShowDropdown(latest => !latest);
 	}
 
+	function devToggle() {
+		if (Variables.PREVIEW) {
+			toggleDropdown();
+		}
+	}
+
 	function changeHandler(label: string, value: string) {
+		console.log("🚀 ~ changeHandler ~ value:", value);
 		setSelectedValue(label);
 		setShowDropdown(false);
 
@@ -113,7 +121,8 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 	return (
 		<>
 			<div
-				onClick={toggleDropdown}
+				onTouchEnd={toggleDropdown}
+				onClick={devToggle}
 				className={styles.main}
 				style={{
 					all: selectStyles.all,

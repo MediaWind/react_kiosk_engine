@@ -57,10 +57,9 @@ export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 	}
 
 	function devClick() {
-		if (!Variables.PREVIEW) {
-			return;
+		if (Variables.PREVIEW) {
+			clickHandler();
 		}
-		clickHandler();
 	}
 
 	if (route?.errorManagement) {

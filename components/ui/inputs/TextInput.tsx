@@ -26,10 +26,9 @@ export default function TextInput(props: ITextInputProps) {
 	} = props;
 
 	function devClick() {
-		if (!Variables.PREVIEW) {
-			return;
+		if (Variables.PREVIEW) {
+			onFocus(id);
 		}
-		onFocus(id);
 	}
 
 	return (

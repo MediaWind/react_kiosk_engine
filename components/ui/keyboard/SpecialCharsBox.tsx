@@ -32,10 +32,9 @@ export default function SpecialCharsBox(props: ISpecialCharsBoxProps): JSX.Eleme
 	};
 
 	function devClick() {
-		if (!Variables.PREVIEW) {
-			return;
+		if (Variables.PREVIEW) {
+			closeBoxHandler();
 		}
-		closeBoxHandler();
 	}
 
 	return (

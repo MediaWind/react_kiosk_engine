@@ -52,10 +52,9 @@ export default function Key(props: IKeyProps): JSX.Element {
 	};
 
 	function changetexthandlerDev() {
-		if (!Variables.PREVIEW) {
-			return;
+		if (Variables.PREVIEW) {
+			changetexthandler();
 		}
-		changetexthandler();
 	}
 
 	const displaySpecCharsHandler = () => {
@@ -65,10 +64,9 @@ export default function Key(props: IKeyProps): JSX.Element {
 	};
 
 	function displaySpecCharsHandlerDev() {
-		if (!Variables.PREVIEW) {
-			return;
+		if (Variables.PREVIEW) {
+			displaySpecCharsHandler();
 		}
-		displaySpecCharsHandler();
 	}
 
 	if (action) {
@@ -80,10 +78,9 @@ export default function Key(props: IKeyProps): JSX.Element {
 			};
 
 			const devClick = () => {
-				if (!Variables.PREVIEW) {
-					return;
+				if (Variables.PREVIEW) {
+					shiftClickHandler();
 				}
-				shiftClickHandler();
 			};
 
 			return (
@@ -175,11 +172,10 @@ export default function Key(props: IKeyProps): JSX.Element {
 				<div
 					className={`${styles.key_action} ${pressed ? styles.pressed : ""}`}
 					onClick={() => {
-						if (!Variables.PREVIEW) {
-							return;
-						}
-						if (onDeleteText) {
-							onDeleteText();
+						if (Variables.PREVIEW) {
+							if (onDeleteText) {
+								onDeleteText();
+							}
 						}
 					}}
 					onMouseDown={() => setPressed(true)}
