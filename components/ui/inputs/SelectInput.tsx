@@ -4,13 +4,14 @@ import { faChevronDown } from "@fortawesome/pro-solid-svg-icons";
 
 import styles from "../../../styles/ui/SelectInput.module.scss";
 
-import { AgentData, IOption, ISelectConfig, IStyles, LANGUAGE, SELECT_PROVIDER, TICKET_DATA_ACTION_TYPE } from "../../../interfaces";
+import { AgentData, IOption, ISelectConfig, IStyles, LANGUAGE, SELECT_PROVIDER, ServiceData, TICKET_DATA_ACTION_TYPE } from "../../../interfaces";
 
 import { useLanguageContext } from "../../../contexts/languageContext";
 import { useFlowContext } from "../../../contexts/flowContext";
 import { useTicketDataContext } from "../../../contexts/ticketDataContext";
 
 import useAgents from "../../../hooks/useAgents";
+import useServices from "../../../hooks/useServices";
 
 import getFontSize from "../../../utils/getFontSize";
 
@@ -40,13 +41,18 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 	const { dispatchTicketState, } = useTicketDataContext();
 
 	const [userAgents, getUserAgents] = useAgents();
+	const [services, getServices] = useServices();
 
 	const [selectedValue, setSelectedValue] = useState<string>(config?.placeholders ? config.placeholders[language ?? "fr"] : getDefaultText(language));
 	const [showDropdown, setShowDropdown] = useState<boolean>(false);
 
 	const [customOptions, setCustomOptions] = useState<IOption[]>([]);
 	const [agentOptions, setAgentOptions] = useState<AgentData[]>([]);
-	const [serviceOptions, setServiceOptions] = useState<any[]>([]);
+	const [serviceOptions, setServiceOptions] = useState<ServiceData[]>([]);
+
+	useEffect(() => {
+		getServices();
+	}, []);
 
 	useEffect(() => {
 		switch (config?.provider) {
@@ -56,8 +62,7 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 				setServiceOptions([]);
 				break;
 			case SELECT_PROVIDER.SERVICES:
-				//TODO: add services options provider
-				setServiceOptions([]);
+				getServices();
 				setCustomOptions([]);
 				setAgentOptions([]);
 				break;
@@ -76,6 +81,10 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 	useEffect(() => {
 		setAgentOptions(userAgents);
 	}, [userAgents]);
+
+	useEffect(() => {
+		setServiceOptions(services);
+	}, [services]);
 
 	function toggleDropdown() {
 		setShowDropdown(latest => !latest);
@@ -194,9 +203,9 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 					}
 
 					{serviceOptions.length > 0 && serviceOptions.map(option => <SelectOption
-						key={option.id_user}
-						label={`${option.name.firstname} ${option.name.lastname}`}
-						value={option.id_user}
+						key={option.id}
+						label={language === LANGUAGE.ENGLISH ? option.name_en : language === LANGUAGE.DUTCH ? option.name_nl : option.name_fr}
+						value={option.id}
 						onChange={changeHandler}
 						styles={config?.optionStyles} />)
 					}

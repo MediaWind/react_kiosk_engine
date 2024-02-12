@@ -438,3 +438,56 @@ export type AgentData = {
 	url_ics_no_availibility: string
 	use_group: string
 }
+
+//* -------- *//
+//* Services *//
+//* -------- *//
+export type ServiceData = {
+	id: string,
+	key_language: string,
+	id_main: string,
+	type: string,
+	disabled: string,
+	id_project: string,
+	name_fr: string,
+	name_en: string,
+	name_nl: string,
+	prefix_ticket: string,
+	last_incremental: string,
+	char_nb_ticket: string,
+	color: string,
+	priority: string,
+	url_icon: string,
+	duration_estimated: string,
+	id_room_wait: string,
+	timezone: string,
+	notify_display: string,
+	url_icone: string,
+	ref_external: string,
+	maximum_waiting: string,
+	schedule_main: string,
+	id_rescue: string,
+	id_adapted: string,
+	service_is_disabled: number,
+	service_is_open: boolean,
+	label: string,
+	is_closed_day: number,
+	nbr_agent: string,
+	nbTicketWait: number,
+	nbTicketBusy: number,
+	array_waiting_room: {
+		id: string,
+		key_language: string,
+		id_project: string,
+		label: string,
+		type: string,
+		id_player_checkin: string,
+		route: string,
+		id_floor: string,
+		name_floor: string | null,
+		capacity: string,
+		id_waiting_room_temp: string,
+		ref_external: string,
+		id_bms: string
+	}
+}

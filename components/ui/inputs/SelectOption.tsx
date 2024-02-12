@@ -40,7 +40,7 @@ export default function SelectOption(props: ISelectOptionProps): JSX.Element {
 				color: styles?.textColor,
 				textAlign: styles?.textAlign,
 			}}>
-				{label}
+				{label.trim().replace("\\", "")}
 			</p>
 		</div>
 	);
