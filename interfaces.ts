@@ -154,6 +154,7 @@ export enum INPUT_TYPE {
 
 export interface ISelectConfig {
 	provider: SELECT_PROVIDER;
+	placeholders?: Record<LANGUAGE, string>;
 	options?: IOption[];
 	dropdownStyles?: IStyles;
 	optionStyles?: IStyles;

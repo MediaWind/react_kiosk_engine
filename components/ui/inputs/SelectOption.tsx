@@ -11,7 +11,7 @@ export default function SelectOption(props: ISelectOptionProps): JSX.Element {
 	const { label, value, onChange, styles, } = props;
 
 	function clickHandler() {
-		onChange(value);
+		onChange(label, value);
 	}
 
 	return (

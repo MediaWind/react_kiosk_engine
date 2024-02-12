@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/pro-solid-svg-icons";
 
-import { AgentData, IOption, ISelectConfig, IStyles, LANGUAGE, SELECT_PROVIDER } from "../../../interfaces";
+import { AgentData, IOption, ISelectConfig, IStyles, LANGUAGE, SELECT_PROVIDER, TICKET_DATA_ACTION_TYPE } from "../../../interfaces";
 
 import { useLanguageContext } from "../../../contexts/languageContext";
+import { useFlowContext } from "../../../contexts/flowContext";
+import { useTicketDataContext } from "../../../contexts/ticketDataContext";
 
 import useAgents from "../../../hooks/useAgents";
 
@@ -15,7 +17,6 @@ import SelectOption from "./SelectOption";
 interface ISelectInputProps {
 	selectStyles: IStyles
 	config: ISelectConfig | undefined
-	placeholder?: string
 }
 
 function getDefaultText(lng: LANGUAGE | undefined): string {
@@ -30,11 +31,15 @@ function getDefaultText(lng: LANGUAGE | undefined): string {
 
 export default function SelectInput(props: ISelectInputProps): JSX.Element {
 	//TODO: add filters (services/agents unavailable or id list)
-	const { selectStyles, config, placeholder, } = props;
+	const { selectStyles, config, } = props;
 
 	const { language, } = useLanguageContext();
+	const { flow, } = useFlowContext();
+	const { dispatchTicketState, } = useTicketDataContext();
+
 	const [userAgents, getUserAgents] = useAgents();
 
+	const [selectedValue, setSelectedValue] = useState<string>(config?.placeholders ? config.placeholders[language ?? "fr"] : getDefaultText(language));
 	const [showDropdown, setShowDropdown] = useState<boolean>(false);
 
 	const [customOptions, setCustomOptions] = useState<IOption[]>([]);
@@ -74,9 +79,28 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 		setShowDropdown(latest => !latest);
 	}
 
-	function changeHandler(value: string) {
-		//TODO
-		console.log(value);
+	function changeHandler(label: string, value: string) {
+		setSelectedValue(label);
+		setShowDropdown(false);
+
+		if (flow.ticketParameters?.idUserAgent && agentOptions.length > 0) {
+			dispatchTicketState({
+				type: TICKET_DATA_ACTION_TYPE.INPUTTEXTUPDATE,
+				payload: {
+					id: flow.ticketParameters.idUserAgent,
+					value: value,
+				},
+			});
+		}
+
+		if (serviceOptions.length > 0) {
+			dispatchTicketState({
+				type: TICKET_DATA_ACTION_TYPE.SERVICEUPDATE,
+				payload: { serviceID: parseInt(value), },
+			});
+		}
+
+		//TODO: save custom value *somewhere*
 	}
 
 	return (
@@ -119,7 +143,7 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 						textAlign: selectStyles.textAlign,
 					}}
 				>
-					{placeholder ?? getDefaultText(language)}
+					{selectedValue}
 				</p>
 				<FontAwesomeIcon icon={faChevronDown} style={{
 					fontSize: selectStyles.fontSize ?? getFontSize(selectStyles.height),
@@ -138,7 +162,7 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 						bottom: config?.dropdownStyles?.bottom,
 						right: config?.dropdownStyles?.right,
 						left: config?.dropdownStyles?.left,
-						zIndex: 1,
+						zIndex: 2,
 
 						width: config?.dropdownStyles?.width,
 						height: config?.dropdownStyles?.height,

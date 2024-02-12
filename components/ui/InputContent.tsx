@@ -120,7 +120,7 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 
 	if (content.type === INPUT_TYPE.SELECT) {
 		return (
-			<SelectInput selectStyles={content.styles} config={content.selectConfig} placeholder={content.placeholder} />
+			<SelectInput selectStyles={content.styles} config={content.selectConfig} />
 		);
 	}
 
