@@ -17,6 +17,7 @@ import { LanguageContext } from "../contexts/languageContext";
 import { ErrorContext } from "../contexts/errorContext";
 import { PrintContext } from "../contexts/printContext";
 import { AppointmentContext } from "../contexts/appointmentContext";
+import { EIdContext } from "../contexts/eIdContext";
 
 import ticketDataReducer, { initialTicketState } from "../reducers/ticketDataReducer";
 import appointmentReducer, { initialAppointmentState } from "../reducers/appointmentReducer";
@@ -34,7 +35,6 @@ import PageRouter from "../components/PageRouter";
 import LoadingScreen from "../components/ui/LoadingScreen";
 import Debugger from "../components/debug/Debugger";
 import DisplayError from "../components/ui/DisplayError";
-import { EIdContext } from "../contexts/eIdContext";
 import EIdBlock from "./ui/EIdBlock";
 
 interface IEngineProps {
@@ -284,7 +284,7 @@ function Engine(props: IEngineProps): JSX.Element {
 
 											{error.hasError && <DisplayError route={props.route} />}
 
-											{isLoading && <LoadingScreen />}
+											{isLoading && <LoadingScreen customImages={props.route.errorManagement} />}
 											{eIdBlock && <EIdBlock customImages={props.route.errorManagement} />}
 
 											<PageRouter isPrinting={isPrinting} onReset={resetAll} />
