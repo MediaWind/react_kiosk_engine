@@ -34,6 +34,8 @@ import PageRouter from "../components/PageRouter";
 import LoadingScreen from "../components/ui/LoadingScreen";
 import Debugger from "../components/debug/Debugger";
 import DisplayError from "../components/ui/DisplayError";
+import { EIdContext } from "../contexts/eIdContext";
+import EIdBlock from "./ui/EIdBlock";
 
 interface IEngineProps {
 	route: Route
@@ -45,6 +47,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [eidStatus, eIdData] = useEId(eIdInserted, eIdReaded, eIdRemoved);
 
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [eIdBlock, setEIdBlock] = useState<boolean>(false);
 
 	const [language, setLanguage] = useState<LANGUAGE | undefined>();
 
@@ -146,6 +149,14 @@ function Engine(props: IEngineProps): JSX.Element {
 			setIsLoading(true);
 		} else {
 			setIsLoading(false);
+		}
+
+		if (eidStatus === eIdStatus.READ) {
+			setEIdBlock(true);
+		}
+
+		if (eidStatus === eIdStatus.REMOVED) {
+			setEIdBlock(false);
 		}
 	}, [eidStatus]);
 
@@ -257,25 +268,28 @@ function Engine(props: IEngineProps): JSX.Element {
 							<FlowContext.Provider value={{ flow: currentFlow, setReload: setReadyToChangeFlow, }}>
 								<ErrorContext.Provider value={{ errorState: error, dispatchErrorState: dispatchError, }}>
 									<PrintContext.Provider value={{ printState, dispatchPrintState, }}>
+										<EIdContext.Provider value={{ status: eidStatus, }}>
 
-										{props.debug && (
-											<Debugger
-												eidData={ticketState.eIdDatas}
-												messages={[
-													`eidstatus: ${eidStatus}`,
-													`firstname from eiddata: ${eIdData?.firstName}`,
-													isPrinting ? "Printing!" : "",
-													error.hasError ? `Error ${error.errorCode}: ${error.message}` : ""
-												]}
-											/>
-										)}
+											{props.debug && (
+												<Debugger
+													eidData={ticketState.eIdDatas}
+													messages={[
+														`eidstatus: ${eidStatus}`,
+														`firstname from eiddata: ${eIdData?.firstName}`,
+														isPrinting ? "Printing!" : "",
+														error.hasError ? `Error ${error.errorCode}: ${error.message}` : ""
+													]}
+												/>
+											)}
 
-										{error.hasError && <DisplayError route={props.route} />}
+											{error.hasError && <DisplayError route={props.route} />}
 
-										{isLoading && <LoadingScreen />}
+											{isLoading && <LoadingScreen />}
+											{eIdBlock && <EIdBlock />}
 
-										<PageRouter isPrinting={isPrinting} onReset={resetAll} />
+											<PageRouter isPrinting={isPrinting} onReset={resetAll} />
 
+										</EIdContext.Provider>
 									</PrintContext.Provider>
 								</ErrorContext.Provider>
 							</FlowContext.Provider>

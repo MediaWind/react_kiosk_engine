@@ -1,4 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+
+import { eIdStatus } from "../../../core/hooks/useEId";
 
 import { APPOINTMENT_ACTION_TYPE, ACTION_TYPE, IInputAction, IInputContent, IService, INPUT_TYPE, PRINT_ACTION_TYPE, TICKET_DATA_ACTION_TYPE } from "../../interfaces";
 
@@ -7,6 +9,7 @@ import { useLanguageContext } from "../../contexts/languageContext";
 import { useTicketDataContext } from "../../contexts/ticketDataContext";
 import { useAppointmentContext } from "../../contexts/appointmentContext";
 import { usePrintContext } from "../../contexts/printContext";
+import { useEIdContext } from "../../contexts/eIdContext";
 
 import ButtonInput from "./inputs/ButtonInput";
 import NumberInput from "./inputs/NumberInput";
@@ -24,15 +27,22 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 	const { dispatchTicketState, } = useTicketDataContext();
 	const { dispatchAppointmentState, } = useAppointmentContext();
 	const { dispatchPrintState, } = usePrintContext();
+	const { status, } = useEIdContext();
+
+	const [eIdBlock, setEIdBlock] = useState<boolean>(false);
 
 	useEffect(() => {
 		if (content.type === INPUT_TYPE.CARDREADER) {
-			// dispatchTicketState({
-			// 	type: TICKET_DATA_ACTION_TYPE.EIDLISTENINGUPDATE,
-			// 	payload: true,
-			// });
+			if (status === eIdStatus.READ) {
+				setEIdBlock(true);
+			}
+
+			if (status === eIdStatus.REMOVED && eIdBlock) {
+				setEIdBlock(false);
+				actionHandler();
+			}
 		}
-	}, []);
+	}, [content, status]);
 
 	useEffect(() => {
 		if (content.type === INPUT_TYPE.QRCODE) {
