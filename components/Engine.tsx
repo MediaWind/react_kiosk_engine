@@ -285,7 +285,7 @@ function Engine(props: IEngineProps): JSX.Element {
 											{error.hasError && <DisplayError route={props.route} />}
 
 											{isLoading && <LoadingScreen />}
-											{eIdBlock && <EIdBlock />}
+											{eIdBlock && <EIdBlock customImages={props.route.errorManagement} />}
 
 											<PageRouter isPrinting={isPrinting} onReset={resetAll} />
 

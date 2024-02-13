@@ -68,6 +68,10 @@ export interface IErrorManagement {
 	notConnectedToInternet?: IBackgroundImage;
 	serviceClosed?: IBackgroundImage;
 	//TODO: add more error options
+
+	//? Not necessarily errors, might need some refactoring here
+	eIdInserted?: IBackgroundImage;
+	eIdRead?: IBackgroundImage;
 }
 
 export enum KEYBOARD_LAYOUT {
