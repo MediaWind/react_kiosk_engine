@@ -241,8 +241,6 @@ export interface IInputField {
 
 export interface ITicketDataState {
 	eIdDatas: eIdData | null,
-	eIdRead: boolean,
-	pageIsListeningToEId: boolean,
 	textInputDatas: IInputField[],
 	service: IService | undefined,
 	language: LANGUAGE | undefined
@@ -255,8 +253,6 @@ export interface ITicketDataAction {
 
 export enum TICKET_DATA_ACTION_TYPE {
 	EIDUPDATE = "eidupdate",
-	EIDLISTENINGUPDATE = "eidlisteningupdate",
-	EIDREADUPDATE = "eidreadupdate",
 	INPUTTEXTUPDATE = "inputtextupdate",
 	SERVICEUPDATE = "serviceupdate",
 	LANGUAGEUPDATE = "languageupdate",

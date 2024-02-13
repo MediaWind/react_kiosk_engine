@@ -142,7 +142,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	//* --- *//
 	//Loading on eId inserted
 	useEffect(() => {
-		if (ticketState.pageIsListeningToEId && eidStatus === eIdStatus.INSERTED) {
+		if (eidStatus === eIdStatus.INSERTED) {
 			setIsLoading(true);
 		} else {
 			setIsLoading(false);
@@ -151,23 +151,13 @@ function Engine(props: IEngineProps): JSX.Element {
 
 	// Updates eId Data in reducer
 	useEffect(() => {
-		if (ticketState.pageIsListeningToEId && eIdData != null) {
+		if (eIdData != null) {
 			dispatchTicketState({
 				type: TICKET_DATA_ACTION_TYPE.EIDUPDATE,
 				payload: eIdData as eIdData,
 			});
 		}
 	}, [eIdData]);
-
-	// Updates eId read in reducer
-	useEffect(() => {
-		if (ticketState.pageIsListeningToEId && eIdData != null && eidStatus === eIdStatus.READ) {
-			dispatchTicketState({
-				type: TICKET_DATA_ACTION_TYPE.EIDREADUPDATE,
-				payload: true,
-			});
-		}
-	}, [ticketState.pageIsListeningToEId, eIdData, eidStatus]);
 
 	//* ------ *//
 	//* Errors *//
@@ -274,8 +264,6 @@ function Engine(props: IEngineProps): JSX.Element {
 												messages={[
 													`eidstatus: ${eidStatus}`,
 													`firstname from eiddata: ${eIdData?.firstName}`,
-													`eidread: ${ticketState.eIdRead}`,
-													`page is listening to eid: ${ticketState.pageIsListeningToEId}`,
 													isPrinting ? "Printing!" : "",
 													error.hasError ? `Error ${error.errorCode}: ${error.message}` : ""
 												]}

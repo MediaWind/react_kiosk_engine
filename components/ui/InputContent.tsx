@@ -21,21 +21,16 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 
 	const { nextPage, previousPage, homePage, } = useRouterContext();
 	const { setLanguage, } = useLanguageContext();
-	const { ticketState, dispatchTicketState, } = useTicketDataContext();
+	const { dispatchTicketState, } = useTicketDataContext();
 	const { dispatchAppointmentState, } = useAppointmentContext();
 	const { dispatchPrintState, } = usePrintContext();
 
 	useEffect(() => {
 		if (content.type === INPUT_TYPE.CARDREADER) {
-			dispatchTicketState({
-				type: TICKET_DATA_ACTION_TYPE.EIDLISTENINGUPDATE,
-				payload: true,
-			});
-		} else {
-			dispatchTicketState({
-				type: TICKET_DATA_ACTION_TYPE.EIDLISTENINGUPDATE,
-				payload: false,
-			});
+			// dispatchTicketState({
+			// 	type: TICKET_DATA_ACTION_TYPE.EIDLISTENINGUPDATE,
+			// 	payload: true,
+			// });
 		}
 	}, []);
 
@@ -45,12 +40,12 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 		}
 	}, []);
 
-	useEffect(() => {
-		//? When eId is read, automatically navigates to services page
-		if (content.type === INPUT_TYPE.CARDREADER && ticketState.eIdRead && content.actions.length > 0) {
-			actionHandler();
-		}
-	}, [ticketState.eIdRead]);
+	// useEffect(() => {
+	// 	//? When eId is read, automatically navigates to services page
+	// 	if (content.type === INPUT_TYPE.CARDREADER && ticketState.eIdRead && content.actions.length > 0) {
+	// 		actionHandler();
+	// 	}
+	// }, [ticketState.eIdRead]);
 
 	const actionHandler = () => {
 		content.actions.map((action) => doAction(action));
