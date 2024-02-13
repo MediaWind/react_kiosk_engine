@@ -37,6 +37,43 @@ import DisplayError from "../components/ui/DisplayError";
 
 interface IEngineProps {
 	route: Route
+	/**
+	 * This forwards all contexts/reducers informations from Engine to App.
+	 *
+	 * @use
+	 * Use the forwarded object as a param in your custom function to read and overwrite the different informations of the engine.
+	 *
+	 * @structure
+	 * The forwarded object follows this structure:
+	 *
+	 * ```ts
+	 * {
+	 * 	router: { state, dispatcher },
+	 * 	language: { state, dispatcher },
+	 * 	ticket: { state, dispatcher },
+	 * 	print: { state, dispatcher },
+	 * 	appointment: { state, dispatcher },
+	 * 	error: { state, dispatcher },
+	 * }
+	 * ```
+	 *
+	 * _state_ is the read only current state, _dispatcher_ allows you to overwrite the current state. Refer to a specific dispatcher for more info on what arguments each of them expects.
+	 *
+	 * @example
+	 * In App:
+	 *
+	 * ```ts
+	 * function customAction(value) {
+	 *		if (value.language.state === LANGUAGE.ENGLISH) {
+	 *			value.router.dispatcher("05987761-0c07-4856-8160-db3d5659eede");
+	 *		}
+	 *
+	 *		if (value.ticket.state.service !== undefined) {
+	 *			value.print.disptacher({ type: PRINT_ACTION_TYPE.REQUESTTICKETCREATION, payload: true, });
+	 *		}
+	 * }
+		```
+	 */
 	onCustomAction?: CallableFunction
 	debug?: boolean
 }
@@ -234,10 +271,6 @@ function Engine(props: IEngineProps): JSX.Element {
 		}
 	}, [qrCode, appointmentState.isCheckingIn, appointmentState.isCheckingOut]);
 
-	// useEffect(() => {
-	// 	console.log(ticketState);
-	// }, [ticketState]);
-
 	// ---------- Handlers ---------- //
 	function resetTicketData() {
 		dispatchTicketState({
@@ -260,7 +293,7 @@ function Engine(props: IEngineProps): JSX.Element {
 
 	function triggerCustomActionHandler(routerState: { router: { state: IPage[], dispatcher: React.Dispatch<React.SetStateAction<IPage[]>> }}) {
 		if (props.onCustomAction) {
-			const result = props.onCustomAction({
+			props.onCustomAction({
 				...routerState,
 				language: {
 					state: language,
@@ -283,8 +316,8 @@ function Engine(props: IEngineProps): JSX.Element {
 					dispatcher: dispatchErrorState,
 				},
 			});
-
-			console.log("🚀 ~ triggerCustomActionHandler ~ result:", result);
+		} else {
+			console.warn("%cEngine Warning:%cYou tried to trigger a custom action, but no action was passed to Engine.\n\nUse onCustomAction as a prop to trigger a custom action.", "font-size: 12px; font-weight: bold; text-decoration: underline;");
 		}
 	}
 
