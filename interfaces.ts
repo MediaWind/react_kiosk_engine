@@ -301,6 +301,10 @@ export enum ERROR_CODE {
 	 */
 	B404 = "404-B",
 	/**
+	 * 408-A: eId reading timeout
+	 */
+	A408 = "408-A",
+	/**
 	 * 500-A: Something went wrong when trying to print ticket
 	 */
 	A500 = "500-A",

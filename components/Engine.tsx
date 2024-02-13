@@ -9,7 +9,7 @@ import useSharedVariables from "../../core/hooks/useSharedVariables";
 import useEId, { eIdData, eIdStatus } from "../../core/hooks/useEId";
 import { setIntervalRange } from "../../core/customInterval";
 
-import { IFlow, LANGUAGE, PRINT_ACTION_TYPE, Route, TICKET_DATA_ACTION_TYPE } from "../interfaces";
+import { ERROR_ACTION_TYPE, ERROR_CODE, IFlow, LANGUAGE, PRINT_ACTION_TYPE, Route, TICKET_DATA_ACTION_TYPE } from "../interfaces";
 
 import { TicketDataContext } from "../contexts/ticketDataContext";
 import { FlowContext } from "../contexts/flowContext";
@@ -145,10 +145,24 @@ function Engine(props: IEngineProps): JSX.Element {
 	//* --- *//
 	//Loading on eId inserted
 	useEffect(() => {
+		let delay: NodeJS.Timer;
+
 		if (eidStatus === eIdStatus.INSERTED) {
 			setIsLoading(true);
+
+			delay = setTimeout(() => {
+				dispatchError({
+					type: ERROR_ACTION_TYPE.SETERROR,
+					payload: {
+						hasError: true,
+						errorCode: ERROR_CODE.A408,
+						message: "ID card could not be read",
+					},
+				});
+			}, 15 * 1000);
 		} else {
 			setIsLoading(false);
+			dispatchError({ type: ERROR_ACTION_TYPE.CLEARERROR, });
 		}
 
 		if (eidStatus === eIdStatus.READ) {
@@ -158,6 +172,10 @@ function Engine(props: IEngineProps): JSX.Element {
 		if (eidStatus === eIdStatus.REMOVED) {
 			setEIdBlock(false);
 		}
+
+		return () => {
+			clearTimeout(delay);
+		};
 	}, [eidStatus]);
 
 	// Updates eId Data in reducer
