@@ -67,6 +67,7 @@ export interface IErrorManagement {
 	noPaper?: IBackgroundImage;
 	notConnectedToInternet?: IBackgroundImage;
 	serviceClosed?: IBackgroundImage;
+	eIdTimeout?: IBackgroundImage;
 	//TODO: add more error options
 
 	//? Not necessarily errors, might need some refactoring here
