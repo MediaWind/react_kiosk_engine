@@ -11,14 +11,6 @@ import { setIntervalRange } from "../../core/customInterval";
 
 import { ERROR_ACTION_TYPE, ERROR_CODE, IFlow, LANGUAGE, PRINT_ACTION_TYPE, Route, TICKET_DATA_ACTION_TYPE } from "../interfaces";
 
-import { TicketDataContext } from "../contexts/ticketDataContext";
-import { FlowContext } from "../contexts/flowContext";
-import { LanguageContext } from "../contexts/languageContext";
-import { ErrorContext } from "../contexts/errorContext";
-import { PrintContext } from "../contexts/printContext";
-import { AppointmentContext } from "../contexts/appointmentContext";
-import { EIdContext } from "../contexts/eIdContext";
-
 import ticketDataReducer, { initialTicketState } from "../reducers/ticketDataReducer";
 import appointmentReducer, { initialAppointmentState } from "../reducers/appointmentReducer";
 import printReducer, { initialPrintState } from "../reducers/printReducer";
@@ -31,6 +23,7 @@ import useAppointment from "../hooks/useAppointment";
 
 import checkCurrentFlow from "../utils/checkCurrentFlow";
 
+import ContextsWrapper from "./ContextsWrappers";
 import PageRouter from "../components/PageRouter";
 import LoadingScreen from "../components/ui/LoadingScreen";
 import Debugger from "../components/debug/Debugger";
@@ -280,40 +273,42 @@ function Engine(props: IEngineProps): JSX.Element {
 				onKeyDown={keydownHandler}
 				tabIndex={0}
 			>
-				<LanguageContext.Provider value={{ language, setLanguage, }}>
-					<TicketDataContext.Provider value={{ ticketState, dispatchTicketState, }}>
-						<AppointmentContext.Provider value={{ appointmentState, dispatchAppointmentState, }}>
-							<FlowContext.Provider value={{ flow: currentFlow, setReload: setReadyToChangeFlow, }}>
-								<ErrorContext.Provider value={{ errorState: error, dispatchErrorState: dispatchError, }}>
-									<PrintContext.Provider value={{ printState, dispatchPrintState, }}>
-										<EIdContext.Provider value={{ status: eidStatus, }}>
+				<ContextsWrapper values={{
+					language,
+					setLanguage,
+					ticketState,
+					dispatchTicketState,
+					appointmentState,
+					dispatchAppointmentState,
+					currentFlow,
+					setReadyToChangeFlow,
+					error,
+					dispatchError,
+					printState,
+					dispatchPrintState,
+					eidStatus,
+				}}>
 
-											{props.debug && (
-												<Debugger
-													eidData={ticketState.eIdDatas}
-													messages={[
-														`eidstatus: ${eidStatus}`,
-														`firstname from eiddata: ${eIdData?.firstName}`,
-														isPrinting ? "Printing!" : "",
-														error.hasError ? `Error ${error.errorCode}: ${error.message}` : ""
-													]}
-												/>
-											)}
+					{props.debug && (
+						<Debugger
+							eidData={ticketState.eIdDatas}
+							messages={[
+								`eidstatus: ${eidStatus}`,
+								`firstname from eiddata: ${eIdData?.firstName}`,
+								isPrinting ? "Printing!" : "",
+								error.hasError ? `Error ${error.errorCode}: ${error.message}` : ""
+							]}
+						/>
+					)}
 
-											{error.hasError && <DisplayError route={props.route} />}
+					{error.hasError && <DisplayError route={props.route} />}
 
-											{isLoading && <LoadingScreen customImages={props.route.errorManagement} />}
-											{eIdBlock && <EIdBlock customImages={props.route.errorManagement} />}
+					{isLoading && <LoadingScreen customImages={props.route.errorManagement} />}
+					{eIdBlock && <EIdBlock customImages={props.route.errorManagement} />}
 
-											<PageRouter isPrinting={isPrinting} onReset={resetAll} />
+					<PageRouter isPrinting={isPrinting} onReset={resetAll} />
 
-										</EIdContext.Provider>
-									</PrintContext.Provider>
-								</ErrorContext.Provider>
-							</FlowContext.Provider>
-						</AppointmentContext.Provider>
-					</TicketDataContext.Provider>
-				</LanguageContext.Provider>
+				</ContextsWrapper>
 			</div>
 		);
 	} else {
