@@ -12,11 +12,11 @@ interface IEIdBlockProps {
 
 function getDefaultText(lng?: LANGUAGE): string {
 	switch (lng) {
-		case LANGUAGE.DUTCH: return "Haal je kaart op";
-		case LANGUAGE.ENGLISH: return "Please remove your card";
-		case LANGUAGE.SPANISH: return "Recoja su tarjeta";
+		case LANGUAGE.DUTCH: return "Haal je kaart op.";
+		case LANGUAGE.ENGLISH: return "Please remove your card.";
+		case LANGUAGE.SPANISH: return "Recoja su tarjeta.";
 		case LANGUAGE.FRENCH:
-		default: return "Veuillez retirer votre carte";
+		default: return "Veuillez retirer votre carte.";
 	}
 }
 

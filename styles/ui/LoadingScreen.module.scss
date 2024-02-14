@@ -14,11 +14,12 @@
 	justify-content: center;
   align-items: center;
 
-  background-color: rgba($color: #ffffff, $alpha: 0.7);
+  background-color: rgba($color: #ffffff, $alpha: 0.8);
 
   p {
-    margin-bottom: 0.07rem;
-    font-size: 0.035rem;
+    margin-top: 0.07rem;
+    font-size: 0.04rem;
+    font-weight: bold;
   }
 }
 

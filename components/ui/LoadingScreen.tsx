@@ -38,13 +38,13 @@ export default function LoadingScreen(props: ILoadingScreenProps): JSX.Element {
 
 	return (
 		<div className={styles.main}>
-			<p>{getDefaultText(language)}</p>
 			<div className={`${styles.lds_ring}`}>
 				<div></div>
 				<div></div>
 				<div></div>
 				<div></div>
 			</div>
+			{status === eIdStatus.INSERTED && <p>{getDefaultText(language)}</p>}
 		</div>
 	);
 }
