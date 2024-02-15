@@ -8,6 +8,7 @@ import { useErrorContext } from "../../contexts/errorContext";
 import { ERROR_ACTION_TYPE, ERROR_CODE, IBackgroundImage, IErrorManagement, LANGUAGE, Route } from "../../interfaces";
 
 import BackgroundImage from "./BackgroundImage";
+import { useEffect } from "react";
 
 interface IDisplayErrorProps {
 	route: Route | null
@@ -59,6 +60,18 @@ export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 	const { route, } = props;
 
 	const { errorState, dispatchErrorState, } = useErrorContext();
+
+	useEffect(() => {
+		const delay = setTimeout(() => {
+			if (route?.errorManagement && errorState.errorCode !== ERROR_CODE.C503) {
+				clickHandler();
+			}
+		}, 30 * 1000);
+
+		return () => {
+			clearTimeout(delay);
+		};
+	}, []);
 
 	function clickHandler() {
 		dispatchErrorState({
