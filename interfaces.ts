@@ -274,6 +274,7 @@ export interface IErrorState {
 	hasError: boolean;
 	errorCode: ERROR_CODE;
 	message: string;
+	errorServiceId?: string
 }
 
 export interface IErrorAction {
