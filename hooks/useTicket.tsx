@@ -26,6 +26,7 @@ export default function useTicket(dispatchPrintState: React.Dispatch<IPrintActio
 							hasError: true,
 							errorCode: ERROR_CODE.C500,
 							message: "Service closed",
+							errorServiceId: ticketState.service ? `${ticketState.service.serviceID}` : undefined,
 						},
 					});
 				} else {

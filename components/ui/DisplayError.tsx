@@ -8,6 +8,7 @@ import { useErrorContext } from "../../contexts/errorContext";
 import { ERROR_ACTION_TYPE, ERROR_CODE, IBackgroundImage, IErrorManagement, LANGUAGE, Route } from "../../interfaces";
 
 import BackgroundImage from "./BackgroundImage";
+import { useEffect } from "react";
 
 interface IDisplayErrorProps {
 	route: Route | null
@@ -35,9 +36,19 @@ function getTranslatedDefaultMessage() {
 	}
 }
 
-function getErrorImage(image: IErrorManagement, errorCode?: ERROR_CODE): IBackgroundImage {
+function getErrorImage(image: IErrorManagement, errorCode?: ERROR_CODE, serviceId?: string): IBackgroundImage {
 	switch (errorCode) {
-		case ERROR_CODE.C500: return image.serviceClosed ?? image.genericError;
+		case ERROR_CODE.C500: {
+			if (image.serviceClosed) {
+				if (serviceId && image.serviceClosed[serviceId]) {
+					return image.serviceClosed[serviceId];
+				} else if (image.serviceClosed["default"]) {
+					return image.serviceClosed["default"];
+				}
+			}
+
+			return image.genericError;
+		}
 		case ERROR_CODE.A503: return image.notConnectedToInternet ?? image.genericError;
 		case ERROR_CODE.C503: return image.noPaper ?? image.genericError;
 		case ERROR_CODE.A408: return image.eIdTimeout ?? image.genericError;
@@ -49,6 +60,18 @@ export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 	const { route, } = props;
 
 	const { errorState, dispatchErrorState, } = useErrorContext();
+
+	useEffect(() => {
+		const delay = setTimeout(() => {
+			if (route?.errorManagement && errorState.errorCode !== ERROR_CODE.C503) {
+				clickHandler();
+			}
+		}, 30 * 1000);
+
+		return () => {
+			clearTimeout(delay);
+		};
+	}, []);
 
 	function clickHandler() {
 		dispatchErrorState({
@@ -64,7 +87,7 @@ export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 	}
 
 	if (route?.errorManagement) {
-		const image = getErrorImage(route.errorManagement, errorState.errorCode);
+		const image = getErrorImage(route.errorManagement, errorState.errorCode, errorState.errorServiceId);
 		return (
 			<div className={styles.error_management_main} onTouchEnd={clickHandler} onClick={devClick}>
 				{image === route.errorManagement.genericError &&
