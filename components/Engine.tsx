@@ -355,7 +355,6 @@ function Engine(props: IEngineProps): JSX.Element {
 					printState,
 					dispatchPrintState,
 					eidStatus,
-					triggerCustomAction,
 				}}>
 
 					{props.debug && (

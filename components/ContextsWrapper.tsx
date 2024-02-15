@@ -22,7 +22,6 @@ import { FlowContext } from "../contexts/flowContext";
 import { LanguageContext } from "../contexts/languageContext";
 import { PrintContext } from "../contexts/printContext";
 import { TicketDataContext } from "../contexts/ticketDataContext";
-import { CustomActionContext } from "../contexts/customActionContext";
 
 interface IContextsWrapperProps {
 	children: ReactNode[]
@@ -40,7 +39,6 @@ interface IContextsWrapperProps {
 		printState: IPrintState
 		dispatchPrintState: React.Dispatch<IPrintAction>
 		eidStatus: eIdStatus
-		triggerCustomAction: CallableFunction
 	}
 }
 
@@ -55,11 +53,9 @@ export default function ContextsWrapper(props: IContextsWrapperProps): JSX.Eleme
 						<ErrorContext.Provider value={{ errorState: values.error, dispatchErrorState: values.dispatchErrorState, }}>
 							<PrintContext.Provider value={{ printState: values.printState, dispatchPrintState: values.dispatchPrintState, }}>
 								<EIdContext.Provider value={{ status: values.eidStatus, }}>
-									<CustomActionContext.Provider value={{ triggerAction: values.triggerCustomAction, }}>
 
-										{children}
+									{children}
 
-									</CustomActionContext.Provider>
 								</EIdContext.Provider>
 							</PrintContext.Provider>
 						</ErrorContext.Provider>
