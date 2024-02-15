@@ -15,14 +15,6 @@ export default function ticketDataReducer(ticketData: ITicketDataState, action: 
 			...ticketData,
 			eIdDatas: action.payload as eIdData,
 		};
-		case TICKET_DATA_ACTION_TYPE.EIDLISTENINGUPDATE: return {
-			...ticketData,
-			pageIsListeningToEId: action.payload as boolean,
-		};
-		case TICKET_DATA_ACTION_TYPE.EIDREADUPDATE: return {
-			...ticketData,
-			eIdRead: action.payload as boolean,
-		};
 		case TICKET_DATA_ACTION_TYPE.INPUTTEXTUPDATE: {
 			const actionInput = action.payload as IInputField;
 			const filteredData = ticketData.textInputDatas.filter(input => input.id !== actionInput.id);
@@ -50,8 +42,6 @@ export default function ticketDataReducer(ticketData: ITicketDataState, action: 
 export const initialTicketState: ITicketDataState = {
 	eIdDatas: null,
 	textInputDatas: [],
-	pageIsListeningToEId: true,
-	eIdRead: false,
 	service: undefined,
 	language: undefined,
 };

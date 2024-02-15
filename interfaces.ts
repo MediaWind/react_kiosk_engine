@@ -67,7 +67,12 @@ export interface IErrorManagement {
 	noPaper?: IBackgroundImage;
 	notConnectedToInternet?: IBackgroundImage;
 	serviceClosed?: IBackgroundImage;
+	eIdTimeout?: IBackgroundImage;
 	//TODO: add more error options
+
+	//? Not necessarily errors, might need some refactoring here
+	eIdInserted?: IBackgroundImage;
+	eIdRead?: IBackgroundImage;
 }
 
 export enum KEYBOARD_LAYOUT {
@@ -241,8 +246,6 @@ export interface IInputField {
 
 export interface ITicketDataState {
 	eIdDatas: eIdData | null,
-	eIdRead: boolean,
-	pageIsListeningToEId: boolean,
 	textInputDatas: IInputField[],
 	service: IService | undefined,
 	language: LANGUAGE | undefined
@@ -255,8 +258,6 @@ export interface ITicketDataAction {
 
 export enum TICKET_DATA_ACTION_TYPE {
 	EIDUPDATE = "eidupdate",
-	EIDLISTENINGUPDATE = "eidlisteningupdate",
-	EIDREADUPDATE = "eidreadupdate",
 	INPUTTEXTUPDATE = "inputtextupdate",
 	SERVICEUPDATE = "serviceupdate",
 	LANGUAGEUPDATE = "languageupdate",
@@ -300,6 +301,10 @@ export enum ERROR_CODE {
 	 * 404-B: Appointment not found
 	 */
 	B404 = "404-B",
+	/**
+	 * 408-A: eId reading timeout
+	 */
+	A408 = "408-A",
 	/**
 	 * 500-A: Something went wrong when trying to print ticket
 	 */
