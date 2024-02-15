@@ -8,6 +8,7 @@ export default function errorReducer(errorState: IErrorState, action: IErrorActi
 			hasError: error.hasError,
 			errorCode: error.errorCode,
 			message: error.message ?? "",
+			errorServiceId: error.errorServiceId ?? undefined,
 		};
 	}
 
