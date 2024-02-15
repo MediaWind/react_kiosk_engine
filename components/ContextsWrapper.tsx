@@ -22,6 +22,7 @@ import { FlowContext } from "../contexts/flowContext";
 import { LanguageContext } from "../contexts/languageContext";
 import { PrintContext } from "../contexts/printContext";
 import { TicketDataContext } from "../contexts/ticketDataContext";
+import { CustomActionContext } from "../contexts/customActionContext";
 
 interface IContextsWrapperProps {
 	children: ReactNode[]
@@ -35,10 +36,11 @@ interface IContextsWrapperProps {
 		currentFlow: IFlow
 		setReadyToChangeFlow: React.Dispatch<React.SetStateAction<boolean>>
 		error: IErrorState
-		dispatchError: React.Dispatch<IErrorAction>
+		dispatchErrorState: React.Dispatch<IErrorAction>
 		printState: IPrintState
 		dispatchPrintState: React.Dispatch<IPrintAction>
 		eidStatus: eIdStatus
+		triggerCustomAction: CallableFunction
 	}
 }
 
@@ -50,12 +52,14 @@ export default function ContextsWrapper(props: IContextsWrapperProps): JSX.Eleme
 			<TicketDataContext.Provider value={{ ticketState: values.ticketState, dispatchTicketState: values.dispatchTicketState, }}>
 				<AppointmentContext.Provider value={{ appointmentState: values.appointmentState, dispatchAppointmentState: values.dispatchAppointmentState, }}>
 					<FlowContext.Provider value={{ flow: values.currentFlow, setReload: values.setReadyToChangeFlow, }}>
-						<ErrorContext.Provider value={{ errorState: values.error, dispatchErrorState: values.dispatchError, }}>
+						<ErrorContext.Provider value={{ errorState: values.error, dispatchErrorState: values.dispatchErrorState, }}>
 							<PrintContext.Provider value={{ printState: values.printState, dispatchPrintState: values.dispatchPrintState, }}>
 								<EIdContext.Provider value={{ status: values.eidStatus, }}>
+									<CustomActionContext.Provider value={{ triggerAction: values.triggerCustomAction, }}>
 
-									{children}
+										{children}
 
+									</CustomActionContext.Provider>
 								</EIdContext.Provider>
 							</PrintContext.Provider>
 						</ErrorContext.Provider>

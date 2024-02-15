@@ -303,7 +303,7 @@ function Engine(props: IEngineProps): JSX.Element {
 		setLanguage(undefined);
 	}
 
-	function triggerCustomActionHandler(routerState: { router: { state: IPage[], dispatcher: React.Dispatch<React.SetStateAction<IPage[]>> }}) {
+	function triggerCustomAction(routerState: { router: { state: IPage[], dispatcher: React.Dispatch<React.SetStateAction<IPage[]>> }}) {
 		if (props.onCustomAction) {
 			props.onCustomAction({
 				...routerState,
@@ -351,10 +351,11 @@ function Engine(props: IEngineProps): JSX.Element {
 					currentFlow,
 					setReadyToChangeFlow,
 					error,
-					dispatchError: dispatchErrorState,
+					dispatchErrorState,
 					printState,
 					dispatchPrintState,
 					eidStatus,
+					triggerCustomAction,
 				}}>
 
 					{props.debug && (
@@ -374,7 +375,7 @@ function Engine(props: IEngineProps): JSX.Element {
 					{isLoading && <LoadingScreen customImages={props.route.errorManagement} />}
 					{eIdBlock && <EIdBlock customImages={props.route.errorManagement} />}
 
-					<PageRouter isPrinting={isPrinting} onReset={resetAll} onCustomAction={triggerCustomActionHandler} />
+					<PageRouter isPrinting={isPrinting} onReset={resetAll} onCustomAction={triggerCustomAction} />
 
 				</ContextsWrapper>
 			</div>
