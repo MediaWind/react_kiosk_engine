@@ -44,6 +44,7 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 
 	const [homePage, setHomePage] = useState<IPage>(getHomePage(flow));
 	const [router, setRouter] = useState<IPage[]>([homePage]);
+	const [customPage, setCustomPage] = useState<JSX.Element | undefined>();
 
 	useEffect(() => {
 		setHomePage(getHomePage(flow));
@@ -113,6 +114,10 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 					state: router,
 					dispatcher: nextPageHandler,
 				},
+				customPage: {
+					state: customPage,
+					dispatcher: setCustomPage,
+				},
 			});
 		}
 	}
@@ -122,7 +127,7 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 			{flow.displayDate && <Date format={flow.displayDate.format} style={flow.displayDate.style} />}
 			{flow.displayTime && <Time format={flow.displayTime.format} style={flow.displayTime.style} />}
 
-			<CustomActionContext.Provider value={{ triggerAction: triggerCustomActionHandler, }}>
+			<CustomActionContext.Provider value={{ triggerAction: triggerCustomActionHandler, customPage, setCustomPage, }}>
 				<RouterContext.Provider value={{ nextPage: nextPageHandler, previousPage: previousPageHandler, homePage: homePageHandler, }}>
 					<ActivePage page={router.slice(-1)[0]} />
 				</RouterContext.Provider>

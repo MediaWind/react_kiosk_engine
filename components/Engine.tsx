@@ -30,6 +30,17 @@ import Debugger from "../components/debug/Debugger";
 import DisplayError from "../components/ui/DisplayError";
 import EIdBlock from "./ui/EIdBlock";
 
+interface IRouterContexts {
+	router: {
+		state: IPage[],
+		dispatcher: React.Dispatch<React.SetStateAction<IPage[]>>,
+	},
+	customPage: {
+		state: JSX.Element | undefined,
+		dispatcher: React.Dispatch<React.SetStateAction<JSX.Element | undefined>>,
+	}
+}
+
 interface IEngineProps {
 	route: Route
 	/**
@@ -303,10 +314,10 @@ function Engine(props: IEngineProps): JSX.Element {
 		setLanguage(undefined);
 	}
 
-	function triggerCustomAction(routerState: { router: { state: IPage[], dispatcher: React.Dispatch<React.SetStateAction<IPage[]>> }}) {
+	function triggerCustomAction(routerStates: IRouterContexts) {
 		if (props.onCustomAction) {
 			props.onCustomAction({
-				...routerState,
+				...routerStates,
 				language: {
 					state: language,
 					dispatcher: setLanguage,
