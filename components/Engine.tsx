@@ -9,14 +9,7 @@ import useSharedVariables from "../../core/hooks/useSharedVariables";
 import useEId, { eIdData, eIdStatus } from "../../core/hooks/useEId";
 import { setIntervalRange } from "../../core/customInterval";
 
-import { IFlow, IPage, LANGUAGE, PRINT_ACTION_TYPE, Route, TICKET_DATA_ACTION_TYPE } from "../interfaces";
-
-import { TicketDataContext } from "../contexts/ticketDataContext";
-import { FlowContext } from "../contexts/flowContext";
-import { LanguageContext } from "../contexts/languageContext";
-import { ErrorContext } from "../contexts/errorContext";
-import { PrintContext } from "../contexts/printContext";
-import { AppointmentContext } from "../contexts/appointmentContext";
+import { ERROR_ACTION_TYPE, ERROR_CODE, IFlow, IPage, LANGUAGE, PRINT_ACTION_TYPE, Route, TICKET_DATA_ACTION_TYPE } from "../interfaces";
 
 import ticketDataReducer, { initialTicketState } from "../reducers/ticketDataReducer";
 import appointmentReducer, { initialAppointmentState } from "../reducers/appointmentReducer";
@@ -30,10 +23,12 @@ import useAppointment from "../hooks/useAppointment";
 
 import checkCurrentFlow from "../utils/checkCurrentFlow";
 
+import ContextsWrapper from "./ContextsWrapper";
 import PageRouter from "../components/PageRouter";
 import LoadingScreen from "../components/ui/LoadingScreen";
 import Debugger from "../components/debug/Debugger";
 import DisplayError from "../components/ui/DisplayError";
+import EIdBlock from "./ui/EIdBlock";
 
 interface IEngineProps {
 	route: Route
@@ -83,6 +78,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [eidStatus, eIdData] = useEId(eIdInserted, eIdReaded, eIdRemoved);
 
 	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [eIdBlock, setEIdBlock] = useState<boolean>(false);
 
 	const [language, setLanguage] = useState<LANGUAGE | undefined>();
 
@@ -180,32 +176,48 @@ function Engine(props: IEngineProps): JSX.Element {
 	//* --- *//
 	//Loading on eId inserted
 	useEffect(() => {
-		if (ticketState.pageIsListeningToEId && eidStatus === eIdStatus.INSERTED) {
+		let delay: NodeJS.Timer;
+
+		if (eidStatus === eIdStatus.INSERTED) {
 			setIsLoading(true);
+
+			delay = setTimeout(() => {
+				dispatchErrorState({
+					type: ERROR_ACTION_TYPE.SETERROR,
+					payload: {
+						hasError: true,
+						errorCode: ERROR_CODE.A408,
+						message: "ID card could not be read",
+					},
+				});
+			}, 15 * 1000);
 		} else {
 			setIsLoading(false);
+			dispatchErrorState({ type: ERROR_ACTION_TYPE.CLEARERROR, });
 		}
+
+		if (eidStatus === eIdStatus.READ) {
+			setEIdBlock(true);
+		}
+
+		if (eidStatus === eIdStatus.REMOVED) {
+			setEIdBlock(false);
+		}
+
+		return () => {
+			clearTimeout(delay);
+		};
 	}, [eidStatus]);
 
 	// Updates eId Data in reducer
 	useEffect(() => {
-		if (ticketState.pageIsListeningToEId && eIdData != null) {
+		if (eIdData != null) {
 			dispatchTicketState({
 				type: TICKET_DATA_ACTION_TYPE.EIDUPDATE,
 				payload: eIdData as eIdData,
 			});
 		}
 	}, [eIdData]);
-
-	// Updates eId read in reducer
-	useEffect(() => {
-		if (ticketState.pageIsListeningToEId && eIdData != null && eidStatus === eIdStatus.READ) {
-			dispatchTicketState({
-				type: TICKET_DATA_ACTION_TYPE.EIDREADUPDATE,
-				payload: true,
-			});
-		}
-	}, [ticketState.pageIsListeningToEId, eIdData, eidStatus]);
 
 	//* ------ *//
 	//* Errors *//
@@ -329,39 +341,42 @@ function Engine(props: IEngineProps): JSX.Element {
 				onKeyDown={keydownHandler}
 				tabIndex={0}
 			>
-				<LanguageContext.Provider value={{ language, setLanguage, }}>
-					<TicketDataContext.Provider value={{ ticketState, dispatchTicketState, }}>
-						<AppointmentContext.Provider value={{ appointmentState, dispatchAppointmentState, }}>
-							<FlowContext.Provider value={{ flow: currentFlow, setReload: setReadyToChangeFlow, }}>
-								<ErrorContext.Provider value={{ errorState: error, dispatchErrorState: dispatchErrorState, }}>
-									<PrintContext.Provider value={{ printState, dispatchPrintState, }}>
+				<ContextsWrapper values={{
+					language,
+					setLanguage,
+					ticketState,
+					dispatchTicketState,
+					appointmentState,
+					dispatchAppointmentState,
+					currentFlow,
+					setReadyToChangeFlow,
+					error,
+					dispatchError: dispatchErrorState,
+					printState,
+					dispatchPrintState,
+					eidStatus,
+				}}>
 
-										{props.debug && (
-											<Debugger
-												eidData={ticketState.eIdDatas}
-												messages={[
-													`eidstatus: ${eidStatus}`,
-													`firstname from eiddata: ${eIdData?.firstName}`,
-													`eidread: ${ticketState.eIdRead}`,
-													`page is listening to eid: ${ticketState.pageIsListeningToEId}`,
-													isPrinting ? "Printing!" : "",
-													error.hasError ? `Error ${error.errorCode}: ${error.message}` : ""
-												]}
-											/>
-										)}
+					{props.debug && (
+						<Debugger
+							eidData={ticketState.eIdDatas}
+							messages={[
+								`eidstatus: ${eidStatus}`,
+								`firstname from eiddata: ${eIdData?.firstName}`,
+								isPrinting ? "Printing!" : "",
+								error.hasError ? `Error ${error.errorCode}: ${error.message}` : ""
+							]}
+						/>
+					)}
 
-										{error.hasError && <DisplayError route={props.route} />}
+					{error.hasError && <DisplayError route={props.route} />}
 
-										{isLoading && <LoadingScreen />}
+					{isLoading && <LoadingScreen customImages={props.route.errorManagement} />}
+					{eIdBlock && <EIdBlock customImages={props.route.errorManagement} />}
 
-										<PageRouter isPrinting={isPrinting} onReset={resetAll} onCustomAction={triggerCustomActionHandler} />
+					<PageRouter isPrinting={isPrinting} onReset={resetAll} onCustomAction={triggerCustomActionHandler} />
 
-									</PrintContext.Provider>
-								</ErrorContext.Provider>
-							</FlowContext.Provider>
-						</AppointmentContext.Provider>
-					</TicketDataContext.Provider>
-				</LanguageContext.Provider>
+				</ContextsWrapper>
 			</div>
 		);
 	} else {

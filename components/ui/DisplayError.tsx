@@ -40,6 +40,7 @@ function getErrorImage(image: IErrorManagement, errorCode?: ERROR_CODE): IBackgr
 		case ERROR_CODE.C500: return image.serviceClosed ?? image.genericError;
 		case ERROR_CODE.A503: return image.notConnectedToInternet ?? image.genericError;
 		case ERROR_CODE.C503: return image.noPaper ?? image.genericError;
+		case ERROR_CODE.A408: return image.eIdTimeout ?? image.genericError;
 		default: return image.genericError;
 	}
 }

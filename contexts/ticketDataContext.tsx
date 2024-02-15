@@ -10,8 +10,6 @@ export type ticketDataContent = {
 export const TicketDataContext = createContext<ticketDataContent>({
 	ticketState: {
 		eIdDatas: null,
-		pageIsListeningToEId: false,
-		eIdRead: false,
 		textInputDatas: [],
 		service: undefined,
 		language: undefined,

@@ -1,0 +1,44 @@
+.main {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 2;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	width: 100%;
+	height: 100%;
+
+	background-color: #ffffff80;
+
+	.container {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+		width: 70%;
+		height: 50%;
+
+		border-radius: 0.03rem;
+
+		background-color: #ffffff;;
+
+		p {
+			font-size: 0.05rem;
+		}
+	}
+}
+
+.custom_image {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 2;
+
+	width: 100%;
+	height: 100%;
+
+	background-color: #ffffff;;
+}
