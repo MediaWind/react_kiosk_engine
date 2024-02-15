@@ -41,7 +41,7 @@ function getErrorImage(image: IErrorManagement, errorCode?: ERROR_CODE, serviceI
 			if (image.serviceClosed) {
 				if (serviceId && image.serviceClosed[serviceId]) {
 					return image.serviceClosed[serviceId];
-				} else {
+				} else if (image.serviceClosed["default"]) {
 					return image.serviceClosed["default"];
 				}
 			}
