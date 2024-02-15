@@ -66,7 +66,9 @@ export interface IErrorManagement {
 	genericError: IBackgroundImage;
 	noPaper?: IBackgroundImage;
 	notConnectedToInternet?: IBackgroundImage;
-	serviceClosed?: IBackgroundImage;
+	serviceClosed?: {
+		[key: string]: IBackgroundImage
+	}
 	eIdTimeout?: IBackgroundImage;
 	//TODO: add more error options
 
