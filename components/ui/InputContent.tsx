@@ -10,6 +10,7 @@ import { useTicketDataContext } from "../../contexts/ticketDataContext";
 import { useAppointmentContext } from "../../contexts/appointmentContext";
 import { usePrintContext } from "../../contexts/printContext";
 import { useEIdContext } from "../../contexts/eIdContext";
+import { useCustomActionContext } from "../../contexts/customActionContext";
 
 import ButtonInput from "./inputs/ButtonInput";
 import NumberInput from "./inputs/NumberInput";
@@ -28,6 +29,7 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 	const { dispatchAppointmentState, } = useAppointmentContext();
 	const { dispatchPrintState, } = usePrintContext();
 	const { status, } = useEIdContext();
+	const { triggerAction, } = useCustomActionContext();
 
 	const [eIdBlock, setEIdBlock] = useState<boolean>(false);
 
@@ -90,6 +92,9 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 						type: APPOINTMENT_ACTION_TYPE.UPDATECHECKINGOUT,
 						payload: true,
 					});
+					break;
+				case ACTION_TYPE.CUSTOM:
+					triggerAction();
 					break;
 				default:
 					break;

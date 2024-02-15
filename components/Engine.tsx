@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 
 import "../styles/index.scss";
 
@@ -9,7 +9,7 @@ import useSharedVariables from "../../core/hooks/useSharedVariables";
 import useEId, { eIdData, eIdStatus } from "../../core/hooks/useEId";
 import { setIntervalRange } from "../../core/customInterval";
 
-import { ERROR_ACTION_TYPE, ERROR_CODE, IFlow, LANGUAGE, PRINT_ACTION_TYPE, Route, TICKET_DATA_ACTION_TYPE } from "../interfaces";
+import { ERROR_ACTION_TYPE, ERROR_CODE, IFlow, IPage, LANGUAGE, PRINT_ACTION_TYPE, Route, TICKET_DATA_ACTION_TYPE } from "../interfaces";
 
 import ticketDataReducer, { initialTicketState } from "../reducers/ticketDataReducer";
 import appointmentReducer, { initialAppointmentState } from "../reducers/appointmentReducer";
@@ -23,15 +23,64 @@ import useAppointment from "../hooks/useAppointment";
 
 import checkCurrentFlow from "../utils/checkCurrentFlow";
 
-import ContextsWrapper from "./ContextsWrappers";
+import ContextsWrapper from "./ContextsWrapper";
 import PageRouter from "../components/PageRouter";
 import LoadingScreen from "../components/ui/LoadingScreen";
 import Debugger from "../components/debug/Debugger";
 import DisplayError from "../components/ui/DisplayError";
 import EIdBlock from "./ui/EIdBlock";
 
+interface IRouterContexts {
+	router: {
+		state: IPage[],
+		dispatcher: React.Dispatch<React.SetStateAction<IPage[]>>,
+	},
+	customPage: {
+		state: JSX.Element | undefined,
+		dispatcher: React.Dispatch<React.SetStateAction<JSX.Element | undefined>>,
+	}
+}
+
 interface IEngineProps {
 	route: Route
+	/**
+	 * This forwards all contexts/reducers informations from Engine to App.
+	 *
+	 * @use
+	 * Use the forwarded object as a param in your custom function to read and overwrite the different informations of the engine.
+	 *
+	 * @structure
+	 * The forwarded object follows this structure:
+	 *
+	 * ```ts
+	 * {
+	 * 	router: { state, dispatcher },
+	 * 	language: { state, dispatcher },
+	 * 	ticket: { state, dispatcher },
+	 * 	print: { state, dispatcher },
+	 * 	appointment: { state, dispatcher },
+	 * 	error: { state, dispatcher },
+	 * }
+	 * ```
+	 *
+	 * _state_ is the read only current state, _dispatcher_ allows you to overwrite the current state. Refer to a specific dispatcher for more info on what arguments each of them expects.
+	 *
+	 * @example
+	 * In App:
+	 *
+	 * ```ts
+	 * function customAction(value) {
+	 *		if (value.language.state === LANGUAGE.ENGLISH) {
+	 *			value.router.dispatcher("05987761-0c07-4856-8160-db3d5659eede");
+	 *		}
+	 *
+	 *		if (value.ticket.state.service !== undefined) {
+	 *			value.print.disptacher({ type: PRINT_ACTION_TYPE.REQUESTTICKETCREATION, payload: true, });
+	 *		}
+	 * }
+		```
+	 */
+	onCustomAction?: CallableFunction
 	debug?: boolean
 }
 
@@ -51,12 +100,12 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [ticketState, dispatchTicketState] = useReducer(ticketDataReducer, initialTicketState);
 	const [appointmentState, dispatchAppointmentState] = useReducer(appointmentReducer, initialAppointmentState);
 	const [printState, dispatchPrintState] = useReducer(printReducer, initialPrintState);
-	const [error, dispatchError] = useReducer(errorReducer, initialErrorState);
+	const [error, dispatchErrorState] = useReducer(errorReducer, initialErrorState);
 
 	const [qrCode, writeQrCode, resetQrCode] = useScanner();
-	const [printTicket, isPrinting , checkPrinterStatus] = usePrinter(dispatchError);
-	const [createTicket] = useTicket(dispatchPrintState, dispatchError);
-	const [appointmentTicketPDF, checkIn, checkOut] = useAppointment(dispatchAppointmentState, dispatchError);
+	const [printTicket, isPrinting , checkPrinterStatus] = usePrinter(dispatchErrorState);
+	const [createTicket] = useTicket(dispatchPrintState, dispatchErrorState);
+	const [appointmentTicketPDF, checkIn, checkOut] = useAppointment(dispatchAppointmentState, dispatchErrorState);
 
 	useEffect(() => {
 		if (Variables.C_ORIENTATION() === ORIENTATION.HORIZONTAL) {
@@ -144,7 +193,7 @@ function Engine(props: IEngineProps): JSX.Element {
 			setIsLoading(true);
 
 			delay = setTimeout(() => {
-				dispatchError({
+				dispatchErrorState({
 					type: ERROR_ACTION_TYPE.SETERROR,
 					payload: {
 						hasError: true,
@@ -155,7 +204,7 @@ function Engine(props: IEngineProps): JSX.Element {
 			}, 15 * 1000);
 		} else {
 			setIsLoading(false);
-			dispatchError({ type: ERROR_ACTION_TYPE.CLEARERROR, });
+			dispatchErrorState({ type: ERROR_ACTION_TYPE.CLEARERROR, });
 		}
 
 		if (eidStatus === eIdStatus.READ) {
@@ -265,6 +314,36 @@ function Engine(props: IEngineProps): JSX.Element {
 		setLanguage(undefined);
 	}
 
+	function triggerCustomAction(routerStates: IRouterContexts) {
+		if (props.onCustomAction) {
+			props.onCustomAction({
+				...routerStates,
+				language: {
+					state: language,
+					dispatcher: setLanguage,
+				},
+				ticket: {
+					state: ticketState,
+					dispatcher: dispatchTicketState,
+				},
+				appointment: {
+					state: appointmentState,
+					dispatcher: dispatchAppointmentState,
+				},
+				print: {
+					state: printState,
+					dispatcher: dispatchPrintState,
+				},
+				error: {
+					state: error,
+					dispatcher: dispatchErrorState,
+				},
+			});
+		} else {
+			console.warn("%cEngine Warning:%cYou tried to trigger a custom action, but no action was passed to Engine.\n\nUse onCustomAction as a prop to trigger a custom action.", "font-size: 12px; font-weight: bold; text-decoration: underline;");
+		}
+	}
+
 	if (currentFlow) {
 		return (
 			<div
@@ -283,7 +362,7 @@ function Engine(props: IEngineProps): JSX.Element {
 					currentFlow,
 					setReadyToChangeFlow,
 					error,
-					dispatchError,
+					dispatchErrorState,
 					printState,
 					dispatchPrintState,
 					eidStatus,
@@ -306,7 +385,7 @@ function Engine(props: IEngineProps): JSX.Element {
 					{isLoading && <LoadingScreen customImages={props.route.errorManagement} />}
 					{eIdBlock && <EIdBlock customImages={props.route.errorManagement} />}
 
-					<PageRouter isPrinting={isPrinting} onReset={resetAll} />
+					<PageRouter isPrinting={isPrinting} onReset={resetAll} onCustomAction={triggerCustomAction} />
 
 				</ContextsWrapper>
 			</div>

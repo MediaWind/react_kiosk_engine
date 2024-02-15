@@ -11,10 +11,12 @@ import ActivePage from "./ActivePage";
 import Date from "./ui/Date";
 import Time from "./ui/Time";
 import { RouterContext } from "../contexts/routerContext";
+import { CustomActionContext } from "../contexts/customActionContext";
 
 interface IFlowDispatcherProps {
 	isPrinting: boolean
 	onReset: CallableFunction
+	onCustomAction?: CallableFunction
 }
 
 function getHomePage(flow: IFlow): IPage {
@@ -34,7 +36,7 @@ function getHomePage(flow: IFlow): IPage {
 }
 
 export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
-	const { isPrinting, onReset, } = props;
+	const { isPrinting, onReset, onCustomAction, } = props;
 
 	const { flow, setReload, } = useFlowContext();
 	const { setLanguage, } = useLanguageContext();
@@ -42,6 +44,7 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 
 	const [homePage, setHomePage] = useState<IPage>(getHomePage(flow));
 	const [router, setRouter] = useState<IPage[]>([homePage]);
+	const [customPage, setCustomPage] = useState<JSX.Element | undefined>();
 
 	useEffect(() => {
 		setHomePage(getHomePage(flow));
@@ -104,14 +107,31 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 		setRouter([homePage]);
 	}
 
+	function triggerCustomActionHandler() {
+		if (onCustomAction) {
+			onCustomAction({
+				router: {
+					state: router,
+					dispatcher: nextPageHandler,
+				},
+				customPage: {
+					state: customPage,
+					dispatcher: setCustomPage,
+				},
+			});
+		}
+	}
+
 	return (
 		<>
 			{flow.displayDate && <Date format={flow.displayDate.format} style={flow.displayDate.style} />}
 			{flow.displayTime && <Time format={flow.displayTime.format} style={flow.displayTime.style} />}
 
-			<RouterContext.Provider value={{ nextPage: nextPageHandler, previousPage: previousPageHandler, homePage: homePageHandler, }}>
-				<ActivePage page={router.slice(-1)[0]} />
-			</RouterContext.Provider>
+			<CustomActionContext.Provider value={{ triggerAction: triggerCustomActionHandler, customPage, setCustomPage, }}>
+				<RouterContext.Provider value={{ nextPage: nextPageHandler, previousPage: previousPageHandler, homePage: homePageHandler, }}>
+					<ActivePage page={router.slice(-1)[0]} />
+				</RouterContext.Provider>
+			</CustomActionContext.Provider>
 		</>
 	);
 }

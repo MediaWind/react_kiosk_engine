@@ -6,6 +6,7 @@ import { useRouterContext } from "../contexts/routerContext";
 import { useTicketDataContext } from "../contexts/ticketDataContext";
 import { useAppointmentContext } from "../contexts/appointmentContext";
 import { usePrintContext } from "../contexts/printContext";
+import { useCustomActionContext } from "../contexts/customActionContext";
 
 import FlowMedia from "./FlowMedia";
 import BackgroundImage from "./ui/BackgroundImage";
@@ -22,6 +23,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 	const { dispatchTicketState, } = useTicketDataContext();
 	const { appointmentState, } = useAppointmentContext();
 	const { dispatchPrintState, } = usePrintContext();
+	const { customPage, } = useCustomActionContext();
 
 	const [pageMedias, setPageMedias] = useState<IMedia[]>([]);
 	const [pageInputs, setPageInputs] = useState<IInputContent[]>([]);
@@ -138,6 +140,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 			}
 			{textInputs.length > 0 && <TextInputsManager inputs={textInputs} onReady={textInputsReadyHandler} />}
 			<BackgroundImage image={page.backgroundImage} />
+			{customPage}
 		</>
 	);
 }
