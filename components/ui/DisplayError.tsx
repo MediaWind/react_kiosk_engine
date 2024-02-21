@@ -66,7 +66,7 @@ export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 			if (route?.errorManagement && errorState.errorCode !== ERROR_CODE.C503) {
 				clickHandler();
 			}
-		}, 30 * 1000);
+		}, 10 * 1000);
 
 		return () => {
 			clearTimeout(delay);
