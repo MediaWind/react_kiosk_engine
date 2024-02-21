@@ -33,7 +33,11 @@ import EIdBlock from "./ui/EIdBlock";
 interface IRouterContexts {
 	router: {
 		state: IPage[],
-		dispatcher: React.Dispatch<React.SetStateAction<IPage[]>>,
+		dispatcher: {
+			nextPage: CallableFunction,
+			previousPage: CallableFunction
+			homePage: CallableFunction,
+		},
 	},
 	customPage: {
 		state: JSX.Element | undefined,

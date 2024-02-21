@@ -5,13 +5,12 @@ import { IFlow, IPage } from "../interfaces";
 import { useFlowContext } from "../contexts/flowContext";
 import { useLanguageContext } from "../contexts/languageContext";
 import { useErrorContext } from "../contexts/errorContext";
-
+import { RouterContext } from "../contexts/routerContext";
+import { CustomActionContext } from "../contexts/customActionContext";
 
 import ActivePage from "./ActivePage";
 import Date from "./ui/Date";
 import Time from "./ui/Time";
-import { RouterContext } from "../contexts/routerContext";
-import { CustomActionContext } from "../contexts/customActionContext";
 
 interface IFlowDispatcherProps {
 	isPrinting: boolean
@@ -112,7 +111,11 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 			onCustomAction({
 				router: {
 					state: router,
-					dispatcher: nextPageHandler,
+					dispatcher: {
+						nextPage: nextPageHandler,
+						previousPage: previousPageHandler,
+						homePage: homePageHandler,
+					},
 				},
 				customPage: {
 					state: customPage,
