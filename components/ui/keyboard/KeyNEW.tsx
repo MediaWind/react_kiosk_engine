@@ -52,7 +52,12 @@ export default function Key(props: IKeyProps): JSX.Element {
 			styleOverride.map(style => {
 				if (style.index === "all" || style.index === index) {
 					setText(latest => style.valueOverride ?? latest);
-					setCustomStyle(style.style);
+					setCustomStyle(latest => {
+						return {
+							...latest,
+							...style.style,
+						};
+					});
 				}
 			});
 		}

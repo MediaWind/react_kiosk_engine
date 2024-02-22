@@ -142,9 +142,25 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 			onMouseUp={devClick}
 		>
 			{config.customText !== "" && <p style={config.customStyles}>{config.customText}</p>}
-			{(icon && config.customText === "") && <FontAwesomeIcon icon={icon} className={styles.icon} />}
-			{config.config.action === KEY_ACTION.SHIFT && <FontAwesomeIcon icon={faCircle} style={{ color: capslock ? "#00dd00" : "#999999", fontSize: "0.01rem", marginTop: "0.004rem", }}  />}
-			{config.config.action === KEY_ACTION.SPECIALCHARS && <FontAwesomeIcon icon={faCircle} style={{ color: specChars ? "#00dd00" : "#999999", fontSize: "0.01rem", marginTop: "0.004rem", }}  />}
+
+			{(icon && config.customText === "") && <FontAwesomeIcon
+				icon={icon}
+				className={styles.icon}
+				style={{
+					fontSize: config.customStyles?.fontSize,
+					color: config.customStyles?.color,
+				}}
+			/>}
+
+			{config.config.action === KEY_ACTION.SHIFT && <FontAwesomeIcon
+				icon={faCircle}
+				style={{ color: capslock ? "#00dd00" : "#999999", fontSize: "0.01rem", marginTop: "0.004rem", }}
+			/>}
+
+			{config.config.action === KEY_ACTION.SPECIALCHARS && <FontAwesomeIcon
+				icon={faCircle}
+				style={{ color: specChars ? "#00dd00" : "#999999", fontSize: "0.01rem", marginTop: "0.004rem", }}
+			/>}
 		</div>
 	);
 }
