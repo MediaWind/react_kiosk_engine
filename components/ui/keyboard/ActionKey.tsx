@@ -103,8 +103,15 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 				timeOut = setTimeout(() => {
 					interval = setInterval(() => {
 						onDelete();
-					}, 500);
-				}, 1000);
+					}, 200);
+				}, 700);
+
+				timeOut = setTimeout(() => {
+					clearInterval(interval);
+					interval = setInterval(() => {
+						onDelete();
+					}, 30);
+				}, 3500);
 			}
 		} else {
 			setClassNames(latest => {
