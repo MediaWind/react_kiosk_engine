@@ -386,15 +386,9 @@ export const fullPattern = {
 					action: KEY_ACTION.SPECIALCHARS,
 				},
 				{
-					text: {
-						defaultValue: "Espace",
-					},
 					action: KEY_ACTION.SPACEBAR,
 				},
 				{
-					text: {
-						defaultValue: "Enter",
-					},
 					action: KEY_ACTION.ENTER,
 				},
 				{

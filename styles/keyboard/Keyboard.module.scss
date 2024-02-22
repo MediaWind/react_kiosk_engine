@@ -1,0 +1,48 @@
+$font_color_default: #333333;
+
+.main {
+	position: absolute;
+	z-index: 5;
+
+	bottom: 0;
+	left: 12.5%;
+
+	width: 1.34rem;
+	width: 75%;
+	// height: 0.5rem;
+
+	padding: 0.01rem 0.016rem;
+
+	border-radius: 0.014rem 0.014rem 0 0;
+	background-color: #eeeeee;
+}
+
+.slide_in {
+	animation: keyboard_slide_in 0.5s ease-out;
+}
+
+.slide_out {
+	animation: keyboard_slide_out 0.5s ease-in forwards;
+}
+
+@keyframes keyboard_slide_in {
+	from {
+		bottom: -30%;
+		opacity: 0;
+	}
+	to {
+		bottom: 0;
+		opacity: 1;
+	}
+}
+
+@keyframes keyboard_slide_out {
+	from {
+		bottom: 0;
+		opacity: 1;
+	}
+	to {
+		bottom: -30%;
+		opacity: 0;
+	}
+}

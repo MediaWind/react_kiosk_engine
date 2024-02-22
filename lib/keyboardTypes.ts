@@ -1,6 +1,77 @@
-import { IKeyboard, KEY_ACTION } from "../../components/ui/keyboard/CustomKeyboard";
+import { CSSProperties } from "react";
 
-export const compactPattern = {
+export interface IKeyboard {
+	layout: KEYBOARD_LAYOUT,
+	customLayout?: IKeyboardLayout
+	styleOverride?: IKeyboardStyleOverride
+}
+
+export enum KEYBOARD_LAYOUT {
+	/**
+	 * 1 row special chars, 3 rows letters, 1 row actions.
+	 */
+	CLASSIC = "classic",
+	/**
+	 * 1 row special chars, 2 rows letters, 1 row actions.
+	 */
+	COMPACT = "compact",
+	/**
+	 * 4 rows of numbers. Last row has enter and backspace action.
+	 */
+	NUMPAD = "numpad",
+	/**
+	 * 1 row special chars (not including numbers), 3 rows letters, 1 row actions + numpad
+	 */
+	FULL = "full",
+	/**
+	 * Provide your own layout
+	 */
+	CUSTOM = "custom"
+}
+
+export interface IKeyboardLayout {
+	rows: IKeyRow[]
+}
+
+export interface IKeyRow {
+	keys: IKeyOptions[]
+	style?: CSSProperties
+}
+
+export interface IKeyOptions {
+	text?: {
+		defaultValue: string
+		capslockValue?: string
+		specCharsValue?: string
+	}
+	action?: KEY_ACTION | CallableFunction
+	style?: CSSProperties
+}
+
+export enum KEY_ACTION {
+	SHIFT = "shift",
+	ALT = "alt",
+	CTRL = "ctrl",
+	SPACEBAR = "spacebar",
+	ENTER = "enter",
+	BACKSPACE = "backspace",
+	SPECIALCHARS = "specialchars"
+}
+
+export interface IKeyboardStyleOverride {
+	board: CSSProperties
+	rows: {
+		index: number | "all"
+		style: CSSProperties
+		keys?: {
+			index: number | "all"
+			style: CSSProperties
+			valueOverride?: string
+		}[]
+	}[]
+}
+
+export const pattern = {
 	rows: [
 		{
 			keys: [
@@ -127,7 +198,11 @@ export const compactPattern = {
 						defaultValue: "p",
 						capslockValue: "P",
 					},
-				},
+				}
+			],
+		},
+		{
+			keys: [
 				{
 					text: {
 						defaultValue: "q",
@@ -145,11 +220,7 @@ export const compactPattern = {
 						defaultValue: "d",
 						capslockValue: "D",
 					},
-				}
-			],
-		},
-		{
-			keys: [
+				},
 				{
 					text: {
 						defaultValue: "f",
@@ -191,7 +262,11 @@ export const compactPattern = {
 						defaultValue: "m",
 						capslockValue: "M",
 					},
-				},
+				}
+			],
+		},
+		{
+			keys: [
 				{
 					text: {
 						defaultValue: "w",
@@ -242,9 +317,15 @@ export const compactPattern = {
 					action: KEY_ACTION.SPECIALCHARS,
 				},
 				{
+					text: {
+						defaultValue: "Espace",
+					},
 					action: KEY_ACTION.SPACEBAR,
 				},
 				{
+					text: {
+						defaultValue: "Enter",
+					},
 					action: KEY_ACTION.ENTER,
 				},
 				{
@@ -253,4 +334,4 @@ export const compactPattern = {
 			],
 		}
 	],
-} as IKeyboard;
+};
