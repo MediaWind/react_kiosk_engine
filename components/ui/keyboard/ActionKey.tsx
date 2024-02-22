@@ -23,6 +23,7 @@ interface IActionKeyProps {
 		customText?: string
 		customStyles?: CSSProperties
 	}
+	onTriggerActionsOverride: CallableFunction
 }
 
 function getIcon(actionType: KEY_ACTION): IconDefinition | undefined {
@@ -35,7 +36,7 @@ function getIcon(actionType: KEY_ACTION): IconDefinition | undefined {
 }
 
 export default function ActionKey(props: IActionKeyProps): JSX.Element {
-	const { config, } = props;
+	const { config, onTriggerActionsOverride, } = props;
 
 	const [classNames, setClassNames] = useState<string[]>([]);
 	const [icon, setIcon] = useState<IconDefinition | undefined>();
@@ -104,6 +105,7 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 
 	function clickHandler() {
 		setPressed(false);
+		onTriggerActionsOverride();
 
 		if (config.config.action === KEY_ACTION.SHIFT) {
 			setCapslock(latest => !latest);

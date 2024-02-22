@@ -8,8 +8,8 @@ export interface IKeyboard {
 	actionsOverride?: {
 		[rowIndex: string]: {
 			[keyIndex: string]: IInputAction[]
-		}[]
-	}[]
+		}
+	}
 	styleOverride?: IKeyboardStyleOverride
 }
 

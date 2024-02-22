@@ -79,7 +79,17 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 	}, [displayKeyboard]);
 
 	return (
-		<KeyboardContext.Provider value={{ displayKeyboard, setDisplayKeyboard, capslock, setCapslock, specChars, setSpecChars, onChange, onDelete, }}>
+		<KeyboardContext.Provider value={{
+			displayKeyboard,
+			setDisplayKeyboard,
+			capslock,
+			setCapslock,
+			specChars,
+			setSpecChars,
+			onChange,
+			onDelete,
+			actionsOverride: config.actionsOverride,
+		}}>
 			<div className={classNames.join(" ")} style={customStyle}>
 				{pattern.rows.map((row, index) => <Row key={"keyboard_row__" + index} index={index} config={row} customStyle={config.styleOverride?.rows} />)}
 			</div>

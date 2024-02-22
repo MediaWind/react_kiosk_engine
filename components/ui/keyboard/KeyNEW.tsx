@@ -6,10 +6,14 @@ import { IKeyOptions, KEY_ACTION } from "./CustomKeyboard";
 import ActionKey from "./ActionKey";
 import { useKeyboardContext } from "../../../contexts/keyboardContext";
 import { Variables } from "../../../../variables";
+import { IInputAction } from "../../../interfaces";
 
 interface IKeyProps {
 	index: number;
 	config: IKeyOptions
+	actionsOverride?: {
+		[keyIndex: string]: IInputAction[]
+	}
 	styleOverride?: {
 		index: number | "all"
 		style: CSSProperties
@@ -18,11 +22,13 @@ interface IKeyProps {
 }
 
 export default function Key(props: IKeyProps): JSX.Element {
-	const { index, config, styleOverride, } = props;
+	const { index, config, actionsOverride, styleOverride, } = props;
 
 	const [classNames, setClassNames] = useState<string[]>([styles.default]);
-	const [customStyles, setCustomStyle] = useState<CSSProperties>();
 	const [text, setText] = useState<string>("");
+
+	const [customActions, setCustomActions] = useState<IInputAction[]>([]);
+	const [customStyles, setCustomStyle] = useState<CSSProperties>();
 
 	const [pressed, setPressed] = useState<boolean>(false);
 
@@ -63,13 +69,26 @@ export default function Key(props: IKeyProps): JSX.Element {
 		}
 	}, [capslock, specChars, styleOverride]);
 
+	useEffect(() => {
+		if (actionsOverride && actionsOverride[index]) {
+			setCustomActions(actionsOverride[index]);
+		}
+	}, [actionsOverride]);
+
+	function triggerActionsOverride() {
+		if (customActions.length > 0) {
+			console.log("🚀 ~ triggerActionsOverride ~ customActions:", customActions);
+		}
+	}
+
 	if (config.action) {
-		return <ActionKey config={{ index, config, customStyles, customText: text, }} />;
+		return <ActionKey config={{ index, config, customStyles, customText: text, }} onTriggerActionsOverride={triggerActionsOverride} />;
 	}
 
 	function clickHandler() {
 		setPressed(false);
 		onChange(text);
+		triggerActionsOverride();
 	}
 
 	function devClick() {
