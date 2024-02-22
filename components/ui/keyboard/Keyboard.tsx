@@ -14,8 +14,8 @@ import { KeyboardContext } from "../../../contexts/keyboardContext";
 
 interface IKeyboardProps {
 	config: IKeyboard
-	onChange?: CallableFunction
-	onDelete?: CallableFunction
+	onChange: CallableFunction
+	onDelete: CallableFunction
 }
 
 function getPattern(layout: KEYBOARD_LAYOUT): IKeyboardLayout {
@@ -29,7 +29,7 @@ function getPattern(layout: KEYBOARD_LAYOUT): IKeyboardLayout {
 }
 
 export default function Keyboard(props: IKeyboardProps): JSX.Element {
-	const { config, } = props;
+	const { config, onChange, onDelete, } = props;
 
 	const [displayKeyboard, setDisplayKeyboard] = useState<boolean>(true);
 	const [pattern, setPattern] = useState<IKeyboardLayout>(classicPattern);
@@ -57,7 +57,7 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 	}, [config, displayKeyboard]);
 
 	return (
-		<KeyboardContext.Provider value={{ displayKeyboard, setDisplayKeyboard, capslock, setCapslock, specChars, setSpecChars, }}>
+		<KeyboardContext.Provider value={{ displayKeyboard, setDisplayKeyboard, capslock, setCapslock, specChars, setSpecChars, onChange, onDelete, }}>
 			<div className={classNames.join(" ")} style={customStyle}>
 				{pattern.rows.map((row, index) => <Row key={"keyboard_row__" + index} index={index} config={row} customStyle={config.styleOverride?.rows} />)}
 			</div>

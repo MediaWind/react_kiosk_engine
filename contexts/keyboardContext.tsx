@@ -7,6 +7,8 @@ type keyboardContext = {
 	setCapslock: React.Dispatch<SetStateAction<boolean>>
 	specChars: boolean
 	setSpecChars: React.Dispatch<SetStateAction<boolean>>
+	onChange: CallableFunction
+	onDelete: CallableFunction
 }
 
 export const KeyboardContext = createContext<keyboardContext>({
@@ -16,6 +18,8 @@ export const KeyboardContext = createContext<keyboardContext>({
 	setCapslock: () => null,
 	specChars: false,
 	setSpecChars: () => null,
+	onChange: () => null,
+	onDelete: () => null,
 });
 
 export const useKeyboardContext = () => useContext(KeyboardContext);

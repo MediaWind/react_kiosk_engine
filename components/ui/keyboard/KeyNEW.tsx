@@ -25,7 +25,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 
 	const [pressed, setPressed] = useState<boolean>(false);
 
-	const { capslock, specChars, } = useKeyboardContext();
+	const { capslock, specChars, onChange, } = useKeyboardContext();
 
 	useEffect(() => {
 		if (pressed) {
@@ -54,6 +54,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 
 	function clickHandler() {
 		setPressed(false);
+		onChange(text);
 	}
 
 	function devClick() {
