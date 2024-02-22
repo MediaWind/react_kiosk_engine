@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
 
-import { IInputContent } from "../interfaces";
+import { IInputContent, TICKET_DATA_ACTION_TYPE } from "../interfaces";
+
+import { useTicketDataContext } from "../contexts/ticketDataContext";
+
+import { IKeyboard, KEYBOARD_LAYOUT } from "../lib/keyboardTypes";
+
 import TextInput from "./ui/inputs/TextInputNEW";
 import Keyboard from "./ui/keyboard/Keyboard";
-import { IKeyboard, KEYBOARD_LAYOUT } from "../lib/keyboardTypes";
 
 interface ITextInputsManagerProps {
 	inputs: IInputContent[]
@@ -16,6 +20,24 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 	const [focusedField, setFocusedField] = useState<IInputContent | undefined>();
 	const [currentValue, setCurrentValue] = useState<string>("");
 	const [displayKeyboard, setDisplayKeyboard] = useState<boolean>(false);
+	const [autoFocus, setAutofocus] = useState<boolean>(false);
+
+	const { dispatchTicketState, } = useTicketDataContext();
+
+	useEffect(() => {
+		const autoFocusInput = inputs.find(input => input.autoFocus);
+
+		if (autoFocusInput) {
+			setAutofocus(true);
+		}
+	}, [inputs]);
+
+	useEffect(() => {
+		if (autoFocus) {
+			setAutofocus(false);
+			setFocusedField(inputs.find(input => input.autoFocus));
+		}
+	}, [autoFocus]);
 
 	useEffect(() => {
 		if (focusedField) {
@@ -29,7 +51,7 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 		} else {
 			setCurrentValue("");
 		}
-	}, [focusedField]);
+	}, [focusedField, autoFocus]);
 
 	useEffect(() => {
 		if (!displayKeyboard) {
@@ -50,6 +72,11 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 			currentInput.textInput.value = currentInput.textInput.value + char;
 			setCurrentValue(currentInput.textInput.value);
 		}
+
+		dispatchTicketState({
+			type: TICKET_DATA_ACTION_TYPE.INPUTTEXTUPDATE,
+			payload: currentInput?.textInput,
+		});
 	}
 
 	function deleteHandler() {
@@ -59,6 +86,11 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 			currentInput.textInput.value = currentInput.textInput.value.slice(0, -1);
 			setCurrentValue(currentInput.textInput.value);
 		}
+
+		dispatchTicketState({
+			type: TICKET_DATA_ACTION_TYPE.INPUTTEXTUPDATE,
+			payload: currentInput?.textInput,
+		});
 	}
 
 	return (
@@ -71,8 +103,8 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 				return <TextInput
 					key={input.textInput.id}
 					id={input.textInput.id}
-					focused={focusedField?.textInput?.id === input.textInput.id}
 					value={input.textInput.value}
+					focused={focusedField === input}
 					onFocus={focusHandler}
 					styles={input.styles}
 				/>;
