@@ -46,7 +46,7 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 
 	const [pressed, setPressed] = useState<boolean>(false);
 
-	const { setDisplayKeyboard, capslock, setCapslock, specChars, setSpecChars, } = useKeyboardContext();
+	const { setDisplayKeyboard, capslock, setCapslock, specChars, setSpecChars, onDelete, } = useKeyboardContext();
 
 	useEffect(() => {
 		if (config.config.action === KEY_ACTION.SPACEBAR) {
@@ -92,14 +92,30 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 	}, [config, text]);
 
 	useEffect(() => {
+		let timeOut: NodeJS.Timer;
+		let interval: NodeJS.Timer;
+
 		if (pressed) {
 			setClassNames(latest => [...latest, styles.pressed]);
+
+			if (config.config.action === KEY_ACTION.BACKSPACE) {
+				timeOut = setTimeout(() => {
+					interval = setInterval(() => {
+						onDelete();
+					}, 500);
+				}, 1000);
+			}
 		} else {
 			setClassNames(latest => {
 				const returned = latest.filter(name => name !== styles.pressed);
 				return [...returned];
 			});
 		}
+
+		return () => {
+			clearTimeout(timeOut);
+			clearInterval(interval);
+		};
 	}, [pressed]);
 
 	function clickHandler() {
@@ -115,6 +131,10 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 
 		if (config.config.action === KEY_ACTION.ENTER) {
 			setDisplayKeyboard(false);
+		}
+
+		if (config.config.action === KEY_ACTION.BACKSPACE) {
+			onDelete();
 		}
 	}
 
