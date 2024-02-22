@@ -6,9 +6,9 @@ export interface IKeyboard {
 	layout: KEYBOARD_LAYOUT,
 	customLayout?: IKeyboardLayout
 	actionsOverride?: {
-		[rowIndex: number]: {
-			[keyIndex: number]: IInputAction[]
-		}
+		[rowIndex: string]: {
+			[keyIndex: string]: IInputAction[]
+		}[]
 	}[]
 	styleOverride?: IKeyboardStyleOverride
 }
@@ -51,7 +51,7 @@ export interface IKeyOptions {
 		capslockValue?: string
 		specCharsValue?: string
 	}
-	action?: KEY_ACTION | CallableFunction
+	action?: KEY_ACTION
 	style?: CSSProperties
 }
 
@@ -66,10 +66,10 @@ export enum KEY_ACTION {
 }
 
 export interface IKeyboardStyleOverride {
-	board: CSSProperties
-	rows: {
+	board?: CSSProperties
+	rows?: {
 		index: number | "all"
-		style: CSSProperties
+		style?: CSSProperties
 		keys?: {
 			index: number | "all"
 			style: CSSProperties

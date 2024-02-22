@@ -1,4 +1,4 @@
-import { IKeyboard, KEY_ACTION } from "../../components/ui/keyboard/CustomKeyboard";
+import { IKeyboardLayout, KEY_ACTION } from "../keyboardTypes";
 
 export const numpadPattern = {
 	rows: [
@@ -87,4 +87,4 @@ export const numpadPattern = {
 			],
 		}
 	],
-} as IKeyboard;
+} as IKeyboardLayout;

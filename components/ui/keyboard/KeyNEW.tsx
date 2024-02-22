@@ -2,7 +2,7 @@ import { CSSProperties, useEffect, useState } from "react";
 
 import styles from "../../../styles/keyboard/Key.module.scss";
 
-import { IKeyOptions } from "./CustomKeyboard";
+import { IKeyOptions, KEY_ACTION } from "./CustomKeyboard";
 import ActionKey from "./ActionKey";
 import { useKeyboardContext } from "../../../contexts/keyboardContext";
 import { Variables } from "../../../../variables";
@@ -21,6 +21,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 	const { index, config, styleOverride, } = props;
 
 	const [classNames, setClassNames] = useState<string[]>([styles.default]);
+	const [customStyles, setCustomStyle] = useState<CSSProperties>();
 	const [text, setText] = useState<string>("");
 
 	const [pressed, setPressed] = useState<boolean>(false);
@@ -41,15 +42,24 @@ export default function Key(props: IKeyProps): JSX.Element {
 	useEffect(() => {
 		if (capslock && config.text?.capslockValue) {
 			setText(config.text.capslockValue);
-		}else if (specChars && config.text?.specCharsValue) {
+		} else if (specChars && config.text?.specCharsValue) {
 			setText(config.text.specCharsValue);
 		} else {
-			setText(config.text?.defaultValue ?? "");
+			setText(config.text?.defaultValue ?? (config.action === KEY_ACTION.SPACEBAR ? "Space" : ""));
 		}
-	}, [capslock, specChars]);
+
+		if (styleOverride) {
+			styleOverride.map(style => {
+				if (style.index === "all" || style.index === index) {
+					setText(latest => style.valueOverride ?? latest);
+					setCustomStyle(style.style);
+				}
+			});
+		}
+	}, [capslock, specChars, styleOverride]);
 
 	if (config.action) {
-		return <ActionKey config={{ index, config, styleOverride, }} />;
+		return <ActionKey config={{ index, config, customStyles, customText: text, }} />;
 	}
 
 	function clickHandler() {
@@ -66,6 +76,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 	return (
 		<div
 			className={classNames.join(" ")}
+			style={customStyles}
 			onTouchStart={() => setPressed(true)}
 			onTouchEnd={clickHandler}
 			onMouseDown={() => setPressed(true)}

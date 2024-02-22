@@ -2,6 +2,8 @@ import { CSSProperties, SetStateAction, useEffect, useState } from "react";
 
 import styles from "../../../styles/keyboard/Keyboard.module.scss";
 
+import { KeyboardContext } from "../../../contexts/keyboardContext";
+
 import { IKeyboard, IKeyboardLayout, KEYBOARD_LAYOUT } from "../../../lib/keyboardTypes";
 
 import { classicPattern } from "../../../lib/keyboardPatterns/classic";
@@ -10,7 +12,6 @@ import { numpadPattern } from "../../../lib/keyboardPatterns/numpad";
 import { fullPattern } from "../../../lib/keyboardPatterns/full";
 
 import Row from "./Row";
-import { KeyboardContext } from "../../../contexts/keyboardContext";
 
 interface IKeyboardProps {
 	currentValue: string

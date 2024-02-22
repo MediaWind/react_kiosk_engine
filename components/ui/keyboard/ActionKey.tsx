@@ -20,11 +20,8 @@ interface IActionKeyProps {
 	config: {
 		index: number;
 		config: IKeyOptions
-		styleOverride?: {
-			index: number | "all"
-			style: CSSProperties
-			valueOverride?: string
-		}[]
+		customText?: string
+		customStyles?: CSSProperties
 	}
 }
 
@@ -41,8 +38,6 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 	const { config, } = props;
 
 	const [classNames, setClassNames] = useState<string[]>([]);
-	const [customStyle, setCustomStyle] = useState<CSSProperties>();
-	const [text, setText] = useState<string>("");
 	const [icon, setIcon] = useState<IconDefinition | undefined>();
 
 	const [pressed, setPressed] = useState<boolean>(false);
@@ -58,39 +53,16 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 	}, [config]);
 
 	useEffect(() => {
-		setText(() => {
-			if (capslock && config.config.text?.capslockValue) {
-				return config.config.text.capslockValue;
-			}
-			if (specChars && config.config.text?.specCharsValue) {
-				return config.config.text.specCharsValue;
-			}
-			return config.config.text?.defaultValue ?? (config.config.action === KEY_ACTION.SPACEBAR ? "Space" : "");
-		});
-	}, [config]);
-
-	useEffect(() => {
-		if (config.styleOverride) {
-			config.styleOverride.map(style => {
-				if (style.index === "all" || style.index === config.index) {
-					setText(latest => style.valueOverride ?? latest);
-					setCustomStyle(style.style);
-				}
-			});
-		}
-	}, [config]);
-
-	useEffect(() => {
 		if (config.config.action) {
 			setIcon(getIcon(config.config.action as KEY_ACTION));
 		}
 	}, [config]);
 
 	useEffect(() => {
-		if (text === "" && config.config.action === KEY_ACTION.ENTER) {
+		if (config.customText === "" && config.config.action === KEY_ACTION.ENTER) {
 			setClassNames(latest => [...latest, styles.align_right]);
 		}
-	}, [config, text]);
+	}, [config, config.customText]);
 
 	useEffect(() => {
 		let timeOut1: NodeJS.Timer;
@@ -163,14 +135,14 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 	return (
 		<div
 			className={classNames.join(" ")}
-			style={customStyle}
+			style={config.customStyles}
 			onTouchStart={() => setPressed(true)}
 			onTouchEnd={clickHandler}
 			onMouseDown={() => setPressed(true)}
 			onMouseUp={devClick}
 		>
-			{text !== "" && <p>{text}</p>}
-			{(icon && text === "") && <FontAwesomeIcon icon={icon} className={styles.icon} />}
+			{config.customText !== "" && <p style={config.customStyles}>{config.customText}</p>}
+			{(icon && config.customText === "") && <FontAwesomeIcon icon={icon} className={styles.icon} />}
 			{config.config.action === KEY_ACTION.SHIFT && <FontAwesomeIcon icon={faCircle} style={{ color: capslock ? "#00dd00" : "#999999", fontSize: "0.01rem", marginTop: "0.004rem", }}  />}
 			{config.config.action === KEY_ACTION.SPECIALCHARS && <FontAwesomeIcon icon={faCircle} style={{ color: specChars ? "#00dd00" : "#999999", fontSize: "0.01rem", marginTop: "0.004rem", }}  />}
 		</div>

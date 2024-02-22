@@ -1,4 +1,4 @@
-import { IKeyboard, KEY_ACTION } from "../../components/ui/keyboard/CustomKeyboard";
+import { IKeyboardLayout, KEY_ACTION } from "../keyboardTypes";
 
 export const compactPattern = {
 	rows: [
@@ -253,4 +253,4 @@ export const compactPattern = {
 			],
 		}
 	],
-} as IKeyboard;
+} as IKeyboardLayout;
