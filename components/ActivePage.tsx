@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 
-import { ACTION_TYPE, IInputAction, IInputContent, IMedia, IPage, IService, MEDIA_TYPE, PRINT_ACTION_TYPE, TICKET_DATA_ACTION_TYPE } from "../interfaces";
+import { ACTION_TYPE, IInputContent, IMedia, IPage, IService, MEDIA_TYPE, PRINT_ACTION_TYPE, TICKET_DATA_ACTION_TYPE } from "../interfaces";
 
+import { useFlowContext } from "../contexts/flowContext";
 import { useRouterContext } from "../contexts/routerContext";
 import { useTicketDataContext } from "../contexts/ticketDataContext";
 import { useAppointmentContext } from "../contexts/appointmentContext";
@@ -10,7 +11,7 @@ import { useCustomActionContext } from "../contexts/customActionContext";
 
 import FlowMedia from "./FlowMedia";
 import BackgroundImage from "./ui/BackgroundImage";
-import TextInputsManager from "./TextInputsManager";
+import TextInputsManagerNEW from "./TextInputsManagerNEW";
 
 interface IActivePageProps {
 	page: IPage
@@ -19,6 +20,7 @@ interface IActivePageProps {
 export default function ActivePage(props: IActivePageProps): JSX.Element {
 	const { page, } = props;
 
+	const { flow, } = useFlowContext();
 	const { nextPage, } = useRouterContext();
 	const { dispatchTicketState, } = useTicketDataContext();
 	const { appointmentState, } = useAppointmentContext();
@@ -27,7 +29,8 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 
 	const [pageMedias, setPageMedias] = useState<IMedia[]>([]);
 	const [pageInputs, setPageInputs] = useState<IInputContent[]>([]);
-	const [textInputs, setTextInputs] = useState<IMedia[]>([]);
+	// const [textInputs, setTextInputs] = useState<IMedia[]>([]);
+	const [newTextInputs, setNewTextInputs] = useState<IInputContent[]>([]);
 
 	useEffect(() => {
 		if (page.medias) {
@@ -78,56 +81,61 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 	}, [page]);
 
 	//* Checks if page contains text inputs and if so, forwards them to text input manager
+	// useEffect(() => {
+	// 	if (page.medias) {
+	// 		const inputs = page.medias.filter(media => media.type === MEDIA_TYPE.INPUT);
+	// 		const textInputMedias = inputs.filter((media) => {
+	// 			const content = media.content as IInputContent;
+	// 			if (content.textInput) {
+	// 				return true;
+	// 			}
+	// 			return false;
+	// 		});
+
+	// 		setTextInputs(textInputMedias);
+	// 	}
+	// }, [page]);
+
 	useEffect(() => {
+		setNewTextInputs([]);
+
 		if (page.medias) {
-			const inputs = page.medias.filter(media => media.type === MEDIA_TYPE.INPUT);
-			const textInputMedias = inputs.filter((media) => {
-				const content = media.content as IInputContent;
-				if (content.textInput) {
-					return true;
-				}
-				return false;
-			});
-
-			setTextInputs(textInputMedias);
+			page.medias.filter(media => media.type === MEDIA_TYPE.INPUT)
+				.map(media => {
+					if ((media.content as IInputContent).textInput) {
+						setNewTextInputs(latest => [...latest, media.content as IInputContent]);
+					}
+				});
 		}
-		//TODO: replace with this code, adapt text manager and test if nothing breaks
-		// if (pageInputs.length > 0) {
-		// 	const textInputs = pageInputs.filter(input => {
-		// 		if (input.textInput) {
-		// 			return true;
-		// 		}
-		// 		return false;
-		// 	});
-
-		// 	setTextInputs([...textInputs]);
-		// }
 	}, [page]);
 
 	useEffect(() => {
 		if (pageInputs.length > 0) {
 			pageInputs.map(input => {
-				input.actions.map(action => {
-					if (
-						(action.type === ACTION_TYPE.CHECKIN || action.type === ACTION_TYPE.CHECKOUT) &&
-						action.navigateTo &&
-						(appointmentState.isCheckedIn || appointmentState.isCheckedOut)
-					) {
-						nextPage(action.navigateTo);
-					}
-				});
+				//!FIXME: had to add this condition because of a "input.actions is undefined" error
+				if (input.actions) {
+					input.actions.map(action => {
+						if (
+							(action.type === ACTION_TYPE.CHECKIN || action.type === ACTION_TYPE.CHECKOUT) &&
+							action.navigateTo &&
+							(appointmentState.isCheckedIn || appointmentState.isCheckedOut)
+						) {
+							nextPage(action.navigateTo);
+						}
+					});
+				}
 			});
 		}
 	}, [appointmentState]);
 
-	function textInputsReadyHandler(actions: IInputAction[]) {
-		const nextPageId = actions.find(action => action.navigateTo)?.navigateTo;
+	// function textInputsReadyHandler(actions: IInputAction[]) {
+	// 	const nextPageId = actions.find(action => action.navigateTo)?.navigateTo;
 
-		if (nextPageId) {
-			nextPage(nextPageId);
-			setTextInputs([]);
-		}
-	}
+	// 	if (nextPageId) {
+	// 		nextPage(nextPageId);
+	// 		// setTextInputs([]);
+	// 	}
+	// }
 
 	return (
 		<>
@@ -138,7 +146,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 					);
 				})
 			}
-			{textInputs.length > 0 && <TextInputsManager inputs={textInputs} onReady={textInputsReadyHandler} />}
+			{(newTextInputs.length > 0 && flow.keyboard) && <TextInputsManagerNEW inputs={newTextInputs} keyboardConfig={flow.keyboard} />}
 			<BackgroundImage image={page.backgroundImage} />
 			{customPage}
 		</>

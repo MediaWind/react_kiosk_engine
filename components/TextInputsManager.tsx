@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 
-import { IInputContent, IInputField, IMedia, KEYBOARD_LAYOUT, TICKET_DATA_ACTION_TYPE } from "../interfaces";
+import { IInputContent, IInputField, IMedia, TICKET_DATA_ACTION_TYPE } from "../interfaces";
 
 import { useTicketDataContext } from "../contexts/ticketDataContext";
 
 import TextInput from "./ui/inputs/TextInput";
 import CustomKeyboard, { IKeyboard, KEY_ACTION } from "./ui/keyboard/CustomKeyboard";
-import { useFlowContext } from "../contexts/flowContext";
+// import { useFlowContext } from "../contexts/flowContext";
 
 interface ITextInputsManagerProps {
 	inputs: IMedia[]
@@ -15,7 +15,7 @@ interface ITextInputsManagerProps {
 
 export default function TextInputsManager(props: ITextInputsManagerProps): JSX.Element {
 	const { inputs, onReady, } = props;
-	const { flow, } = useFlowContext();
+	// const { flow, } = useFlowContext();
 
 	const [content, setContent] = useState<IInputContent[]>([]);
 	const [focusedField, setFocusedField] = useState<string | undefined>();
@@ -24,272 +24,272 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 
 	const { dispatchTicketState, } = useTicketDataContext();
 
-	const customPattern = {
-		rows: [
-			{
-				keys: [
-					{
-						text: {
-							defaultValue: "0",
-							specCharsValue: "-",
-						},
-					},
-					{
-						text: {
-							defaultValue: "1",
-							specCharsValue: "à",
-						},
-					},
-					{
-						text: {
-							defaultValue: "2",
-							specCharsValue: "â",
-						},
-					},
-					{
-						text: {
-							defaultValue: "3",
-							specCharsValue: "ç",
-						},
-					},
-					{
-						text: {
-							defaultValue: "4",
-							specCharsValue: "é",
-						},
-					},
-					{
-						text: {
-							defaultValue: "5",
-							specCharsValue: "è",
-						},
-					},
-					{
-						text: {
-							defaultValue: "6",
-							specCharsValue: "ê",
-						},
-					},
-					{
-						text: {
-							defaultValue: "7",
-							specCharsValue: "ë",
-						},
-					},
-					{
-						text: {
-							defaultValue: "8",
-							specCharsValue: "ù",
-						},
-					},
-					{
-						text: {
-							defaultValue: "9",
-							specCharsValue: "û",
-						},
-					}
-				],
-			},
-			{
-				keys: [
-					{
-						text: {
-							defaultValue: "a",
-							capslockValue: "A",
-						},
-					},
-					{
-						text: {
-							defaultValue: "z",
-							capslockValue: "Z",
-						},
-					},
-					{
-						text: {
-							defaultValue: "e",
-							capslockValue: "E",
-						},
-					},
-					{
-						text: {
-							defaultValue: "r",
-							capslockValue: "R",
-						},
-					},
-					{
-						text: {
-							defaultValue: "t",
-							capslockValue: "T",
-						},
-					},
-					{
-						text: {
-							defaultValue: "y",
-							capslockValue: "Y",
-						},
-					},
-					{
-						text: {
-							defaultValue: "u",
-							capslockValue: "U",
-						},
-					},
-					{
-						text: {
-							defaultValue: "i",
-							capslockValue: "I",
-						},
-					},
-					{
-						text: {
-							defaultValue: "o",
-							capslockValue: "O",
-						},
-					},
-					{
-						text: {
-							defaultValue: "p",
-							capslockValue: "P",
-						},
-					},
-					{
-						text: {
-							defaultValue: "q",
-							capslockValue: "Q",
-						},
-					},
-					{
-						text: {
-							defaultValue: "s",
-							capslockValue: "S",
-						},
-					},
-					{
-						text: {
-							defaultValue: "d",
-							capslockValue: "D",
-						},
-					}
-				],
-			},
-			{
-				keys: [
-					{
-						text: {
-							defaultValue: "f",
-							capslockValue: "F",
-						},
-					},
-					{
-						text: {
-							defaultValue: "g",
-							capslockValue: "G",
-						},
-					},
-					{
-						text: {
-							defaultValue: "h",
-							capslockValue: "H",
-						},
-					},
-					{
-						text: {
-							defaultValue: "j",
-							capslockValue: "J",
-						},
-					},
-					{
-						text: {
-							defaultValue: "k",
-							capslockValue: "K",
-						},
-					},
-					{
-						text: {
-							defaultValue: "l",
-							capslockValue: "L",
-						},
-					},
-					{
-						text: {
-							defaultValue: "m",
-							capslockValue: "M",
-						},
-					},
-					{
-						text: {
-							defaultValue: "w",
-							capslockValue: "W",
-						},
-					},
-					{
-						text: {
-							defaultValue: "x",
-							capslockValue: "X",
-						},
-					},
-					{
-						text: {
-							defaultValue: "c",
-							capslockValue: "C",
-						},
-					},
-					{
-						text: {
-							defaultValue: "v",
-							capslockValue: "V",
-						},
-					},
-					{
-						text: {
-							defaultValue: "b",
-							capslockValue: "B",
-						},
-					},
-					{
-						text: {
-							defaultValue: "n",
-							capslockValue: "N",
-						},
-					}
-				],
-			},
-			{
-				keys: [
-					{
-						action: KEY_ACTION.SHIFT,
-					},
-					{
-						text: {
-							defaultValue: "-^´",
-						},
-						action: KEY_ACTION.SPECIALCHARS,
-					},
-					{
-						text: {
-							defaultValue: "Espace",
-						},
-						action: KEY_ACTION.SPACEBAR,
-					},
-					{
-						text: {
-							defaultValue: "Valider",
-						},
-						action: confirmForm,
-						style: {
-							backgroundColor: "#117a31",
-							textColor: "#ffffff",
-							fontSize: "0.032rem",
-							textAlign: "center",
-						},
-					},
-					{
-						action: KEY_ACTION.BACKSPACE,
-					}
-				],
-			}
-		],
-	} as IKeyboard;
+	// const customPattern = {
+	// 	rows: [
+	// 		{
+	// 			keys: [
+	// 				{
+	// 					text: {
+	// 						defaultValue: "0",
+	// 						specCharsValue: "-",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "1",
+	// 						specCharsValue: "à",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "2",
+	// 						specCharsValue: "â",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "3",
+	// 						specCharsValue: "ç",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "4",
+	// 						specCharsValue: "é",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "5",
+	// 						specCharsValue: "è",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "6",
+	// 						specCharsValue: "ê",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "7",
+	// 						specCharsValue: "ë",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "8",
+	// 						specCharsValue: "ù",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "9",
+	// 						specCharsValue: "û",
+	// 					},
+	// 				}
+	// 			],
+	// 		},
+	// 		{
+	// 			keys: [
+	// 				{
+	// 					text: {
+	// 						defaultValue: "a",
+	// 						capslockValue: "A",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "z",
+	// 						capslockValue: "Z",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "e",
+	// 						capslockValue: "E",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "r",
+	// 						capslockValue: "R",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "t",
+	// 						capslockValue: "T",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "y",
+	// 						capslockValue: "Y",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "u",
+	// 						capslockValue: "U",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "i",
+	// 						capslockValue: "I",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "o",
+	// 						capslockValue: "O",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "p",
+	// 						capslockValue: "P",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "q",
+	// 						capslockValue: "Q",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "s",
+	// 						capslockValue: "S",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "d",
+	// 						capslockValue: "D",
+	// 					},
+	// 				}
+	// 			],
+	// 		},
+	// 		{
+	// 			keys: [
+	// 				{
+	// 					text: {
+	// 						defaultValue: "f",
+	// 						capslockValue: "F",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "g",
+	// 						capslockValue: "G",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "h",
+	// 						capslockValue: "H",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "j",
+	// 						capslockValue: "J",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "k",
+	// 						capslockValue: "K",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "l",
+	// 						capslockValue: "L",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "m",
+	// 						capslockValue: "M",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "w",
+	// 						capslockValue: "W",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "x",
+	// 						capslockValue: "X",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "c",
+	// 						capslockValue: "C",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "v",
+	// 						capslockValue: "V",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "b",
+	// 						capslockValue: "B",
+	// 					},
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "n",
+	// 						capslockValue: "N",
+	// 					},
+	// 				}
+	// 			],
+	// 		},
+	// 		{
+	// 			keys: [
+	// 				{
+	// 					action: KEY_ACTION.SHIFT,
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "-^´",
+	// 					},
+	// 					action: KEY_ACTION.SPECIALCHARS,
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "Espace",
+	// 					},
+	// 					action: KEY_ACTION.SPACEBAR,
+	// 				},
+	// 				{
+	// 					text: {
+	// 						defaultValue: "Valider",
+	// 					},
+	// 					action: confirmForm,
+	// 					style: {
+	// 						backgroundColor: "#117a31",
+	// 						textColor: "#ffffff",
+	// 						fontSize: "0.032rem",
+	// 						textAlign: "center",
+	// 					},
+	// 				},
+	// 				{
+	// 					action: KEY_ACTION.BACKSPACE,
+	// 				}
+	// 			],
+	// 		}
+	// 	],
+	// } as IKeyboard;
 
 	const classicPattern = {
 		rows: [
@@ -699,7 +699,7 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 				);
 			})}
 			<CustomKeyboard
-				pattern={(flow.keyboardLayout && flow.keyboardLayout === KEYBOARD_LAYOUT.CUSTOMMADE) ? customPattern : classicPattern}
+				pattern={classicPattern}
 				onChange={changetexthandler}
 				onDelete={deleteHandler}
 				shift={

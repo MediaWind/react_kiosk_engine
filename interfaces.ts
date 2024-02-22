@@ -1,5 +1,7 @@
 import { eIdData } from "../core/hooks/useEId";
 
+import { IKeyboard } from "./lib/keyboardTypes";
+
 //* --------------------------- *//
 //* JSON based types/interfaces *//
 //* --------------------------- *//
@@ -38,7 +40,7 @@ export interface IFlow {
 	id: string;
 	name: string;
 	homePage: string;
-	keyboardLayout?: KEYBOARD_LAYOUT;
+	keyboard?: IKeyboard;
 	navigateToHomePageAfter?: number;
 	pages: IPage[];
 	ticketParameters?: ITicketParameters;
@@ -75,11 +77,6 @@ export interface IErrorManagement {
 	//? Not necessarily errors, might need some refactoring here
 	eIdInserted?: IBackgroundImage;
 	eIdRead?: IBackgroundImage;
-}
-
-export enum KEYBOARD_LAYOUT {
-	CLASSIC = "classic",
-	CUSTOMMADE = "customMade"
 }
 
 export interface IPage {

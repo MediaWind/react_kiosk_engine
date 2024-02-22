@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 
 import styles from "../../../styles/CustomKeyboard.module.scss";
 
@@ -21,7 +21,7 @@ export interface IKeyOptions {
 		specCharsValue?: string
 	}
 	action?: KEY_ACTION | CallableFunction
-	style?: IKeyStyling
+	style?: CSSProperties
 }
 
 export enum KEY_ACTION {

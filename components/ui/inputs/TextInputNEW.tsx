@@ -9,11 +9,12 @@ interface ITextInputProps {
 	value: string
 	focused: boolean
 	onFocus: CallableFunction
+	invalid: boolean
 	styles: CSSProperties
 }
 
 export default function TextInput(props: ITextInputProps): JSX.Element {
-	const { id, value, focused, onFocus, styles, } = props;
+	const { id, value, focused, onFocus, invalid, styles, } = props;
 
 	function focusHandler() {
 		onFocus(id);
@@ -38,7 +39,7 @@ export default function TextInput(props: ITextInputProps): JSX.Element {
 				zIndex: 1,
 
 				fontSize: styles.fontSize ?? getFontSize(styles.height?.toString() ?? ""),
-				boxShadow: focused ? `0 0 10px 0 ${styles.borderColor ?? "#000000"}` : "",
+				boxShadow: (focused || invalid) ? `0 0 10px 0 ${invalid ? "#ff0000" : (styles.borderColor ?? "#000000")}` : styles.boxShadow ??  "",
 			}}
 		/>
 	);

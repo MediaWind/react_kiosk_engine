@@ -4,18 +4,19 @@ import { IInputContent, TICKET_DATA_ACTION_TYPE } from "../interfaces";
 
 import { useTicketDataContext } from "../contexts/ticketDataContext";
 
-import { IKeyboard, KEYBOARD_LAYOUT } from "../lib/keyboardTypes";
+import { IKeyboard } from "../lib/keyboardTypes";
 
 import TextInput from "./ui/inputs/TextInputNEW";
 import Keyboard from "./ui/keyboard/Keyboard";
 
 interface ITextInputsManagerProps {
 	inputs: IInputContent[]
-	keyboardConfig?: IKeyboard
+	keyboardConfig: IKeyboard
+	invalidFields?: IInputContent[]
 }
 
 export default function TextInputsManager(props: ITextInputsManagerProps): JSX.Element {
-	const { inputs, } = props;
+	const { inputs, keyboardConfig, invalidFields, } = props;
 
 	const [focusedField, setFocusedField] = useState<IInputContent | undefined>();
 	const [currentValue, setCurrentValue] = useState<string>("");
@@ -106,15 +107,14 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 					value={input.textInput.value}
 					focused={focusedField === input}
 					onFocus={focusHandler}
+					invalid={invalidFields ? invalidFields.includes(input) : false}
 					styles={input.styles}
 				/>;
 			})}
 
 			<Keyboard
 				currentValue={currentValue}
-				config={{
-					layout: KEYBOARD_LAYOUT.CLASSIC,
-				}}
+				config={keyboardConfig}
 				onChange={changeHandler}
 				onDelete={deleteHandler}
 				displayKeyboard={displayKeyboard}

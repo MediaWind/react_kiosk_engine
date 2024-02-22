@@ -6,9 +6,9 @@ import { faArrowTurnDownLeft } from "@fortawesome/pro-solid-svg-icons";
 
 import styles from "../../../styles/CustomKeyboard.module.scss";
 
-import { IKeyStyling, KEY_ACTION } from "./CustomKeyboard";
+import { KEY_ACTION } from "./CustomKeyboard";
 import { Variables } from "../../../../variables";
-import { useState } from "react";
+import { CSSProperties, useState } from "react";
 
 interface IKeyProps {
 	text?: {
@@ -16,7 +16,7 @@ interface IKeyProps {
 		capslockValue?: string
 		specCharsValue?: string
 	}
-	style?: IKeyStyling
+	style?: CSSProperties
 	action?: KEY_ACTION | CallableFunction
 	onChangeText: CallableFunction
 	onDeleteText?: CallableFunction
@@ -150,14 +150,11 @@ export default function Key(props: IKeyProps): JSX.Element {
 						onChangeText("\n");
 						setPressed(false);
 					}}
-					style={{
-						backgroundColor: style?.backgroundColor ? style.backgroundColor : "",
-						justifyContent: style?.textAlign ? style.textAlign : "",
-					}}
+					style={style}
 				>
 					<p
 						style={{
-							color: style?.textColor ? style.textColor : "",
+							color: style?.color ? style.color : "",
 							fontSize: style?.fontSize ? style.fontSize : "",
 						}}
 					>
@@ -171,6 +168,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 			return (
 				<div
 					className={`${styles.key_action} ${pressed ? styles.pressed : ""}`}
+					style={style}
 					onClick={() => {
 						if (Variables.PREVIEW) {
 							if (onDeleteText) {
@@ -221,7 +219,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 				>
 					<p
 						style={{
-							color: style?.textColor ? style.textColor : "",
+							color: style?.color ? style.color : "",
 							fontSize: style?.fontSize ? style.fontSize : "",
 						}}
 					>
@@ -244,6 +242,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 	return (
 		<div
 			className={`${styles.key_default} ${pressed ? styles.pressed : ""}`}
+			style={style}
 			onClick={changetexthandlerDev}
 			onMouseDown={() => setPressed(true)}
 			onMouseUp={() => setPressed(false)}
