@@ -93,22 +93,24 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 	}, [config, text]);
 
 	useEffect(() => {
-		let timeOut: NodeJS.Timer;
-		let interval: NodeJS.Timer;
+		let timeOut1: NodeJS.Timer;
+		let interval1: NodeJS.Timer;
+		let timeOut2: NodeJS.Timer;
+		let interval2: NodeJS.Timer;
 
 		if (pressed) {
 			setClassNames(latest => [...latest, styles.pressed]);
 
 			if (config.config.action === KEY_ACTION.BACKSPACE) {
-				timeOut = setTimeout(() => {
-					interval = setInterval(() => {
+				timeOut1 = setTimeout(() => {
+					interval1 = setInterval(() => {
 						onDelete();
 					}, 200);
 				}, 700);
 
-				timeOut = setTimeout(() => {
-					clearInterval(interval);
-					interval = setInterval(() => {
+				timeOut2 = setTimeout(() => {
+					clearInterval(interval1);
+					interval2 = setInterval(() => {
 						onDelete();
 					}, 30);
 				}, 3500);
@@ -121,8 +123,10 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 		}
 
 		return () => {
-			clearTimeout(timeOut);
-			clearInterval(interval);
+			clearTimeout(timeOut1);
+			clearInterval(interval1);
+			clearTimeout(timeOut2);
+			clearInterval(interval2);
 		};
 	}, [pressed]);
 
