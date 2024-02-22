@@ -13,6 +13,7 @@ import Row from "./Row";
 import { KeyboardContext } from "../../../contexts/keyboardContext";
 
 interface IKeyboardProps {
+	currentValue: string
 	config: IKeyboard
 	onChange: CallableFunction
 	onDelete: CallableFunction
@@ -29,7 +30,7 @@ function getPattern(layout: KEYBOARD_LAYOUT): IKeyboardLayout {
 }
 
 export default function Keyboard(props: IKeyboardProps): JSX.Element {
-	const { config, onChange, onDelete, } = props;
+	const { currentValue, config, onChange, onDelete, } = props;
 
 	const [displayKeyboard, setDisplayKeyboard] = useState<boolean>(true);
 	const [pattern, setPattern] = useState<IKeyboardLayout>(classicPattern);
@@ -39,6 +40,18 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 
 	const [capslock, setCapslock] = useState<boolean>(true);
 	const [specChars, setSpecChars] = useState<boolean>(false);
+
+	useEffect(() => {
+		if (
+			currentValue === "" ||
+			currentValue.slice(-1) === " " ||
+			currentValue.slice(-1) === "-"
+		) {
+			setCapslock(true);
+		} else {
+			setCapslock(false);
+		}
+	}, [currentValue]);
 
 	useEffect(() => {
 		if (config.layout === KEYBOARD_LAYOUT.CUSTOM && config.customLayout) {

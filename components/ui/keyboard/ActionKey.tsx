@@ -8,12 +8,13 @@ import { faArrowTurnDownLeft } from "@fortawesome/pro-solid-svg-icons";
 
 import styles from "../../../styles/keyboard/Key.module.scss";
 
+import { Variables } from "../../../../variables";
+
 import { KEY_ACTION } from "../../../lib/keyboardTypes";
 
 import { useKeyboardContext } from "../../../contexts/keyboardContext";
 
 import { IKeyOptions } from "./CustomKeyboard";
-import { Variables } from "../../../../variables";
 
 interface IActionKeyProps {
 	config: {
@@ -46,7 +47,7 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 
 	const [pressed, setPressed] = useState<boolean>(false);
 
-	const { setDisplayKeyboard, capslock, setCapslock, specChars, setSpecChars, onDelete, } = useKeyboardContext();
+	const { setDisplayKeyboard, capslock, setCapslock, specChars, setSpecChars, onChange, onDelete, } = useKeyboardContext();
 
 	useEffect(() => {
 		if (config.config.action === KEY_ACTION.SPACEBAR) {
@@ -135,6 +136,10 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 
 		if (config.config.action === KEY_ACTION.BACKSPACE) {
 			onDelete();
+		}
+
+		if (config.config.action === KEY_ACTION.SPACEBAR) {
+			onChange(" ");
 		}
 	}
 
