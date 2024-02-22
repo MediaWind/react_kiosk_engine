@@ -1,4 +1,4 @@
-import { CSSProperties, useEffect, useState } from "react";
+import { CSSProperties, SetStateAction, useEffect, useState } from "react";
 
 import styles from "../../../styles/keyboard/Keyboard.module.scss";
 
@@ -17,6 +17,8 @@ interface IKeyboardProps {
 	config: IKeyboard
 	onChange: CallableFunction
 	onDelete: CallableFunction
+	displayKeyboard: boolean
+	setDisplayKeyboard: React.Dispatch<SetStateAction<boolean>>
 }
 
 function getPattern(layout: KEYBOARD_LAYOUT): IKeyboardLayout {
@@ -30,9 +32,9 @@ function getPattern(layout: KEYBOARD_LAYOUT): IKeyboardLayout {
 }
 
 export default function Keyboard(props: IKeyboardProps): JSX.Element {
-	const { currentValue, config, onChange, onDelete, } = props;
+	const { currentValue, config, onChange, onDelete, displayKeyboard, setDisplayKeyboard, } = props;
 
-	const [displayKeyboard, setDisplayKeyboard] = useState<boolean>(true);
+	const [init, setInit] = useState<boolean>(true);
 	const [pattern, setPattern] = useState<IKeyboardLayout>(classicPattern);
 
 	const [classNames, setClassNames] = useState<string[]>([styles.main]);
@@ -65,9 +67,15 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 		if (config.styleOverride?.board) {
 			setCustomStyle(config.styleOverride.board);
 		}
+	}, [config]);
 
-		setClassNames(latest => displayKeyboard ? [...latest, styles.slide_in] : [...latest, styles.slide_out]);
-	}, [config, displayKeyboard]);
+	useEffect(() => {
+		if (init) {
+			setInit(false);
+		} else {
+			setClassNames(displayKeyboard ? [styles.main, styles.slide_in] : [styles.main, styles.slide_out]);
+		}
+	}, [displayKeyboard]);
 
 	return (
 		<KeyboardContext.Provider value={{ displayKeyboard, setDisplayKeyboard, capslock, setCapslock, specChars, setSpecChars, onChange, onDelete, }}>
