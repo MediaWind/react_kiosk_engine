@@ -4,7 +4,7 @@ $font_color_default: #333333;
 	position: absolute;
 	z-index: 5;
 
-	bottom: 0;
+	bottom: -30%;
 	left: 12.5%;
 
 	width: 1.34rem;
@@ -13,12 +13,14 @@ $font_color_default: #333333;
 
 	padding: 0.01rem 0.016rem;
 
+	opacity: 0;
+
 	border-radius: 0.014rem 0.014rem 0 0;
 	background-color: #eeeeee;
 }
 
 .slide_in {
-	animation: keyboard_slide_in 0.5s ease-out;
+	animation: keyboard_slide_in 0.5s ease-out forwards;
 }
 
 .slide_out {
