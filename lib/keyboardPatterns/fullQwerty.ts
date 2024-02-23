@@ -182,6 +182,16 @@ export const fullQwertyPattern = {
 			keys: [
 				{
 					text: {
+						defaultValue: "",
+					},
+					style: {
+						backgroundColor: "transparent",
+						boxShadow: "none",
+						width: "0.02rem",
+					},
+				},
+				{
+					text: {
 						defaultValue: "a",
 						capslockValue: "A",
 					},
@@ -241,15 +251,7 @@ export const fullQwertyPattern = {
 					style: {
 						backgroundColor: "transparent",
 						boxShadow: "none",
-					},
-				},
-				{
-					text: {
-						defaultValue: "",
-					},
-					style: {
-						backgroundColor: "transparent",
-						boxShadow: "none",
+						width: "0.14rem",
 					},
 				},
 				{
