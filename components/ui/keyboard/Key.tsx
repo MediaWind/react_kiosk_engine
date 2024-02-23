@@ -26,7 +26,6 @@ interface IKeyProps {
 
 export default function Key(props: IKeyProps): JSX.Element {
 	const { index, config, actionsOverride, styleOverride, } = props;
-	console.log("🚀 ~ Key ~ index, config, actionsOverride, styleOverride:", index, config, actionsOverride, styleOverride);
 
 	const [classNames, setClassNames] = useState<string[]>([styles.default]);
 	const [text, setText] = useState<string>("");
