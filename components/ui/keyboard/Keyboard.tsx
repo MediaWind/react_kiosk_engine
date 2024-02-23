@@ -42,6 +42,7 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 
 	const [classNames, setClassNames] = useState<string[]>([styles.main]);
 	const [customStyle, setCustomStyle] = useState<CSSProperties>();
+	const [displayStyle, setDisplayStyle] = useState<string | undefined>();
 
 	const [capslock, setCapslock] = useState<boolean>(true);
 	const [specChars, setSpecChars] = useState<boolean>(false);
@@ -68,6 +69,7 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 
 	useEffect(() => {
 		if (config.styleOverride?.board) {
+			setDisplayStyle(config.styleOverride.board.display);
 			setCustomStyle(config.styleOverride.board);
 		}
 	}, [config]);
@@ -78,6 +80,20 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 		} else {
 			setClassNames(displayKeyboard ? [styles.main, styles.slide_in] : [styles.main, styles.slide_out]);
 		}
+
+		let timeOut: NodeJS.Timer;
+
+		if (displayKeyboard) {
+			setDisplayStyle(config.styleOverride?.board?.display);
+		} else {
+			timeOut = setTimeout(() => {
+				setDisplayStyle("none");
+			}, 500);
+		}
+
+		return () => {
+			clearTimeout(timeOut);
+		};
 	}, [displayKeyboard]);
 
 	function triggerActionsOverride(actions: IInputAction[]) {
@@ -97,7 +113,7 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 			actionsOverride: config.actionsOverride,
 			triggerActionsOverride,
 		}}>
-			<div className={classNames.join(" ")} style={customStyle}>
+			<div className={classNames.join(" ")} style={{ ...customStyle, display: displayStyle, }}>
 				{pattern.rows.map((row, index) => <Row key={"keyboard_row__" + index} index={index} config={row} customStyle={config.styleOverride?.rows} />)}
 			</div>
 		</KeyboardContext.Provider>
