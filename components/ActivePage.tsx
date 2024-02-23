@@ -11,7 +11,7 @@ import { useCustomActionContext } from "../contexts/customActionContext";
 
 import FlowMedia from "./FlowMedia";
 import BackgroundImage from "./ui/BackgroundImage";
-import TextInputsManagerNEW from "./TextInputsManagerNEW";
+import TextInputsManager from "./TextInputsManagerNEW";
 
 interface IActivePageProps {
 	page: IPage
@@ -113,6 +113,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 		if (pageInputs.length > 0) {
 			pageInputs.map(input => {
 				//!FIXME: had to add this condition because of a "input.actions is undefined" error
+				// See issue #13 on Github
 				if (input.actions) {
 					input.actions.map(action => {
 						if (
@@ -146,7 +147,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 					);
 				})
 			}
-			{(newTextInputs.length > 0 && flow.keyboard) && <TextInputsManagerNEW inputs={newTextInputs} keyboardConfig={flow.keyboard} />}
+			{(newTextInputs.length > 0 && flow.keyboard) && <TextInputsManager inputs={newTextInputs} keyboardConfig={flow.keyboard} />}
 			<BackgroundImage image={page.backgroundImage} />
 			{customPage}
 		</>

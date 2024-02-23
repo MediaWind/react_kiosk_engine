@@ -2,11 +2,14 @@ import { CSSProperties, useEffect, useState } from "react";
 
 import styles from "../../../styles/keyboard/Key.module.scss";
 
+import { Variables } from "../../../../variables";
+
+import { IInputAction } from "../../../interfaces";
+
+import { useKeyboardContext } from "../../../contexts/keyboardContext";
+
 import { IKeyOptions, KEY_ACTION } from "./CustomKeyboard";
 import ActionKey from "./ActionKey";
-import { useKeyboardContext } from "../../../contexts/keyboardContext";
-import { Variables } from "../../../../variables";
-import { IInputAction } from "../../../interfaces";
 
 interface IKeyProps {
 	index: number;

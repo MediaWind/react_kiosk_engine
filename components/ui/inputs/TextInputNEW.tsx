@@ -48,7 +48,9 @@ export default function TextInput(props: ITextInputProps): JSX.Element {
 					color: styles.color,
 					fontSize: styles.fontSize ?? getFontSize(styles.height?.toString() ?? ""),
 				}}
-			>{value}</p>
+			>
+				{value}
+			</p>
 		</div>
 	);
 }
