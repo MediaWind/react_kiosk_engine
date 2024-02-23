@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 
-import { IInputContent, TICKET_DATA_ACTION_TYPE } from "../interfaces";
+import { IInputAction, IInputContent, TICKET_DATA_ACTION_TYPE } from "../interfaces";
+import { IKeyboard } from "../lib/keyboardTypes";
 
 import { useTicketDataContext } from "../contexts/ticketDataContext";
-
-import { IKeyboard } from "../lib/keyboardTypes";
 
 import TextInput from "./ui/inputs/TextInputNEW";
 import Keyboard from "./ui/keyboard/Keyboard";
@@ -12,13 +11,15 @@ import Keyboard from "./ui/keyboard/Keyboard";
 interface ITextInputsManagerProps {
 	inputs: IInputContent[]
 	keyboardConfig: IKeyboard
-	invalidFields?: IInputContent[]
+	onTriggerActions: CallableFunction
+	invalidFields: IInputContent[]
 }
 
 export default function TextInputsManager(props: ITextInputsManagerProps): JSX.Element {
-	const { inputs, keyboardConfig, invalidFields, } = props;
+	const { inputs, keyboardConfig, onTriggerActions, invalidFields, } = props;
 
 	const [focusedField, setFocusedField] = useState<IInputContent | undefined>();
+	const [invalidInputs, setInvalidInputs] = useState<IInputContent[]>([]);
 	const [currentValue, setCurrentValue] = useState<string>("");
 	const [displayKeyboard, setDisplayKeyboard] = useState<boolean>(false);
 	const [autoFocus, setAutofocus] = useState<boolean>(false);
@@ -60,6 +61,28 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 		}
 	}, [displayKeyboard]);
 
+	useEffect(() => {
+		if (invalidFields.length > 0) {
+			setInvalidInputs(invalidFields);
+			const firstInvalidInput = inputs.find(input => invalidFields.includes(input));
+
+			if (firstInvalidInput) {
+				setFocusedField(firstInvalidInput);
+				setDisplayKeyboard(true);
+			}
+		}
+	}, [invalidFields]);
+
+	useEffect(() => {
+		if (currentValue === focusedField?.textInput?.value) {
+			const invalidMatch = invalidInputs.find(input => input === focusedField);
+
+			if (invalidMatch && currentValue.trim() !== "") {
+				setInvalidInputs(latest => latest.filter(input => input !== invalidMatch));
+			}
+		}
+	}, [currentValue]);
+
 	function focusHandler(id: string) {
 		setFocusedField(() => {
 			return inputs.find(input => input.textInput?.id === id);
@@ -94,6 +117,10 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 		});
 	}
 
+	function triggerActionsHandler(actions: IInputAction[]) {
+		onTriggerActions(actions);
+	}
+
 	return (
 		<>
 			{inputs.map((input) => {
@@ -107,7 +134,7 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 					value={input.textInput.value}
 					focused={focusedField === input}
 					onFocus={focusHandler}
-					invalid={invalidFields ? invalidFields.includes(input) : false}
+					invalid={invalidInputs.includes(input)}
 					styles={input.styles}
 				/>;
 			})}
@@ -117,6 +144,7 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 				config={keyboardConfig}
 				onChange={changeHandler}
 				onDelete={deleteHandler}
+				onTriggerActionsOverride={triggerActionsHandler}
 				displayKeyboard={displayKeyboard}
 				setDisplayKeyboard={setDisplayKeyboard}
 			/>
