@@ -10,11 +10,9 @@ import styles from "../../../styles/keyboard/Key.module.scss";
 
 import { Variables } from "../../../../variables";
 
-import { KEY_ACTION } from "../../../lib/keyboardTypes";
+import { IKeyOptions, KEY_ACTION } from "../../../lib/keyboardTypes";
 
 import { useKeyboardContext } from "../../../contexts/keyboardContext";
-
-import { IKeyOptions } from "./CustomKeyboard";
 
 interface IActionKeyProps {
 	config: {

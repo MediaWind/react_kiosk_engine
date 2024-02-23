@@ -14,7 +14,7 @@ import doActions from "../utils/doActions";
 
 import FlowMedia from "./FlowMedia";
 import BackgroundImage from "./ui/BackgroundImage";
-import TextInputsManager from "./TextInputsManagerNEW";
+import TextInputsManager from "./TextInputsManager";
 
 interface IActivePageProps {
 	page: IPage

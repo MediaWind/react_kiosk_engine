@@ -8,7 +8,7 @@ import { IInputAction } from "../../../interfaces";
 
 import { useKeyboardContext } from "../../../contexts/keyboardContext";
 
-import Key from "./KeyNEW";
+import Key from "./Key";
 
 interface IKeyCustomStyles  {
 	index: number | "all"
