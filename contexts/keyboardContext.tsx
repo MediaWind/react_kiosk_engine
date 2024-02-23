@@ -16,6 +16,7 @@ type keyboardContext = {
 			[keyIndex: string]: IInputAction[]
 		}
 	}
+	triggerActionsOverride?: CallableFunction
 }
 
 export const KeyboardContext = createContext<keyboardContext>({

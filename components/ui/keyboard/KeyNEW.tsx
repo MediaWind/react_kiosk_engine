@@ -35,7 +35,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 
 	const [pressed, setPressed] = useState<boolean>(false);
 
-	const { capslock, specChars, onChange, } = useKeyboardContext();
+	const { capslock, specChars, onChange, triggerActionsOverride, } = useKeyboardContext();
 
 	useEffect(() => {
 		if (pressed) {
@@ -78,21 +78,20 @@ export default function Key(props: IKeyProps): JSX.Element {
 		}
 	}, [actionsOverride]);
 
-	function triggerActionsOverride() {
-		if (customActions.length > 0) {
-			//TODO: trigger custom actions
-			console.log("🚀 ~ triggerActionsOverride ~ customActions:", customActions);
+	function triggerActions() {
+		if (customActions.length > 0 && triggerActionsOverride) {
+			triggerActionsOverride(customActions);
 		}
 	}
 
 	if (config.action) {
-		return <ActionKey config={{ index, config, customStyles, customText: text, }} onTriggerActionsOverride={triggerActionsOverride} />;
+		return <ActionKey config={{ index, config, customStyles, customText: text, }} onTriggerActionsOverride={triggerActions} />;
 	}
 
 	function clickHandler() {
 		setPressed(false);
 		onChange(text);
-		triggerActionsOverride();
+		triggerActions();
 	}
 
 	function devClick() {

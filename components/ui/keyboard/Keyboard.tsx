@@ -2,9 +2,10 @@ import { CSSProperties, SetStateAction, useEffect, useState } from "react";
 
 import styles from "../../../styles/keyboard/Keyboard.module.scss";
 
-import { KeyboardContext } from "../../../contexts/keyboardContext";
-
+import { IInputAction } from "../../../interfaces";
 import { IKeyboard, IKeyboardLayout, KEYBOARD_LAYOUT } from "../../../lib/keyboardTypes";
+
+import { KeyboardContext } from "../../../contexts/keyboardContext";
 
 import { classicPattern } from "../../../lib/keyboardPatterns/classic";
 import { compactPattern } from "../../../lib/keyboardPatterns/compact";
@@ -18,6 +19,7 @@ interface IKeyboardProps {
 	config: IKeyboard
 	onChange: CallableFunction
 	onDelete: CallableFunction
+	onTriggerActionsOverride: CallableFunction
 	displayKeyboard: boolean
 	setDisplayKeyboard: React.Dispatch<SetStateAction<boolean>>
 }
@@ -33,7 +35,7 @@ function getPattern(layout: KEYBOARD_LAYOUT): IKeyboardLayout {
 }
 
 export default function Keyboard(props: IKeyboardProps): JSX.Element {
-	const { currentValue, config, onChange, onDelete, displayKeyboard, setDisplayKeyboard, } = props;
+	const { currentValue, config, onChange, onDelete, onTriggerActionsOverride, displayKeyboard, setDisplayKeyboard, } = props;
 
 	const [init, setInit] = useState<boolean>(true);
 	const [pattern, setPattern] = useState<IKeyboardLayout>(classicPattern);
@@ -78,6 +80,10 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 		}
 	}, [displayKeyboard]);
 
+	function triggerActionsOverride(actions: IInputAction[]) {
+		onTriggerActionsOverride(actions);
+	}
+
 	return (
 		<KeyboardContext.Provider value={{
 			displayKeyboard,
@@ -89,6 +95,7 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 			onChange,
 			onDelete,
 			actionsOverride: config.actionsOverride,
+			triggerActionsOverride,
 		}}>
 			<div className={classNames.join(" ")} style={customStyle}>
 				{pattern.rows.map((row, index) => <Row key={"keyboard_row__" + index} index={index} config={row} customStyle={config.styleOverride?.rows} />)}
