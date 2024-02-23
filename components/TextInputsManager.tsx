@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { IInputAction, IInputContent, TICKET_DATA_ACTION_TYPE } from "../interfaces";
+import { IInputAction, IInputContent, IInputField, TICKET_DATA_ACTION_TYPE } from "../interfaces";
 import { IKeyboard } from "../lib/keyboardTypes";
 
 import { useTicketDataContext } from "../contexts/ticketDataContext";
@@ -12,131 +12,155 @@ interface ITextInputsManagerProps {
 	inputs: IInputContent[]
 	keyboardConfig: IKeyboard
 	onTriggerActions: CallableFunction
-	invalidFields: IInputContent[]
 }
 
 export default function TextInputsManager(props: ITextInputsManagerProps): JSX.Element {
-	const { inputs, keyboardConfig, onTriggerActions, invalidFields, } = props;
+	const { inputs, keyboardConfig, onTriggerActions, } = props;
 
-	const [focusedField, setFocusedField] = useState<IInputContent | undefined>();
-	const [invalidInputs, setInvalidInputs] = useState<IInputContent[]>([]);
+	const [fields, setFields] = useState<IInputField[]>([]);
+	const [focusedField, setFocusedField] = useState<string>("");
+	const [invalidFields, setInvalidFields] = useState<string[]>([]);
 	const [currentValue, setCurrentValue] = useState<string>("");
+
 	const [displayKeyboard, setDisplayKeyboard] = useState<boolean>(false);
-	const [autoFocus, setAutofocus] = useState<boolean>(false);
 
 	const { dispatchTicketState, } = useTicketDataContext();
 
 	useEffect(() => {
-		const autoFocusInput = inputs.find(input => input.autoFocus);
+		setFields(() => {
+			const returnArray : IInputField[] = [];
+			inputs.forEach(input => {
+				if (input.textInput) {
+					returnArray.push({
+						id: input.textInput.id,
+						value: input.textInput.value,
+						required: input.textInput.required,
+					});
+				}
+			});
+			return [...returnArray];
+		});
+	}, [inputs]);
 
-		if (autoFocusInput) {
-			setAutofocus(true);
+	useEffect(() => {
+		const autoFocusOn = inputs.find(input => input.autoFocus);
+
+		if (autoFocusOn && autoFocusOn.textInput) {
+			setFocusedField(autoFocusOn.textInput.id);
 		}
 	}, [inputs]);
 
 	useEffect(() => {
-		if (autoFocus) {
-			setAutofocus(false);
-			setFocusedField(inputs.find(input => input.autoFocus));
-		}
-	}, [autoFocus]);
-
-	useEffect(() => {
 		if (focusedField) {
-			const currentInput = inputs.find(input => input === focusedField);
-
-			if (currentInput?.textInput) {
-				setCurrentValue(currentInput.textInput.value);
-			}
-
 			setDisplayKeyboard(true);
+
+			const matchingField = fields.find(field => field.id === focusedField);
+
+			if (matchingField) {
+				setCurrentValue(matchingField.value);
+			}
 		} else {
+			setDisplayKeyboard(false);
 			setCurrentValue("");
 		}
-	}, [focusedField, autoFocus]);
+	}, [focusedField]);
+
+	useEffect(() => {
+		if (invalidFields.length > 0 && currentValue.trim() !== "") {
+			setInvalidFields(latest => {
+				const filtered = latest.filter(field => field !== focusedField);
+				return [...filtered];
+			});
+		}
+	}, [currentValue]);
 
 	useEffect(() => {
 		if (!displayKeyboard) {
-			setFocusedField(undefined);
+			setFocusedField("");
 		}
 	}, [displayKeyboard]);
 
 	useEffect(() => {
 		if (invalidFields.length > 0) {
-			setInvalidInputs(invalidFields);
-			const firstInvalidInput = inputs.find(input => invalidFields.includes(input));
+			const firstInvalidInput = fields.find(input => invalidFields.includes(input.id));
 
 			if (firstInvalidInput) {
-				setFocusedField(firstInvalidInput);
+				setFocusedField(firstInvalidInput.id);
 				setDisplayKeyboard(true);
 			}
 		}
 	}, [invalidFields]);
 
-	useEffect(() => {
-		if (currentValue === focusedField?.textInput?.value) {
-			const invalidMatch = invalidInputs.find(input => input === focusedField);
-
-			if (invalidMatch && currentValue.trim() !== "") {
-				setInvalidInputs(latest => latest.filter(input => input !== invalidMatch));
-			}
-		}
-	}, [currentValue]);
-
 	function focusHandler(id: string) {
-		setFocusedField(() => {
-			return inputs.find(input => input.textInput?.id === id);
-		});
+		setFocusedField(id);
 	}
 
 	function changeHandler(char: string) {
-		const currentInput = inputs.find(input => input === focusedField);
+		const matchingField = fields.find(field => field.id === focusedField);
 
-		if (currentInput?.textInput) {
-			currentInput.textInput.value = currentInput.textInput.value + char;
-			setCurrentValue(currentInput.textInput.value);
+		if (matchingField) {
+			matchingField.value = matchingField.value + char;
+			setCurrentValue(matchingField.value + char);
+
+			dispatchTicketState({
+				type: TICKET_DATA_ACTION_TYPE.INPUTTEXTUPDATE,
+				payload: {
+					id: matchingField.id,
+					value: matchingField.value,
+					required: matchingField.required,
+				},
+			});
 		}
-
-		dispatchTicketState({
-			type: TICKET_DATA_ACTION_TYPE.INPUTTEXTUPDATE,
-			payload: currentInput?.textInput,
-		});
 	}
 
 	function deleteHandler() {
-		const currentInput = inputs.find(input => input === focusedField);
+		const matchingField = fields.find(field => field.id === focusedField);
 
-		if (currentInput?.textInput) {
-			currentInput.textInput.value = currentInput.textInput.value.slice(0, -1);
-			setCurrentValue(currentInput.textInput.value);
+		if (matchingField) {
+			matchingField.value = matchingField.value.slice(0, -1);
+			setCurrentValue(matchingField.value);
+
+			dispatchTicketState({
+				type: TICKET_DATA_ACTION_TYPE.INPUTTEXTUPDATE,
+				payload: {
+					id: matchingField.id,
+					value: matchingField.value,
+					required: matchingField.required,
+				},
+			});
 		}
-
-		dispatchTicketState({
-			type: TICKET_DATA_ACTION_TYPE.INPUTTEXTUPDATE,
-			payload: currentInput?.textInput,
-		});
 	}
 
 	function triggerActionsHandler(actions: IInputAction[]) {
+		setInvalidFields([]);
+		const invalidIds: string[] = [];
+
+		fields.map(field => {
+			if (field.required && field.value.trim() === "") {
+				invalidIds.push(field.id);
+			}
+		});
+
+		if (invalidIds.length > 0) {
+			setInvalidFields(invalidIds);
+			return;
+		}
+
 		onTriggerActions(actions);
 	}
 
 	return (
 		<>
-			{inputs.map((input) => {
-				if (!input.textInput) {
-					return <></>;
-				}
-
+			{fields.map((field, i) => {
 				return <TextInput
-					key={input.textInput.id}
-					id={input.textInput.id}
-					value={input.textInput.value}
-					focused={focusedField === input}
+					key={field.id}
+					id={field.id}
+					value={field.value}
+					focused={focusedField === field.id}
 					onFocus={focusHandler}
-					invalid={invalidInputs.includes(input)}
-					styles={input.styles}
-					placeholder={input.placeholder}
+					invalid={invalidFields.includes(field.id)}
+					styles={inputs[i].styles}
+					placeholder={inputs[i].placeholder}
 				/>;
 			})}
 

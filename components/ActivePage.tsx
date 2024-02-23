@@ -35,7 +35,6 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 	const [pageInputs, setPageInputs] = useState<IInputContent[]>([]);
 
 	const [textInputs, setTextInputs] = useState<IInputContent[]>([]);
-	const [invalidTextInputs, setInvalidTextInputs] = useState<IInputContent[]>([]);
 
 	useEffect(() => {
 		if (page.medias) {
@@ -119,24 +118,6 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 	}, [appointmentState]);
 
 	function triggerActions(actions: IInputAction[]) {
-		if (textInputs.length > 0) {
-			setInvalidTextInputs([]);
-			const invalidInputs: IInputContent[] = [];
-
-			textInputs.map(input => {
-				if (input.textInput === undefined) return;
-
-				if (input.textInput.required && input.textInput.value.trim() === "") {
-					invalidInputs.push(input);
-				}
-			});
-
-			if (invalidInputs.length > 0) {
-				setInvalidTextInputs(invalidInputs);
-				return;
-			}
-		}
-
 		doActions(actions, {
 			router: {
 				nextPage,
@@ -165,7 +146,6 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 				inputs={textInputs}
 				keyboardConfig={flow.keyboard}
 				onTriggerActions={triggerActions}
-				invalidFields={invalidTextInputs}
 			/>}
 
 			<BackgroundImage image={page.backgroundImage} />
