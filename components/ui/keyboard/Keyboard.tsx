@@ -15,6 +15,8 @@ import { classicQwertyPattern } from "../../../lib/keyboardPatterns/classicQwert
 import { compactQwertyPattern } from "../../../lib/keyboardPatterns/compactQwerty";
 import { fullQwertyPattern } from "../../../lib/keyboardPatterns/fullQwerty";
 
+import getKeyboardAnimation from "../../../utils/getKeyboardAnimation";
+
 import Row from "./Row";
 
 interface IKeyboardProps {
@@ -81,7 +83,7 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 		if (init) {
 			setInit(false);
 		} else {
-			setClassNames(displayKeyboard ? [styles.main, styles.slide_in] : [styles.main, styles.slide_out]);
+			setClassNames([styles.main, getKeyboardAnimation(displayKeyboard, config.styleOverride?.board)]);
 		}
 
 		let timeOut: NodeJS.Timer;
@@ -116,7 +118,13 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 			actionsOverride: config.actionsOverride,
 			triggerActionsOverride,
 		}}>
-			<div className={classNames.join(" ")} style={{ ...customStyle, display: displayStyle, }}>
+			<div
+				className={classNames.join(" ")}
+				style={{
+					...customStyle,
+					display: displayStyle,
+				}}
+			>
 				{pattern.rows.map((row, index) => <Row key={"keyboard_row__" + index} index={index} config={row} customStyle={config.styleOverride?.rows} />)}
 			</div>
 		</KeyboardContext.Provider>

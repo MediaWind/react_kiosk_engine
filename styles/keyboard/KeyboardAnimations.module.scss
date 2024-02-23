@@ -1,0 +1,266 @@
+$position_in: 0;
+$position_out: -30%;
+
+.bottom_in {
+	animation: anim_bottom_in 0.5s ease-out forwards;
+}
+
+.bottom_out {
+	animation: anim_bottom_out 0.5s ease-in forwards;
+}
+
+.top_in {
+	animation: anim_top_in 0.5s ease-out forwards;
+}
+
+.top_out {
+	animation: anim_top_out 0.5s ease-in forwards;
+}
+
+.left_in {
+	animation: anim_left_in 0.5s ease-out forwards;
+}
+
+.left_out {
+	animation: anim_left_out 0.5s ease-in forwards;
+}
+
+.right_in {
+	animation: anim_right_in 0.5s ease-out forwards;
+}
+
+.right_out {
+	animation: anim_right_out 0.5s ease-in forwards;
+}
+
+//*
+
+.left_top_in {
+	animation: anim_left_top_in 0.5s ease-out forwards;
+}
+
+.left_top_out {
+	animation: anim_left_top_out 0.5s ease-in forwards;
+}
+
+.right_top_in {
+	animation: anim_right_top_in 0.5s ease-out forwards;
+}
+
+.right_top_out {
+	animation: anim_right_top_out 0.5s ease-in forwards;
+}
+
+//*
+
+.left_bottom_in {
+	animation: anim_left_bottom_in 0.5s ease-out forwards;
+}
+
+.left_bottom_out {
+	animation: anim_left_bottom_out 0.5s ease-in forwards;
+}
+
+.right_bottom_in {
+	animation: anim_right_bottom_in 0.5s ease-out forwards;
+}
+
+.right_bottom_out {
+	animation: anim_right_bottom_out 0.5s ease-in forwards;
+}
+
+@keyframes anim_bottom_in {
+	from {
+		bottom: $position_out;
+		opacity: 0;
+	}
+	to {
+		bottom: $position_in;
+		opacity: 1;
+	}
+}
+
+@keyframes anim_bottom_out {
+	from {
+		bottom: $position_in;
+		opacity: 1;
+	}
+	to {
+		bottom: $position_out;
+		opacity: 0;
+	}
+}
+
+@keyframes anim_top_in {
+	from {
+		top: $position_out;
+		opacity: 0;
+	}
+	to {
+		top: $position_in;
+		opacity: 1;
+	}
+}
+
+@keyframes anim_top_out {
+	from {
+		top: $position_in;
+		opacity: 1;
+	}
+	to {
+		top: $position_out;
+		opacity: 0;
+	}
+}
+
+@keyframes anim_left_in {
+	from {
+		left: $position_out;
+		opacity: 0;
+	}
+	to {
+		left: $position_in;
+		opacity: 1;
+	}
+}
+
+@keyframes anim_left_out {
+	from {
+		left: $position_in;
+		opacity: 1;
+	}
+	to {
+		left: $position_out;
+		opacity: 0;
+	}
+}
+
+@keyframes anim_right_in {
+	from {
+		right: $position_out;
+		opacity: 0;
+	}
+	to {
+		right: $position_in;
+		opacity: 1;
+	}
+}
+
+@keyframes anim_right_out {
+	from {
+		right: $position_in;
+		opacity: 1;
+	}
+	to {
+		right: $position_out;
+		opacity: 0;
+	}
+}
+
+//*
+
+@keyframes anim_left_top_in {
+	from {
+		top: $position_out;
+		left: $position_out;
+		opacity: 0;
+	}
+	to {
+		top: $position_in;
+		left: $position_in;
+		opacity: 1;
+	}
+}
+
+@keyframes anim_left_top_out {
+	from {
+		top: $position_in;
+		left: $position_in;
+		opacity: 1;
+	}
+	to {
+		top: $position_out;
+		left: $position_out;
+		opacity: 0;
+	}
+}
+
+@keyframes anim_right_top_in {
+	from {
+		top: $position_out;
+		right: $position_out;
+		opacity: 0;
+	}
+	to {
+		top: $position_in;
+		right: $position_in;
+		opacity: 1;
+	}
+}
+
+@keyframes anim_right_top_out {
+	from {
+		top: $position_in;
+		right: $position_in;
+		opacity: 1;
+	}
+	to {
+		top: $position_out;
+		right: $position_out;
+		opacity: 0;
+	}
+}
+
+//*
+
+@keyframes anim_left_bottom_in {
+	from {
+		bottom: $position_out;
+		left: $position_out;
+		opacity: 0;
+	}
+	to {
+		bottom: $position_in;
+		left: $position_in;
+		opacity: 1;
+	}
+}
+
+@keyframes anim_left_bottom_out {
+	from {
+		bottom: $position_in;
+		left: $position_in;
+		opacity: 1;
+	}
+	to {
+		bottom: $position_out;
+		left: $position_out;
+		opacity: 0;
+	}
+}
+
+@keyframes anim_right_bottom_in {
+	from {
+		bottom: $position_out;
+		right: $position_out;
+		opacity: 0;
+	}
+	to {
+		bottom: $position_in;
+		right: $position_in;
+		opacity: 1;
+	}
+}
+
+@keyframes anim_right_bottom_out {
+	from {
+		bottom: $position_in;
+		right: $position_in;
+		opacity: 1;
+	}
+	to {
+		bottom: $position_out;
+		right: $position_out;
+		opacity: 0;
+	}
+}
