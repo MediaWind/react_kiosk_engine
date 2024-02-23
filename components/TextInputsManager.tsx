@@ -136,6 +136,7 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 					onFocus={focusHandler}
 					invalid={invalidInputs.includes(input)}
 					styles={input.styles}
+					placeholder={input.placeholder}
 				/>;
 			})}
 

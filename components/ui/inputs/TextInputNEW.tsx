@@ -13,10 +13,11 @@ interface ITextInputProps {
 	onFocus: CallableFunction
 	invalid: boolean
 	styles: CSSProperties
+	placeholder?: string
 }
 
 export default function TextInput(props: ITextInputProps): JSX.Element {
-	const { id, value, focused, onFocus, invalid, styles, } = props;
+	const { id, value, focused, onFocus, invalid, styles, placeholder, } = props;
 
 	function focusHandler() {
 		onFocus(id);
@@ -43,6 +44,18 @@ export default function TextInput(props: ITextInputProps): JSX.Element {
 				userSelect: "none",
 			}}
 		>
+			{(value === "" && placeholder) && <span
+				style={{
+					position: "absolute",
+					top: 0,
+					color: styles.color,
+					fontSize: styles.fontSize ?? getFontSize(styles.height?.toString() ?? ""),
+					opacity: focused ? .1 : .5,
+				}}
+			>
+				{placeholder}
+			</span>}
+
 			<p
 				style={{
 					color: styles.color,
