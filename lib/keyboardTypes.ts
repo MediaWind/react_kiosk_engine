@@ -4,6 +4,7 @@ import { IInputAction } from "../interfaces";
 
 export interface IKeyboard {
 	layout: KEYBOARD_LAYOUT,
+	mode?: KEYBOARD_MODE
 	customLayout?: IKeyboardLayout
 	actionsOverride?: {
 		[rowIndex: string]: {
@@ -34,6 +35,11 @@ export enum KEYBOARD_LAYOUT {
 	 * Provide your own layout
 	 */
 	CUSTOM = "custom"
+}
+
+export enum KEYBOARD_MODE {
+	AZERTY = "azerty",
+	QWERTY = "qwerty",
 }
 
 export interface IKeyboardLayout {

@@ -1,6 +1,6 @@
 import { IKeyboardLayout, KEY_ACTION } from "../keyboardTypes";
 
-export const compactPattern = {
+export const compactQwertyPattern = {
 	rows: [
 		{
 			keys: [
@@ -70,14 +70,14 @@ export const compactPattern = {
 			keys: [
 				{
 					text: {
-						defaultValue: "a",
-						capslockValue: "A",
+						defaultValue: "q",
+						capslockValue: "Q",
 					},
 				},
 				{
 					text: {
-						defaultValue: "z",
-						capslockValue: "Z",
+						defaultValue: "w",
+						capslockValue: "W",
 					},
 				},
 				{
@@ -130,8 +130,8 @@ export const compactPattern = {
 				},
 				{
 					text: {
-						defaultValue: "q",
-						capslockValue: "Q",
+						defaultValue: "a",
+						capslockValue: "A",
 					},
 				},
 				{
@@ -188,14 +188,8 @@ export const compactPattern = {
 				},
 				{
 					text: {
-						defaultValue: "m",
-						capslockValue: "M",
-					},
-				},
-				{
-					text: {
-						defaultValue: "w",
-						capslockValue: "W",
+						defaultValue: "z",
+						capslockValue: "Z",
 					},
 				},
 				{
@@ -226,6 +220,12 @@ export const compactPattern = {
 					text: {
 						defaultValue: "n",
 						capslockValue: "N",
+					},
+				},
+				{
+					text: {
+						defaultValue: "m",
+						capslockValue: "M",
 					},
 				}
 			],

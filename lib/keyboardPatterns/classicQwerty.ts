@@ -1,6 +1,6 @@
 import { IKeyboardLayout, KEY_ACTION } from "../keyboardTypes";
 
-export const compactPattern = {
+export const classicQwertyPattern = {
 	rows: [
 		{
 			keys: [
@@ -70,14 +70,14 @@ export const compactPattern = {
 			keys: [
 				{
 					text: {
-						defaultValue: "a",
-						capslockValue: "A",
+						defaultValue: "q",
+						capslockValue: "Q",
 					},
 				},
 				{
 					text: {
-						defaultValue: "z",
-						capslockValue: "Z",
+						defaultValue: "w",
+						capslockValue: "W",
 					},
 				},
 				{
@@ -127,11 +127,15 @@ export const compactPattern = {
 						defaultValue: "p",
 						capslockValue: "P",
 					},
-				},
+				}
+			],
+		},
+		{
+			keys: [
 				{
 					text: {
-						defaultValue: "q",
-						capslockValue: "Q",
+						defaultValue: "a",
+						capslockValue: "A",
 					},
 				},
 				{
@@ -145,11 +149,7 @@ export const compactPattern = {
 						defaultValue: "d",
 						capslockValue: "D",
 					},
-				}
-			],
-		},
-		{
-			keys: [
+				},
 				{
 					text: {
 						defaultValue: "f",
@@ -185,17 +185,15 @@ export const compactPattern = {
 						defaultValue: "l",
 						capslockValue: "L",
 					},
-				},
+				}
+			],
+		},
+		{
+			keys: [
 				{
 					text: {
-						defaultValue: "m",
-						capslockValue: "M",
-					},
-				},
-				{
-					text: {
-						defaultValue: "w",
-						capslockValue: "W",
+						defaultValue: "z",
+						capslockValue: "Z",
 					},
 				},
 				{
@@ -226,6 +224,12 @@ export const compactPattern = {
 					text: {
 						defaultValue: "n",
 						capslockValue: "N",
+					},
+				},
+				{
+					text: {
+						defaultValue: "m",
+						capslockValue: "M",
 					},
 				}
 			],

@@ -3,14 +3,17 @@ import { CSSProperties, SetStateAction, useEffect, useState } from "react";
 import styles from "../../../styles/keyboard/Keyboard.module.scss";
 
 import { IInputAction } from "../../../interfaces";
-import { IKeyboard, IKeyboardLayout, KEYBOARD_LAYOUT } from "../../../lib/keyboardTypes";
+import { IKeyboard, IKeyboardLayout, KEYBOARD_LAYOUT, KEYBOARD_MODE } from "../../../lib/keyboardTypes";
 
 import { KeyboardContext } from "../../../contexts/keyboardContext";
 
 import { classicPattern } from "../../../lib/keyboardPatterns/classic";
 import { compactPattern } from "../../../lib/keyboardPatterns/compact";
-import { numpadPattern } from "../../../lib/keyboardPatterns/numpad";
 import { fullPattern } from "../../../lib/keyboardPatterns/full";
+import { numpadPattern } from "../../../lib/keyboardPatterns/numpad";
+import { classicQwertyPattern } from "../../../lib/keyboardPatterns/classicQwerty";
+import { compactQwertyPattern } from "../../../lib/keyboardPatterns/compactQwerty";
+import { fullQwertyPattern } from "../../../lib/keyboardPatterns/fullQwerty";
 
 import Row from "./Row";
 
@@ -24,13 +27,13 @@ interface IKeyboardProps {
 	setDisplayKeyboard: React.Dispatch<SetStateAction<boolean>>
 }
 
-function getPattern(layout: KEYBOARD_LAYOUT): IKeyboardLayout {
+function getPattern(layout: KEYBOARD_LAYOUT, mode?: KEYBOARD_MODE): IKeyboardLayout {
 	switch (layout) {
-		case KEYBOARD_LAYOUT.COMPACT: return compactPattern;
-		case KEYBOARD_LAYOUT.FULL: return fullPattern;
+		case KEYBOARD_LAYOUT.COMPACT: return mode === KEYBOARD_MODE.QWERTY ? compactQwertyPattern : compactPattern;
+		case KEYBOARD_LAYOUT.FULL: return mode === KEYBOARD_MODE.QWERTY ? fullQwertyPattern : fullPattern;
 		case KEYBOARD_LAYOUT.NUMPAD: return numpadPattern;
 		case KEYBOARD_LAYOUT.CLASSIC:
-		default: return classicPattern;
+		default: return mode === KEYBOARD_MODE.QWERTY ? classicQwertyPattern : classicPattern;
 	}
 }
 
@@ -38,7 +41,7 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 	const { currentValue, config, onChange, onDelete, onTriggerActionsOverride, displayKeyboard, setDisplayKeyboard, } = props;
 
 	const [init, setInit] = useState<boolean>(true);
-	const [pattern, setPattern] = useState<IKeyboardLayout>(classicPattern);
+	const [pattern, setPattern] = useState<IKeyboardLayout>(getPattern(config.layout, config.mode));
 
 	const [classNames, setClassNames] = useState<string[]>([styles.main]);
 	const [customStyle, setCustomStyle] = useState<CSSProperties>();
@@ -63,7 +66,7 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 		if (config.layout === KEYBOARD_LAYOUT.CUSTOM && config.customLayout) {
 			setPattern(config.customLayout);
 		} else {
-			setPattern(getPattern(config.layout));
+			setPattern(getPattern(config.layout, config.mode));
 		}
 	}, [config]);
 

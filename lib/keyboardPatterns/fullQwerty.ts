@@ -1,67 +1,91 @@
 import { IKeyboardLayout, KEY_ACTION } from "../keyboardTypes";
 
-export const compactPattern = {
+export const fullQwertyPattern = {
 	rows: [
 		{
 			keys: [
 				{
 					text: {
-						defaultValue: "1",
-						specCharsValue: "-",
-					},
-				},
-				{
-					text: {
-						defaultValue: "2",
+						defaultValue: "!",
 						specCharsValue: "à",
 					},
 				},
 				{
 					text: {
-						defaultValue: "3",
+						defaultValue: "@",
 						specCharsValue: "â",
 					},
 				},
 				{
 					text: {
-						defaultValue: "4",
+						defaultValue: "#",
 						specCharsValue: "ç",
 					},
 				},
 				{
 					text: {
-						defaultValue: "5",
+						defaultValue: "$",
 						specCharsValue: "é",
 					},
 				},
 				{
 					text: {
-						defaultValue: "6",
+						defaultValue: "%",
 						specCharsValue: "è",
 					},
 				},
 				{
 					text: {
-						defaultValue: "7",
+						defaultValue: ".",
 						specCharsValue: "ê",
 					},
 				},
 				{
 					text: {
-						defaultValue: "8",
+						defaultValue: "&",
 						specCharsValue: "ë",
 					},
 				},
 				{
 					text: {
-						defaultValue: "9",
+						defaultValue: "*",
 						specCharsValue: "ù",
 					},
 				},
 				{
 					text: {
-						defaultValue: "0",
+						defaultValue: ":",
 						specCharsValue: "û",
+					},
+				},
+				{
+					text: {
+						defaultValue: "-",
+						specCharsValue: "_",
+					},
+				},
+				{
+					text: {
+						defaultValue: "",
+					},
+					style: {
+						backgroundColor: "transparent",
+						boxShadow: "none",
+					},
+				},
+				{
+					text: {
+						defaultValue: "7",
+					},
+				},
+				{
+					text: {
+						defaultValue: "8",
+					},
+				},
+				{
+					text: {
+						defaultValue: "9",
 					},
 				}
 			],
@@ -70,14 +94,14 @@ export const compactPattern = {
 			keys: [
 				{
 					text: {
-						defaultValue: "a",
-						capslockValue: "A",
+						defaultValue: "q",
+						capslockValue: "Q",
 					},
 				},
 				{
 					text: {
-						defaultValue: "z",
-						capslockValue: "Z",
+						defaultValue: "w",
+						capslockValue: "W",
 					},
 				},
 				{
@@ -130,8 +154,36 @@ export const compactPattern = {
 				},
 				{
 					text: {
-						defaultValue: "q",
-						capslockValue: "Q",
+						defaultValue: "",
+					},
+					style: {
+						backgroundColor: "transparent",
+						boxShadow: "none",
+					},
+				},
+				{
+					text: {
+						defaultValue: "4",
+					},
+				},
+				{
+					text: {
+						defaultValue: "5",
+					},
+				},
+				{
+					text: {
+						defaultValue: "6",
+					},
+				}
+			],
+		},
+		{
+			keys: [
+				{
+					text: {
+						defaultValue: "a",
+						capslockValue: "A",
 					},
 				},
 				{
@@ -145,11 +197,7 @@ export const compactPattern = {
 						defaultValue: "d",
 						capslockValue: "D",
 					},
-				}
-			],
-		},
-		{
-			keys: [
+				},
 				{
 					text: {
 						defaultValue: "f",
@@ -188,14 +236,63 @@ export const compactPattern = {
 				},
 				{
 					text: {
-						defaultValue: "m",
-						capslockValue: "M",
+						defaultValue: "",
+					},
+					style: {
+						backgroundColor: "transparent",
+						boxShadow: "none",
 					},
 				},
 				{
 					text: {
-						defaultValue: "w",
-						capslockValue: "W",
+						defaultValue: "",
+					},
+					style: {
+						backgroundColor: "transparent",
+						boxShadow: "none",
+					},
+				},
+				{
+					text: {
+						defaultValue: "1",
+					},
+				},
+				{
+					text: {
+						defaultValue: "2",
+					},
+				},
+				{
+					text: {
+						defaultValue: "3",
+					},
+				}
+			],
+		},
+		{
+			keys: [
+				{
+					text: {
+						defaultValue: "",
+					},
+					style: {
+						backgroundColor: "transparent",
+						boxShadow: "none",
+					},
+				},
+				{
+					text: {
+						defaultValue: "",
+					},
+					style: {
+						backgroundColor: "transparent",
+						boxShadow: "none",
+					},
+				},
+				{
+					text: {
+						defaultValue: "z",
+						capslockValue: "Z",
 					},
 				},
 				{
@@ -226,6 +323,53 @@ export const compactPattern = {
 					text: {
 						defaultValue: "n",
 						capslockValue: "N",
+					},
+				},
+				{
+					text: {
+						defaultValue: "m",
+						capslockValue: "M",
+					},
+				},
+				{
+					text: {
+						defaultValue: "",
+					},
+					style: {
+						backgroundColor: "transparent",
+						boxShadow: "none",
+					},
+				},
+				{
+					text: {
+						defaultValue: "",
+					},
+					style: {
+						backgroundColor: "transparent",
+						boxShadow: "none",
+					},
+				},
+				{
+					text: {
+						defaultValue: "",
+					},
+					style: {
+						backgroundColor: "transparent",
+						boxShadow: "none",
+					},
+				},
+				{
+					text: {
+						defaultValue: "0",
+					},
+				},
+				{
+					text: {
+						defaultValue: "",
+					},
+					style: {
+						backgroundColor: "transparent",
+						boxShadow: "none",
 					},
 				}
 			],

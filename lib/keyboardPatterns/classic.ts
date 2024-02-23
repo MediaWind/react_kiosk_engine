@@ -6,61 +6,61 @@ export const classicPattern = {
 			keys: [
 				{
 					text: {
-						defaultValue: "0",
+						defaultValue: "1",
 						specCharsValue: "-",
 					},
 				},
 				{
 					text: {
-						defaultValue: "1",
+						defaultValue: "2",
 						specCharsValue: "à",
 					},
 				},
 				{
 					text: {
-						defaultValue: "2",
+						defaultValue: "3",
 						specCharsValue: "â",
 					},
 				},
 				{
 					text: {
-						defaultValue: "3",
+						defaultValue: "4",
 						specCharsValue: "ç",
 					},
 				},
 				{
 					text: {
-						defaultValue: "4",
+						defaultValue: "5",
 						specCharsValue: "é",
 					},
 				},
 				{
 					text: {
-						defaultValue: "5",
+						defaultValue: "6",
 						specCharsValue: "è",
 					},
 				},
 				{
 					text: {
-						defaultValue: "6",
+						defaultValue: "7",
 						specCharsValue: "ê",
 					},
 				},
 				{
 					text: {
-						defaultValue: "7",
+						defaultValue: "8",
 						specCharsValue: "ë",
 					},
 				},
 				{
 					text: {
-						defaultValue: "8",
+						defaultValue: "9",
 						specCharsValue: "ù",
 					},
 				},
 				{
 					text: {
-						defaultValue: "9",
+						defaultValue: "0",
 						specCharsValue: "û",
 					},
 				}
