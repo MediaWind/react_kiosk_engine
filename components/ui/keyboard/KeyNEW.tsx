@@ -77,6 +77,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 
 	function triggerActionsOverride() {
 		if (customActions.length > 0) {
+			//TODO: trigger custom actions
 			console.log("🚀 ~ triggerActionsOverride ~ customActions:", customActions);
 		}
 	}

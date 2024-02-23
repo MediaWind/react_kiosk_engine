@@ -1,5 +1,7 @@
 import { CSSProperties } from "react";
 
+import styling from "../../../styles/inputs/TextInput.module.scss";
+
 import { Variables } from "../../../../variables";
 
 import getFontSize from "../../../utils/getFontSize";
@@ -27,10 +29,8 @@ export default function TextInput(props: ITextInputProps): JSX.Element {
 	}
 
 	return (
-		<input
-			type="text"
-			value={value}
-			readOnly
+		<div
+			className={focused ? styling.focused : ""}
 			onTouchEnd={focusHandler}
 			onClick={devClick}
 			style={{
@@ -38,9 +38,17 @@ export default function TextInput(props: ITextInputProps): JSX.Element {
 				position: "absolute",
 				zIndex: 1,
 
-				fontSize: styles.fontSize ?? getFontSize(styles.height?.toString() ?? ""),
 				boxShadow: (focused || invalid) ? `0 0 10px 0 ${invalid ? "#ff0000" : (styles.borderColor ?? "#000000")}` : styles.boxShadow ??  "",
+
+				userSelect: "none",
 			}}
-		/>
+		>
+			<p
+				style={{
+					color: styles.color,
+					fontSize: styles.fontSize ?? getFontSize(styles.height?.toString() ?? ""),
+				}}
+			>{value}</p>
+		</div>
 	);
 }
