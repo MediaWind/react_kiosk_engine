@@ -24,7 +24,7 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 
 	const [displayKeyboard, setDisplayKeyboard] = useState<boolean>(false);
 
-	const { dispatchTicketState, } = useTicketDataContext();
+	const { ticketState, dispatchTicketState, } = useTicketDataContext();
 
 	useEffect(() => {
 		setFields(() => {
@@ -40,6 +40,19 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 			});
 			return [...returnArray];
 		});
+
+		if (ticketState.textInputDatas.length > 0) {
+			setFields(latest => {
+				latest.forEach(field => {
+					ticketState.textInputDatas.forEach(input => {
+						if (field.id === input.id) {
+							field.value = input.value;
+						}
+					});
+				});
+				return [...latest];
+			});
+		}
 	}, [inputs]);
 
 	useEffect(() => {
