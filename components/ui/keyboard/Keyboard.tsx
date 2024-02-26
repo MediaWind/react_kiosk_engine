@@ -107,29 +107,36 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 		onTriggerActionsOverride(actions);
 	}
 
+	function closeKeyboardHandler() {
+		setDisplayKeyboard(false);
+	}
+
 	return (
-		<KeyboardContext.Provider value={{
-			displayKeyboard,
-			setDisplayKeyboard,
-			capslock,
-			setCapslock,
-			specChars,
-			setSpecChars,
-			onChange,
-			onDelete,
-			actionsOverride: config.actionsOverride,
-			triggerActionsOverride,
-		}}>
-			<div
-				className={classNames.join(" ")}
-				style={{
-					...customStyle,
-					display: displayStyle,
-				}}
-			>
-				{enableTextPreview && <TextPreview text={currentValue} />}
-				{pattern.rows.map((row, index) => <Row key={"keyboard_row__" + index} index={index} config={row} customStyle={config.styleOverride?.rows} />)}
-			</div>
-		</KeyboardContext.Provider>
+		<>
+			<KeyboardContext.Provider value={{
+				displayKeyboard,
+				setDisplayKeyboard,
+				capslock,
+				setCapslock,
+				specChars,
+				setSpecChars,
+				onChange,
+				onDelete,
+				actionsOverride: config.actionsOverride,
+				triggerActionsOverride,
+			}}>
+				<div
+					className={classNames.join(" ")}
+					style={{
+						...customStyle,
+						display: displayStyle,
+					}}
+				>
+					{enableTextPreview && <TextPreview text={currentValue} />}
+					{pattern.rows.map((row, index) => <Row key={"keyboard_row__" + index} index={index} config={row} customStyle={config.styleOverride?.rows} />)}
+				</div>
+			</KeyboardContext.Provider>
+			<div className={styles.close_area} onClick={closeKeyboardHandler}></div>
+		</>
 	);
 }

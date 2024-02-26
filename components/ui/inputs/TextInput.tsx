@@ -41,7 +41,7 @@ export default function TextInput(props: ITextInputProps): JSX.Element {
 			style={{
 				...styles,
 				position: "absolute",
-				zIndex: 1,
+				zIndex: 2,
 
 				boxShadow: (focused || invalid) ? `0 0 10px 0 ${invalid ? "#ff0000" : (styles.borderColor ?? "#000000")}` : styles.boxShadow ??  "",
 
