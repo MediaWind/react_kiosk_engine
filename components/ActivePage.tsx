@@ -87,11 +87,10 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 
 	useEffect(() => {
 		setTextInputs([]);
-
 		if (page.medias) {
 			page.medias.filter(media => media.type === MEDIA_TYPE.INPUT)
 				.map(media => {
-					if ((media.content as IInputContent).textInput) {
+					if ((media.content as IInputContent).textInputConfig) {
 						setTextInputs(latest => [...latest, media.content as IInputContent]);
 					}
 				});
@@ -119,16 +118,16 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 	}, [appointmentState]);
 
 	function triggerActions(actions: IInputAction[]) {
-		if (textInputs.length > 0) {
+		if (textInputs.length > 0 && actions.find(action => action.type === ACTION_TYPE.CHECKTEXTINPUTS)) {
 			setInvalidTextInputs([]);
 			const invalidInputs: string[] = [];
 
 			textInputs.forEach(input => {
-				if (input.textInput?.required) {
-					const match = ticketState.textInputDatas.find(i => i.id === input.textInput?.id);
+				if (input.textInputConfig?.textInput.required) {
+					const match = ticketState.textInputDatas.find(i => i.id === input.textInputConfig?.textInput.id);
 
 					if (!match || match.value.trim() === "") {
-						invalidInputs.push(input.textInput.id);
+						invalidInputs.push(input.textInputConfig.textInput.id);
 					}
 				}
 			});

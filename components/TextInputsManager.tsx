@@ -5,7 +5,7 @@ import { IKeyboard } from "../lib/keyboardTypes";
 
 import { useTicketDataContext } from "../contexts/ticketDataContext";
 
-import TextInput from "./ui/inputs/TextInputNEW";
+import TextInput from "./ui/inputs/TextInput";
 import Keyboard from "./ui/keyboard/Keyboard";
 
 interface ITextInputsManagerProps {
@@ -29,13 +29,13 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 
 	useEffect(() => {
 		setFields(() => {
-			const returnArray : IInputField[] = [];
+			const returnArray: IInputField[] = [];
 			inputs.forEach(input => {
-				if (input.textInput) {
+				if (input.textInputConfig) {
 					returnArray.push({
-						id: input.textInput.id,
-						value: input.textInput.value,
-						required: input.textInput.required,
+						id: input.textInputConfig.textInput.id,
+						value: input.textInputConfig.textInput.value,
+						required: input.textInputConfig.textInput.required,
 					});
 				}
 			});
@@ -54,13 +54,14 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 				return [...latest];
 			});
 		}
+		console.log("🚀 ~ TextInputsManager ~ inputs:", inputs);
 	}, [inputs]);
 
 	useEffect(() => {
-		const autoFocusOn = inputs.find(input => input.autoFocus);
+		const autoFocusOn = inputs.find(input => input.textInputConfig?.autoFocus);
 
-		if (autoFocusOn && autoFocusOn.textInput) {
-			setFocusedField(autoFocusOn.textInput.id);
+		if (autoFocusOn && autoFocusOn.textInputConfig?.textInput) {
+			setFocusedField(autoFocusOn.textInputConfig.textInput.id);
 		}
 	}, [inputs]);
 
@@ -162,7 +163,7 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 					onFocus={focusHandler}
 					invalid={invalidFields.includes(field.id)}
 					styles={inputs[i].styles}
-					placeholder={inputs[i].placeholder}
+					placeholder={inputs[i].textInputConfig?.placeholder}
 				/>;
 			})}
 

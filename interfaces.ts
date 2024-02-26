@@ -139,11 +139,9 @@ export interface IInputContent {
 	name: string;
 	type: INPUT_TYPE;
 	actions: IInputAction[];
-	placeholder?: string;
-	autoFocus?: boolean;
-	textInput?: IInputField;
 	styles: IStyles;
-	selectConfig?: ISelectConfig
+	textInputConfig?: ITextInputConfig;
+	selectConfig?: ISelectConfig;
 }
 
 export enum INPUT_TYPE {
@@ -153,6 +151,13 @@ export enum INPUT_TYPE {
 	CARDREADER = "cardReader",
 	QRCODE = "qrCode",
 	SELECT = "select",
+}
+
+export interface ITextInputConfig {
+	textInput: IInputField
+	placeholder?: Record<LANGUAGE, string>
+	autoFocus?: boolean
+	textPreview?: boolean
 }
 
 export interface ISelectConfig {
@@ -195,6 +200,7 @@ export enum ACTION_TYPE {
 	CHECKIN = "checkin",
 	CHECKOUT = "checkout",
 	CUSTOM = "custom",
+	CHECKTEXTINPUTS = "checktextinputs"
 }
 
 export interface IService {
