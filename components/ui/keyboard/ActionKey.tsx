@@ -203,7 +203,7 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 			{config.config.action === KEY_ACTION.SHIFT && <FontAwesomeIcon
 				icon={faCircle}
 				style={{
-					color: capslock ? "#00dd00" : "#999999",
+					color: shiftLock ? "#ffba3a" : capslock ? "#00dd00" : "#999999",
 					fontSize: "0.01rem",
 					marginTop: "0.004rem",
 					...capslockDotStyle,
