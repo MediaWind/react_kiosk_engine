@@ -49,7 +49,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 	}, []);
 
 	useEffect(() => {
-		if (actionsOverride && actionsOverride[parentIndex][index]) {
+		if (actionsOverride && actionsOverride[parentIndex] && actionsOverride[parentIndex][index]) {
 			setCustomActions(actionsOverride[parentIndex][index]);
 		}
 	}, []);
