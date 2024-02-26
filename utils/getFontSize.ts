@@ -3,8 +3,7 @@ export default function getFontSize(height: string): string {
 
 	if (match) {
 		const value = parseFloat(match[0].toString());
-
-		return `${value / 100 * 0.6753}rem`;
+		return `${value / 100 * 0.7416}rem`;
 	} else {
 		return "";
 	}

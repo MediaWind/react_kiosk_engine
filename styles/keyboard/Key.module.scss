@@ -12,7 +12,7 @@ $font_color_default: #333333;
 	border-style: none;
 	border-radius: 0.007rem;
 
-	box-shadow: 0 0.0035rem 0 rgba($color: #000000, $alpha: 0.2);
+	box-shadow: 0 0.0035rem 0 rgba(0, 0, 0, .2);
 	background-color: #ffffff;
 
 	p {
@@ -34,7 +34,7 @@ $font_color_default: #333333;
 	border-style: none;
 	border-radius: 0.007rem;
 
-	box-shadow: 0 0.0035rem 0 rgba($color: #000000, $alpha: 0.2);
+	box-shadow: 0 0.0035rem 0 rgba(0, 0, 0, .2);
 	background-color: #ffffff;
 
 	p {
@@ -55,7 +55,7 @@ $font_color_default: #333333;
 	border-style: none;
 	border-radius: 0.007rem;
 
-	box-shadow: 0 0.0035rem 0 rgba($color: #000000, $alpha: 0.2);
+	box-shadow: 0 0.0035rem 0 rgba(0, 0, 0, .2);
 	background-color: #ffffff;
 
 	p {
@@ -67,6 +67,7 @@ $font_color_default: #333333;
 .pressed {
 	transform: translateY(5%);
 	transition: transform 0.1s;
+	background-color: rgba(255, 255, 255, 0.7);
 }
 
 .icon {

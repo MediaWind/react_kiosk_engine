@@ -8,7 +8,6 @@
 .focused {
 	p::after {
 		content: "|";
-
 		animation: blinking 1.5s step-start infinite;
 	}
 }

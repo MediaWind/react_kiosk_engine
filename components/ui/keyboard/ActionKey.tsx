@@ -49,19 +49,19 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 		} else {
 			setClassNames([styles.action]);
 		}
-	}, [config]);
+	}, []);
 
 	useEffect(() => {
 		if (config.config.action) {
 			setIcon(getIcon(config.config.action as KEY_ACTION));
 		}
-	}, [config]);
+	}, []);
 
 	useEffect(() => {
 		if (config.customText === "" && config.config.action === KEY_ACTION.ENTER) {
 			setClassNames(latest => [...latest, styles.align_right]);
 		}
-	}, [config, config.customText]);
+	}, []);
 
 	useEffect(() => {
 		let timeOut1: NodeJS.Timer;
@@ -80,6 +80,7 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 				}, 700);
 
 				timeOut2 = setTimeout(() => {
+					clearTimeout(timeOut1);
 					clearInterval(interval1);
 					interval2 = setInterval(() => {
 						onDelete();
@@ -101,7 +102,11 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 		};
 	}, [pressed]);
 
-	function clickHandler() {
+	function clickStartHandler() {
+		setPressed(true);
+	}
+
+	function clickEndHandler() {
 		setPressed(false);
 		onTriggerActionsOverride();
 
@@ -126,9 +131,15 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 		}
 	}
 
-	function devClick() {
+	function devClickDown() {
 		if (Variables.PREVIEW) {
-			clickHandler();
+			clickStartHandler();
+		}
+	}
+
+	function devClickUp() {
+		if (Variables.PREVIEW) {
+			clickEndHandler();
 		}
 	}
 
@@ -136,10 +147,10 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 		<div
 			className={classNames.join(" ")}
 			style={config.customStyles}
-			onTouchStart={() => setPressed(true)}
-			onTouchEnd={clickHandler}
-			onMouseDown={() => setPressed(true)}
-			onMouseUp={devClick}
+			onTouchStart={clickStartHandler}
+			onTouchEnd={clickEndHandler}
+			onMouseDown={devClickDown}
+			onMouseUp={devClickUp}
 		>
 			{config.customText !== "" && <p style={config.customStyles}>{config.customText}</p>}
 

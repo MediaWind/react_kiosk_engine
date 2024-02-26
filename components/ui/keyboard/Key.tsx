@@ -94,15 +94,25 @@ export default function Key(props: IKeyProps): JSX.Element {
 		return <ActionKey config={{ index, config, customStyles, customText: text, }} onTriggerActionsOverride={triggerActions} />;
 	}
 
-	function clickHandler() {
+	function clickStartHandler() {
+		setPressed(true);
+	}
+
+	function clickEndHandler() {
 		setPressed(false);
 		onChange(text);
 		triggerActions();
 	}
 
-	function devClick() {
+	function devClickDown() {
 		if (Variables.PREVIEW) {
-			clickHandler();
+			clickStartHandler();
+		}
+	}
+
+	function devClickUp() {
+		if (Variables.PREVIEW) {
+			clickEndHandler();
 		}
 	}
 
@@ -110,10 +120,10 @@ export default function Key(props: IKeyProps): JSX.Element {
 		<div
 			className={classNames.join(" ")}
 			style={customStyles}
-			onTouchStart={() => setPressed(true)}
-			onTouchEnd={clickHandler}
-			onMouseDown={() => setPressed(true)}
-			onMouseUp={devClick}
+			onTouchStart={clickStartHandler}
+			onTouchEnd={clickEndHandler}
+			onMouseDown={devClickDown}
+			onMouseUp={devClickUp}
 		>
 			<p>{text}</p>
 		</div>
