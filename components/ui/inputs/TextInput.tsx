@@ -1,77 +1,73 @@
+import { CSSProperties } from "react";
+
+import styling from "../../../styles/inputs/TextInput.module.scss";
+
 import { Variables } from "../../../../variables";
 
-import { IStyles } from "../../../interfaces";
-
 import getFontSize from "../../../utils/getFontSize";
+import { LANGUAGE } from "../../../interfaces";
+import { useLanguageContext } from "../../../contexts/languageContext";
 
 interface ITextInputProps {
 	id: string
 	value: string
-	isValid: boolean | undefined
 	focused: boolean
 	onFocus: CallableFunction
-	placeholder: string
-	styles: IStyles
+	invalid: boolean
+	styles: CSSProperties
+	placeholder?: Record<LANGUAGE, string>
 }
 
-export default function TextInput(props: ITextInputProps) {
-	const {
-		id,
-		value,
-		focused,
-		isValid,
-		onFocus,
-		placeholder,
-		styles,
-	} = props;
+export default function TextInput(props: ITextInputProps): JSX.Element {
+	const { id, value, focused, onFocus, invalid, styles, placeholder, } = props;
+
+	const { language, } = useLanguageContext();
+
+	function focusHandler() {
+		onFocus(id);
+	}
 
 	function devClick() {
 		if (Variables.PREVIEW) {
-			onFocus(id);
+			focusHandler();
 		}
 	}
 
 	return (
-		<>
-			<input
-				id="textinput"
-				placeholder={placeholder}
-				value={value}
-				readOnly
-				type="text"
-				onClick={devClick}
-				onTouchEnd={() => onFocus(id)}
+		<div
+			className={focused ? styling.focused : ""}
+			onTouchEnd={focusHandler}
+			onClick={devClick}
+			style={{
+				...styles,
+				position: "absolute",
+				zIndex: 1,
+
+				boxShadow: (focused || invalid) ? `0 0 10px 0 ${invalid ? "#ff0000" : (styles.borderColor ?? "#000000")}` : styles.boxShadow ??  "",
+
+				userSelect: "none",
+			}}
+		>
+			{(value === "" && placeholder) && <span
 				style={{
-					all: styles.all,
-
 					position: "absolute",
-					top: styles.top,
-					bottom: styles.bottom,
-					right: styles.right,
-					left: styles.left,
-					zIndex: 1,
-
-					width: styles.width,
-					height: styles.height,
-
-					margin: styles.margin,
-					padding: styles.padding,
-
-					borderWidth: styles.borderWidth,
-					borderStyle: styles.borderStyle,
-					borderColor: isValid ? styles.borderColor : "#ff0000",
-					borderRadius: styles.borderRadius,
-					boxShadow: isValid ? (focused ? `0 0 10px 0 ${styles.borderColor ?? "#000000"}` : "") : "0 0 10px 0 #ff0000",
-
-					fontSize: styles.fontSize ? styles.fontSize : getFontSize(styles.height),
-					color: styles.textColor,
-					textAlign: styles.textAlign,
-					backgroundColor: styles.backgroundColor ?? "#ffffff",
-
-					caretColor: "auto",
-					userSelect: "none",
+					top: 0,
+					color: styles.color,
+					fontSize: styles.fontSize ?? getFontSize(styles.height?.toString() ?? "50%"),
+					opacity: focused ? .1 : .5,
 				}}
-			/>
-		</>
+			>
+				{placeholder[language ?? "fr"]}
+			</span>}
+
+			<p
+				style={{
+					color: styles.color,
+					fontSize: styles.fontSize ?? getFontSize(styles.height?.toString() ?? ""),
+				}}
+			>
+				{value}
+			</p>
+		</div>
 	);
 }
