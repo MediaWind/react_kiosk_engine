@@ -146,7 +146,10 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 	return (
 		<div
 			className={classNames.join(" ")}
-			style={config.customStyles}
+			style={{
+				...config.config.style,
+				...config.customStyles,
+			}}
 			onTouchStart={clickStartHandler}
 			onTouchEnd={clickEndHandler}
 			onMouseDown={devClickDown}
@@ -158,8 +161,8 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 				icon={icon}
 				className={styles.icon}
 				style={{
-					fontSize: config.customStyles?.fontSize,
-					color: config.customStyles?.color,
+					fontSize: config.customStyles?.fontSize ?? config.config.style?.fontSize,
+					color: config.customStyles?.color ?? config.config.style?.color,
 				}}
 			/>}
 

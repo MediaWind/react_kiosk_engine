@@ -122,6 +122,7 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 				setSpecChars,
 				onChange,
 				onDelete,
+				styleOverride: config.styleOverride,
 				actionsOverride: config.actionsOverride,
 				triggerActionsOverride,
 			}}>
@@ -133,7 +134,7 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 					}}
 				>
 					{enableTextPreview && <TextPreview text={currentValue} />}
-					{pattern.rows.map((row, index) => <Row key={"keyboard_row__" + index} index={index} config={row} customStyle={config.styleOverride?.rows} />)}
+					{pattern.rows.map((row, index) => <Row key={"keyboard_row__" + index} index={index} config={row} />)}
 				</div>
 			</KeyboardContext.Provider>
 			<div className={styles.close_area} onClick={closeKeyboardHandler}></div>

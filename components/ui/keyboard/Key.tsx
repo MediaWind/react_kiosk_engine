@@ -13,19 +13,12 @@ import ActionKey from "./ActionKey";
 
 interface IKeyProps {
 	index: number;
+	parentIndex: number;
 	config: IKeyOptions
-	actionsOverride?: {
-		[keyIndex: string]: IInputAction[]
-	}
-	styleOverride?: {
-		index: number | "all"
-		style: CSSProperties
-		valueOverride?: string
-	}[]
 }
 
 export default function Key(props: IKeyProps): JSX.Element {
-	const { index, config, actionsOverride, styleOverride, } = props;
+	const { index, parentIndex, config, } = props;
 
 	const [classNames, setClassNames] = useState<string[]>([styles.default]);
 	const [text, setText] = useState<string>("");
@@ -35,13 +28,31 @@ export default function Key(props: IKeyProps): JSX.Element {
 
 	const [pressed, setPressed] = useState<boolean>(false);
 
-	const { capslock, specChars, onChange, triggerActionsOverride, } = useKeyboardContext();
+	const { capslock, specChars, onChange, styleOverride, actionsOverride, triggerActionsOverride, } = useKeyboardContext();
 
 	useEffect(() => {
-		if (config.style) {
-			setCustomStyle(config.style);
+		if (styleOverride && styleOverride.rows) {
+			styleOverride.rows.map(row => {
+				if (row.index === parentIndex || row.index === "all") {
+					if (row.keys) {
+						row.keys.map(key => {
+							if (key.index === index || key.index === "all") {
+								setCustomStyle(latest => {
+									return { ...latest, ...key.style, };
+								});
+							}
+						});
+					}
+				}
+			});
 		}
-	}, [config]);
+	}, []);
+
+	useEffect(() => {
+		if (actionsOverride && actionsOverride[parentIndex][index]) {
+			setCustomActions(actionsOverride[parentIndex][index]);
+		}
+	}, []);
 
 	useEffect(() => {
 		if (pressed) {
@@ -62,27 +73,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 		} else {
 			setText(config.text?.defaultValue ?? (config.action === KEY_ACTION.SPACEBAR ? "Space" : ""));
 		}
-
-		if (styleOverride) {
-			styleOverride.map(style => {
-				if (style.index === "all" || style.index === index) {
-					setText(latest => style.valueOverride ?? latest);
-					setCustomStyle(latest => {
-						return {
-							...latest,
-							...style.style,
-						};
-					});
-				}
-			});
-		}
-	}, [capslock, specChars, styleOverride]);
-
-	useEffect(() => {
-		if (actionsOverride && actionsOverride[index]) {
-			setCustomActions(actionsOverride[index]);
-		}
-	}, [actionsOverride]);
+	}, [capslock, specChars]);
 
 	function triggerActions() {
 		if (customActions.length > 0 && triggerActionsOverride) {
@@ -91,7 +82,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 	}
 
 	if (config.action) {
-		return <ActionKey config={{ index, config, customStyles, customText: text, }} onTriggerActionsOverride={triggerActions} />;
+		return <ActionKey config={{ index, config, customText: text, customStyles, }} onTriggerActionsOverride={triggerActions} />;
 	}
 
 	function clickStartHandler() {
@@ -119,7 +110,10 @@ export default function Key(props: IKeyProps): JSX.Element {
 	return (
 		<div
 			className={classNames.join(" ")}
-			style={customStyles}
+			style={{
+				...config.style,
+				...customStyles,
+			}}
 			onTouchStart={clickStartHandler}
 			onTouchEnd={clickEndHandler}
 			onMouseDown={devClickDown}

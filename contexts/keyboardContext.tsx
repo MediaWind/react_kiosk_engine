@@ -2,6 +2,8 @@ import { SetStateAction, createContext, useContext } from "react";
 
 import { IInputAction } from "../interfaces";
 
+import { IKeyboardStyleOverride } from "../lib/keyboardTypes";
+
 type keyboardContext = {
 	displayKeyboard: boolean,
 	setDisplayKeyboard: React.Dispatch<SetStateAction<boolean>>
@@ -11,6 +13,7 @@ type keyboardContext = {
 	setSpecChars: React.Dispatch<SetStateAction<boolean>>
 	onChange: CallableFunction
 	onDelete: CallableFunction
+	styleOverride?: IKeyboardStyleOverride
 	actionsOverride?: {
 		[rowIndex: string]: {
 			[keyIndex: string]: IInputAction[]
