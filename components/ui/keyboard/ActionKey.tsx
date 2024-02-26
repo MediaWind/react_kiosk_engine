@@ -39,9 +39,12 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 	const [classNames, setClassNames] = useState<string[]>([]);
 	const [icon, setIcon] = useState<IconDefinition | undefined>();
 
+	const [capslockDotStyle, setCapslockDotStyle] = useState<CSSProperties>();
+	const [specCharsDotStyle, setSpecCharsDotStyle] = useState<CSSProperties>();
+
 	const [pressed, setPressed] = useState<boolean>(false);
 
-	const { setDisplayKeyboard, capslock, setCapslock, specChars, setSpecChars, onChange, onDelete, } = useKeyboardContext();
+	const { setDisplayKeyboard, capslock, setCapslock, specChars, setSpecChars, onChange, onDelete, styleOverride, } = useKeyboardContext();
 
 	useEffect(() => {
 		if (config.config.action === KEY_ACTION.SPACEBAR) {
@@ -62,6 +65,22 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 			setClassNames(latest => [...latest, styles.align_right]);
 		}
 	}, []);
+
+	useEffect(() => {
+		if (styleOverride && styleOverride.statusDot) {
+			if (capslock) {
+				setCapslockDotStyle(styleOverride.statusDot.enabled);
+			} else {
+				setCapslockDotStyle(styleOverride.statusDot.disabled);
+			}
+
+			if (specChars) {
+				setSpecCharsDotStyle(styleOverride.statusDot.enabled);
+			} else {
+				setSpecCharsDotStyle(styleOverride.statusDot.disabled);
+			}
+		}
+	}, [capslock, specChars]);
 
 	useEffect(() => {
 		let timeOut1: NodeJS.Timer;
@@ -168,12 +187,22 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 
 			{config.config.action === KEY_ACTION.SHIFT && <FontAwesomeIcon
 				icon={faCircle}
-				style={{ color: capslock ? "#00dd00" : "#999999", fontSize: "0.01rem", marginTop: "0.004rem", }}
+				style={{
+					color: capslock ? "#00dd00" : "#999999",
+					fontSize: "0.01rem",
+					marginTop: "0.004rem",
+					...capslockDotStyle,
+				}}
 			/>}
 
 			{config.config.action === KEY_ACTION.SPECIALCHARS && <FontAwesomeIcon
 				icon={faCircle}
-				style={{ color: specChars ? "#00dd00" : "#999999", fontSize: "0.01rem", marginTop: "0.004rem", }}
+				style={{
+					color: specChars ? "#00dd00" : "#999999",
+					fontSize: "0.01rem",
+					marginTop: "0.004rem",
+					...specCharsDotStyle,
+				}}
 			/>}
 		</div>
 	);

@@ -82,4 +82,9 @@ export interface IKeyboardStyleOverride {
 			valueOverride?: string
 		}[]
 	}[]
+	statusDot?: {
+		disabled: CSSProperties
+		enabled: CSSProperties
+		secondaryEnabled?: CSSProperties
+	}
 }
