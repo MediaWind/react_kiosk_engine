@@ -35,7 +35,7 @@ export default function TextInput(props: ITextInputProps): JSX.Element {
 
 	return (
 		<div
-			className={focused ? styling.focused : ""}
+			className={`${styling.main} ${focused ? styling.focused : ""}`}
 			onTouchEnd={focusHandler}
 			onClick={devClick}
 			style={{

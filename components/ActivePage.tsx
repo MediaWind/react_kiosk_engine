@@ -87,6 +87,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 
 	useEffect(() => {
 		setTextInputs([]);
+		setInvalidTextInputs([]);
 		if (page.medias) {
 			page.medias.filter(media => media.type === MEDIA_TYPE.INPUT)
 				.map(media => {

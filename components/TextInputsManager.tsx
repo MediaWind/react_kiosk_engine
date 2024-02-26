@@ -22,6 +22,7 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 	const [focusedField, setFocusedField] = useState<string>("");
 	const [invalidFields, setInvalidFields] = useState<string[]>([]);
 	const [currentValue, setCurrentValue] = useState<string>("");
+	const [showPreview, setShowPreview] = useState<boolean>(false);
 
 	const [displayKeyboard, setDisplayKeyboard] = useState<boolean>(false);
 
@@ -54,7 +55,6 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 				return [...latest];
 			});
 		}
-		console.log("🚀 ~ TextInputsManager ~ inputs:", inputs);
 	}, [inputs]);
 
 	useEffect(() => {
@@ -77,6 +77,16 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 		} else {
 			setDisplayKeyboard(false);
 			setCurrentValue("");
+		}
+	}, [focusedField]);
+
+	useEffect(() => {
+		const match = inputs.find(input => input.textInputConfig?.textInput.id === focusedField);
+
+		if (match && match.textInputConfig?.textPreview) {
+			setShowPreview(true);
+		} else {
+			setShowPreview(false);
 		}
 	}, [focusedField]);
 
@@ -117,7 +127,7 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 
 		if (matchingField) {
 			matchingField.value = matchingField.value + char;
-			setCurrentValue(matchingField.value + char);
+			setCurrentValue(matchingField.value);
 
 			dispatchTicketState({
 				type: TICKET_DATA_ACTION_TYPE.INPUTTEXTUPDATE,
@@ -175,6 +185,7 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 				onTriggerActionsOverride={triggerActionsHandler}
 				displayKeyboard={displayKeyboard}
 				setDisplayKeyboard={setDisplayKeyboard}
+				enableTextPreview={showPreview}
 			/>
 		</>
 	);

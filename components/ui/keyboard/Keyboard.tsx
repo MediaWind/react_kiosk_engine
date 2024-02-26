@@ -18,6 +18,7 @@ import { fullQwertyPattern } from "../../../lib/keyboardPatterns/fullQwerty";
 import getKeyboardAnimation from "../../../utils/getKeyboardAnimation";
 
 import Row from "./Row";
+import TextPreview from "./TextPreview";
 
 interface IKeyboardProps {
 	currentValue: string
@@ -27,6 +28,7 @@ interface IKeyboardProps {
 	onTriggerActionsOverride: CallableFunction
 	displayKeyboard: boolean
 	setDisplayKeyboard: React.Dispatch<SetStateAction<boolean>>
+	enableTextPreview?: boolean
 }
 
 function getPattern(layout: KEYBOARD_LAYOUT, mode?: KEYBOARD_MODE): IKeyboardLayout {
@@ -40,7 +42,7 @@ function getPattern(layout: KEYBOARD_LAYOUT, mode?: KEYBOARD_MODE): IKeyboardLay
 }
 
 export default function Keyboard(props: IKeyboardProps): JSX.Element {
-	const { currentValue, config, onChange, onDelete, onTriggerActionsOverride, displayKeyboard, setDisplayKeyboard, } = props;
+	const { currentValue, config, onChange, onDelete, onTriggerActionsOverride, displayKeyboard, setDisplayKeyboard, enableTextPreview, } = props;
 
 	const [init, setInit] = useState<boolean>(true);
 	const [pattern, setPattern] = useState<IKeyboardLayout>(getPattern(config.layout, config.mode));
@@ -125,6 +127,7 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 					display: displayStyle,
 				}}
 			>
+				{enableTextPreview && <TextPreview text={currentValue} />}
 				{pattern.rows.map((row, index) => <Row key={"keyboard_row__" + index} index={index} config={row} customStyle={config.styleOverride?.rows} />)}
 			</div>
 		</KeyboardContext.Provider>

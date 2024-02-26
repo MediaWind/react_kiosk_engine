@@ -1,3 +1,10 @@
+.main {
+	p {
+		overflow: hidden;
+		white-space: nowrap;
+	}
+}
+
 .focused {
 	p::after {
 		content: "|";
