@@ -44,7 +44,7 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 
 	const [pressed, setPressed] = useState<boolean>(false);
 
-	const { setDisplayKeyboard, capslock, setCapslock, specChars, setSpecChars, onChange, onDelete, styleOverride, } = useKeyboardContext();
+	const { setDisplayKeyboard, capslock, setCapslock, specChars, setSpecChars, shiftLock, setShiftLock, onChange, onDelete, styleOverride, } = useKeyboardContext();
 
 	useEffect(() => {
 		if (config.config.action === KEY_ACTION.SPACEBAR) {
@@ -131,6 +131,10 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 
 		if (config.config.action === KEY_ACTION.SHIFT) {
 			setCapslock(latest => !latest);
+
+			if (shiftLock) {
+				setShiftLock(false);
+			}
 		}
 
 		if (config.config.action === KEY_ACTION.SPECIALCHARS) {
@@ -162,6 +166,12 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 		}
 	}
 
+	function doubleClickHandler() {
+		if (config.config.action === KEY_ACTION.SHIFT) {
+			setShiftLock(true);
+		}
+	}
+
 	return (
 		<div
 			className={classNames.join(" ")}
@@ -173,6 +183,7 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 			onTouchEnd={clickEndHandler}
 			onMouseDown={devClickDown}
 			onMouseUp={devClickUp}
+			onDoubleClick={doubleClickHandler}
 		>
 			{config.customText !== "" && <p style={config.customStyles}>{config.customText}</p>}
 

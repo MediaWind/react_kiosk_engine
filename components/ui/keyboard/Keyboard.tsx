@@ -53,6 +53,7 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 
 	const [capslock, setCapslock] = useState<boolean>(true);
 	const [specChars, setSpecChars] = useState<boolean>(false);
+	const [shiftLock, setShiftLock] = useState<boolean>(false);
 
 	useEffect(() => {
 		if (
@@ -62,7 +63,9 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 		) {
 			setCapslock(true);
 		} else {
-			setCapslock(false);
+			if (!shiftLock) {
+				setCapslock(false);
+			}
 		}
 	}, [currentValue]);
 
@@ -103,6 +106,12 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 		};
 	}, [displayKeyboard]);
 
+	useEffect(() => {
+		if (shiftLock) {
+			setCapslock(true);
+		}
+	}, [shiftLock]);
+
 	function triggerActionsOverride(actions: IInputAction[]) {
 		onTriggerActionsOverride(actions);
 	}
@@ -120,6 +129,8 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 				setCapslock,
 				specChars,
 				setSpecChars,
+				shiftLock,
+				setShiftLock,
 				onChange,
 				onDelete,
 				styleOverride: config.styleOverride,

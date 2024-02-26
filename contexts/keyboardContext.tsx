@@ -11,6 +11,8 @@ type keyboardContext = {
 	setCapslock: React.Dispatch<SetStateAction<boolean>>
 	specChars: boolean
 	setSpecChars: React.Dispatch<SetStateAction<boolean>>
+	shiftLock: boolean
+	setShiftLock: React.Dispatch<SetStateAction<boolean>>
 	onChange: CallableFunction
 	onDelete: CallableFunction
 	styleOverride?: IKeyboardStyleOverride
@@ -29,6 +31,8 @@ export const KeyboardContext = createContext<keyboardContext>({
 	setCapslock: () => null,
 	specChars: false,
 	setSpecChars: () => null,
+	shiftLock: false,
+	setShiftLock: () => null,
 	onChange: () => null,
 	onDelete: () => null,
 });
