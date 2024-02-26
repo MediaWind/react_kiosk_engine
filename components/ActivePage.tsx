@@ -27,7 +27,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 	const { nextPage, previousPage, homePage, } = useRouterContext();
 	const { setLanguage, } = useLanguageContext();
 	const { dispatchPrintState, } = usePrintContext();
-	const { dispatchTicketState, } = useTicketDataContext();
+	const { ticketState, dispatchTicketState, } = useTicketDataContext();
 	const { appointmentState, dispatchAppointmentState, } = useAppointmentContext();
 	const { triggerAction, customPage, } = useCustomActionContext();
 
@@ -35,6 +35,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 	const [pageInputs, setPageInputs] = useState<IInputContent[]>([]);
 
 	const [textInputs, setTextInputs] = useState<IInputContent[]>([]);
+	const [invalidTextInputs, setInvalidTextInputs] = useState<string[]>([]);
 
 	useEffect(() => {
 		if (page.medias) {
@@ -118,6 +119,26 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 	}, [appointmentState]);
 
 	function triggerActions(actions: IInputAction[]) {
+		if (textInputs.length > 0) {
+			setInvalidTextInputs([]);
+			const invalidInputs: string[] = [];
+
+			textInputs.forEach(input => {
+				if (input.textInput?.required) {
+					const match = ticketState.textInputDatas.find(i => i.id === input.textInput?.id);
+
+					if (!match || match.value.trim() === "") {
+						invalidInputs.push(input.textInput.id);
+					}
+				}
+			});
+
+			if (invalidInputs.length > 0) {
+				setInvalidTextInputs(invalidInputs);
+				return;
+			}
+		}
+
 		doActions(actions, {
 			router: {
 				nextPage,
@@ -137,7 +158,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 			{(page.medias && page.medias.length > 0) &&
 				page.medias.map((media, index) => {
 					return (
-						<FlowMedia key={`${page.id}__${index}`} id={`${page.id}__${index}`} media={media} />
+						<FlowMedia key={`${page.id}__${index}`} id={`${page.id}__${index}`} media={media} onActionsTrigger={triggerActions} />
 					);
 				})
 			}
@@ -146,6 +167,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 				inputs={textInputs}
 				keyboardConfig={flow.keyboard}
 				onTriggerActions={triggerActions}
+				invalidTextInputs={invalidTextInputs}
 			/>}
 
 			<BackgroundImage image={page.backgroundImage} />

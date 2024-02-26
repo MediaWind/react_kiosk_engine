@@ -12,10 +12,11 @@ interface ITextInputsManagerProps {
 	inputs: IInputContent[]
 	keyboardConfig: IKeyboard
 	onTriggerActions: CallableFunction
+	invalidTextInputs: string[]
 }
 
 export default function TextInputsManager(props: ITextInputsManagerProps): JSX.Element {
-	const { inputs, keyboardConfig, onTriggerActions, } = props;
+	const { inputs, keyboardConfig, onTriggerActions, invalidTextInputs, } = props;
 
 	const [fields, setFields] = useState<IInputField[]>([]);
 	const [focusedField, setFocusedField] = useState<string>("");
@@ -94,15 +95,17 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 	}, [displayKeyboard]);
 
 	useEffect(() => {
-		if (invalidFields.length > 0) {
-			const firstInvalidInput = fields.find(input => invalidFields.includes(input.id));
+		if (invalidTextInputs.length > 0) {
+			setInvalidFields(invalidTextInputs);
+
+			const firstInvalidInput = fields.find(input => invalidTextInputs.includes(input.id));
 
 			if (firstInvalidInput) {
 				setFocusedField(firstInvalidInput.id);
 				setDisplayKeyboard(true);
 			}
 		}
-	}, [invalidFields]);
+	}, [invalidTextInputs]);
 
 	function focusHandler(id: string) {
 		setFocusedField(id);
@@ -145,20 +148,6 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 	}
 
 	function triggerActionsHandler(actions: IInputAction[]) {
-		setInvalidFields([]);
-		const invalidIds: string[] = [];
-
-		fields.map(field => {
-			if (field.required && field.value.trim() === "") {
-				invalidIds.push(field.id);
-			}
-		});
-
-		if (invalidIds.length > 0) {
-			setInvalidFields(invalidIds);
-			return;
-		}
-
 		onTriggerActions(actions);
 	}
 
