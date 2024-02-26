@@ -1,13 +1,13 @@
 import { SetStateAction, createContext, useContext } from "react";
 
 type customActionContext = {
-	triggerAction: CallableFunction
+	triggerCustomAction: CallableFunction
 	customPage: JSX.Element | undefined
 	setCustomPage: React.Dispatch<SetStateAction<JSX.Element | undefined>>
 }
 
 export const CustomActionContext = createContext<customActionContext>({
-	triggerAction: () => null,
+	triggerCustomAction: () => null,
 	customPage: undefined,
 	setCustomPage: () => null,
 });

@@ -12,7 +12,7 @@ interface IDispatchers {
 	dispatchTicketState: React.Dispatch<ITicketDataAction>
 	setLanguage: React.Dispatch<SetStateAction<LANGUAGE | undefined>>
 	dispatchAppointmentState: React.Dispatch<IAppointmentAction>
-	triggerAction: CallableFunction
+	triggerCustomAction: CallableFunction
 }
 
 export default function doActions(actions: IInputAction[], dispatchers: IDispatchers) {
@@ -57,7 +57,7 @@ export default function doActions(actions: IInputAction[], dispatchers: IDispatc
 				});
 				break;
 			case ACTION_TYPE.CUSTOM:
-				dispatchers.triggerAction();
+				dispatchers.triggerCustomAction();
 				break;
 			default:
 				break;
