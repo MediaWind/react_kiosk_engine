@@ -62,6 +62,7 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 			currentValue.slice(-1) === "-"
 		) {
 			setCapslock(true);
+			setShiftLock(false);
 		} else {
 			if (!shiftLock) {
 				setCapslock(false);
