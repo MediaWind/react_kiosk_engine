@@ -68,8 +68,12 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 
 	useEffect(() => {
 		if (styleOverride && styleOverride.statusDot) {
-			if (capslock) {
-				setCapslockDotStyle(styleOverride.statusDot.enabled);
+			if (capslock || shiftLock) {
+				if (shiftLock && styleOverride.statusDot.secondaryEnabled) {
+					setCapslockDotStyle(styleOverride.statusDot.secondaryEnabled);
+				} else {
+					setCapslockDotStyle(styleOverride.statusDot.enabled);
+				}
 			} else {
 				setCapslockDotStyle(styleOverride.statusDot.disabled);
 			}
@@ -80,7 +84,7 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 				setSpecCharsDotStyle(styleOverride.statusDot.disabled);
 			}
 		}
-	}, [capslock, specChars]);
+	}, [capslock, specChars, shiftLock]);
 
 	useEffect(() => {
 		let timeOut1: NodeJS.Timer;
