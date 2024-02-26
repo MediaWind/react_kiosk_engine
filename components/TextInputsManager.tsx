@@ -21,8 +21,10 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 	const [fields, setFields] = useState<IInputField[]>([]);
 	const [focusedField, setFocusedField] = useState<string>("");
 	const [invalidFields, setInvalidFields] = useState<string[]>([]);
+
 	const [currentValue, setCurrentValue] = useState<string>("");
 	const [showPreview, setShowPreview] = useState<boolean>(false);
+	const [autoFocus, setAutoFocus] = useState<boolean>(false);
 
 	const [displayKeyboard, setDisplayKeyboard] = useState<boolean>(false);
 
@@ -61,12 +63,21 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 		const autoFocusOn = inputs.find(input => input.textInputConfig?.autoFocus);
 
 		if (autoFocusOn && autoFocusOn.textInputConfig?.textInput) {
-			setFocusedField(autoFocusOn.textInputConfig.textInput.id);
+			setAutoFocus(true);
+		} else {
+			setAutoFocus(false);
 		}
 	}, [inputs]);
 
 	useEffect(() => {
-		if (focusedField) {
+		setFocusedField(() => {
+			const focusInput = inputs.find(input => input.textInputConfig?.autoFocus);
+			return focusInput?.textInputConfig?.textInput.id ?? "";
+		});
+	}, [autoFocus]);
+
+	useEffect(() => {
+		if (focusedField !== "") {
 			setDisplayKeyboard(true);
 
 			const matchingField = fields.find(field => field.id === focusedField);
