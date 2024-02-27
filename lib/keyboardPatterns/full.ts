@@ -65,12 +65,8 @@ export const fullPattern = {
 					},
 				},
 				{
-					text: {
-						defaultValue: "",
-					},
 					style: {
-						backgroundColor: "transparent",
-						boxShadow: "none",
+						visibility: "hidden",
 					},
 				},
 				{
@@ -153,12 +149,8 @@ export const fullPattern = {
 					},
 				},
 				{
-					text: {
-						defaultValue: "",
-					},
 					style: {
-						backgroundColor: "transparent",
-						boxShadow: "none",
+						visibility: "hidden",
 					},
 				},
 				{
@@ -241,12 +233,8 @@ export const fullPattern = {
 					},
 				},
 				{
-					text: {
-						defaultValue: "",
-					},
 					style: {
-						backgroundColor: "transparent",
-						boxShadow: "none",
+						visibility: "hidden",
 					},
 				},
 				{
@@ -269,21 +257,13 @@ export const fullPattern = {
 		{
 			keys: [
 				{
-					text: {
-						defaultValue: "",
-					},
 					style: {
-						backgroundColor: "transparent",
-						boxShadow: "none",
+						visibility: "hidden",
 					},
 				},
 				{
-					text: {
-						defaultValue: "",
-					},
 					style: {
-						backgroundColor: "transparent",
-						boxShadow: "none",
+						visibility: "hidden",
 					},
 				},
 				{
@@ -323,39 +303,23 @@ export const fullPattern = {
 					},
 				},
 				{
-					text: {
-						defaultValue: "",
-					},
 					style: {
-						backgroundColor: "transparent",
-						boxShadow: "none",
+						visibility: "hidden",
 					},
 				},
 				{
-					text: {
-						defaultValue: "",
-					},
 					style: {
-						backgroundColor: "transparent",
-						boxShadow: "none",
+						visibility: "hidden",
 					},
 				},
 				{
-					text: {
-						defaultValue: "",
-					},
 					style: {
-						backgroundColor: "transparent",
-						boxShadow: "none",
+						visibility: "hidden",
 					},
 				},
 				{
-					text: {
-						defaultValue: "",
-					},
 					style: {
-						backgroundColor: "transparent",
-						boxShadow: "none",
+						visibility: "hidden",
 					},
 				},
 				{
@@ -364,12 +328,8 @@ export const fullPattern = {
 					},
 				},
 				{
-					text: {
-						defaultValue: "",
-					},
 					style: {
-						backgroundColor: "transparent",
-						boxShadow: "none",
+						visibility: "hidden",
 					},
 				}
 			],

@@ -65,12 +65,8 @@ export const fullQwertyPattern = {
 					},
 				},
 				{
-					text: {
-						defaultValue: "",
-					},
 					style: {
-						backgroundColor: "transparent",
-						boxShadow: "none",
+						visibility: "hidden",
 					},
 				},
 				{
@@ -153,12 +149,8 @@ export const fullQwertyPattern = {
 					},
 				},
 				{
-					text: {
-						defaultValue: "",
-					},
 					style: {
-						backgroundColor: "transparent",
-						boxShadow: "none",
+						visibility: "hidden",
 					},
 				},
 				{
@@ -181,12 +173,8 @@ export const fullQwertyPattern = {
 		{
 			keys: [
 				{
-					text: {
-						defaultValue: "",
-					},
 					style: {
-						backgroundColor: "transparent",
-						boxShadow: "none",
+						visibility: "hidden",
 						width: "0.02rem",
 					},
 				},
@@ -245,12 +233,8 @@ export const fullQwertyPattern = {
 					},
 				},
 				{
-					text: {
-						defaultValue: "",
-					},
 					style: {
-						backgroundColor: "transparent",
-						boxShadow: "none",
+						visibility: "hidden",
 						width: "0.14rem",
 					},
 				},
@@ -274,21 +258,9 @@ export const fullQwertyPattern = {
 		{
 			keys: [
 				{
-					text: {
-						defaultValue: "",
-					},
 					style: {
-						backgroundColor: "transparent",
-						boxShadow: "none",
-					},
-				},
-				{
-					text: {
-						defaultValue: "",
-					},
-					style: {
-						backgroundColor: "transparent",
-						boxShadow: "none",
+						visibility: "hidden",
+						width: "0.12rem",
 					},
 				},
 				{
@@ -334,30 +306,9 @@ export const fullQwertyPattern = {
 					},
 				},
 				{
-					text: {
-						defaultValue: "",
-					},
 					style: {
-						backgroundColor: "transparent",
-						boxShadow: "none",
-					},
-				},
-				{
-					text: {
-						defaultValue: "",
-					},
-					style: {
-						backgroundColor: "transparent",
-						boxShadow: "none",
-					},
-				},
-				{
-					text: {
-						defaultValue: "",
-					},
-					style: {
-						backgroundColor: "transparent",
-						boxShadow: "none",
+						visibility: "hidden",
+						width: "0.335rem",
 					},
 				},
 				{
@@ -366,12 +317,8 @@ export const fullQwertyPattern = {
 					},
 				},
 				{
-					text: {
-						defaultValue: "",
-					},
 					style: {
-						backgroundColor: "transparent",
-						boxShadow: "none",
+						visibility: "hidden",
 					},
 				}
 			],
