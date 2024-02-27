@@ -119,7 +119,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 			onMouseDown={devClickDown}
 			onMouseUp={devClickUp}
 		>
-			<p>{text}</p>
+			<p style={{ ...config.style, ...customStyles, }}>{text}</p>
 		</div>
 	);
 }
