@@ -7,61 +7,61 @@ export const fullQwertyPattern = {
 				{
 					text: {
 						defaultValue: "!",
-						specCharsValue: "à",
+						specCharsValue: "?",
 					},
 				},
 				{
 					text: {
 						defaultValue: "@",
-						specCharsValue: "â",
+						specCharsValue: ".",
 					},
 				},
 				{
 					text: {
 						defaultValue: "#",
-						specCharsValue: "ç",
+						specCharsValue: "-",
 					},
 				},
 				{
 					text: {
 						defaultValue: "$",
-						specCharsValue: "é",
+						specCharsValue: "\"",
 					},
 				},
 				{
 					text: {
 						defaultValue: "%",
-						specCharsValue: "è",
+						specCharsValue: "'",
 					},
 				},
 				{
 					text: {
-						defaultValue: ".",
-						specCharsValue: "ê",
+						defaultValue: "^",
+						specCharsValue: ":",
 					},
 				},
 				{
 					text: {
 						defaultValue: "&",
-						specCharsValue: "ë",
+						specCharsValue: "/",
 					},
 				},
 				{
 					text: {
 						defaultValue: "*",
-						specCharsValue: "ù",
+						specCharsValue: "\\",
 					},
 				},
 				{
 					text: {
-						defaultValue: ":",
-						specCharsValue: "û",
+						defaultValue: "(",
+						specCharsValue: "[",
 					},
 				},
 				{
 					text: {
-						defaultValue: "-",
-						specCharsValue: "_",
+						defaultValue: ")",
+						specCharsValue: "]",
 					},
 				},
 				{

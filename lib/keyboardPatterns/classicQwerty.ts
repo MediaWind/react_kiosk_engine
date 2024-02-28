@@ -7,61 +7,61 @@ export const classicQwertyPattern = {
 				{
 					text: {
 						defaultValue: "1",
-						specCharsValue: "-",
+						specCharsValue: "!",
 					},
 				},
 				{
 					text: {
 						defaultValue: "2",
-						specCharsValue: "à",
+						specCharsValue: "@",
 					},
 				},
 				{
 					text: {
 						defaultValue: "3",
-						specCharsValue: "â",
+						specCharsValue: "#",
 					},
 				},
 				{
 					text: {
 						defaultValue: "4",
-						specCharsValue: "ç",
+						specCharsValue: "$",
 					},
 				},
 				{
 					text: {
 						defaultValue: "5",
-						specCharsValue: "é",
+						specCharsValue: "%",
 					},
 				},
 				{
 					text: {
 						defaultValue: "6",
-						specCharsValue: "è",
+						specCharsValue: "^",
 					},
 				},
 				{
 					text: {
 						defaultValue: "7",
-						specCharsValue: "ê",
+						specCharsValue: "&",
 					},
 				},
 				{
 					text: {
 						defaultValue: "8",
-						specCharsValue: "ë",
+						specCharsValue: "*",
 					},
 				},
 				{
 					text: {
 						defaultValue: "9",
-						specCharsValue: "ù",
+						specCharsValue: "(",
 					},
 				},
 				{
 					text: {
 						defaultValue: "0",
-						specCharsValue: "û",
+						specCharsValue: ")",
 					},
 				}
 			],
