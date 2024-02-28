@@ -108,7 +108,7 @@ export default function usePrinter(dispatchError: React.Dispatch<IErrorAction>):
 		} finally {
 			setTimeout(() => {
 				setIsPrinting(false);
-			}, 5 * 1000);
+			}, Variables.W_WAIT_TIME_AFTER_PRINT * 1000);
 		}
 	}
 
