@@ -111,19 +111,16 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 			if (match.textInputConfig?.forceLowerCase) {
 				setForceLowerCase(true);
 				setForceUpperCase(false);
+				return;
 			} else if (match.textInputConfig?.forceUpperCase) {
 				setForceUpperCase(true);
 				setForceLowerCase(false);
-			} else {
-				setForceUpperCase(false);
-				setForceLowerCase(false);
+				return;
 			}
 		}
 
-		if (focusedField === "") {
-			setForceUpperCase(false);
-			setForceLowerCase(false);
-		}
+		setForceUpperCase(false);
+		setForceLowerCase(false);
 	}, [focusedField]);
 
 	useEffect(() => {
