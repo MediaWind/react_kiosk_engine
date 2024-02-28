@@ -29,6 +29,8 @@ interface IKeyboardProps {
 	displayKeyboard: boolean
 	setDisplayKeyboard: React.Dispatch<SetStateAction<boolean>>
 	enableTextPreview?: boolean
+	forceLowerCase?: boolean
+	forceUpperCase?: boolean
 }
 
 function getPattern(layout: KEYBOARD_LAYOUT, mode?: KEYBOARD_MODE): IKeyboardLayout {
@@ -42,7 +44,18 @@ function getPattern(layout: KEYBOARD_LAYOUT, mode?: KEYBOARD_MODE): IKeyboardLay
 }
 
 export default function Keyboard(props: IKeyboardProps): JSX.Element {
-	const { currentValue, config, onChange, onDelete, onTriggerActionsOverride, displayKeyboard, setDisplayKeyboard, enableTextPreview, } = props;
+	const {
+		currentValue,
+		config,
+		onChange,
+		onDelete,
+		onTriggerActionsOverride,
+		displayKeyboard,
+		setDisplayKeyboard,
+		enableTextPreview,
+		forceLowerCase,
+		forceUpperCase,
+	} = props;
 
 	const [init, setInit] = useState<boolean>(true);
 	const [pattern, setPattern] = useState<IKeyboardLayout>(getPattern(config.layout, config.mode));
@@ -56,6 +69,18 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 	const [shiftLock, setShiftLock] = useState<boolean>(false);
 
 	useEffect(() => {
+		if (forceLowerCase) {
+			setShiftLock(false);
+			setCapslock(false);
+			return;
+		}
+
+		if (forceUpperCase) {
+			setShiftLock(true);
+			setCapslock(true);
+			return;
+		}
+
 		if (
 			currentValue === "" ||
 			currentValue.slice(-1) === " " ||

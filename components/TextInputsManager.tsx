@@ -28,6 +28,9 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 
 	const [displayKeyboard, setDisplayKeyboard] = useState<boolean>(false);
 
+	const [forceLowerCase, setForceLowerCase] = useState<boolean>(false);
+	const [forceUpperCase, setForceUpperCase] = useState<boolean>(false);
+
 	const { ticketState, dispatchTicketState, } = useTicketDataContext();
 
 	useEffect(() => {
@@ -98,6 +101,28 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 			setShowPreview(true);
 		} else {
 			setShowPreview(false);
+		}
+	}, [focusedField]);
+
+	useEffect(() => {
+		const match = inputs.find(input => input.textInputConfig?.textInput.id === focusedField);
+
+		if (match) {
+			if (match.textInputConfig?.forceLowerCase) {
+				setForceLowerCase(true);
+				setForceUpperCase(false);
+			} else if (match.textInputConfig?.forceUpperCase) {
+				setForceUpperCase(true);
+				setForceLowerCase(false);
+			} else {
+				setForceUpperCase(false);
+				setForceLowerCase(false);
+			}
+		}
+
+		if (focusedField === "") {
+			setForceUpperCase(false);
+			setForceLowerCase(false);
 		}
 	}, [focusedField]);
 
@@ -197,6 +222,8 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 				displayKeyboard={displayKeyboard}
 				setDisplayKeyboard={setDisplayKeyboard}
 				enableTextPreview={showPreview}
+				forceLowerCase={forceLowerCase}
+				forceUpperCase={forceUpperCase}
 			/>
 		</>
 	);

@@ -158,6 +158,8 @@ export interface ITextInputConfig {
 	placeholder?: Record<LANGUAGE, string>
 	autoFocus?: boolean
 	textPreview?: boolean
+	forceLowerCase?: boolean
+	forceUpperCase?: boolean
 }
 
 export interface ISelectConfig {
