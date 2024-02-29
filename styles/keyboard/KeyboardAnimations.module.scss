@@ -10,26 +10,38 @@ $position_out: -30%;
 }
 
 .top_in {
+	border-radius: 0 0 0.014rem 0.014rem;
 	animation: anim_top_in 0.5s ease-out forwards;
 }
 
 .top_out {
+	border-radius: 0 0 0.014rem 0.014rem;
 	animation: anim_top_out 0.5s ease-in forwards;
 }
 
 .left_in {
+	bottom: 27.5%;
+	border-radius: 0 0.014rem 0.014rem 0;
 	animation: anim_left_in 0.5s ease-out forwards;
 }
 
 .left_out {
+	bottom: 27.5%;
+	border-radius: 0 0.014rem 0.014rem 0;
 	animation: anim_left_out 0.5s ease-in forwards;
 }
 
 .right_in {
+	left: unset;
+	bottom: 27.5%;
+	border-radius: 0.014rem 0 0 0.014rem;
 	animation: anim_right_in 0.5s ease-out forwards;
 }
 
 .right_out {
+	left: unset;
+	bottom: 27.5%;
+	border-radius: 0.014rem 0 0 0.014rem;
 	animation: anim_right_out 0.5s ease-in forwards;
 }
 
@@ -44,10 +56,12 @@ $position_out: -30%;
 }
 
 .top_right_in {
+	left: unset;
 	animation: anim_right_top_in 0.5s ease-out forwards;
 }
 
 .top_right_out {
+	left: unset;
 	animation: anim_right_top_out 0.5s ease-in forwards;
 }
 
@@ -62,10 +76,12 @@ $position_out: -30%;
 }
 
 .bottom_right_in {
+	left: unset;
 	animation: anim_right_bottom_in 0.5s ease-out forwards;
 }
 
 .bottom_right_out {
+	left: unset;
 	animation: anim_right_bottom_out 0.5s ease-in forwards;
 }
 
