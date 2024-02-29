@@ -35,37 +35,37 @@ $position_out: -30%;
 
 //*
 
-.left_top_in {
+.top_left_in {
 	animation: anim_left_top_in 0.5s ease-out forwards;
 }
 
-.left_top_out {
+.top_left_out {
 	animation: anim_left_top_out 0.5s ease-in forwards;
 }
 
-.right_top_in {
+.top_right_in {
 	animation: anim_right_top_in 0.5s ease-out forwards;
 }
 
-.right_top_out {
+.top_right_out {
 	animation: anim_right_top_out 0.5s ease-in forwards;
 }
 
 //*
 
-.left_bottom_in {
+.bottom_left_in {
 	animation: anim_left_bottom_in 0.5s ease-out forwards;
 }
 
-.left_bottom_out {
+.bottom_left_out {
 	animation: anim_left_bottom_out 0.5s ease-in forwards;
 }
 
-.right_bottom_in {
+.bottom_right_in {
 	animation: anim_right_bottom_in 0.5s ease-out forwards;
 }
 
-.right_bottom_out {
+.bottom_right_out {
 	animation: anim_right_bottom_out 0.5s ease-in forwards;
 }
 

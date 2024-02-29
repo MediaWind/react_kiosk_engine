@@ -108,7 +108,7 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 		if (init) {
 			setInit(false);
 		} else {
-			setClassNames([styles.main, getKeyboardAnimation(displayKeyboard, config.styleOverride?.board)]);
+			setClassNames([styles.main, getKeyboardAnimation(displayKeyboard, config.slideAnimation, config.styleOverride?.board)]);
 		}
 
 		let timeOut: NodeJS.Timer;

@@ -4,8 +4,10 @@ import styling from "../../../styles/inputs/TextInput.module.scss";
 
 import { Variables } from "../../../../variables";
 
-import getFontSize from "../../../utils/getFontSize";
 import { LANGUAGE } from "../../../interfaces";
+
+import getFontSize from "../../../utils/getFontSize";
+
 import { useLanguageContext } from "../../../contexts/languageContext";
 
 interface ITextInputProps {

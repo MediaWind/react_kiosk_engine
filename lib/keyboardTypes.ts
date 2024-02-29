@@ -3,8 +3,9 @@ import { CSSProperties } from "react";
 import { IInputAction } from "../interfaces";
 
 export interface IKeyboard {
-	layout: KEYBOARD_LAYOUT,
+	layout: KEYBOARD_LAYOUT
 	mode?: KEYBOARD_MODE
+	slideAnimation?: SLIDE_ANIMATION
 	customLayout?: IKeyboardLayout
 	actionsOverride?: {
 		[rowIndex: string]: {
@@ -35,6 +36,17 @@ export enum KEYBOARD_LAYOUT {
 	 * Provide your own layout
 	 */
 	CUSTOM = "custom"
+}
+
+export enum SLIDE_ANIMATION {
+	TOP = "top",
+	RIGHT = "right",
+	LEFT = "left",
+	BOTTOM = "bottom",
+	TOP_LEFT = "top_left",
+	TOP_RIGHT = "top_right",
+	BOTTOM_LEFT = "bottom_left",
+	BOTTOM_RIGHT = "bottom_right"
 }
 
 export enum KEYBOARD_MODE {
