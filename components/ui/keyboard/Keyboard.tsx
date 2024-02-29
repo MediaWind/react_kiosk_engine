@@ -69,6 +69,8 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 	const [shiftLock, setShiftLock] = useState<boolean>(false);
 
 	function checkCurrentValue() {
+		if (forceLowerCase || forceUpperCase) return;
+
 		if (
 			currentValue === "" ||
 			currentValue.slice(-1) === " " ||
