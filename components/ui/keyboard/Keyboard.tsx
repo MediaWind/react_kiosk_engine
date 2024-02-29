@@ -136,7 +136,6 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 		if (forceUpperCase) {
 			setShiftLock(true);
 			setCapslock(true);
-			return;
 		}
 	}, [forceLowerCase, forceUpperCase]);
 
