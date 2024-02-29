@@ -48,40 +48,48 @@ $position_out: -30%;
 //*
 
 .top_left_in {
+	border-radius: 0 0 0.014rem 0;
 	animation: anim_left_top_in 0.5s ease-out forwards;
 }
 
 .top_left_out {
+	border-radius: 0 0 0.014rem 0;
 	animation: anim_left_top_out 0.5s ease-in forwards;
 }
 
 .top_right_in {
 	left: unset;
+	border-radius: 0 0 0 0.014rem;
 	animation: anim_right_top_in 0.5s ease-out forwards;
 }
 
 .top_right_out {
 	left: unset;
+	border-radius: 0 0 0 0.014rem;
 	animation: anim_right_top_out 0.5s ease-in forwards;
 }
 
 //*
 
 .bottom_left_in {
+	border-radius: 0 0.014rem 0 0;
 	animation: anim_left_bottom_in 0.5s ease-out forwards;
 }
 
 .bottom_left_out {
+	border-radius: 0 0.014rem 0 0;
 	animation: anim_left_bottom_out 0.5s ease-in forwards;
 }
 
 .bottom_right_in {
 	left: unset;
+	border-radius: 0.014rem 0 0 0;
 	animation: anim_right_bottom_in 0.5s ease-out forwards;
 }
 
 .bottom_right_out {
 	left: unset;
+	border-radius: 0.014rem 0 0 0;
 	animation: anim_right_bottom_out 0.5s ease-in forwards;
 }
 
