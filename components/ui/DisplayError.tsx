@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 import styles from "../../styles/ui/Error.module.scss";
 
 import { Variables } from "../../../variables";
@@ -6,10 +8,9 @@ import { useLanguageContext } from "../../contexts/languageContext";
 import { useErrorContext } from "../../contexts/errorContext";
 
 import { ERROR_ACTION_TYPE, IBackgroundImage, IErrorManagement, LANGUAGE, Route } from "../../interfaces";
+import { ERROR_CODE } from "../../lib/errorCodes";
 
 import BackgroundImage from "./BackgroundImage";
-import { useEffect } from "react";
-import { ERROR_CODE } from "../../lib/errorCodes";
 
 interface IDisplayErrorProps {
 	route: Route | null

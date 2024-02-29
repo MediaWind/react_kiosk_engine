@@ -38,7 +38,7 @@ export default function useServices(dispatchErrorState?: React.Dispatch<IErrorAc
 					payload: {
 						hasError: true,
 						errorCode: ERROR_CODE.D500,
-						message: "Unable to fetch services (Status 0)",
+						message: "Error caught - Unable to fetch services",
 					},
 				});
 			}
