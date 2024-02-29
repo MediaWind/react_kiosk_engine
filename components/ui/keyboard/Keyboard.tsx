@@ -68,7 +68,7 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 	const [specChars, setSpecChars] = useState<boolean>(false);
 	const [shiftLock, setShiftLock] = useState<boolean>(false);
 
-	useEffect(() => {
+	function checkCurrentValue() {
 		if (
 			currentValue === "" ||
 			currentValue.slice(-1) === " " ||
@@ -81,6 +81,10 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 				setCapslock(false);
 			}
 		}
+	}
+
+	useEffect(() => {
+		checkCurrentValue();
 	}, [currentValue]);
 
 	useEffect(() => {
@@ -136,7 +140,10 @@ export default function Keyboard(props: IKeyboardProps): JSX.Element {
 		if (forceUpperCase) {
 			setShiftLock(true);
 			setCapslock(true);
+			return;
 		}
+
+		checkCurrentValue();
 	}, [forceLowerCase, forceUpperCase]);
 
 	function triggerActionsOverride(actions: IInputAction[]) {
