@@ -122,7 +122,7 @@ export enum ERROR_CODE {
 	C500 = "500-C",
 
 	/**
-	 * 500-D: SQL error
+	 * 500-D: Something went wrong when trying to fetch agents
 	 */
 	D500 = "500-D",
 

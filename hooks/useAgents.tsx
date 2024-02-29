@@ -2,9 +2,10 @@ import { useState } from "react";
 
 import { Variables } from "../../variables";
 
-import { AgentData } from "../interfaces";
+import { AgentData, ERROR_ACTION_TYPE, IErrorAction } from "../interfaces";
+import { ERROR_CODE } from "../lib/errorCodes";
 
-export default function useAgents(): [AgentData[], CallableFunction] {
+export default function useAgents(dispatchErrorState: React.Dispatch<IErrorAction>): [AgentData[], CallableFunction] {
 	const [agents, setAgents] = useState<AgentData[]>([]);
 
 	async function getUserAgents(filterIds?: string[]) {
@@ -37,9 +38,26 @@ export default function useAgents(): [AgentData[], CallableFunction] {
 
 					return returnedAgents;
 				});
+			} else {
+				dispatchErrorState({
+					type: ERROR_ACTION_TYPE.SETERROR,
+					payload: {
+						hasError: true,
+						errorCode: ERROR_CODE.D500,
+						message: "Unable to fetch user agents (Status 0)",
+					},
+				});
 			}
 		} catch (err) {
 			console.log(err);
+			dispatchErrorState({
+				type: ERROR_ACTION_TYPE.SETERROR,
+				payload: {
+					hasError: true,
+					errorCode: ERROR_CODE.D500,
+					message: "Error caught - Unable to fetch user agents",
+				},
+			});
 		}
 	}
 

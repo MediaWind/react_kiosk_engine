@@ -99,7 +99,7 @@ export default function usePrinter(dispatchError: React.Dispatch<IErrorAction>):
 						payload: {
 							hasError: true,
 							errorCode: ERROR_CODE.A500,
-							message: "Unable to print ticket PDF - No result",
+							message: "Unable to print ticket PDF (No result)",
 						} as IErrorState,
 					});
 				}

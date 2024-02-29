@@ -83,7 +83,7 @@ export default function useTicket(dispatchPrintState: React.Dispatch<IPrintActio
 						payload: {
 							hasError: true,
 							errorCode: ERROR_CODE.B500,
-							message: "Unable to create ticket - Status 0",
+							message: "Unable to create ticket (Status 0)",
 						},
 					});
 				}

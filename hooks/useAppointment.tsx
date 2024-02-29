@@ -40,7 +40,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 						payload: {
 							hasError: true,
 							errorCode: ERROR_CODE.B500,
-							message: "Unable to fetch ticket PDF - Status 0",
+							message: "Unable to fetch ticket PDF (Status 0)",
 						} as IErrorState,
 					});
 				}

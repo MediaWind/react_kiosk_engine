@@ -11,6 +11,7 @@ import { AgentData, IOption, ISelectConfig, IStyles, LANGUAGE, SELECT_PROVIDER, 
 import { useLanguageContext } from "../../../contexts/languageContext";
 import { useFlowContext } from "../../../contexts/flowContext";
 import { useTicketDataContext } from "../../../contexts/ticketDataContext";
+import { useErrorContext } from "../../../contexts/errorContext";
 
 import useAgents from "../../../hooks/useAgents";
 import useServices from "../../../hooks/useServices";
@@ -40,9 +41,10 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 	const { language, } = useLanguageContext();
 	const { flow, } = useFlowContext();
 	const { dispatchTicketState, } = useTicketDataContext();
+	const { dispatchErrorState, } = useErrorContext();
 
-	const [userAgents, getUserAgents] = useAgents();
-	const [services, getServices] = useServices();
+	const [userAgents, getUserAgents] = useAgents(dispatchErrorState);
+	const [services, getServices] = useServices(dispatchErrorState);
 
 	const [selectedValue, setSelectedValue] = useState<string>(config?.placeholders ? config.placeholders[language ?? "fr"] : getDefaultText(language));
 	const [showDropdown, setShowDropdown] = useState<boolean>(false);
