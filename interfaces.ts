@@ -1,5 +1,6 @@
 import { eIdData } from "../core/hooks/useEId";
 
+import { ERROR_CODE } from "./lib/errorCodes";
 import { IKeyboard } from "./lib/keyboardTypes";
 
 //* --------------------------- *//
@@ -291,57 +292,6 @@ export interface IErrorAction {
 export enum ERROR_ACTION_TYPE {
 	SETERROR = "setError",
 	CLEARERROR = "clearError"
-}
-
-export enum ERROR_CODE {
-	/**
-	 * 200: All good!
-	 */
-	A200 = "200",
-	/**
-	 * 400-A: Ticket PDF is null
-	 */
-	A400 = "400-A",
-	/**
-	 * 404-A: Flow not found
-	 */
-	A404 = "404-A",
-	/**
-	 * 404-B: Appointment not found
-	 */
-	B404 = "404-B",
-	/**
-	 * 408-A: eId reading timeout
-	 */
-	A408 = "408-A",
-	/**
-	 * 500-A: Something went wrong when trying to print ticket
-	 */
-	A500 = "500-A",
-	/**
-	 * 500-B: Something went wrong when trying to fetch ticket PDF
-	 */
-	B500 = "500-B",
-	/**
-	 * 500-C: Service is closed
-	 */
-	C500 = "500-C",
-	/**
-	 * 503-A: Kiosk is not connected to internet
-	 */
-	A503 = "503-A",
-	/**
-	 * 503-B: Printer is not connected
-	 */
-	B503 = "503-B",
-	/**
-	 * 503-C: Printer has no more paper
-	 */
-	C503 = "503-C",
-	/**
-	 * 503-D: Printer has an unsupported error
-	 */
-	D503 = "503-D"
 }
 
 //* ------------------- *//

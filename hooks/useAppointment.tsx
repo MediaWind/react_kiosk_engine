@@ -1,6 +1,9 @@
 import { useState } from "react";
+
 import { Variables } from "../../variables";
-import { APPOINTMENT_ACTION_TYPE, ERROR_ACTION_TYPE, ERROR_CODE, IAppointmentAction, IErrorAction, IErrorState } from "../interfaces";
+import { APPOINTMENT_ACTION_TYPE, ERROR_ACTION_TYPE, IAppointmentAction, IErrorAction, IErrorState } from "../interfaces";
+import { ERROR_CODE } from "../lib/errorCodes";
+
 import { testPDF } from "../utils/testPDF";
 
 export default function useAppointment(dispatchAppointment: React.Dispatch<IAppointmentAction>, dispatchError: React.Dispatch<IErrorAction>): [string, CallableFunction, CallableFunction] {
@@ -37,7 +40,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 						payload: {
 							hasError: true,
 							errorCode: ERROR_CODE.B500,
-							message: "Unable to fetch ticket PDF",
+							message: "Unable to fetch ticket PDF - Status 0",
 						} as IErrorState,
 					});
 				}
@@ -62,6 +65,14 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 			}
 		} catch (err) {
 			console.log(err);
+			dispatchError({
+				type: ERROR_ACTION_TYPE.SETERROR,
+				payload: {
+					hasError: true,
+					errorCode: ERROR_CODE.B500,
+					message: "Error caught - Unable to fetch ticket PDF",
+				} as IErrorState,
+			});
 		} finally {
 			setTimeout(() => {
 				dispatchAppointment({

@@ -4,7 +4,8 @@ import Printer from "../../core/client/printer";
 
 import { Variables } from "../../variables";
 
-import { ERROR_ACTION_TYPE, ERROR_CODE, IErrorAction, IErrorState } from "../interfaces";
+import { ERROR_ACTION_TYPE, IErrorAction, IErrorState } from "../interfaces";
+import { ERROR_CODE } from "../lib/errorCodes";
 
 export default function usePrinter(dispatchError: React.Dispatch<IErrorAction>): [CallableFunction, boolean, CallableFunction] {
 	const [isPrinting, setIsPrinting] = useState<boolean>(false);
@@ -74,7 +75,7 @@ export default function usePrinter(dispatchError: React.Dispatch<IErrorAction>):
 				payload: {
 					hasError: true,
 					errorCode: ERROR_CODE.D503,
-					message: "Unable to check printer status",
+					message: "Error caught - Unable to check printer status",
 				} as IErrorState,
 			});
 		}
@@ -98,13 +99,21 @@ export default function usePrinter(dispatchError: React.Dispatch<IErrorAction>):
 						payload: {
 							hasError: true,
 							errorCode: ERROR_CODE.A500,
-							message: "Unable to print ticket PDF",
+							message: "Unable to print ticket PDF - No result",
 						} as IErrorState,
 					});
 				}
 			}
 		} catch (err) {
 			console.log(err);
+			dispatchError({
+				type: ERROR_ACTION_TYPE.SETERROR,
+				payload: {
+					hasError: true,
+					errorCode: ERROR_CODE.A500,
+					message: "Error caught - Unable to print ticket PDF",
+				} as IErrorState,
+			});
 		} finally {
 			setTimeout(() => {
 				setIsPrinting(false);

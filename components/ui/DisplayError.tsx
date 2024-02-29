@@ -5,10 +5,11 @@ import { Variables } from "../../../variables";
 import { useLanguageContext } from "../../contexts/languageContext";
 import { useErrorContext } from "../../contexts/errorContext";
 
-import { ERROR_ACTION_TYPE, ERROR_CODE, IBackgroundImage, IErrorManagement, LANGUAGE, Route } from "../../interfaces";
+import { ERROR_ACTION_TYPE, IBackgroundImage, IErrorManagement, LANGUAGE, Route } from "../../interfaces";
 
 import BackgroundImage from "./BackgroundImage";
 import { useEffect } from "react";
+import { ERROR_CODE } from "../../lib/errorCodes";
 
 interface IDisplayErrorProps {
 	route: Route | null
@@ -92,7 +93,7 @@ export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 			<div className={styles.error_management_main} onTouchEnd={clickHandler} onClick={devClick}>
 				{image === route.errorManagement.genericError &&
 					<div className={styles.error_management_message}>
-						<p>{errorState.message ? errorState.message : "An unexpected error occured"}</p>
+						<p>{errorState.message !== "" ? errorState.message : "An unexpected error occured"}</p>
 						{errorState.errorCode && <p id={styles.error_code}>Error code: <b>{errorState.errorCode}</b></p>}
 					</div>
 				}
@@ -105,7 +106,7 @@ export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 				<div className={styles.message}>
 					<div>
 						<h1>{getTranslatedTitle()}</h1>
-						<p>{errorState.message ? "Message: " + errorState.message : getTranslatedDefaultMessage()}</p>
+						<p>{errorState.message !== "" ? "Message: " + errorState.message : getTranslatedDefaultMessage()}</p>
 					</div>
 					{errorState.errorCode !== ERROR_CODE.C503 && <button onTouchEnd={clickHandler} onClick={devClick}>OK</button>}
 					{errorState.errorCode && <p id={styles.error_code}>Error code: <b>{errorState.errorCode}</b></p>}

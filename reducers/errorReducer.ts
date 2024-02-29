@@ -1,4 +1,5 @@
-import { ERROR_ACTION_TYPE, ERROR_CODE, IErrorAction, IErrorState } from "../interfaces";
+import { ERROR_ACTION_TYPE, IErrorAction, IErrorState } from "../interfaces";
+import { ERROR_CODE } from "../lib/errorCodes";
 
 export default function errorReducer(errorState: IErrorState, action: IErrorAction): IErrorState {
 	if (action.type === ERROR_ACTION_TYPE.SETERROR) {
