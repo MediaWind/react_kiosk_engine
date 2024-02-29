@@ -33,7 +33,7 @@ export default function ButtonInput(props: IButtonInputProps) {
 				bottom: styles.bottom,
 				right: styles.right,
 				left: styles.left,
-				zIndex: 1,
+				zIndex: 2,
 
 				width: styles.width,
 				height: styles.height,

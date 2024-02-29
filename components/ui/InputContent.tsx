@@ -2,15 +2,9 @@ import { useEffect, useState } from "react";
 
 import { eIdStatus } from "../../../core/hooks/useEId";
 
-import { APPOINTMENT_ACTION_TYPE, ACTION_TYPE, IInputAction, IInputContent, IService, INPUT_TYPE, PRINT_ACTION_TYPE, TICKET_DATA_ACTION_TYPE } from "../../interfaces";
+import { IInputContent, INPUT_TYPE } from "../../interfaces";
 
-import { useRouterContext } from "../../contexts/routerContext";
-import { useLanguageContext } from "../../contexts/languageContext";
-import { useTicketDataContext } from "../../contexts/ticketDataContext";
-import { useAppointmentContext } from "../../contexts/appointmentContext";
-import { usePrintContext } from "../../contexts/printContext";
 import { useEIdContext } from "../../contexts/eIdContext";
-import { useCustomActionContext } from "../../contexts/customActionContext";
 
 import ButtonInput from "./inputs/ButtonInput";
 import NumberInput from "./inputs/NumberInput";
@@ -18,18 +12,13 @@ import SelectInput from "./inputs/SelectInput";
 
 interface IInputContentProps {
 	content: IInputContent
+	onActionsTrigger: CallableFunction
 }
 
 export default function InputContent(props: IInputContentProps): JSX.Element {
-	const { content, } = props;
+	const { content, onActionsTrigger, } = props;
 
-	const { nextPage, previousPage, homePage, } = useRouterContext();
-	const { setLanguage, } = useLanguageContext();
-	const { dispatchTicketState, } = useTicketDataContext();
-	const { dispatchAppointmentState, } = useAppointmentContext();
-	const { dispatchPrintState, } = usePrintContext();
 	const { status, } = useEIdContext();
-	const { triggerAction, } = useCustomActionContext();
 
 	const [eIdBlock, setEIdBlock] = useState<boolean>(false);
 
@@ -52,55 +41,9 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 		}
 	}, []);
 
-	const actionHandler = () => {
-		content.actions.map((action) => doAction(action));
-
-		function doAction(action: IInputAction) {
-			switch (action.type) {
-				case ACTION_TYPE.NEXTPAGE:
-					nextPage(action.navigateTo);
-					break;
-				case ACTION_TYPE.PREVIOUSPAGE:
-					previousPage();
-					break;
-				case ACTION_TYPE.HOMEPAGE:
-					homePage();
-					break;
-				case ACTION_TYPE.CREATETICKET:
-					dispatchPrintState({ type: PRINT_ACTION_TYPE.REQUESTTICKETCREATION, payload: true, });
-					break;
-				case ACTION_TYPE.SAVESERVICE:
-					dispatchTicketState({
-						type: TICKET_DATA_ACTION_TYPE.SERVICEUPDATE,
-						payload: action.service as IService,
-					});
-					break;
-				case ACTION_TYPE.PRINTTICKET:
-					dispatchPrintState({ type: PRINT_ACTION_TYPE.REQUESTPRINT, payload: true, });
-					break;
-				case ACTION_TYPE.CHANGELANGUAGE:
-					setLanguage(latest => action.language ?? latest);
-					break;
-				case ACTION_TYPE.CHECKIN:
-					dispatchAppointmentState({
-						type: APPOINTMENT_ACTION_TYPE.UPDATECHECKINGIN,
-						payload: true,
-					});
-					break;
-				case ACTION_TYPE.CHECKOUT:
-					dispatchAppointmentState({
-						type: APPOINTMENT_ACTION_TYPE.UPDATECHECKINGOUT,
-						payload: true,
-					});
-					break;
-				case ACTION_TYPE.CUSTOM:
-					triggerAction();
-					break;
-				default:
-					break;
-			}
-		}
-	};
+	function actionHandler() {
+		onActionsTrigger(content.actions);
+	}
 
 	if (content.type === INPUT_TYPE.BUTTON) {
 		return (

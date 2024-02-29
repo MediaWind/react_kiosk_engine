@@ -130,7 +130,7 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 					bottom: selectStyles.bottom,
 					right: selectStyles.right,
 					left: selectStyles.left,
-					zIndex: 1,
+					zIndex: 3,
 
 					width: selectStyles.width,
 					height: selectStyles.height,
@@ -173,7 +173,7 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 						bottom: config?.dropdownStyles?.bottom,
 						right: config?.dropdownStyles?.right,
 						left: config?.dropdownStyles?.left,
-						zIndex: 2,
+						zIndex: 3,
 
 						width: config?.dropdownStyles?.width,
 						height: config?.dropdownStyles?.height,

@@ -1,5 +1,7 @@
 import { eIdData } from "../core/hooks/useEId";
 
+import { IKeyboard } from "./lib/keyboardTypes";
+
 //* --------------------------- *//
 //* JSON based types/interfaces *//
 //* --------------------------- *//
@@ -38,7 +40,7 @@ export interface IFlow {
 	id: string;
 	name: string;
 	homePage: string;
-	keyboardLayout?: KEYBOARD_LAYOUT;
+	keyboard?: IKeyboard;
 	navigateToHomePageAfter?: number;
 	pages: IPage[];
 	ticketParameters?: ITicketParameters;
@@ -75,11 +77,6 @@ export interface IErrorManagement {
 	//? Not necessarily errors, might need some refactoring here
 	eIdInserted?: IBackgroundImage;
 	eIdRead?: IBackgroundImage;
-}
-
-export enum KEYBOARD_LAYOUT {
-	CLASSIC = "classic",
-	CUSTOMMADE = "customMade"
 }
 
 export interface IPage {
@@ -142,11 +139,9 @@ export interface IInputContent {
 	name: string;
 	type: INPUT_TYPE;
 	actions: IInputAction[];
-	placeholder?: string;
-	autoFocus?: boolean;
-	textInput?: IInputField;
 	styles: IStyles;
-	selectConfig?: ISelectConfig
+	textInputConfig?: ITextInputConfig;
+	selectConfig?: ISelectConfig;
 }
 
 export enum INPUT_TYPE {
@@ -156,6 +151,15 @@ export enum INPUT_TYPE {
 	CARDREADER = "cardReader",
 	QRCODE = "qrCode",
 	SELECT = "select",
+}
+
+export interface ITextInputConfig {
+	textInput: IInputField
+	placeholder?: Record<LANGUAGE, string>
+	autoFocus?: boolean
+	textPreview?: boolean
+	forceLowerCase?: boolean
+	forceUpperCase?: boolean
 }
 
 export interface ISelectConfig {
@@ -198,6 +202,7 @@ export enum ACTION_TYPE {
 	CHECKIN = "checkin",
 	CHECKOUT = "checkout",
 	CUSTOM = "custom",
+	CHECKTEXTINPUTS = "checktextinputs"
 }
 
 export interface IService {
