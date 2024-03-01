@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+import { Variables } from "../../variables";
+
 import { IFlow, IPage } from "../interfaces";
 
 import { useFlowContext } from "../contexts/flowContext";
@@ -45,6 +47,8 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 	const [router, setRouter] = useState<IPage[]>([homePage]);
 	const [customPage, setCustomPage] = useState<JSX.Element | undefined>();
 
+	const [userIsInteracting, setUserIsInteracting] = useState<boolean>(false);
+
 	useEffect(() => {
 		setHomePage(getHomePage(flow));
 		setRouter([getHomePage(flow)]);
@@ -57,19 +61,19 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 	}, [errorState.hasError]);
 
 	useEffect(() => {
-		if (flow.navigateToHomePageAfter) {
-			const delay = setTimeout(() => {
-				if (router.slice(-1)[0] !== homePage) {
-					setRouter([homePage]);
-					onReset();
-				}
-			}, flow.navigateToHomePageAfter * 1000);
+		let delay: NodeJS.Timer;
 
-			return () => {
-				clearTimeout(delay);
-			};
+		if (flow.navigateToHomePageAfter && router.slice(-1)[0] !== homePage) {
+			delay = setTimeout(() => {
+				setRouter([homePage]);
+				onReset();
+			}, flow.navigateToHomePageAfter * 1000);
 		}
-	}, [router]);
+
+		return () => {
+			clearTimeout(delay);
+		};
+	}, [router, userIsInteracting]);
 
 	useEffect(() => {
 		if (router.slice(-1)[0] === homePage) {
@@ -125,8 +129,33 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 		}
 	}
 
+	function userInteractionStart() {
+		setUserIsInteracting(true);
+	}
+
+	function userInteractionEnd() {
+		setUserIsInteracting(false);
+	}
+
+	function devClickDown() {
+		if (Variables.PREVIEW) {
+			userInteractionStart();
+		}
+	}
+
+	function devClickUp() {
+		if (Variables.PREVIEW) {
+			userInteractionEnd();
+		}
+	}
+
 	return (
-		<>
+		<div
+			onTouchStart={userInteractionStart}
+			onTouchEnd={userInteractionEnd}
+			onMouseDown={devClickDown}
+			onMouseUp={devClickUp}
+		>
 			{flow.displayDate && <Date format={flow.displayDate.format} style={flow.displayDate.style} />}
 			{flow.displayTime && <Time format={flow.displayTime.format} style={flow.displayTime.style} />}
 
@@ -135,6 +164,6 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 					<ActivePage page={router.slice(-1)[0]} />
 				</RouterContext.Provider>
 			</CustomActionContext.Provider>
-		</>
+		</div>
 	);
 }
