@@ -5,7 +5,7 @@ import { Variables } from "../../variables";
 import { ERROR_ACTION_TYPE, IErrorAction, ServiceData } from "../interfaces";
 import { ERROR_CODE } from "../lib/errorCodes";
 
-export default function useServices(dispatchErrorState?: React.Dispatch<IErrorAction>): [ServiceData[], CallableFunction] {
+export default function useServices(dispatchErrorState: React.Dispatch<IErrorAction>): [ServiceData[], CallableFunction] {
 	const [services, setServices] = useState<ServiceData[]>([]);
 
 	async function getServices(filterClosed?: boolean, filterIds?: string[]) {
@@ -32,16 +32,14 @@ export default function useServices(dispatchErrorState?: React.Dispatch<IErrorAc
 			}
 		} catch (e) {
 			console.log(e);
-			if (dispatchErrorState) {
-				dispatchErrorState({
-					type: ERROR_ACTION_TYPE.SETERROR,
-					payload: {
-						hasError: true,
-						errorCode: ERROR_CODE.D500,
-						message: "Error caught - Unable to fetch services",
-					},
-				});
-			}
+			dispatchErrorState({
+				type: ERROR_ACTION_TYPE.SETERROR,
+				payload: {
+					hasError: true,
+					errorCode: ERROR_CODE.D500,
+					message: "Error caught - Unable to fetch services",
+				},
+			});
 		}
 	}
 
