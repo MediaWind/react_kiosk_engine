@@ -28,7 +28,7 @@ export default function useTicket(dispatchPrintState: React.Dispatch<IPrintActio
 									hasError: true,
 									errorCode: ERROR_CODE.C500,
 									message: "Service is closed",
-									errorServiceId: ticketState.service ? `${ticketState.service.serviceID}` : undefined,
+									errorServiceId: ticketState.service ? `${ticketState.service.serviceId}` : undefined,
 								},
 							});
 							break;
@@ -39,7 +39,7 @@ export default function useTicket(dispatchPrintState: React.Dispatch<IPrintActio
 									hasError: true,
 									errorCode: ERROR_CODE.C404,
 									message: "Ticket not found",
-									errorServiceId: ticketState.service ? `${ticketState.service.serviceID}` : undefined,
+									errorServiceId: ticketState.service ? `${ticketState.service.serviceId}` : undefined,
 								},
 							});
 							break;
@@ -50,7 +50,7 @@ export default function useTicket(dispatchPrintState: React.Dispatch<IPrintActio
 									hasError: true,
 									errorCode: ERROR_CODE.C404,
 									message: "Ticket not found or bad status",
-									errorServiceId: ticketState.service ? `${ticketState.service.serviceID}` : undefined,
+									errorServiceId: ticketState.service ? `${ticketState.service.serviceId}` : undefined,
 								},
 							});
 							break;
@@ -61,7 +61,7 @@ export default function useTicket(dispatchPrintState: React.Dispatch<IPrintActio
 									hasError: true,
 									errorCode: ERROR_CODE.F404,
 									message: "Service not found",
-									errorServiceId: ticketState.service ? `${ticketState.service.serviceID}` : undefined,
+									errorServiceId: ticketState.service ? `${ticketState.service.serviceId}` : undefined,
 								},
 							});
 							break;
@@ -72,7 +72,7 @@ export default function useTicket(dispatchPrintState: React.Dispatch<IPrintActio
 									hasError: true,
 									errorCode: ERROR_CODE.B500,
 									message: data.status_reason,
-									errorServiceId: ticketState.service ? `${ticketState.service.serviceID}` : undefined,
+									errorServiceId: ticketState.service ? `${ticketState.service.serviceId}` : undefined,
 								},
 							});
 							break;

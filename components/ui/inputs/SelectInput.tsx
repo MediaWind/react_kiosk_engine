@@ -112,7 +112,7 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 		if (serviceOptions.length > 0) {
 			dispatchTicketState({
 				type: TICKET_DATA_ACTION_TYPE.SERVICEUPDATE,
-				payload: { serviceID: parseInt(value), },
+				payload: { serviceId: parseInt(value), },
 			});
 		}
 

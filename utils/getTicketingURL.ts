@@ -7,7 +7,7 @@ export default function getTicketingURL(ticketState: ITicketDataState, flow: IFl
 	let params = `
 	id_project=${Variables.W_ID_PROJECT}
 	&serial=${Variables.SERIAL_PLAYER}
-	&id_service=${ticketState.service?.serviceID}
+	&id_service=${ticketState.service?.serviceId}
 	&priority=${ticketState.service?.priority ?? 1}
 	&lang=${ticketState.language ?? "fr"}
 	`;
