@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { Variables } from "../../variables";
 import { ERROR_ACTION_TYPE, ERROR_CODE, IErrorAction, IFlow, IPrintAction, ITicketDataState, PRINT_ACTION_TYPE } from "../interfaces";
 
@@ -6,11 +7,13 @@ import { testPDF } from "../utils/testPDF";
 
 export default function useTicket(dispatchPrintState: React.Dispatch<IPrintAction>, dispatchError: React.Dispatch<IErrorAction>): [CallableFunction] {
 	async function createTicket(ticketState: ITicketDataState, flow: IFlow) {
-		console.log("Creating ticket: ", ticketState);
+		console.log(dayjs().unix() + " - useTicket - createTicket:10 - ticketState: ", ticketState);
 
 		try {
 			const response = await fetch(getTicketingURL(ticketState, flow));
+			console.log(dayjs().unix() + " - useTicket - createTicket:14 - response status: ", response.status);
 			const data = await response.json();
+			console.log(dayjs().unix() + " - useTicket -createTicket:16 - data:", data);
 
 			if (data.status == 1) {
 				dispatchPrintState({

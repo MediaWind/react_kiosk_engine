@@ -85,7 +85,7 @@ export default function usePrinter(dispatchError: React.Dispatch<IErrorAction>):
 			return;
 		}
 
-		console.log("Printing!", pdf);
+		// console.log("Printing!", pdf);
 		setIsPrinting(true);
 
 		try {
