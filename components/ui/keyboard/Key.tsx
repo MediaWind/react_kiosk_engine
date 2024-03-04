@@ -71,7 +71,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 	}, [pressed]);
 
 	useEffect(() => {
-		if (customValue) {
+		if (customValue !== "") {
 			setText(customValue);
 			return;
 		}
