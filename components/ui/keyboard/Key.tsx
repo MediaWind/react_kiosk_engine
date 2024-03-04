@@ -25,6 +25,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 
 	const [customActions, setCustomActions] = useState<IInputAction[]>([]);
 	const [customStyles, setCustomStyle] = useState<CSSProperties>();
+	const [customValue, setCustomValue] = useState<string>("");
 
 	const [pressed, setPressed] = useState<boolean>(false);
 
@@ -40,6 +41,10 @@ export default function Key(props: IKeyProps): JSX.Element {
 								setCustomStyle(latest => {
 									return { ...latest, ...key.style, };
 								});
+
+								if (key.valueOverride) {
+									setCustomValue(key.valueOverride);
+								}
 							}
 						});
 					}
@@ -66,6 +71,11 @@ export default function Key(props: IKeyProps): JSX.Element {
 	}, [pressed]);
 
 	useEffect(() => {
+		if (customValue !== "") {
+			setText(customValue);
+			return;
+		}
+
 		if (capslock && config.text?.capslockValue) {
 			setText(config.text.capslockValue);
 		} else if (specChars && config.text?.specCharsValue) {
@@ -73,7 +83,7 @@ export default function Key(props: IKeyProps): JSX.Element {
 		} else {
 			setText(config.text?.defaultValue ?? (config.action === KEY_ACTION.SPACEBAR ? "Space" : ""));
 		}
-	}, [capslock, specChars]);
+	}, [capslock, specChars, customValue]);
 
 	function triggerActions() {
 		if (customActions.length > 0 && triggerActionsOverride) {

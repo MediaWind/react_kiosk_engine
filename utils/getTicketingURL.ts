@@ -3,11 +3,17 @@ import { Variables } from "../../variables";
 import { IFlow, ITicketDataState } from "../interfaces";
 
 export default function getTicketingURL(ticketState: ITicketDataState, flow: IFlow): URL {
+	let serviceId = ticketState.service?.serviceId;
+
+	if (ticketState.service?.devServiceId && (process.env.NODE_ENV !== "production" || Variables.DOMAINE === "modules.greenplayer.com")) {
+		serviceId = ticketState.service.devServiceId;
+	}
+
 	const baseURL = `${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/ticket.php?`;
 	let params = `
 	id_project=${Variables.W_ID_PROJECT}
 	&serial=${Variables.SERIAL_PLAYER}
-	&id_service=${ticketState.service?.serviceID}
+	&id_service=${serviceId}
 	&priority=${ticketState.service?.priority ?? 1}
 	&lang=${ticketState.language ?? "fr"}
 	`;

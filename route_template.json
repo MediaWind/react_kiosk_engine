@@ -140,7 +140,7 @@
 						"delay": 5,
 						"printTicket": true,
 						"service": {
-							"serviceID": 10,
+							"serviceId": 10,
 							"priority": 0
 						}
 					},
@@ -159,7 +159,7 @@
 										"navigateTo": "UUID",
 
 										"service": {
-											"serviceID": 10,
+											"serviceId": 10,
 											"priority": 0
 										},
 
