@@ -208,6 +208,7 @@ export enum ACTION_TYPE {
 
 export interface IService {
 	serviceId: number;
+	devServiceId?: number;
 	/**
  * 1 = normal
  * 2 = high
