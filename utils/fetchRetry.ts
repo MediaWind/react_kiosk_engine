@@ -1,21 +1,38 @@
-import dayjs from "dayjs";
+export default async function fetchRetry(
+	url: string | URL,
+	init?: RequestInit,
+	tries = 6
+): Promise<Response> {
+	const controller = new AbortController();
+	let attempt = 0;
+	const fib = [1, 2];
 
-export default async function fetchRetry(url: URL | string, retries = 0): Promise<Response | undefined> {
-	let response;
+	while (attempt <= tries) {
+		try {
+			const signal = controller.signal;
 
-	try {
-		response = await fetch(url);
+			const response = await fetch(url, { ...init, signal: signal, });
+			if (response.ok) {
+				return response;
+			} else {
+				throw new Error(`Request failed with status: ${response.status}`);
+			}
+		} catch (e) {
+			if (attempt === tries) {
+				controller.abort();
+				throw e;
+			} else {
+				const waitTime = fib[attempt];
+				console.log(`Attempt ${attempt + 1}/${tries + 1} failed. Retrying in ${waitTime * 100}ms.`);
+				console.error(e);
+				await new Promise(resolve => setTimeout(resolve, waitTime * 100));
+				attempt++;
 
-		if (!response.ok && retries < 3) {
-			setTimeout(() => {
-				fetchRetry(url, retries + 1);
-			}, 100);
-		} else if (retries >= 3) {
-			throw new Error("Too many fetch retries");
-		} else {
-			return response;
+				fib.push(fib[fib.length - 1] + fib[fib.length - 2]);
+			}
 		}
-	} catch (err) {
-		console.log(dayjs().unix() + " - fetchRetry:19 - error: " + err);
 	}
+
+	controller.abort();
+	throw new Error(`All ${tries + 1} attempts failed.`);
 }
