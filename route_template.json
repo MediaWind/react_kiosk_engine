@@ -387,6 +387,27 @@
 			"english": "optional path"
 		},
 		"serviceClosed": {
+			"_use 'default' or service id": {
+				"default": "required path",
+				"french": "optional path",
+				"dutch": "optional path",
+				"english": "optional path"
+			}
+		},
+		"eIdTimeout": {
+			"default": "required path",
+			"french": "optional path",
+			"dutch": "optional path",
+			"english": "optional path"
+		},
+
+		"eIdInserted": {
+			"default": "required path",
+			"french": "optional path",
+			"dutch": "optional path",
+			"english": "optional path"
+		},
+		"eIdRead": {
 			"default": "required path",
 			"french": "optional path",
 			"dutch": "optional path",
