@@ -84,8 +84,8 @@ export interface IPage {
 	id: string;
 	name: string;
 	backgroundImage: IBackgroundImage;
-	medias?: IMedia[];
 	navigateToAfter?: ITimer
+	medias?: IMedia[];
 }
 
 export interface ITimer {

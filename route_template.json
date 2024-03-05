@@ -217,6 +217,7 @@
 						"printTicket": true,
 						"service": {
 							"serviceId": 10,
+							"devServiceId": 20,
 							"priority": 0
 						}
 					},
