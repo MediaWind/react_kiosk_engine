@@ -129,6 +129,7 @@ export interface IImageContent {
 	styles: IStyles;
 }
 
+//TODO: use snake case instead
 export enum ANIMATION_TYPE {
 	RIGHTLEFT = "rightToLeft",
 	BOTTOMTOP = "bottomToTop",
@@ -150,6 +151,7 @@ export enum INPUT_TYPE {
 	TEXT = "text",
 	NUMBER = "number",
 	CARDREADER = "cardReader",
+	//TODO: replace "qrCode" by "scanner"?
 	QRCODE = "qrCode",
 	SELECT = "select",
 }

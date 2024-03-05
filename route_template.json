@@ -225,6 +225,58 @@
 					"medias": [
 						{
 							"type": "input",
+							"content": {
+								"name": "string",
+								"type": "button",
+								"actions": [
+									{
+										"type": "nextpage",
+										"navigateTo": "page UUID"
+									},
+									{
+										"type": "previouspage"
+									},
+									{
+										"type": "homepage"
+									},
+									{
+										"type": "createticket"
+									},
+									{
+										"type": "printticket"
+									},
+									{
+										"type": "saveservice",
+										"service": {
+											"serviceId": 1,
+											"devServiceId": 2,
+											"priority": 0
+										}
+									},
+									{
+										"type": "changelanguage",
+										"language": "fr|nl|en|es"
+									},
+									{
+										"type": "checkin"
+									},
+									{
+										"type": "checkout"
+									},
+									{
+										"type": "custom"
+									},
+									{
+										"type": "checktextinputs"
+									}
+								],
+								"styles": {
+									"all": "IStyles - to be replaced with css properties"
+								}
+							}
+						},
+						{
+							"type": "input",
 
 							"content": {
 								"name": "string",
