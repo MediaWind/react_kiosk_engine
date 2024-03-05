@@ -150,6 +150,7 @@ export enum INPUT_TYPE {
 	BUTTON = "button",
 	TEXT = "text",
 	NUMBER = "number",
+	//TODO: replace "cardReader" by "eIdReader"?
 	CARDREADER = "cardReader",
 	//TODO: replace "qrCode" by "scanner"?
 	QRCODE = "qrCode",

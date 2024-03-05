@@ -156,45 +156,13 @@
 			"displayDate": {
 				"format": "DD MMMM YYYY",
 				"style": {
-					"top": "css property",
-					"left": "css property",
-					"bottom": "css property",
-					"right": "css property",
-					"width": "css property",
-					"height": "css property",
-					"padding": "css property",
-					"margin": "css property",
-					"borderWidth": "css property",
-					"borderStyle": "css property",
-					"borderColor": "css property",
-					"borderRadius": "css property",
-					"all": "css property",
-					"backgroundColor": "css property",
-					"textColor": "css property",
-					"fontSize": "css property",
-					"textAlign": "left|right|center"
+					"all": "IStyles - to be replaced with css properties"
 				}
 			},
 			"displayTime": {
 				"format": "HH:mm:ss",
 				"style": {
-					"top": "css property",
-					"left": "css property",
-					"bottom": "css property",
-					"right": "css property",
-					"width": "css property",
-					"height": "css property",
-					"padding": "css property",
-					"margin": "css property",
-					"borderWidth": "css property",
-					"borderStyle": "css property",
-					"borderColor": "css property",
-					"borderRadius": "css property",
-					"all": "css property",
-					"backgroundColor": "css property",
-					"textColor": "css property",
-					"fontSize": "css property",
-					"textAlign": "left|right|center"
+					"all": "IStyles - to be replaced with css properties"
 				}
 			},
 
@@ -227,7 +195,7 @@
 							"type": "input",
 							"content": {
 								"name": "string",
-								"type": "button",
+								"type": "button|number|cardReader|qrCode",
 								"actions": [
 									{
 										"type": "nextpage",
@@ -277,72 +245,40 @@
 						},
 						{
 							"type": "input",
-
 							"content": {
 								"name": "string",
-								"type": "button|text|number|cardReader|qrCode",
-								"actions": [
-									{
-										"type": "nextpage|previouspage|homepage|printticket|saveservice|changelanguage|checkin|checkout...",
-
-										"navigateTo": "UUID",
-
-										"service": {
-											"serviceId": 10,
-											"priority": 0
-										},
-
-										"language": "fr|nl|en|es"
-									}
-								],
-
-								"placeholder": "placeholder",
-								"autoFocus": false,
-								"textInput": {
-									"id": "text_input_id",
-									"value": "Default value",
-									"required": true
-								},
+								"type": "text",
+								"actions": ["..."],
 
 								"styles": {
-									"top": "css property",
-									"left": "css property",
-									"bottom": "css property",
-									"right": "css property",
-									"width": "css property",
-									"height": "css property",
-									"padding": "css property",
-									"margin": "css property",
-									"borderWidth": "css property",
-									"borderStyle": "css property",
-									"borderColor": "css property",
-									"borderRadius": "css property",
-									"all": "css property"
+									"all": "IStyles - to be replaced with css properties"
+								},
+
+								"textInputConfig": {
+									"textInput": {
+										"id": "id associated with the flow's ticketParameters",
+										"value": "value - usually let empty",
+										"required": false
+									},
+									"placeholder": {
+										"fr|en|es|nl": "placeholder"
+									},
+									"autoFocus": false,
+									"textPreview": false,
+									"forceLowerCase": false,
+									"forceUpperCase": false
 								}
 							}
 						},
 						{
 							"type": "input",
-
 							"content": {
 								"name": "string",
 								"type": "select",
 								"actions": ["..."],
 
 								"styles": {
-									"top": "css property",
-									"left": "css property",
-									"bottom": "css property",
-									"right": "css property",
-									"width": "css property",
-									"height": "css property",
-									"padding": "css property",
-									"margin": "css property",
-									"borderWidth": "css property",
-									"borderStyle": "css property",
-									"borderColor": "css property",
-									"borderRadius": "css property",
-									"all": "css property"
+									"all": "IStyles - to be replaced with css properties"
 								},
 
 								"selectConfig": {
@@ -357,8 +293,12 @@
 											"value": "option value"
 										}
 									],
-									"dropdownStyles": { "...": "css properties" },
-									"optionStyles": { "...": "css properties" },
+									"dropdownStyles": {
+										"all": "css properties"
+									},
+									"optionStyles": {
+										"all": "css properties"
+									},
 									"filterUnavailable": false,
 									"filterIds": ["service or agent ids"]
 								}
