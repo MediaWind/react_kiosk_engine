@@ -75,7 +75,83 @@
 				"idUserAgent": "text input ID"
 			},
 
-			"keyboardLayout": "classic|customMade",
+			"keyboard": {
+				"layout": "classic|compact|numpad|full|custom",
+				"mode": "azerty|qwerty",
+				"slideAnimation": "top|right|left|bottom|top_left|top_right|bottom_left|bottom_right",
+				"customLayout": {
+					"rows": [
+						{
+							"keys": [
+								{
+									"text": {
+										"defaultValue": "a",
+										"capslockValue": "A",
+										"specCharsValue": "!"
+									},
+									"action": "shift|alt|ctrl|spacebar|enter|backspace|specialchars",
+									"style": {
+										"all": "css properties"
+									}
+								}
+							],
+							"style": {
+								"all": "css properties"
+							}
+						}
+					]
+				},
+				"actionsOverride": {
+					"_row index": {
+						"_key index": [
+							{
+								"type": "nextpage|previouspage|homepage|printticket|saveservice|changelanguage|checkin|checkout...",
+								"navigateTo": "UUID",
+								"service": {
+									"serviceId": 1,
+									"devServiceId": 2,
+									"priority": 0
+								},
+								"language": "fr|en|es|nl"
+							}
+						]
+					}
+				},
+				"styleOverride": {
+					"board": {
+						"all": "css properties"
+					},
+					"rows": [
+						{
+							"index": "row index number|all",
+							"style": {
+								"all": "css properties"
+							},
+							"keys": [
+								{
+									"index": "key index number |all",
+									"style": {
+										"all": "css properties"
+									},
+									"valueOverride": "X"
+								}
+							]
+						}
+					],
+					"statusDot": {
+						"disabled": {
+							"all": "css properties"
+						},
+						"enabled": {
+							"all":"css properties"
+						},
+						"secondaryEnabled": {
+							"_comment": "when shiftlocked",
+							"all": "css properties"
+						}
+					}
+				}
+			},
 
 			"displayDate": {
 				"format": "DD MMMM YYYY",

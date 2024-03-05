@@ -41,12 +41,12 @@ export interface IFlow {
 	id: string;
 	name: string;
 	homePage: string;
-	keyboard?: IKeyboard;
 	navigateToHomePageAfter?: number;
-	pages: IPage[];
 	ticketParameters?: ITicketParameters;
+	keyboard?: IKeyboard;
 	displayDate?: IDateTime;
 	displayTime?: IDateTime;
+	pages: IPage[];
 }
 
 export interface ITicketParameters {
