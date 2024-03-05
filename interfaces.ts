@@ -41,12 +41,12 @@ export interface IFlow {
 	id: string;
 	name: string;
 	homePage: string;
-	keyboard?: IKeyboard;
 	navigateToHomePageAfter?: number;
-	pages: IPage[];
 	ticketParameters?: ITicketParameters;
+	keyboard?: IKeyboard;
 	displayDate?: IDateTime;
 	displayTime?: IDateTime;
+	pages: IPage[];
 }
 
 export interface ITicketParameters {
@@ -84,8 +84,8 @@ export interface IPage {
 	id: string;
 	name: string;
 	backgroundImage: IBackgroundImage;
-	medias?: IMedia[];
 	navigateToAfter?: ITimer
+	medias?: IMedia[];
 }
 
 export interface ITimer {
@@ -129,6 +129,7 @@ export interface IImageContent {
 	styles: IStyles;
 }
 
+//TODO: use snake case instead
 export enum ANIMATION_TYPE {
 	RIGHTLEFT = "rightToLeft",
 	BOTTOMTOP = "bottomToTop",
@@ -149,7 +150,9 @@ export enum INPUT_TYPE {
 	BUTTON = "button",
 	TEXT = "text",
 	NUMBER = "number",
+	//TODO: replace "cardReader" by "eIdReader"?
 	CARDREADER = "cardReader",
+	//TODO: replace "qrCode" by "scanner"?
 	QRCODE = "qrCode",
 	SELECT = "select",
 }

@@ -75,50 +75,94 @@
 				"idUserAgent": "text input ID"
 			},
 
-			"keyboardLayout": "classic|customMade",
+			"keyboard": {
+				"layout": "classic|compact|numpad|full|custom",
+				"mode": "azerty|qwerty",
+				"slideAnimation": "top|right|left|bottom|top_left|top_right|bottom_left|bottom_right",
+				"customLayout": {
+					"rows": [
+						{
+							"keys": [
+								{
+									"text": {
+										"defaultValue": "a",
+										"capslockValue": "A",
+										"specCharsValue": "!"
+									},
+									"action": "shift|alt|ctrl|spacebar|enter|backspace|specialchars",
+									"style": {
+										"all": "css properties"
+									}
+								}
+							],
+							"style": {
+								"all": "css properties"
+							}
+						}
+					]
+				},
+				"actionsOverride": {
+					"_row index": {
+						"_key index": [
+							{
+								"type": "nextpage|previouspage|homepage|printticket|saveservice|changelanguage|checkin|checkout...",
+								"navigateTo": "UUID",
+								"service": {
+									"serviceId": 1,
+									"devServiceId": 2,
+									"priority": 0
+								},
+								"language": "fr|en|es|nl"
+							}
+						]
+					}
+				},
+				"styleOverride": {
+					"board": {
+						"all": "css properties"
+					},
+					"rows": [
+						{
+							"index": "row index number|all",
+							"style": {
+								"all": "css properties"
+							},
+							"keys": [
+								{
+									"index": "key index number |all",
+									"style": {
+										"all": "css properties"
+									},
+									"valueOverride": "X"
+								}
+							]
+						}
+					],
+					"statusDot": {
+						"disabled": {
+							"all": "css properties"
+						},
+						"enabled": {
+							"all":"css properties"
+						},
+						"secondaryEnabled": {
+							"_comment": "when shiftlocked",
+							"all": "css properties"
+						}
+					}
+				}
+			},
 
 			"displayDate": {
 				"format": "DD MMMM YYYY",
 				"style": {
-					"top": "css property",
-					"left": "css property",
-					"bottom": "css property",
-					"right": "css property",
-					"width": "css property",
-					"height": "css property",
-					"padding": "css property",
-					"margin": "css property",
-					"borderWidth": "css property",
-					"borderStyle": "css property",
-					"borderColor": "css property",
-					"borderRadius": "css property",
-					"all": "css property",
-					"backgroundColor": "css property",
-					"textColor": "css property",
-					"fontSize": "css property",
-					"textAlign": "left|right|center"
+					"all": "IStyles - to be replaced with css properties"
 				}
 			},
 			"displayTime": {
 				"format": "HH:mm:ss",
 				"style": {
-					"top": "css property",
-					"left": "css property",
-					"bottom": "css property",
-					"right": "css property",
-					"width": "css property",
-					"height": "css property",
-					"padding": "css property",
-					"margin": "css property",
-					"borderWidth": "css property",
-					"borderStyle": "css property",
-					"borderColor": "css property",
-					"borderRadius": "css property",
-					"all": "css property",
-					"backgroundColor": "css property",
-					"textColor": "css property",
-					"fontSize": "css property",
-					"textAlign": "left|right|center"
+					"all": "IStyles - to be replaced with css properties"
 				}
 			},
 
@@ -141,6 +185,7 @@
 						"printTicket": true,
 						"service": {
 							"serviceId": 10,
+							"devServiceId": 20,
 							"priority": 0
 						}
 					},
@@ -148,72 +193,92 @@
 					"medias": [
 						{
 							"type": "input",
-
 							"content": {
 								"name": "string",
-								"type": "button|text|number|cardReader|qrCode",
+								"type": "button|number|cardReader|qrCode",
 								"actions": [
 									{
-										"type": "nextpage|previouspage|homepage|printticket|saveservice|changelanguage|checkin|checkout...",
-
-										"navigateTo": "UUID",
-
+										"type": "nextpage",
+										"navigateTo": "page UUID"
+									},
+									{
+										"type": "previouspage"
+									},
+									{
+										"type": "homepage"
+									},
+									{
+										"type": "createticket"
+									},
+									{
+										"type": "printticket"
+									},
+									{
+										"type": "saveservice",
 										"service": {
-											"serviceId": 10,
+											"serviceId": 1,
+											"devServiceId": 2,
 											"priority": 0
-										},
-
+										}
+									},
+									{
+										"type": "changelanguage",
 										"language": "fr|nl|en|es"
+									},
+									{
+										"type": "checkin"
+									},
+									{
+										"type": "checkout"
+									},
+									{
+										"type": "custom"
+									},
+									{
+										"type": "checktextinputs"
 									}
 								],
-
-								"placeholder": "placeholder",
-								"autoFocus": false,
-								"textInput": {
-									"id": "text_input_id",
-									"value": "Default value",
-									"required": true
-								},
-
 								"styles": {
-									"top": "css property",
-									"left": "css property",
-									"bottom": "css property",
-									"right": "css property",
-									"width": "css property",
-									"height": "css property",
-									"padding": "css property",
-									"margin": "css property",
-									"borderWidth": "css property",
-									"borderStyle": "css property",
-									"borderColor": "css property",
-									"borderRadius": "css property",
-									"all": "css property"
+									"all": "IStyles - to be replaced with css properties"
 								}
 							}
 						},
 						{
 							"type": "input",
+							"content": {
+								"name": "string",
+								"type": "text",
+								"actions": ["..."],
 
+								"styles": {
+									"all": "IStyles - to be replaced with css properties"
+								},
+
+								"textInputConfig": {
+									"textInput": {
+										"id": "id associated with the flow's ticketParameters",
+										"value": "value - usually let empty",
+										"required": false
+									},
+									"placeholder": {
+										"fr|en|es|nl": "placeholder"
+									},
+									"autoFocus": false,
+									"textPreview": false,
+									"forceLowerCase": false,
+									"forceUpperCase": false
+								}
+							}
+						},
+						{
+							"type": "input",
 							"content": {
 								"name": "string",
 								"type": "select",
 								"actions": ["..."],
 
 								"styles": {
-									"top": "css property",
-									"left": "css property",
-									"bottom": "css property",
-									"right": "css property",
-									"width": "css property",
-									"height": "css property",
-									"padding": "css property",
-									"margin": "css property",
-									"borderWidth": "css property",
-									"borderStyle": "css property",
-									"borderColor": "css property",
-									"borderRadius": "css property",
-									"all": "css property"
+									"all": "IStyles - to be replaced with css properties"
 								},
 
 								"selectConfig": {
@@ -228,8 +293,12 @@
 											"value": "option value"
 										}
 									],
-									"dropdownStyles": { "...": "css properties" },
-									"optionStyles": { "...": "css properties" },
+									"dropdownStyles": {
+										"all": "css properties"
+									},
+									"optionStyles": {
+										"all": "css properties"
+									},
 									"filterUnavailable": false,
 									"filterIds": ["service or agent ids"]
 								}
@@ -318,6 +387,27 @@
 			"english": "optional path"
 		},
 		"serviceClosed": {
+			"_use 'default' or service id": {
+				"default": "required path",
+				"french": "optional path",
+				"dutch": "optional path",
+				"english": "optional path"
+			}
+		},
+		"eIdTimeout": {
+			"default": "required path",
+			"french": "optional path",
+			"dutch": "optional path",
+			"english": "optional path"
+		},
+
+		"eIdInserted": {
+			"default": "required path",
+			"french": "optional path",
+			"dutch": "optional path",
+			"english": "optional path"
+		},
+		"eIdRead": {
 			"default": "required path",
 			"french": "optional path",
 			"dutch": "optional path",
