@@ -16,7 +16,7 @@ export default async function fetchRetry(url: string | URL, init?: RequestInit, 
 		} catch (e) {
 			if (attempt === tries) {
 				controller.abort();
-				throw new Error(`All ${tries + 1} attempts failed.`);
+				throw new Error(`fetchRetry - All ${tries + 1} attempts failed.`);
 			} else {
 				const waitTime = fib[attempt];
 				console.log(`Attempt ${attempt + 1}/${tries + 1} failed. Retrying in ${waitTime * 100}ms.`);
@@ -30,5 +30,5 @@ export default async function fetchRetry(url: string | URL, init?: RequestInit, 
 	}
 
 	controller.abort();
-	throw new Error(`All ${tries + 1} attempts failed.`);
+	throw new Error(`fetchRetry - All ${tries + 1} attempts failed.`);
 }
