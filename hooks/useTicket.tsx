@@ -1,6 +1,7 @@
 import { ERROR_ACTION_TYPE, IErrorAction, IFlow, IPrintAction, ITicketDataState, PRINT_ACTION_TYPE } from "../interfaces";
 import { ERROR_CODE } from "../lib/errorCodes";
 
+import fetchRetry from "../utils/fetchRetry";
 import getTicketingURL from "../utils/getTicketingURL";
 
 export default function useTicket(dispatchPrintState: React.Dispatch<IPrintAction>, dispatchError: React.Dispatch<IErrorAction>): [CallableFunction] {
@@ -8,7 +9,7 @@ export default function useTicket(dispatchPrintState: React.Dispatch<IPrintActio
 		console.log("Creating ticket: ", ticketState);
 
 		try {
-			const response = await fetch(getTicketingURL(ticketState, flow));
+			const response = await fetchRetry(getTicketingURL(ticketState, flow));
 			const data = await response.json();
 
 			if (data.status == 1) {

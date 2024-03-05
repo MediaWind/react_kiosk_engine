@@ -5,6 +5,8 @@ import { Variables } from "../../variables";
 import { AgentData, ERROR_ACTION_TYPE, IErrorAction } from "../interfaces";
 import { ERROR_CODE } from "../lib/errorCodes";
 
+import fetchRetry from "../utils/fetchRetry";
+
 export default function useAgents(dispatchErrorState: React.Dispatch<IErrorAction>): [AgentData[], CallableFunction] {
 	const [agents, setAgents] = useState<AgentData[]>([]);
 
@@ -13,7 +15,7 @@ export default function useAgents(dispatchErrorState: React.Dispatch<IErrorActio
 		const url = `${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/listUserAgent.php?id_project=${Variables.W_ID_PROJECT}&serial=${Variables.SERIAL}`;
 
 		try {
-			const response = await fetch(url);
+			const response = await fetchRetry(url);
 			const data = await response.json();
 
 			if (data.status == 1) {

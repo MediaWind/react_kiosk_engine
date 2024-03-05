@@ -5,6 +5,8 @@ import { Variables } from "../../variables";
 import { ERROR_ACTION_TYPE, IErrorAction, ServiceData } from "../interfaces";
 import { ERROR_CODE } from "../lib/errorCodes";
 
+import fetchRetry from "../utils/fetchRetry";
+
 export default function useServices(dispatchErrorState: React.Dispatch<IErrorAction>): [ServiceData[], CallableFunction] {
 	const [services, setServices] = useState<ServiceData[]>([]);
 
@@ -12,7 +14,7 @@ export default function useServices(dispatchErrorState: React.Dispatch<IErrorAct
 		const url = `${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/services.php?id_project=${Variables.W_ID_PROJECT}&serial=${Variables.SERIAL}`;
 
 		try {
-			const response = await fetch(url);
+			const response = await fetchRetry(url);
 			const data = await response.json();
 
 			if (data.array_services) {
