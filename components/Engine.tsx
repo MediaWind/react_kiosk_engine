@@ -22,6 +22,7 @@ import usePrinter from "../hooks/usePrinter";
 import useTicket from "../hooks/useTicket";
 import useAppointment from "../hooks/useAppointment";
 
+import { Console } from "../utils/console";
 import checkCurrentFlow from "../utils/checkCurrentFlow";
 
 import ContextsWrapper from "./ContextsWrapper";
@@ -154,6 +155,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	// Change current with flagged flow if no user interaction
 	useEffect(() => {
 		if (flaggedFlow !== currentFlow && readyToChangeFlow) {
+			Console.info("Changing flow");
 			setCurrentFlow(flaggedFlow);
 		}
 	}, [flaggedFlow, readyToChangeFlow]);
@@ -192,6 +194,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	//* --- *//
 	//Loading on eId inserted
 	useEffect(() => {
+		Console.info("eId status: " + eidStatus);
 		let delay: NodeJS.Timer;
 
 		if (eidStatus === eIdStatus.INSERTED) {
@@ -228,6 +231,8 @@ function Engine(props: IEngineProps): JSX.Element {
 	// Updates eId Data in reducer
 	useEffect(() => {
 		if (eIdData != null) {
+			Console.info("Updating eId data");
+			Console.info("Zip from eId: " + eIdData.addressZip);
 			dispatchTicketState({
 				type: TICKET_DATA_ACTION_TYPE.EIDUPDATE,
 				payload: eIdData as eIdData,
@@ -345,7 +350,7 @@ function Engine(props: IEngineProps): JSX.Element {
 				},
 			});
 		} else {
-			console.warn("%cEngine Warning:%cYou tried to trigger a custom action, but no action was passed to Engine.\n\nUse onCustomAction as a prop to trigger a custom action.", "font-size: 12px; font-weight: bold; text-decoration: underline;");
+			Console.warn("You tried to trigger a custom action, but no action was passed to Engine. Use onCustomAction as a prop to trigger a custom action.");
 		}
 	}
 
