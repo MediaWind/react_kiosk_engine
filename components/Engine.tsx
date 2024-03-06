@@ -232,7 +232,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	useEffect(() => {
 		if (eIdData != null) {
 			Console.info("Updating eId data");
-			Console.info("Zip from eId: " + eIdData.addressZip);
+			Console.info("Zip code from eId: " + eIdData.addressZip);
 			dispatchTicketState({
 				type: TICKET_DATA_ACTION_TYPE.EIDUPDATE,
 				payload: eIdData as eIdData,
@@ -317,8 +317,11 @@ function Engine(props: IEngineProps): JSX.Element {
 	}
 
 	function resetAll() {
+		Console.info("Resetting all data");
 		resetTicketData();
-		resetQrCode();
+		if (qrCode !== "") {
+			resetQrCode();
+		}
 
 		setReadyToChangeFlow(true);
 		setLanguage(undefined);

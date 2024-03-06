@@ -15,6 +15,7 @@ import doActions from "../utils/doActions";
 import FlowMedia from "./FlowMedia";
 import BackgroundImage from "./ui/BackgroundImage";
 import TextInputsManager from "./TextInputsManager";
+import { Console } from "../utils/console";
 
 interface IActivePageProps {
 	page: IPage
@@ -137,6 +138,11 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 				setInvalidTextInputs(invalidInputs);
 				return;
 			}
+		}
+
+		if (textInputs.length > 0) {
+			Console.info("Text inputs updated: ");
+			ticketState.textInputDatas.map(input => Console.log(`input ${input.id}: ${input.value.slice(0, 1)}${"*".repeat(input.value.slice(1).length)}`));
 		}
 
 		doActions(actions, {

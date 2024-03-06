@@ -17,7 +17,6 @@ export default function useScanner(): [string, CallableFunction, CallableFunctio
 	}
 
 	function resetAll() {
-		Console.info("Resetting QR code");
 		setReturnedQrCodeText("");
 		setCurrentQrText("");
 	}
