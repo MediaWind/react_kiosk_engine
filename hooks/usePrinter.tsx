@@ -6,6 +6,7 @@ import { Variables } from "../../variables";
 
 import { ERROR_ACTION_TYPE, IErrorAction, IErrorState } from "../interfaces";
 import { ERROR_CODE } from "../lib/errorCodes";
+
 import { Console } from "../utils/console";
 
 export default function usePrinter(dispatchError: React.Dispatch<IErrorAction>): [CallableFunction, boolean, CallableFunction] {
@@ -82,7 +83,7 @@ export default function usePrinter(dispatchError: React.Dispatch<IErrorAction>):
 				dispatchError({ type: ERROR_ACTION_TYPE.CLEARERROR, });
 			}
 		} catch (error) {
-			Console.error("Error when checking printer status: error caught.", { fileName: "usePrinter", functionName: "checkPrinterStatus", lineNumber: 85, });
+			Console.error("Error when checking printer status: error caught.", { fileName: "usePrinter", functionName: "checkPrinterStatus", lineNumber: 86, });
 			Console.error(error);
 			dispatchError({
 				type: ERROR_ACTION_TYPE.SETERROR,
@@ -108,7 +109,7 @@ export default function usePrinter(dispatchError: React.Dispatch<IErrorAction>):
 				const result = await Printer.print(pdf);
 
 				if (!result) {
-					Console.error("Error when trying to print: result is undefined.", { fileName: "usePrinter", functionName: "print", lineNumber: 111, });
+					Console.error("Error when trying to print: result is undefined.", { fileName: "usePrinter", functionName: "print", lineNumber: 112, });
 					dispatchError({
 						type: ERROR_ACTION_TYPE.SETERROR,
 						payload: {
@@ -120,8 +121,8 @@ export default function usePrinter(dispatchError: React.Dispatch<IErrorAction>):
 				}
 			}
 		} catch (err) {
-			Console.error("Error when trying to print: error caught.", { fileName: "usePrinter", functionName: "print", lineNumber: 123, });
-			Console.log(err);
+			Console.error("Error when trying to print: error caught.", { fileName: "usePrinter", functionName: "print", lineNumber: 124, });
+			Console.error(err);
 			dispatchError({
 				type: ERROR_ACTION_TYPE.SETERROR,
 				payload: {
