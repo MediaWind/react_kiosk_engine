@@ -10,6 +10,7 @@ import { useTicketDataContext } from "../contexts/ticketDataContext";
 import { useAppointmentContext } from "../contexts/appointmentContext";
 import { useCustomActionContext } from "../contexts/customActionContext";
 
+import { Console } from "../utils/console";
 import doActions from "../utils/doActions";
 
 import FlowMedia from "./FlowMedia";
@@ -137,6 +138,11 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 				setInvalidTextInputs(invalidInputs);
 				return;
 			}
+		}
+
+		if (textInputs.length > 0) {
+			Console.info("Text inputs updated: ");
+			ticketState.textInputDatas.map(input => Console.log(`input ${input.id}: ${input.value.slice(0, 1)}${"*".repeat(input.value.slice(1).trim().length)}`));
 		}
 
 		doActions(actions, {

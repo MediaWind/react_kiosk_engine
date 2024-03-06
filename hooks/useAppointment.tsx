@@ -4,13 +4,15 @@ import { Variables } from "../../variables";
 import { APPOINTMENT_ACTION_TYPE, ERROR_ACTION_TYPE, IAppointmentAction, IErrorAction, IErrorState } from "../interfaces";
 import { ERROR_CODE } from "../lib/errorCodes";
 
-import { testPDF } from "../utils/testPDF";
+import { Console } from "../utils/console";
 import fetchRetry from "../utils/fetchRetry";
+import { testPDF } from "../utils/testPDF";
 
 export default function useAppointment(dispatchAppointment: React.Dispatch<IAppointmentAction>, dispatchError: React.Dispatch<IErrorAction>): [string, CallableFunction, CallableFunction] {
 	const [appointmentTicketPdf, setAppointmentTicketPDF] = useState<string>("");
 
 	async function checkIn(qrCode: string) {
+		Console.info("Appointment check in...");
 		setAppointmentTicketPDF("");
 
 		const checkinURL = `
@@ -20,15 +22,13 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 			&qrcode=${qrCode}
 			pdf_ticket=base_64
 		`;
-		// console.log("🚀 ~ checkIn ~ checkinURL:", checkinURL);
 
 		try {
 			const response = await fetchRetry(checkinURL);
 			const data = await response.json();
-			console.log("🚀 ~ checkIn ~ data:", data);
 
 			if (data.status != 1) {
-				//* Error
+				Console.error("Error when trying to check in appointment: data status " + data.status ?? "undefined", { fileName: "useAppointment", functionName: "checkIn", lineNumber: 31, });
 				if (Variables.PREVIEW) {
 					dispatchAppointment({
 						type: APPOINTMENT_ACTION_TYPE.UPDATECHECKEDIN,
@@ -54,6 +54,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 
 					setAppointmentTicketPDF(data.pdf);
 				} else {
+					Console.error("Error when trying to check in appointment: pdf is null", { fileName: "useAppointment", functionName: "checkIn", lineNumber: 57, });
 					dispatchError({
 						type: ERROR_ACTION_TYPE.SETERROR,
 						payload: {
@@ -65,8 +66,8 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 				}
 			}
 		} catch (err) {
-			console.log(err);
-
+			Console.error("Error when trying to check in appointment: error caught.", { fileName: "useAppointment", functionName: "checkIn", lineNumber: 69, });
+			Console.error(err);
 			if (err instanceof Error) {
 				if (err.message.split("-")[0].trim() === "fetchRetry") {
 					dispatchError({
@@ -107,6 +108,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 	}
 
 	async function checkOut(qrCode: string) {
+		Console.info("Appointment check in...");
 		setAppointmentTicketPDF("");
 
 		const checkoutURL = `
@@ -119,16 +121,23 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 		try {
 			const response = await fetchRetry(checkoutURL);
 			const data = await response.json();
-			console.log("🚀 ~ checkOut ~ data:", data);
 
 			if (data.status != 1) {
+				Console.error("Error when trying to check out appointment: data status " + data.status ?? "undefined", { fileName: "useAppointment", functionName: "checkOut", lineNumber: 126, });
 				if (Variables.PREVIEW) {
 					dispatchAppointment({
 						type: APPOINTMENT_ACTION_TYPE.UPDATECHECKEDOUT,
 						payload: true,
 					});
 				} else {
-					//TODO: add error management
+					dispatchError({
+						type: ERROR_ACTION_TYPE.SETERROR,
+						payload: {
+							hasError: true,
+							errorCode: ERROR_CODE.B500,
+							message: "Unable to fetch ticket PDF (Status 0)",
+						} as IErrorState,
+					});
 				}
 			} else {
 				dispatchAppointment({
@@ -137,8 +146,8 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 				});
 			}
 		} catch (err) {
-			console.log(err);
-
+			Console.error("Error when trying to check out appointment: error caught.", { fileName: "useAppointment", functionName: "checkOut", lineNumber: 149, });
+			Console.error(err);
 			if (err instanceof Error) {
 				if (err.message.split("-")[0].trim() === "fetchRetry") {
 					dispatchError({

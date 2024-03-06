@@ -1,12 +1,13 @@
 import { ERROR_ACTION_TYPE, IErrorAction, IFlow, IPrintAction, ITicketDataState, PRINT_ACTION_TYPE } from "../interfaces";
 import { ERROR_CODE } from "../lib/errorCodes";
 
+import { Console } from "../utils/console";
 import fetchRetry from "../utils/fetchRetry";
 import getTicketingURL from "../utils/getTicketingURL";
 
 export default function useTicket(dispatchPrintState: React.Dispatch<IPrintAction>, dispatchError: React.Dispatch<IErrorAction>): [CallableFunction] {
 	async function createTicket(ticketState: ITicketDataState, flow: IFlow) {
-		console.log("Creating ticket: ", ticketState);
+		Console.info("Creating ticket...");
 
 		try {
 			const response = await fetchRetry(getTicketingURL(ticketState, flow));
@@ -18,9 +19,8 @@ export default function useTicket(dispatchPrintState: React.Dispatch<IPrintActio
 					payload: data.pdf,
 				});
 			} else {
-				console.log("Error: unable to create ticket. Data:", data);
-
 				if (data.status_reason) {
+					Console.error("Error when trying to create ticket - data.status_reason: " + data.status_reason, { fileName: "useTicket", functionName: "createTicket", lineNumber: 23, });
 					switch (data.status_reason) {
 						case "service_closed":
 							dispatchError({
@@ -79,6 +79,7 @@ export default function useTicket(dispatchPrintState: React.Dispatch<IPrintActio
 							break;
 					}
 				} else {
+					Console.error("Error when trying to create ticket - data status: " + data.status, { fileName: "useTicket", functionName: "createTicket", lineNumber: 82, });
 					dispatchError({
 						type: ERROR_ACTION_TYPE.SETERROR,
 						payload: {
@@ -90,8 +91,8 @@ export default function useTicket(dispatchPrintState: React.Dispatch<IPrintActio
 				}
 			}
 		} catch (err) {
-			console.log(err);
-
+			Console.error("Error caught when trying to create ticket", { fileName: "useTicket", functionName: "createTicket", lineNumber: 94, });
+			Console.error(err);
 			if (err instanceof Error) {
 				if (err.message.split("-")[0].trim() === "fetchRetry") {
 					dispatchError({

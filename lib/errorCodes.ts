@@ -133,6 +133,11 @@ export enum ERROR_CODE {
 	 */
 	D500 = "500-D",
 
+	/**
+	 * 500-E: Something went wrong when trying to fetch services
+	 */
+	E500 = "500-E",
+
 	//? -- Service unavailable/hardware errors -- //
 
 	/**

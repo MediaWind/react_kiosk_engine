@@ -7,6 +7,8 @@ import { Variables } from "../../variables";
 import { ERROR_ACTION_TYPE, IErrorAction, IErrorState } from "../interfaces";
 import { ERROR_CODE } from "../lib/errorCodes";
 
+import { Console } from "../utils/console";
+
 export default function usePrinter(dispatchError: React.Dispatch<IErrorAction>): [CallableFunction, boolean, CallableFunction] {
 	const [isPrinting, setIsPrinting] = useState<boolean>(false);
 
@@ -47,22 +49,33 @@ export default function usePrinter(dispatchError: React.Dispatch<IErrorAction>):
 					} as IErrorState,
 				});
 			} else if (data.status == undefined || data.status.status == 0) {
-				if (data.status.array_alerts.includes("No paper")) {
-					dispatchError({
-						type: ERROR_ACTION_TYPE.SETERROR,
-						payload: {
-							hasError: true,
-							errorCode: ERROR_CODE.C503,
-							message: "No paper in the printer",
-						} as IErrorState,
-					});
+				if (data.status && data.status.array_alerts) {
+					if (data.status.array_alerts.includes("No paper")) {
+						dispatchError({
+							type: ERROR_ACTION_TYPE.SETERROR,
+							payload: {
+								hasError: true,
+								errorCode: ERROR_CODE.C503,
+								message: "No paper in the printer",
+							} as IErrorState,
+						});
+					} else {
+						dispatchError({
+							type: ERROR_ACTION_TYPE.SETERROR,
+							payload: {
+								hasError: true,
+								errorCode: ERROR_CODE.D503,
+								message: "Printer error: " + data.status.array_alerts.join(", "),
+							} as IErrorState,
+						});
+					}
 				} else {
 					dispatchError({
 						type: ERROR_ACTION_TYPE.SETERROR,
 						payload: {
 							hasError: true,
 							errorCode: ERROR_CODE.D503,
-							message: "Printer error: " + data.status.array_alerts.join(", "),
+							message: "Printer error: data status " + data.status.status ?? "undefined",
 						} as IErrorState,
 					});
 				}
@@ -70,6 +83,8 @@ export default function usePrinter(dispatchError: React.Dispatch<IErrorAction>):
 				dispatchError({ type: ERROR_ACTION_TYPE.CLEARERROR, });
 			}
 		} catch (error) {
+			Console.error("Error when checking printer status: error caught.", { fileName: "usePrinter", functionName: "checkPrinterStatus", lineNumber: 86, });
+			Console.error(error);
 			dispatchError({
 				type: ERROR_ACTION_TYPE.SETERROR,
 				payload: {
@@ -86,7 +101,7 @@ export default function usePrinter(dispatchError: React.Dispatch<IErrorAction>):
 			return;
 		}
 
-		console.log("Printing!", pdf);
+		Console.info("Printing...");
 		setIsPrinting(true);
 
 		try {
@@ -94,6 +109,7 @@ export default function usePrinter(dispatchError: React.Dispatch<IErrorAction>):
 				const result = await Printer.print(pdf);
 
 				if (!result) {
+					Console.error("Error when trying to print: result is undefined.", { fileName: "usePrinter", functionName: "print", lineNumber: 112, });
 					dispatchError({
 						type: ERROR_ACTION_TYPE.SETERROR,
 						payload: {
@@ -105,7 +121,8 @@ export default function usePrinter(dispatchError: React.Dispatch<IErrorAction>):
 				}
 			}
 		} catch (err) {
-			console.log(err);
+			Console.error("Error when trying to print: error caught.", { fileName: "usePrinter", functionName: "print", lineNumber: 124, });
+			Console.error(err);
 			dispatchError({
 				type: ERROR_ACTION_TYPE.SETERROR,
 				payload: {

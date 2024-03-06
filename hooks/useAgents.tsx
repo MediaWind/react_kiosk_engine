@@ -5,6 +5,7 @@ import { Variables } from "../../variables";
 import { AgentData, ERROR_ACTION_TYPE, IErrorAction } from "../interfaces";
 import { ERROR_CODE } from "../lib/errorCodes";
 
+import { Console } from "../utils/console";
 import fetchRetry from "../utils/fetchRetry";
 
 export default function useAgents(dispatchErrorState: React.Dispatch<IErrorAction>): [AgentData[], CallableFunction] {
@@ -12,6 +13,7 @@ export default function useAgents(dispatchErrorState: React.Dispatch<IErrorActio
 
 	async function getUserAgents(filterIds?: string[]) {
 		//TODO: filter unavailable agents? don't know if that's available in the module yet
+		Console.info("Fetching agents...");
 		const url = `${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/listUserAgent.php?id_project=${Variables.W_ID_PROJECT}&serial=${Variables.SERIAL}`;
 
 		try {
@@ -41,6 +43,7 @@ export default function useAgents(dispatchErrorState: React.Dispatch<IErrorActio
 					return returnedAgents;
 				});
 			} else {
+				Console.error("Error when trying to fetch agents: data status " + data.status ?? "undefined", { fileName: "useAgents", functionName: "getUserAgents", lineNumber: 46, });
 				dispatchErrorState({
 					type: ERROR_ACTION_TYPE.SETERROR,
 					payload: {
@@ -51,8 +54,8 @@ export default function useAgents(dispatchErrorState: React.Dispatch<IErrorActio
 				});
 			}
 		} catch (err) {
-			console.log(err);
-
+			Console.error("Error when trying to fetch agents: error caught. ", { fileName: "useAgents", functionName: "getUserAgents", lineNumber: 57, });
+			Console.error(err);
 			if (err instanceof Error) {
 				if (err.message.split("-")[0].trim() === "fetchRetry") {
 					dispatchErrorState({
