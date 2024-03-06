@@ -1,3 +1,4 @@
+import { CSSProperties } from "react";
 import { eIdData } from "../core/hooks/useEId";
 
 import { ERROR_CODE } from "./lib/errorCodes";
@@ -62,7 +63,7 @@ export interface ITicketParameters {
 
 export interface IDateTime {
 	format?: string
-	style: IStyles
+	style: CSSProperties
 }
 
 export interface IErrorManagement {
