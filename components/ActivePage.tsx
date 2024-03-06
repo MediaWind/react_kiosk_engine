@@ -10,12 +10,12 @@ import { useTicketDataContext } from "../contexts/ticketDataContext";
 import { useAppointmentContext } from "../contexts/appointmentContext";
 import { useCustomActionContext } from "../contexts/customActionContext";
 
+import { Console } from "../utils/console";
 import doActions from "../utils/doActions";
 
 import FlowMedia from "./FlowMedia";
 import BackgroundImage from "./ui/BackgroundImage";
 import TextInputsManager from "./TextInputsManager";
-import { Console } from "../utils/console";
 
 interface IActivePageProps {
 	page: IPage
