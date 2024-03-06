@@ -1,6 +1,7 @@
 import { ERROR_ACTION_TYPE, IErrorAction, IFlow, IPrintAction, ITicketDataState, PRINT_ACTION_TYPE } from "../interfaces";
 import { ERROR_CODE } from "../lib/errorCodes";
 
+import fetchRetry from "../utils/fetchRetry";
 import getTicketingURL from "../utils/getTicketingURL";
 
 export default function useTicket(dispatchPrintState: React.Dispatch<IPrintAction>, dispatchError: React.Dispatch<IErrorAction>): [CallableFunction] {
@@ -8,7 +9,7 @@ export default function useTicket(dispatchPrintState: React.Dispatch<IPrintActio
 		console.log("Creating ticket: ", ticketState);
 
 		try {
-			const response = await fetch(getTicketingURL(ticketState, flow));
+			const response = await fetchRetry(getTicketingURL(ticketState, flow));
 			const data = await response.json();
 
 			if (data.status == 1) {
@@ -90,14 +91,37 @@ export default function useTicket(dispatchPrintState: React.Dispatch<IPrintActio
 			}
 		} catch (err) {
 			console.log(err);
-			dispatchError({
-				type: ERROR_ACTION_TYPE.SETERROR,
-				payload: {
-					hasError: true,
-					errorCode: ERROR_CODE.B500,
-					message: "Error caught - Unable to create ticket",
-				},
-			});
+
+			if (err instanceof Error) {
+				if (err.message.split("-")[0].trim() === "fetchRetry") {
+					dispatchError({
+						type: ERROR_ACTION_TYPE.SETERROR,
+						payload: {
+							hasError: true,
+							errorCode: ERROR_CODE.A429,
+							message: "Too many retries",
+						},
+					});
+				} else {
+					dispatchError({
+						type: ERROR_ACTION_TYPE.SETERROR,
+						payload: {
+							hasError: true,
+							errorCode: ERROR_CODE.B500,
+							message: "Error caught - " + err.message,
+						},
+					});
+				}
+			} else {
+				dispatchError({
+					type: ERROR_ACTION_TYPE.SETERROR,
+					payload: {
+						hasError: true,
+						errorCode: ERROR_CODE.B500,
+						message: "Error caught - Unable to create ticket",
+					},
+				});
+			}
 		}
 	}
 

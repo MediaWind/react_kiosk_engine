@@ -100,9 +100,16 @@ export enum ERROR_CODE {
 	B409 = "409-B",
 
 	/**
-	 * Appointment cancelled
+	 * 409-C: Appointment cancelled
 	 */
 	C409 = "409-C",
+
+	//? -- Too many requests -- //
+
+	/**
+	 * 429-A: Troo many retries
+	 */
+	A429 = "429-A",
 
 	//? -- Internal server error --//
 

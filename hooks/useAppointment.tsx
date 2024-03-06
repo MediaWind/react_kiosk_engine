@@ -5,6 +5,7 @@ import { APPOINTMENT_ACTION_TYPE, ERROR_ACTION_TYPE, IAppointmentAction, IErrorA
 import { ERROR_CODE } from "../lib/errorCodes";
 
 import { testPDF } from "../utils/testPDF";
+import fetchRetry from "../utils/fetchRetry";
 
 export default function useAppointment(dispatchAppointment: React.Dispatch<IAppointmentAction>, dispatchError: React.Dispatch<IErrorAction>): [string, CallableFunction, CallableFunction] {
 	const [appointmentTicketPdf, setAppointmentTicketPDF] = useState<string>("");
@@ -22,7 +23,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 		// console.log("🚀 ~ checkIn ~ checkinURL:", checkinURL);
 
 		try {
-			const response = await fetch(checkinURL);
+			const response = await fetchRetry(checkinURL);
 			const data = await response.json();
 			console.log("🚀 ~ checkIn ~ data:", data);
 
@@ -65,14 +66,37 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 			}
 		} catch (err) {
 			console.log(err);
-			dispatchError({
-				type: ERROR_ACTION_TYPE.SETERROR,
-				payload: {
-					hasError: true,
-					errorCode: ERROR_CODE.B500,
-					message: "Error caught - Unable to fetch ticket PDF",
-				} as IErrorState,
-			});
+
+			if (err instanceof Error) {
+				if (err.message.split("-")[0].trim() === "fetchRetry") {
+					dispatchError({
+						type: ERROR_ACTION_TYPE.SETERROR,
+						payload: {
+							hasError: true,
+							errorCode: ERROR_CODE.A429,
+							message: "Too many retries",
+						},
+					});
+				} else {
+					dispatchError({
+						type: ERROR_ACTION_TYPE.SETERROR,
+						payload: {
+							hasError: true,
+							errorCode: ERROR_CODE.B500,
+							message: "Error caught - " + err.message,
+						},
+					});
+				}
+			} else {
+				dispatchError({
+					type: ERROR_ACTION_TYPE.SETERROR,
+					payload: {
+						hasError: true,
+						errorCode: ERROR_CODE.B500,
+						message: "Error caught - Unable to create ticket",
+					},
+				});
+			}
 		} finally {
 			setTimeout(() => {
 				dispatchAppointment({
@@ -93,7 +117,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 		`;
 
 		try {
-			const response = await fetch(checkoutURL);
+			const response = await fetchRetry(checkoutURL);
 			const data = await response.json();
 			console.log("🚀 ~ checkOut ~ data:", data);
 
@@ -114,6 +138,37 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 			}
 		} catch (err) {
 			console.log(err);
+
+			if (err instanceof Error) {
+				if (err.message.split("-")[0].trim() === "fetchRetry") {
+					dispatchError({
+						type: ERROR_ACTION_TYPE.SETERROR,
+						payload: {
+							hasError: true,
+							errorCode: ERROR_CODE.A429,
+							message: "Too many retries",
+						},
+					});
+				} else {
+					dispatchError({
+						type: ERROR_ACTION_TYPE.SETERROR,
+						payload: {
+							hasError: true,
+							errorCode: ERROR_CODE.B500,
+							message: "Error caught - " + err.message,
+						},
+					});
+				}
+			} else {
+				dispatchError({
+					type: ERROR_ACTION_TYPE.SETERROR,
+					payload: {
+						hasError: true,
+						errorCode: ERROR_CODE.B500,
+						message: "Error caught - Unable to create ticket",
+					},
+				});
+			}
 		} finally {
 			setTimeout(() => {
 				dispatchAppointment({
