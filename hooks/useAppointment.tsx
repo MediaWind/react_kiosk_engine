@@ -123,7 +123,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 			const data = await response.json();
 
 			if (data.status != 1) {
-				Console.error("Error when trying to check out appointment: data status " + data.status ?? "undefined", { fileName: "useAppointment", functionName: "checkOut", lineNumber: 104, });
+				Console.error("Error when trying to check out appointment: data status " + data.status ?? "undefined", { fileName: "useAppointment", functionName: "checkOut", lineNumber: 126, });
 				if (Variables.PREVIEW) {
 					dispatchAppointment({
 						type: APPOINTMENT_ACTION_TYPE.UPDATECHECKEDOUT,

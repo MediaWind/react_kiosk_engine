@@ -142,7 +142,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 
 		if (textInputs.length > 0) {
 			Console.info("Text inputs updated: ");
-			ticketState.textInputDatas.map(input => Console.log(`input ${input.id}: ${input.value.slice(0, 1)}${"*".repeat(input.value.slice(1).length)}`));
+			ticketState.textInputDatas.map(input => Console.log(`input ${input.id}: ${input.value.slice(0, 1)}${"*".repeat(input.value.slice(1).trim().length)}`));
 		}
 
 		doActions(actions, {

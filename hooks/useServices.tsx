@@ -44,9 +44,9 @@ export default function useServices(dispatchErrorState: React.Dispatch<IErrorAct
 					},
 				});
 			}
-		} catch (e) {
+		} catch (err) {
 			Console.error("Error when trying to fetch services: error caught.", { fileName: "useServices", functionName: "getServices", lineNumber: 48, });
-			Console.error(e);
+			Console.error(err);
 			if (err instanceof Error) {
 				if (err.message.split("-")[0].trim() === "fetchRetry") {
 					dispatchErrorState({
