@@ -42,7 +42,7 @@ export default function useAgents(dispatchErrorState: React.Dispatch<IErrorActio
 					return returnedAgents;
 				});
 			} else {
-				Console.error("Error when trying to fetch agents: data status " + data.status ?? "undefined", { fileName: "useAgents", functionName: "getUserAgents", lineNumber: 44, });
+				Console.error("Error when trying to fetch agents: data status " + data.status ?? "undefined", { fileName: "useAgents", functionName: "getUserAgents", lineNumber: 45, });
 				dispatchErrorState({
 					type: ERROR_ACTION_TYPE.SETERROR,
 					payload: {
@@ -53,7 +53,7 @@ export default function useAgents(dispatchErrorState: React.Dispatch<IErrorActio
 				});
 			}
 		} catch (err) {
-			Console.error("Error when trying to fetch agents: error caught. ", { fileName: "useAgents", functionName: "getUserAgents", lineNumber: 55, });
+			Console.error("Error when trying to fetch agents: error caught. ", { fileName: "useAgents", functionName: "getUserAgents", lineNumber: 56, });
 			Console.error(err);
 			dispatchErrorState({
 				type: ERROR_ACTION_TYPE.SETERROR,
