@@ -120,14 +120,14 @@ export interface IVideoContent {
 	src: string;
 	type: string;
 	controls?: boolean;
-	styles: IStyles;
+	styles: CSSProperties;
 }
 
 export interface IImageContent {
 	name: string;
 	src: string;
 	animate?: ANIMATION_TYPE;
-	styles: IStyles;
+	styles: CSSProperties;
 }
 
 //TODO: use snake case instead

@@ -48,10 +48,8 @@ export default function Date(props: IDateProps): JSX.Element {
 		>
 			<p
 				style={{
-					fontFamily: style.fontFamily,
-					color: style.color,
-					fontSize: style.fontSize ? style.fontSize : getFontSize(`${style.height}`),
-					textAlign: style.textAlign,
+					fontSize: getFontSize(`${style.height}`),
+					...style,
 				}}
 			>
 				{date}

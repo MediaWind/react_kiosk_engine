@@ -16,10 +16,10 @@ export default function VideoContent(props: IVideoContentProps): JSX.Element {
 			UUID={id}
 			url={content.src}
 			emptyUrlError={`L'url renseigné pour "${content.name}" est invalide`}
-			top={getNumbersOnly(content.styles.top)}
-			bottom={content.styles.bottom ? getNumbersOnly(content.styles.bottom) : 0}
-			left={getNumbersOnly(content.styles.left)}
-			right={content.styles.right ? getNumbersOnly(content.styles.right) : 0}
+			top={getNumbersOnly(`${content.styles.top}`)}
+			bottom={content.styles.bottom ? getNumbersOnly(`${content.styles.bottom}`) : 0}
+			left={getNumbersOnly(`${content.styles.left}`)}
+			right={content.styles.right ? getNumbersOnly(`${content.styles.right}`) : 0}
 			muted={true}
 		/>
 	);
