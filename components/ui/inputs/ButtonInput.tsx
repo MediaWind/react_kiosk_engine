@@ -1,10 +1,10 @@
-import { Variables } from "../../../../variables";
+import { CSSProperties } from "react";
 
-import { IStyles } from "../../../interfaces";
+import { Variables } from "../../../../variables";
 
 interface IButtonInputProps {
 	onClick: CallableFunction
-	styles: IStyles
+	styles: CSSProperties
 }
 
 export default function ButtonInput(props: IButtonInputProps) {
@@ -25,28 +25,14 @@ export default function ButtonInput(props: IButtonInputProps) {
 			onClick={devClick}
 			onTouchEnd={clickHandler}
 			style={{
-				all: styles.all,
 				outline: "none",
-
 				position: "absolute",
-				top: styles.top,
-				bottom: styles.bottom,
-				right: styles.right,
-				left: styles.left,
 				zIndex: 2,
 
-				width: styles.width,
-				height: styles.height,
-
-				margin: styles.margin,
-				padding: styles.padding,
-
 				borderStyle: "none",
-				backgroundColor: styles.backgroundColor ?? "transparent",
-				opacity: styles.opacity,
+				backgroundColor: "transparent",
 
-				borderColor: styles.borderColor,
-				borderRadius: styles.borderRadius,
+				...styles,
 			}}
 		></button>
 	);

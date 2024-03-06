@@ -142,7 +142,7 @@ export interface IInputContent {
 	name: string;
 	type: INPUT_TYPE;
 	actions: IInputAction[];
-	styles: IStyles;
+	styles: CSSProperties;
 	textInputConfig?: ITextInputConfig;
 	selectConfig?: ISelectConfig;
 }
