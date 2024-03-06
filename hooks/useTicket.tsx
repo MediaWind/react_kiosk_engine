@@ -2,7 +2,7 @@ import { ERROR_ACTION_TYPE, IErrorAction, IFlow, IPrintAction, ITicketDataState,
 import { ERROR_CODE } from "../lib/errorCodes";
 
 import { Console } from "../utils/console";
-
+import fetchRetry from "../utils/fetchRetry";
 import getTicketingURL from "../utils/getTicketingURL";
 
 export default function useTicket(dispatchPrintState: React.Dispatch<IPrintAction>, dispatchError: React.Dispatch<IErrorAction>): [CallableFunction] {
@@ -10,7 +10,7 @@ export default function useTicket(dispatchPrintState: React.Dispatch<IPrintActio
 		Console.info("Creating ticket...");
 
 		try {
-			const response = await fetch(getTicketingURL(ticketState, flow));
+			const response = await fetchRetry(getTicketingURL(ticketState, flow));
 			const data = await response.json();
 
 			if (data.status == 1) {
@@ -93,14 +93,36 @@ export default function useTicket(dispatchPrintState: React.Dispatch<IPrintActio
 		} catch (err) {
 			Console.error("Error caught when trying to create ticket", { fileName: "useTicket", functionName: "createTicket", lineNumber: 94, });
 			Console.error(err);
-			dispatchError({
-				type: ERROR_ACTION_TYPE.SETERROR,
-				payload: {
-					hasError: true,
-					errorCode: ERROR_CODE.B500,
-					message: "Error caught - Unable to create ticket",
-				},
-			});
+			if (err instanceof Error) {
+				if (err.message.split("-")[0].trim() === "fetchRetry") {
+					dispatchError({
+						type: ERROR_ACTION_TYPE.SETERROR,
+						payload: {
+							hasError: true,
+							errorCode: ERROR_CODE.A429,
+							message: "Too many retries",
+						},
+					});
+				} else {
+					dispatchError({
+						type: ERROR_ACTION_TYPE.SETERROR,
+						payload: {
+							hasError: true,
+							errorCode: ERROR_CODE.B500,
+							message: "Error caught - " + err.message,
+						},
+					});
+				}
+			} else {
+				dispatchError({
+					type: ERROR_ACTION_TYPE.SETERROR,
+					payload: {
+						hasError: true,
+						errorCode: ERROR_CODE.B500,
+						message: "Error caught - Unable to create ticket",
+					},
+				});
+			}
 		}
 	}
 

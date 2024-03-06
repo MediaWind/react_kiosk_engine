@@ -4,8 +4,9 @@ import { Variables } from "../../variables";
 import { APPOINTMENT_ACTION_TYPE, ERROR_ACTION_TYPE, IAppointmentAction, IErrorAction, IErrorState } from "../interfaces";
 import { ERROR_CODE } from "../lib/errorCodes";
 
-import { testPDF } from "../utils/testPDF";
 import { Console } from "../utils/console";
+import fetchRetry from "../utils/fetchRetry";
+import { testPDF } from "../utils/testPDF";
 
 export default function useAppointment(dispatchAppointment: React.Dispatch<IAppointmentAction>, dispatchError: React.Dispatch<IErrorAction>): [string, CallableFunction, CallableFunction] {
 	const [appointmentTicketPdf, setAppointmentTicketPDF] = useState<string>("");
@@ -21,10 +22,9 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 			&qrcode=${qrCode}
 			pdf_ticket=base_64
 		`;
-		// console.log("🚀 ~ checkIn ~ checkinURL:", checkinURL);
 
 		try {
-			const response = await fetch(checkinURL);
+			const response = await fetchRetry(checkinURL);
 			const data = await response.json();
 
 			if (data.status != 1) {
@@ -68,14 +68,36 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 		} catch (err) {
 			Console.error("Error when trying to check in appointment: error caught.", { fileName: "useAppointment", functionName: "checkIn", lineNumber: 69, });
 			Console.error(err);
-			dispatchError({
-				type: ERROR_ACTION_TYPE.SETERROR,
-				payload: {
-					hasError: true,
-					errorCode: ERROR_CODE.B500,
-					message: "Error caught - Unable to fetch ticket PDF",
-				} as IErrorState,
-			});
+			if (err instanceof Error) {
+				if (err.message.split("-")[0].trim() === "fetchRetry") {
+					dispatchError({
+						type: ERROR_ACTION_TYPE.SETERROR,
+						payload: {
+							hasError: true,
+							errorCode: ERROR_CODE.A429,
+							message: "Too many retries",
+						},
+					});
+				} else {
+					dispatchError({
+						type: ERROR_ACTION_TYPE.SETERROR,
+						payload: {
+							hasError: true,
+							errorCode: ERROR_CODE.B500,
+							message: "Error caught - " + err.message,
+						},
+					});
+				}
+			} else {
+				dispatchError({
+					type: ERROR_ACTION_TYPE.SETERROR,
+					payload: {
+						hasError: true,
+						errorCode: ERROR_CODE.B500,
+						message: "Error caught - Unable to create ticket",
+					},
+				});
+			}
 		} finally {
 			setTimeout(() => {
 				dispatchAppointment({
@@ -97,7 +119,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 		`;
 
 		try {
-			const response = await fetch(checkoutURL);
+			const response = await fetchRetry(checkoutURL);
 			const data = await response.json();
 
 			if (data.status != 1) {
@@ -124,16 +146,38 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 				});
 			}
 		} catch (err) {
-			Console.error("Error when trying to check out appointment: error caught.", { fileName: "useAppointment", functionName: "checkOut", lineNumber: 127, });
+			Console.error("Error when trying to check out appointment: error caught.", { fileName: "useAppointment", functionName: "checkOut", lineNumber: 149, });
 			Console.error(err);
-			dispatchError({
-				type: ERROR_ACTION_TYPE.SETERROR,
-				payload: {
-					hasError: true,
-					errorCode: ERROR_CODE.B500,
-					message: "Unable to fetch ticket PDF (error caught)",
-				} as IErrorState,
-			});
+			if (err instanceof Error) {
+				if (err.message.split("-")[0].trim() === "fetchRetry") {
+					dispatchError({
+						type: ERROR_ACTION_TYPE.SETERROR,
+						payload: {
+							hasError: true,
+							errorCode: ERROR_CODE.A429,
+							message: "Too many retries",
+						},
+					});
+				} else {
+					dispatchError({
+						type: ERROR_ACTION_TYPE.SETERROR,
+						payload: {
+							hasError: true,
+							errorCode: ERROR_CODE.B500,
+							message: "Error caught - " + err.message,
+						},
+					});
+				}
+			} else {
+				dispatchError({
+					type: ERROR_ACTION_TYPE.SETERROR,
+					payload: {
+						hasError: true,
+						errorCode: ERROR_CODE.B500,
+						message: "Error caught - Unable to create ticket",
+					},
+				});
+			}
 		} finally {
 			setTimeout(() => {
 				dispatchAppointment({

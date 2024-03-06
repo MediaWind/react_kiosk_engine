@@ -6,6 +6,7 @@ import { ERROR_ACTION_TYPE, IErrorAction, ServiceData } from "../interfaces";
 import { ERROR_CODE } from "../lib/errorCodes";
 
 import { Console } from "../utils/console";
+import fetchRetry from "../utils/fetchRetry";
 
 export default function useServices(dispatchErrorState: React.Dispatch<IErrorAction>): [ServiceData[], CallableFunction] {
 	const [services, setServices] = useState<ServiceData[]>([]);
@@ -15,7 +16,7 @@ export default function useServices(dispatchErrorState: React.Dispatch<IErrorAct
 		const url = `${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/services.php?id_project=${Variables.W_ID_PROJECT}&serial=${Variables.SERIAL}`;
 
 		try {
-			const response = await fetch(url);
+			const response = await fetchRetry(url);
 			const data = await response.json();
 
 			if (data.array_services) {
@@ -33,7 +34,7 @@ export default function useServices(dispatchErrorState: React.Dispatch<IErrorAct
 					return returnedServices;
 				});
 			} else {
-				Console.error("Error when trying to fetch services: data.array_services is undefined, check project id.", { fileName: "useServices", functionName: "getServices", lineNumber: 36, });
+				Console.error("Error when trying to fetch services: data.array_services is undefined, check project id.", { fileName: "useServices", functionName: "getServices", lineNumber: 37, });
 				dispatchErrorState({
 					type: ERROR_ACTION_TYPE.SETERROR,
 					payload: {
@@ -44,16 +45,38 @@ export default function useServices(dispatchErrorState: React.Dispatch<IErrorAct
 				});
 			}
 		} catch (e) {
-			Console.error("Error when trying to fetch services: error caught.", { fileName: "useServices", functionName: "getServices", lineNumber: 47, });
+			Console.error("Error when trying to fetch services: error caught.", { fileName: "useServices", functionName: "getServices", lineNumber: 48, });
 			Console.error(e);
-			dispatchErrorState({
-				type: ERROR_ACTION_TYPE.SETERROR,
-				payload: {
-					hasError: true,
-					errorCode: ERROR_CODE.D500,
-					message: "Error caught - Unable to fetch services",
-				},
-			});
+			if (err instanceof Error) {
+				if (err.message.split("-")[0].trim() === "fetchRetry") {
+					dispatchErrorState({
+						type: ERROR_ACTION_TYPE.SETERROR,
+						payload: {
+							hasError: true,
+							errorCode: ERROR_CODE.A429,
+							message: "Too many retries",
+						},
+					});
+				} else {
+					dispatchErrorState({
+						type: ERROR_ACTION_TYPE.SETERROR,
+						payload: {
+							hasError: true,
+							errorCode: ERROR_CODE.B500,
+							message: "Error caught - " + err.message,
+						},
+					});
+				}
+			} else {
+				dispatchErrorState({
+					type: ERROR_ACTION_TYPE.SETERROR,
+					payload: {
+						hasError: true,
+						errorCode: ERROR_CODE.B500,
+						message: "Error caught - Unable to create ticket",
+					},
+				});
+			}
 		}
 	}
 
