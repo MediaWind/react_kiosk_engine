@@ -1,4 +1,4 @@
-export default async function fetchRetry(url: string | URL, init?: RequestInit, tries = 6): Promise<Response> {
+export default async function fetchRetry(url: string | URL, init?: RequestInit, tries = 4): Promise<Response> {
 	const controller = new AbortController();
 	let attempt = 0;
 	const fib = [1, 2];
