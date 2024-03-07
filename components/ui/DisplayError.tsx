@@ -1,41 +1,19 @@
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 import styles from "../../styles/ui/Error.module.scss";
 
 import { Variables } from "../../../variables";
 
-import { useLanguageContext } from "../../contexts/languageContext";
 import { useErrorContext } from "../../contexts/errorContext";
 
-import { ERROR_ACTION_TYPE, IBackgroundImage, IErrorManagement, LANGUAGE, Route } from "../../interfaces";
+import { ERROR_ACTION_TYPE, IBackgroundImage, IErrorManagement, Route } from "../../interfaces";
 import { ERROR_CODE } from "../../lib/errorCodes";
 
 import BackgroundImage from "./BackgroundImage";
 
 interface IDisplayErrorProps {
 	route: Route | null
-}
-
-function getTranslatedTitle() {
-	const { language, } = useLanguageContext();
-
-	switch (language) {
-		case LANGUAGE.FRENCH: return "Une erreur est survenue";
-		case LANGUAGE.DUTCH: return "Er is een fout opgetreden";
-		case LANGUAGE.ENGLISH: return "Something went wrong";
-		default: return "Une erreur est survenue";
-	}
-}
-
-function getTranslatedDefaultMessage() {
-	const { language, } = useLanguageContext();
-
-	switch (language) {
-		case LANGUAGE.FRENCH: return "Veuillez réessayer ou vous adresser au guichet";
-		case LANGUAGE.DUTCH: return "Probeer het nog eens opnieuw of ga naar het loket";
-		case LANGUAGE.ENGLISH: return "Please try again or contact the reception";
-		default: return "Veuillez réessayer ou vous adresser au guichet";
-	}
 }
 
 function getErrorImage(image: IErrorManagement, errorCode?: ERROR_CODE, serviceId?: string): IBackgroundImage {
@@ -62,6 +40,7 @@ export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 	const { route, } = props;
 
 	const { errorState, dispatchErrorState, } = useErrorContext();
+	const { t, } = useTranslation("errors");
 
 	useEffect(() => {
 		const delay = setTimeout(() => {
@@ -94,7 +73,7 @@ export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 			<div className={styles.error_management_main} onTouchEnd={clickHandler} onClick={devClick}>
 				{image === route.errorManagement.genericError &&
 					<div className={styles.error_management_message}>
-						<p>{errorState.message !== "" ? errorState.message : "An unexpected error occured"}</p>
+						<p>{errorState.message !== "" ? errorState.message : t("unsupported error message")}</p>
 						{errorState.errorCode && <p id={styles.error_code}>Error code: <b>{errorState.errorCode}</b></p>}
 					</div>
 				}
@@ -106,8 +85,8 @@ export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 			<div className={styles.main}>
 				<div className={styles.message}>
 					<div>
-						<h1>{getTranslatedTitle()}</h1>
-						<p>{errorState.message !== "" ? "Message: " + errorState.message : getTranslatedDefaultMessage()}</p>
+						<h1>{t("default title")}</h1>
+						<p>{errorState.message !== "" ? "Message: " + errorState.message : t("default message")}</p>
 					</div>
 					{errorState.errorCode !== ERROR_CODE.C503 && <button onTouchEnd={clickHandler} onClick={devClick}>OK</button>}
 					{errorState.errorCode && <p id={styles.error_code}>Error code: <b>{errorState.errorCode}</b></p>}

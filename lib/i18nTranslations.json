@@ -1,34 +1,85 @@
 {
 	"en": {
 		"translation": {
-			"Welcome to React": "Welcome to React and react-i18next"
+			"key": "value"
+		},
+		"eId": {
+			"card inserted": "Your card is being read. Please do not remove it from the terminal.",
+			"remove card": "Please remove your card."
+		},
+		"errors": {
+			"default title": "Something went wrong.",
+			"default message": "Please try again or contact the reception.",
+			"unsupported error message": "An unexpected error occured."
 		},
 		"SelectInput": {
 			"default placeholder": "-- Select an option --"
+		},
+		"Media content": {
+			"empty url": "The url entered for {{what}} is empty"
 		}
 	},
+
 	"fr": {
 		"translation": {
-			"Welcome to React": "Bienvenue à React et react-i18next"
+			"key": "value"
+		},
+		"eId": {
+			"card inserted": "Votre carte est en cours de lecture. Merci de ne pas la retirer du terminal.",
+			"remove card": "Veuillez retirer votre carte."
+		},
+		"errors": {
+			"default title": "Une erreur est survenue.",
+			"default message": "Veuillez réessayer ou vous adresser au guichet.",
+			"unsupported error message": "Une erreur inattendue est survenue."
 		},
 		"SelectInput": {
 			"default placeholder": "-- Sélectionnez une option --"
+		},
+		"Media content": {
+			"empty url": "L'url renseigné pour {{what}} est vide"
 		}
 	},
+
 	"nl": {
 		"translation": {
-			"Welcome to React": "Bienvenue à React et react-i18next"
+			"key": "value"
+		},
+		"eId": {
+			"card inserted": "Uw kaart wordt gelezen. Haal de kaart niet uit de terminal.",
+			"remove card": "Haal je kaart op."
+		},
+		"errors": {
+			"default title": "Er is een fout opgetreden.",
+			"default message": "Probeer het nog eens opnieuw of ga naar het loket.",
+			"unsupported error message": "Er is een onverwachte fout opgetreden."
 		},
 		"SelectInput": {
 			"default placeholder": "-- Selecteer een optie --"
+		},
+		"Media content": {
+			"empty url": "De ingevoerde url voor {{what}} is leeg"
 		}
 	},
+
 	"es": {
 		"translation": {
-			"Welcome to React": "Bienvenue à React et react-i18next"
+			"key": "value"
+		},
+		"eId": {
+			"card inserted": "Su tarjeta está siendo leída. No la retire del terminal.",
+			"remove card": "Recoja su tarjeta."
+		},
+		"errors": {
+			"default title": "Algo salió mal.",
+			"default message": "Vuelva a intentarlo o póngase en contacto con la recepción.",
+			"unsupported error message": "Se ha producido un error inesperado."
 		},
 		"SelectInput": {
 			"default placeholder": "-- Seleccione una opción --"
+		},
+		"Media content": {
+			"empty url": "La url introducida para {{what}} es vacío"
 		}
 	}
 }
