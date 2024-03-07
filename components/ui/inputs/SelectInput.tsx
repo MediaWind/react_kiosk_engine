@@ -2,7 +2,7 @@ import { CSSProperties, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/pro-solid-svg-icons";
 
-import styles from "../../../styles/ui/SelectInput.module.scss";
+import styles from "../../../styles/inputs/SelectInput.module.scss";
 
 import { Variables } from "../../../../variables";
 
@@ -150,27 +150,9 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 				<div
 					className={styles.dropdown}
 					style={{
-						all: config?.dropdownStyles?.all,
-
-						top: config?.dropdownStyles?.top,
-						bottom: config?.dropdownStyles?.bottom,
-						right: config?.dropdownStyles?.right,
-						left: config?.dropdownStyles?.left,
 						zIndex: 3,
-
-						width: config?.dropdownStyles?.width,
-						height: config?.dropdownStyles?.height,
-
-						margin: config?.dropdownStyles?.margin,
-						padding: config?.dropdownStyles?.padding,
-
 						backgroundColor: config?.dropdownStyles?.backgroundColor ?? "transparent",
-						opacity: config?.dropdownStyles?.opacity,
-
-						borderStyle: config?.dropdownStyles?.borderStyle,
-						borderWidth: config?.dropdownStyles?.borderWidth,
-						borderColor: config?.dropdownStyles?.borderColor,
-						borderRadius: config?.dropdownStyles?.borderRadius,
+						...config?.dropdownStyles,
 					}}
 				>
 					{customOptions.length > 0 && customOptions.map(option => <SelectOption

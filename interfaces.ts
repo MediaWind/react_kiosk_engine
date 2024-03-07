@@ -171,8 +171,8 @@ export interface ISelectConfig {
 	provider: SELECT_PROVIDER;
 	placeholders?: Record<LANGUAGE, string>;
 	options?: IOption[];
-	dropdownStyles?: IStyles;
-	optionStyles?: IStyles;
+	dropdownStyles?: CSSProperties;
+	optionStyles?: CSSProperties;
 	filterUnavailable?: boolean;
 	filterIds?: string[];
 }
