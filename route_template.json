@@ -156,13 +156,13 @@
 			"displayDate": {
 				"format": "DD MMMM YYYY",
 				"style": {
-					"all": "IStyles - to be replaced with css properties"
+					"all": "css properties"
 				}
 			},
 			"displayTime": {
 				"format": "HH:mm:ss",
 				"style": {
-					"all": "IStyles - to be replaced with css properties"
+					"all": "css properties"
 				}
 			},
 
@@ -239,7 +239,7 @@
 									}
 								],
 								"styles": {
-									"all": "IStyles - to be replaced with css properties"
+									"all": "css properties"
 								}
 							}
 						},
@@ -251,7 +251,7 @@
 								"actions": ["..."],
 
 								"styles": {
-									"all": "IStyles - to be replaced with css properties"
+									"all": "css properties"
 								},
 
 								"textInputConfig": {
@@ -278,7 +278,7 @@
 								"actions": ["..."],
 
 								"styles": {
-									"all": "IStyles - to be replaced with css properties"
+									"all": "css properties"
 								},
 
 								"selectConfig": {
