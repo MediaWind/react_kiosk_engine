@@ -9,6 +9,7 @@ import { useEIdContext } from "../../contexts/eIdContext";
 import ButtonInput from "./inputs/ButtonInput";
 import NumberInput from "./inputs/NumberInput";
 import SelectInput from "./inputs/SelectInput";
+import AdvancedButton from "./inputs/AdvancedButton";
 
 interface IInputContentProps {
 	content: IInputContent
@@ -60,6 +61,12 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 	if (content.type === INPUT_TYPE.SELECT) {
 		return (
 			<SelectInput selectStyles={content.styles} config={content.selectConfig} />
+		);
+	}
+
+	if (content.type === INPUT_TYPE.ADVANCED_BUTTON && content.advancedButtonConfig) {
+		return (
+			<AdvancedButton onClick={actionHandler} config={content.advancedButtonConfig} styles={content.styles} />
 		);
 	}
 

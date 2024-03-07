@@ -164,6 +164,7 @@ export enum INPUT_TYPE {
 export interface IAdvancedButtonConfig {
 	backgroundImage: IBackgroundImage;
 	label?: Record<LANGUAGE, string>;
+	labelStyle?: CSSProperties;
 	style: CSSProperties
 	pressed?: {
 		backgroundImage: IBackgroundImage;
