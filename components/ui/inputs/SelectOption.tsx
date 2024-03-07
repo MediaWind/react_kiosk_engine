@@ -22,7 +22,7 @@ export default function SelectOption(props: ISelectOptionProps): JSX.Element {
 		<div onClick={clickHandler} className={style.option} style={{ ...styles, }}>
 			<p style={{
 				fontFamily: styles?.fontFamily,
-				fontSize: style.fontSize ?? getFontSize(`${style.height}`),
+				fontSize: styles?.fontSize ?? getFontSize(`${style.height}`),
 				color: styles?.color,
 				textAlign: styles?.textAlign,
 			}}>
