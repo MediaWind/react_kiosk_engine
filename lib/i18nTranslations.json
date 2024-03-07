@@ -1,0 +1,34 @@
+{
+	"en": {
+		"translation": {
+			"Welcome to React": "Welcome to React and react-i18next"
+		},
+		"SelectInput": {
+			"default placeholder": "-- Select an option --"
+		}
+	},
+	"fr": {
+		"translation": {
+			"Welcome to React": "Bienvenue à React et react-i18next"
+		},
+		"SelectInput": {
+			"default placeholder": "-- Sélectionnez une option --"
+		}
+	},
+	"nl": {
+		"translation": {
+			"Welcome to React": "Bienvenue à React et react-i18next"
+		},
+		"SelectInput": {
+			"default placeholder": "-- Selecteer een optie --"
+		}
+	},
+	"es": {
+		"translation": {
+			"Welcome to React": "Bienvenue à React et react-i18next"
+		},
+		"SelectInput": {
+			"default placeholder": "-- Seleccione una opción --"
+		}
+	}
+}
