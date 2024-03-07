@@ -1,21 +1,17 @@
-import { useEffect, useState } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import dayjs from "dayjs";
+import "dayjs/locale";
 
 import { setIntervalSync } from "../../../core/customInterval";
+import capitalizeFirstLetter from "../../../core/utils/capitalizeFirstLetter";
 
 import { useLanguageContext } from "../../contexts/languageContext";
 
-import { IStyles } from "../../interfaces";
 import getFontSize from "../../utils/getFontSize";
-
-require("dayjs/locale/fr");
-require("dayjs/locale/en");
-require("dayjs/locale/nl");
-require("dayjs/locale/es");
 
 interface IDateProps {
 	format?: string
-	style: IStyles
+	style: CSSProperties
 }
 
 export default function Date(props: IDateProps): JSX.Element {
@@ -42,38 +38,20 @@ export default function Date(props: IDateProps): JSX.Element {
 	return (
 		<div
 			style= {{
-				all: style.all,
 				position: "absolute",
 				zIndex: 1,
-
-				top: style.top,
-				left: style.left,
-				bottom: style.bottom,
-				right: style.right,
-
-				width: style.width,
-				height: style.height,
-
-				padding: style.padding,
-				margin: style.margin,
-
-				borderWidth: style.borderWidth,
-				borderStyle: style.borderStyle,
-				borderColor: style.borderColor,
-				borderRadius: style.borderRadius,
-
-				backgroundColor: style.backgroundColor,
+				...style,
 			}}
 		>
 			<p
 				style={{
 					fontFamily: style.fontFamily,
-					color: style.textColor,
-					fontSize: style.fontSize ? style.fontSize : getFontSize(style.height),
+					fontSize: style.fontSize ?? getFontSize(`${style.height}`),
+					color: style.color,
 					textAlign: style.textAlign,
 				}}
 			>
-				{date}
+				{capitalizeFirstLetter(date)}
 			</p>
 		</div>
 	);

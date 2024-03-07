@@ -1,3 +1,5 @@
+import { CSSProperties } from "react";
+
 import { eIdData } from "../core/hooks/useEId";
 
 import { ERROR_CODE } from "./lib/errorCodes";
@@ -62,7 +64,7 @@ export interface ITicketParameters {
 
 export interface IDateTime {
 	format?: string
-	style: IStyles
+	style: CSSProperties
 }
 
 export interface IErrorManagement {
@@ -119,14 +121,14 @@ export interface IVideoContent {
 	src: string;
 	type: string;
 	controls?: boolean;
-	styles: IStyles;
+	styles: CSSProperties;
 }
 
 export interface IImageContent {
 	name: string;
 	src: string;
 	animate?: ANIMATION_TYPE;
-	styles: IStyles;
+	styles: CSSProperties;
 }
 
 //TODO: use snake case instead
@@ -141,7 +143,7 @@ export interface IInputContent {
 	name: string;
 	type: INPUT_TYPE;
 	actions: IInputAction[];
-	styles: IStyles;
+	styles: CSSProperties;
 	textInputConfig?: ITextInputConfig;
 	selectConfig?: ISelectConfig;
 }
@@ -170,8 +172,8 @@ export interface ISelectConfig {
 	provider: SELECT_PROVIDER;
 	placeholders?: Record<LANGUAGE, string>;
 	options?: IOption[];
-	dropdownStyles?: IStyles;
-	optionStyles?: IStyles;
+	dropdownStyles?: CSSProperties;
+	optionStyles?: CSSProperties;
 	filterUnavailable?: boolean;
 	filterIds?: string[];
 }
@@ -218,34 +220,6 @@ export interface IService {
  * 3 = urgent
  */
 	priority?: 1 | 2 | 3
-}
-
-export interface IStyles {
-	all?: "initial" | "inherit" | "unset" | "revert";
-
-	top: string;
-	left: string;
-	bottom?: string;
-	right?: string;
-
-	width: string;
-	height: string;
-
-	padding?: string;
-	margin?: string;
-
-	borderWidth?: string;
-	borderStyle?: string;
-	borderColor?: string;
-	borderRadius?: string;
-
-	backgroundColor?: string;
-	opacity?: number;
-
-	fontFamily?: string;
-	textColor?: string;
-	fontSize?: string;
-	textAlign?: "left" | "right" | "center";
 }
 
 //* ------------------------- *//

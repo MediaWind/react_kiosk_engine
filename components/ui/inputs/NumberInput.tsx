@@ -1,7 +1,7 @@
-import { IStyles } from "../../../interfaces";
+import { CSSProperties } from "react";
 
 interface INumberInputProps {
-	styles: IStyles
+	styles: CSSProperties
 }
 
 export default function NumberInput(props: INumberInputProps) {
@@ -11,22 +11,9 @@ export default function NumberInput(props: INumberInputProps) {
 		<input
 			type="number"
 			style={{
-				all: styles.all,
-
 				position: "absolute",
-				top: styles.top,
-				bottom: styles.bottom,
-				right: styles.right,
-				left: styles.left,
-
-				width: styles.width,
-				height: styles.height,
-
-				margin: styles.margin,
-				padding: styles.padding,
-
-				borderColor: styles.borderColor,
-				borderRadius: styles.borderRadius,
+				zIndex: 1,
+				...styles,
 			}}
 		/>
 	);

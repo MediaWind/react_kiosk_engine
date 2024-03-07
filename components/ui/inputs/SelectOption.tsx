@@ -1,12 +1,14 @@
-import style from "../../../styles/ui/SelectInput.module.scss";
+import { CSSProperties } from "react";
 
-import { IStyles } from "../../../interfaces";
+import style from "../../../styles/inputs/SelectInput.module.scss";
+
+import getFontSize from "../../../utils/getFontSize";
 
 interface ISelectOptionProps {
 	label: string
 	value: string
 	onChange: CallableFunction
-	styles?: IStyles
+	styles?: CSSProperties
 }
 
 export default function SelectOption(props: ISelectOptionProps): JSX.Element {
@@ -17,27 +19,11 @@ export default function SelectOption(props: ISelectOptionProps): JSX.Element {
 	}
 
 	return (
-		<div onClick={clickHandler} className={style.option} style={{
-			all: styles?.all,
-
-			width: styles?.width,
-			height: styles?.height,
-
-			margin: styles?.margin,
-			padding: styles?.padding,
-
-			backgroundColor: styles?.backgroundColor,
-			opacity: styles?.opacity,
-
-			borderStyle: styles?.borderStyle,
-			borderWidth: styles?.borderWidth,
-			borderColor: styles?.borderColor,
-			borderRadius: styles?.borderRadius,
-		}}>
+		<div onClick={clickHandler} className={style.option} style={{ ...styles, }}>
 			<p style={{
 				fontFamily: styles?.fontFamily,
-				fontSize: styles?.fontSize,
-				color: styles?.textColor,
+				fontSize: style.fontSize ?? getFontSize(`${style.height}`),
+				color: styles?.color,
 				textAlign: styles?.textAlign,
 			}}>
 				{label.trim().replace("\\", "")}

@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import { CSSProperties, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/pro-solid-svg-icons";
 
-import styles from "../../../styles/ui/SelectInput.module.scss";
+import styles from "../../../styles/inputs/SelectInput.module.scss";
 
 import { Variables } from "../../../../variables";
 
-import { AgentData, IOption, ISelectConfig, IStyles, LANGUAGE, SELECT_PROVIDER, ServiceData, TICKET_DATA_ACTION_TYPE } from "../../../interfaces";
+import { AgentData, IOption, ISelectConfig, LANGUAGE, SELECT_PROVIDER, ServiceData, TICKET_DATA_ACTION_TYPE } from "../../../interfaces";
 
 import { useLanguageContext } from "../../../contexts/languageContext";
 import { useFlowContext } from "../../../contexts/flowContext";
@@ -21,7 +21,7 @@ import getFontSize from "../../../utils/getFontSize";
 import SelectOption from "./SelectOption";
 
 interface ISelectInputProps {
-	selectStyles: IStyles
+	selectStyles: CSSProperties
 	config: ISelectConfig | undefined
 }
 
@@ -126,42 +126,25 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 				onClick={devToggle}
 				className={styles.main}
 				style={{
-					all: selectStyles.all,
-
-					top: selectStyles.top,
-					bottom: selectStyles.bottom,
-					right: selectStyles.right,
-					left: selectStyles.left,
+					position: "absolute",
 					zIndex: 3,
-
-					width: selectStyles.width,
-					height: selectStyles.height,
-
-					margin: selectStyles.margin,
-					padding: selectStyles.padding,
-
-					backgroundColor: selectStyles.backgroundColor ?? "transparent",
-					opacity: selectStyles.opacity,
-
-					borderStyle: selectStyles.borderStyle,
-					borderWidth: selectStyles.borderWidth,
-					borderColor: selectStyles.borderColor,
-					borderRadius: selectStyles.borderRadius,
+					backgroundColor: "transparent",
+					...selectStyles,
 				}}
 			>
 				<p
 					style={{
 						fontFamily: selectStyles.fontFamily,
-						fontSize: selectStyles.fontSize ?? getFontSize(selectStyles.height),
-						color: selectStyles.textColor,
+						fontSize: selectStyles.fontSize ?? getFontSize(`${selectStyles.height}`),
 						textAlign: selectStyles.textAlign,
+						color: selectStyles.color,
 					}}
 				>
 					{selectedValue}
 				</p>
 				<FontAwesomeIcon icon={faChevronDown} style={{
-					fontSize: selectStyles.fontSize ?? getFontSize(selectStyles.height),
-					color: selectStyles.textColor,
+					fontSize: selectStyles.fontSize ?? getFontSize(`${selectStyles.height}`),
+					color: selectStyles.color,
 				}} />
 			</div>
 
@@ -169,27 +152,9 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 				<div
 					className={styles.dropdown}
 					style={{
-						all: config?.dropdownStyles?.all,
-
-						top: config?.dropdownStyles?.top,
-						bottom: config?.dropdownStyles?.bottom,
-						right: config?.dropdownStyles?.right,
-						left: config?.dropdownStyles?.left,
 						zIndex: 3,
-
-						width: config?.dropdownStyles?.width,
-						height: config?.dropdownStyles?.height,
-
-						margin: config?.dropdownStyles?.margin,
-						padding: config?.dropdownStyles?.padding,
-
 						backgroundColor: config?.dropdownStyles?.backgroundColor ?? "transparent",
-						opacity: config?.dropdownStyles?.opacity,
-
-						borderStyle: config?.dropdownStyles?.borderStyle,
-						borderWidth: config?.dropdownStyles?.borderWidth,
-						borderColor: config?.dropdownStyles?.borderColor,
-						borderRadius: config?.dropdownStyles?.borderRadius,
+						...config?.dropdownStyles,
 					}}
 				>
 					{customOptions.length > 0 && customOptions.map(option => <SelectOption

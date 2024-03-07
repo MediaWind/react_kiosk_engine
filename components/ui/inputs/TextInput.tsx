@@ -54,8 +54,10 @@ export default function TextInput(props: ITextInputProps): JSX.Element {
 			{(value === "" && placeholder) && <span
 				style={{
 					position: "absolute",
+					fontFamily: styles.fontFamily,
+					fontSize: styles.fontSize ?? getFontSize(`${styles.height}`),
 					color: styles.color,
-					fontSize: styles.fontSize ?? getFontSize(styles.height?.toString() ?? ""),
+					textAlign: styles.textAlign,
 					opacity: focused ? .1 : .5,
 				}}
 			>
@@ -64,8 +66,10 @@ export default function TextInput(props: ITextInputProps): JSX.Element {
 
 			<p
 				style={{
+					fontFamily: styles.fontFamily,
+					fontSize: styles.fontSize ?? getFontSize(`${styles.height}`),
 					color: styles.color,
-					fontSize: styles.fontSize ?? getFontSize(styles.height?.toString() ?? ""),
+					textAlign: styles.textAlign,
 				}}
 			>
 				{value}
