@@ -1,5 +1,7 @@
 import React, { useEffect, useReducer, useState } from "react";
+import { useTranslation } from "react-i18next";
 
+import "../i18n";
 import "../styles/index.scss";
 
 import { Variables } from "../../variables";
@@ -93,6 +95,7 @@ interface IEngineProps {
 function Engine(props: IEngineProps): JSX.Element {
 	const [eIdInserted, eIdReaded, eIdRemoved] = useSharedVariables("eid_inserted", "eid_readed", "eid_removed");
 	const [eidStatus, eIdData] = useEId(eIdInserted, eIdReaded, eIdRemoved);
+	const { i18n, } = useTranslation();
 
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [eIdBlock, setEIdBlock] = useState<boolean>(false);
@@ -187,6 +190,10 @@ function Engine(props: IEngineProps): JSX.Element {
 			type: TICKET_DATA_ACTION_TYPE.LANGUAGEUPDATE,
 			payload: language,
 		});
+	}, [language]);
+	// Updates language in i18n
+	useEffect(() => {
+		i18n.changeLanguage(language);
 	}, [language]);
 
 	//* --- *//
