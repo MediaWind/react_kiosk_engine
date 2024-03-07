@@ -144,12 +144,14 @@ export interface IInputContent {
 	type: INPUT_TYPE;
 	actions: IInputAction[];
 	styles: CSSProperties;
+	advancedButtonConfig?: IAdvancedButtonConfig;
 	textInputConfig?: ITextInputConfig;
 	selectConfig?: ISelectConfig;
 }
 
 export enum INPUT_TYPE {
 	BUTTON = "button",
+	ADVANCED_BUTTON = "advancedButton",
 	TEXT = "text",
 	NUMBER = "number",
 	//TODO: replace "cardReader" by "eIdReader"?
@@ -159,13 +161,34 @@ export enum INPUT_TYPE {
 	SELECT = "select",
 }
 
+export interface IAdvancedButtonConfig {
+	backgroundImage: IBackgroundImage;
+	label?: Record<LANGUAGE, string>;
+	style: CSSProperties
+	pressed?: {
+		backgroundImage: IBackgroundImage;
+		label?: Record<LANGUAGE, string>;
+		animation?: BUTTON_ANIMATION;
+		style: CSSProperties
+	}
+}
+
+export enum BUTTON_ANIMATION {
+	MOVE_DOWN = "moveDown",
+	EMBOSSED = "embossed",
+	FLIP = "flip",
+	SHINE = "shine",
+	ROLL = "roll",
+	BOUNCE = "bounce",
+}
+
 export interface ITextInputConfig {
-	textInput: IInputField
-	placeholder?: Record<LANGUAGE, string>
-	autoFocus?: boolean
-	textPreview?: boolean
-	forceLowerCase?: boolean
-	forceUpperCase?: boolean
+	textInput: IInputField;
+	placeholder?: Record<LANGUAGE, string>;
+	autoFocus?: boolean;
+	textPreview?: boolean;
+	forceLowerCase?: boolean;
+	forceUpperCase?: boolean;
 }
 
 export interface ISelectConfig {
