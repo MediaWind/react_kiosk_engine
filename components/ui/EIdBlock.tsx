@@ -1,8 +1,8 @@
+import { useTranslation } from "react-i18next";
+
 import styles from "../../styles/ui/EIdBlock.module.scss";
 
-import { useLanguageContext } from "../../contexts/languageContext";
-
-import { IErrorManagement, LANGUAGE } from "../../interfaces";
+import { IErrorManagement } from "../../interfaces";
 
 import BackgroundImage from "./BackgroundImage";
 
@@ -10,19 +10,9 @@ interface IEIdBlockProps {
 	customImages?: IErrorManagement
 }
 
-function getDefaultText(lng?: LANGUAGE): string {
-	switch (lng) {
-		case LANGUAGE.DUTCH: return "Haal je kaart op.";
-		case LANGUAGE.ENGLISH: return "Please remove your card.";
-		case LANGUAGE.SPANISH: return "Recoja su tarjeta.";
-		case LANGUAGE.FRENCH:
-		default: return "Veuillez retirer votre carte.";
-	}
-}
-
 export default function EIdBlock(props: IEIdBlockProps): JSX.Element {
 	const { customImages, } = props;
-	const { language, } = useLanguageContext();
+	const { t, } = useTranslation("eId");
 
 	if (customImages?.eIdRead) {
 		return (
@@ -35,7 +25,7 @@ export default function EIdBlock(props: IEIdBlockProps): JSX.Element {
 	return (
 		<div className={styles.main}>
 			<div className={styles.container}>
-				<p>{getDefaultText(language)}</p>
+				<p>{t("remove card")}</p>
 			</div>
 		</div>
 	);
