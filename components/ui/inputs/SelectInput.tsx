@@ -1,4 +1,5 @@
 import { CSSProperties, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronDown } from "@fortawesome/pro-solid-svg-icons";
 
@@ -25,18 +26,10 @@ interface ISelectInputProps {
 	config: ISelectConfig | undefined
 }
 
-function getDefaultText(lng: LANGUAGE | undefined): string {
-	switch (lng) {
-		case LANGUAGE.ENGLISH: return "-- Select an option --";
-		case LANGUAGE.DUTCH: return "-- Selecteer een optie --";
-		case LANGUAGE.SPANISH: return "-- Seleccione una opción --";
-		case LANGUAGE.FRENCH:
-		default: return "-- Sélectionnez une option --";
-	}
-}
-
 export default function SelectInput(props: ISelectInputProps): JSX.Element {
 	const { selectStyles, config, } = props;
+
+	const { t, } = useTranslation("SelectInput");
 
 	const { language, } = useLanguageContext();
 	const { flow, } = useFlowContext();
@@ -46,7 +39,7 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 	const [userAgents, getUserAgents] = useAgents(dispatchErrorState);
 	const [services, getServices] = useServices(dispatchErrorState);
 
-	const [selectedValue, setSelectedValue] = useState<string>(config?.placeholders ? config.placeholders[language ?? "fr"] : getDefaultText(language));
+	const [selectedValue, setSelectedValue] = useState<string>(config?.placeholders ? config.placeholders[language ?? "fr"] : t("default placeholder"));
 	const [showDropdown, setShowDropdown] = useState<boolean>(false);
 
 	const [customOptions, setCustomOptions] = useState<IOption[]>([]);
