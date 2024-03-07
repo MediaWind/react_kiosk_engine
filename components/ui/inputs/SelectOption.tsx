@@ -2,6 +2,8 @@ import { CSSProperties } from "react";
 
 import style from "../../../styles/inputs/SelectInput.module.scss";
 
+import getFontSize from "../../../utils/getFontSize";
+
 interface ISelectOptionProps {
 	label: string
 	value: string
@@ -20,7 +22,7 @@ export default function SelectOption(props: ISelectOptionProps): JSX.Element {
 		<div onClick={clickHandler} className={style.option} style={{ ...styles, }}>
 			<p style={{
 				fontFamily: styles?.fontFamily,
-				fontSize: styles?.fontSize,
+				fontSize: style.fontSize ?? getFontSize(`${style.height}`),
 				color: styles?.color,
 				textAlign: styles?.textAlign,
 			}}>

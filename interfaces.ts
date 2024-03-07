@@ -1,4 +1,5 @@
 import { CSSProperties } from "react";
+
 import { eIdData } from "../core/hooks/useEId";
 
 import { ERROR_CODE } from "./lib/errorCodes";
