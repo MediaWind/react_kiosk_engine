@@ -1,6 +1,9 @@
 import { CSSProperties, useEffect, useState } from "react";
 import dayjs from "dayjs";
-import "dayjs/locale";
+import "dayjs/locale/en";
+import "dayjs/locale/fr";
+import "dayjs/locale/nl";
+import "dayjs/locale/es";
 
 import { setIntervalSync } from "../../../core/customInterval";
 
