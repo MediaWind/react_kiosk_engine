@@ -79,10 +79,18 @@ export default function AdvancedButton(props: IAdvancedButtonProps): JSX.Element
 				position: "absolute",
 				zIndex: 1,
 				backgroundImage: `url(${(pressed && config.pressed) ? config.pressed.backgroundImage.default : config.backgroundImage.default})`,
+				backgroundPosition: "center center",
+				backgroundRepeat: "no-repeat",
+				backgroundSize: "100% 100%",
 				...styles,
 			}}
 		>
-			<p style={config.labelStyle}>
+			<p style={{
+				fontFamily: styles.fontFamily,
+				fontSize: styles.fontSize,
+				color: styles.color,
+				textAlign: styles.textAlign,
+			}}>
 				{label}
 			</p>
 		</div>
