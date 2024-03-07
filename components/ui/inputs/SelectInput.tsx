@@ -134,7 +134,9 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 			>
 				<p
 					style={{
+						fontFamily: selectStyles.fontFamily,
 						fontSize: selectStyles.fontSize ?? getFontSize(`${selectStyles.height}`),
+						textAlign: selectStyles.textAlign,
 						color: selectStyles.color,
 					}}
 				>

@@ -1,16 +1,13 @@
 import { CSSProperties, useEffect, useState } from "react";
 import dayjs from "dayjs";
+import "dayjs/locale";
 
 import { setIntervalSync } from "../../../core/customInterval";
+import capitalizeFirstLetter from "../../../core/utils/capitalizeFirstLetter";
 
 import { useLanguageContext } from "../../contexts/languageContext";
 
 import getFontSize from "../../utils/getFontSize";
-
-require("dayjs/locale/fr");
-require("dayjs/locale/en");
-require("dayjs/locale/nl");
-require("dayjs/locale/es");
 
 interface IDateProps {
 	format?: string
@@ -48,11 +45,13 @@ export default function Date(props: IDateProps): JSX.Element {
 		>
 			<p
 				style={{
-					fontSize: getFontSize(`${style.height}`),
-					...style,
+					fontFamily: style.fontFamily,
+					fontSize: style.fontSize ?? getFontSize(`${style.height}`),
+					color: style.color,
+					textAlign: style.textAlign,
 				}}
 			>
-				{date}
+				{capitalizeFirstLetter(date)}
 			</p>
 		</div>
 	);
