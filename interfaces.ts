@@ -221,34 +221,6 @@ export interface IService {
 	priority?: 1 | 2 | 3
 }
 
-export interface IStyles {
-	all?: "initial" | "inherit" | "unset" | "revert";
-
-	top: string;
-	left: string;
-	bottom?: string;
-	right?: string;
-
-	width: string;
-	height: string;
-
-	padding?: string;
-	margin?: string;
-
-	borderWidth?: string;
-	borderStyle?: string;
-	borderColor?: string;
-	borderRadius?: string;
-
-	backgroundColor?: string;
-	opacity?: number;
-
-	fontFamily?: string;
-	textColor?: string;
-	fontSize?: string;
-	textAlign?: "left" | "right" | "center";
-}
-
 //* ------------------------- *//
 //* Ticket Data State Reducer *//
 //* ------------------------- *//
