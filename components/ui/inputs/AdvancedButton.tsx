@@ -70,6 +70,10 @@ export default function AdvancedButton(props: IAdvancedButtonProps): JSX.Element
 					}, 600);
 				}
 			}
+
+			if (config.pressed.animation === BUTTON_ANIMATION.BOUNCE) {
+				setAnimationClass(pressed ? animation.bounce_down : animation.bounce_up);
+			}
 		} else {
 			setAnimationClass(animation.none);
 		}
@@ -97,37 +101,55 @@ export default function AdvancedButton(props: IAdvancedButtonProps): JSX.Element
 	}
 
 	return (
-		<div
-			onTouchStart={clickDownHandler}
-			onTouchEnd={clickUpHandler}
-			onMouseDown={devClickDown}
-			onMouseUp={devClickUp}
-			className={`${classes.main} ${animationClass}`}
-			style={{
-				position: "absolute",
-				zIndex: 1,
-				backgroundImage: config.backgroundImage ? `url(${(pressed && config.pressed?.backgroundImage) ? config.pressed.backgroundImage.default : config.backgroundImage.default})` : "",
-				backgroundPosition: "center center",
-				backgroundRepeat: "no-repeat",
-				backgroundSize: "100% 100%",
-				...styles,
-			}}
-		>
-			<p style={{
-				fontFamily: styles.fontFamily,
-				fontSize: styles.fontSize,
-				color: styles.color,
-				textAlign: styles.textAlign,
-			}}>
-				{label}
-			</p>
-
-			{config.pressed?.animation === BUTTON_ANIMATION.SHINE && <>
-				<div className={animation.shine1}></div>
-				<div className={animation.shine1_blur}></div>
-				<div className={animation.shine2}></div>
-				<div className={animation.shadow}></div>
+		<>
+			{config.pressed?.animation === BUTTON_ANIMATION.BOUNCE && <>
+				<div
+					className={`${animation.bounce_shadow} ${pressed ? animation.shadow_bounce_down : animation.shadow_bounce_up}`}
+					style={{
+						position: "absolute",
+						zIndex: 1,
+						backgroundImage: config.backgroundImage ? `url(${(pressed && config.pressed?.backgroundImage) ? config.pressed.backgroundImage.default : config.backgroundImage.default})` : "",
+						backgroundPosition: "center center",
+						backgroundRepeat: "no-repeat",
+						backgroundSize: "100% 100%",
+						...styles,
+						backgroundColor: "#0000009f",
+					}}
+				></div>
 			</>}
-		</div>
+
+			<div
+				onTouchStart={clickDownHandler}
+				onTouchEnd={clickUpHandler}
+				onMouseDown={devClickDown}
+				onMouseUp={devClickUp}
+				className={`${classes.main} ${animationClass}`}
+				style={{
+					position: "absolute",
+					zIndex: 1,
+					backgroundImage: config.backgroundImage ? `url(${(pressed && config.pressed?.backgroundImage) ? config.pressed.backgroundImage.default : config.backgroundImage.default})` : "",
+					backgroundPosition: "center center",
+					backgroundRepeat: "no-repeat",
+					backgroundSize: "100% 100%",
+					...styles,
+				}}
+			>
+				<p style={{
+					fontFamily: styles.fontFamily,
+					fontSize: styles.fontSize,
+					color: styles.color,
+					textAlign: styles.textAlign,
+				}}>
+					{label}
+				</p>
+
+				{config.pressed?.animation === BUTTON_ANIMATION.SHINE && <>
+					<div className={animation.shine1}></div>
+					<div className={animation.shine1_blur}></div>
+					<div className={animation.shine2}></div>
+					<div className={animation.shine_shadow}></div>
+				</>}
+			</div>
+		</>
 	);
 }
