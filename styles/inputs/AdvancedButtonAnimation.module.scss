@@ -189,11 +189,10 @@
 }
 
 .bounce_up {
-	animation: bounce_up .1s ease-in forwards;
+	animation: bounce_up .2s ease-out forwards;
 }
 
 .bounce_shadow {
-	transition: transform .1s;
 	background-color: #0000009f;
 }
 
@@ -202,7 +201,7 @@
 }
 
 .shadow_bounce_up {
-	animation: shadow_bounce_up .1s ease-out forwards;
+	animation: shadow_bounce_up .2s ease-out forwards;
 }
 
 @keyframes bounce_down {
@@ -219,10 +218,10 @@
 		transform: translateY(5px);
 	}
 	20% {
-		transform: translateY(0);
-	}
-	60% {
 		transform: translateY(-10px);
+	}
+	80% {
+		transform: translateY(5px);
 	}
 	100% {
 		transform: translateY(0);
@@ -243,12 +242,29 @@
 		transform: translateY(5px);
 	}
 	20% {
-		transform: translateY(10px);
-	}
-	60% {
 		transform: translateY(20px);
+	}
+	80% {
+		transform: translateY(5px);
 	}
 	100% {
 		transform: translateY(10px);
+	}
+}
+
+.flip {
+	animation: flip .3s ease-out;
+	transform-style: preserve-3d;
+}
+
+@keyframes flip {
+	0% {
+		transform: scaleY(1);
+	}
+	50% {
+		transform: scaleY(0);
+	}
+	100% {
+		transform: scaleY(1);
 	}
 }

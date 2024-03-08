@@ -74,6 +74,16 @@ export default function AdvancedButton(props: IAdvancedButtonProps): JSX.Element
 			if (config.pressed.animation === BUTTON_ANIMATION.BOUNCE) {
 				setAnimationClass(pressed ? animation.bounce_down : animation.bounce_up);
 			}
+
+			if (config.pressed.animation === BUTTON_ANIMATION.FLIP) {
+				if (pressed) {
+					setAnimationClass(animation.flip);
+
+					setTimeout(() => {
+						setAnimationClass(animation.none);
+					}, 300);
+				}
+			}
 		} else {
 			setAnimationClass(animation.none);
 		}
@@ -108,11 +118,8 @@ export default function AdvancedButton(props: IAdvancedButtonProps): JSX.Element
 					style={{
 						position: "absolute",
 						zIndex: 1,
-						backgroundImage: config.backgroundImage ? `url(${(pressed && config.pressed?.backgroundImage) ? config.pressed.backgroundImage.default : config.backgroundImage.default})` : "",
-						backgroundPosition: "center center",
-						backgroundRepeat: "no-repeat",
-						backgroundSize: "100% 100%",
 						...styles,
+						backgroundImage: "none",
 						backgroundColor: "#0000009f",
 					}}
 				></div>
@@ -132,13 +139,14 @@ export default function AdvancedButton(props: IAdvancedButtonProps): JSX.Element
 					backgroundRepeat: "no-repeat",
 					backgroundSize: "100% 100%",
 					...styles,
+					...(pressed && config.pressed ? config.pressed.style : ""),
 				}}
 			>
 				<p style={{
-					fontFamily: styles.fontFamily,
-					fontSize: styles.fontSize,
-					color: styles.color,
-					textAlign: styles.textAlign,
+					fontFamily: pressed && config.pressed?.style.fontFamily ? config.pressed.style.fontFamily : styles.fontFamily,
+					fontSize: pressed && config.pressed?.style.fontSize ? config.pressed.style.fontSize : styles.fontSize,
+					color: pressed && config.pressed?.style.color ? config.pressed.style.color : styles.color,
+					textAlign: pressed && config.pressed?.style.textAlign ? config.pressed.style.textAlign : styles.textAlign,
 				}}>
 					{label}
 				</p>
