@@ -247,6 +247,41 @@
 							"type": "input",
 							"content": {
 								"name": "string",
+								"type": "advancedButton",
+								"actions": ["..."],
+								"styles": {
+									"all": "css properties"
+								},
+
+								"advancedButtonConfig": {
+									"backgroundImage": {
+										"default|french|dutch|...": "path"
+									},
+									"label": {
+										"fr|nl|en|...": "label"
+									},
+									"labelStyle": {
+										"all": "css properties"
+									},
+									"pressed": {
+										"backgroundImage": {
+											"default|french|dutch|...": "path"
+										},
+										"label": {
+											"fr|nl|en|...": "label"
+										},
+										"animation": "moveDown|embossed|flip|shine|rool|bounce",
+										"style":  {
+											"all": "css properties"
+										}
+									}
+								}
+							}
+						},
+						{
+							"type": "input",
+							"content": {
+								"name": "string",
 								"type": "text",
 								"actions": ["..."],
 
