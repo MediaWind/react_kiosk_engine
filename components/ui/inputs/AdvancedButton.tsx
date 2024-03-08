@@ -5,7 +5,7 @@ import animation from "../../../styles/inputs/AdvancedButtonAnimation.module.scs
 
 import { Variables } from "../../../../variables";
 
-import { IAdvancedButtonConfig } from "../../../interfaces";
+import { BUTTON_ANIMATION, IAdvancedButtonConfig } from "../../../interfaces";
 
 import { useLanguageContext } from "../../../contexts/languageContext";
 
@@ -37,10 +37,18 @@ export default function AdvancedButton(props: IAdvancedButtonProps): JSX.Element
 
 	useEffect(() => {
 		if (config.pressed?.animation) {
-			if (pressed) {
-				//TODO: switch between animation types
-			} else {
-				//TODO: switch between animation types
+			if (config.pressed.animation === BUTTON_ANIMATION.MOVE_DOWN) {
+				if (pressed) {
+					setAnimationClass(animation.move_down);
+				} else {
+					setAnimationClass(animation.move_up);
+				}
+			} else if (config.pressed.animation === BUTTON_ANIMATION.EMBOSSED) {
+				if (pressed) {
+					setAnimationClass(animation.embossed_down);
+				} else {
+					setAnimationClass(animation.embossed_up);
+				}
 			}
 		} else {
 			setAnimationClass(animation.none);
@@ -78,7 +86,7 @@ export default function AdvancedButton(props: IAdvancedButtonProps): JSX.Element
 			style={{
 				position: "absolute",
 				zIndex: 1,
-				backgroundImage: `url(${(pressed && config.pressed) ? config.pressed.backgroundImage.default : config.backgroundImage.default})`,
+				backgroundImage: config.backgroundImage ? `url(${(pressed && config.pressed?.backgroundImage) ? config.pressed.backgroundImage.default : config.backgroundImage.default})` : "",
 				backgroundPosition: "center center",
 				backgroundRepeat: "no-repeat",
 				backgroundSize: "100% 100%",

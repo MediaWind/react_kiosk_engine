@@ -1,0 +1,85 @@
+.move_down {
+	animation: move_down .1s ease-out forwards;
+}
+
+.move_up {
+	animation: move_up .1s ease-in forwards;
+}
+
+.embossed_down {
+	animation: embossed_down .1s ease-in forwards;
+
+	p {
+		animation: embossed_down_label .1s ease-out forwards;
+	}
+}
+
+.embossed_up {
+	animation: embossed_up .1s ease-in forwards;
+
+	p {
+		animation: embossed_up_label .1s ease-out forwards;
+	}
+}
+
+@keyframes move_down {
+	from {
+		transform: translateY(0);
+	}
+	to {
+		transform: translateY(0.007rem);
+	}
+}
+
+@keyframes move_up {
+	from {
+		transform: translateY(0.007rem);
+	}
+	to {
+		transform: translateY(0);
+	}
+}
+
+@keyframes embossed_down {
+	from {
+		box-shadow: none;
+		border: none;
+	}
+	to {
+		box-shadow: inset 5px 5px 5px 0 rgba(0, 0, 0, 0.5);
+		border: 1px solid rgba(0, 0, 0, 0.5);
+		border-top: none;
+		border-left: none;
+	}
+}
+
+@keyframes embossed_down_label {
+	from {
+		transform: translateY(0);
+	}
+	to {
+		transform: translateY(5px);
+	}
+}
+
+@keyframes embossed_up {
+	from {
+		box-shadow: inset 5px 5px 5px 0 rgba(0, 0, 0, 0.5);
+		border: 1px solid rgba(0, 0, 0, 0.5);
+		border-top: none;
+		border-left: none;
+	}
+	to {
+		box-shadow: none;
+		border: none;
+	}
+}
+
+@keyframes embossed_up_label {
+	from {
+		transform: translateY(5px);
+	}
+	to {
+		transform: translateY(0);
+	}
+}
