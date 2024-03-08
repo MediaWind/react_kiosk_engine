@@ -1,3 +1,7 @@
+.none {
+	overflow: hidden;
+}
+
 .move_down {
 	animation: move_down .1s ease-out forwards;
 }
@@ -7,7 +11,7 @@
 }
 
 .embossed_down {
-	animation: embossed_down .1s ease-in forwards;
+	animation: embossed_down .1s ease-out forwards;
 
 	p {
 		animation: embossed_down_label .1s ease-out forwards;
@@ -18,8 +22,65 @@
 	animation: embossed_up .1s ease-in forwards;
 
 	p {
-		animation: embossed_up_label .1s ease-out forwards;
+		animation: embossed_up_label .1s ease-in forwards;
 	}
+}
+
+.roll {
+	animation: roll .8s ease-out forwards;
+}
+
+.shine_in {
+	overflow: hidden;
+
+	.shine1, .shine1_blur {
+		animation: shine_slide_right .5s ease-out forwards;
+		animation-delay: .1s;
+	}
+
+	.shine2 {
+		animation: shine_slide_right .5s ease-out forwards;
+	}
+
+	.shadow {
+		animation: shine_shadow .5s ease-in-out;
+	}
+}
+
+.shine1, .shine1_blur, .shine2 {
+	position: absolute;
+	top: -350px;
+	left: -8%;
+
+	width: 10px;
+	height: 700px;
+
+	transform: rotate(45deg);
+	filter: blur(5px);
+
+	background-color: #ffffffc9;
+}
+
+.shine1_blur {
+	left: -10%;
+	width: 30px;
+	filter: blur(15px);
+	background-color: #ffffffb0;
+}
+
+.shine2 {
+	left: -14%;
+	width: 50px;
+	background-color: none;
+	background: linear-gradient(#ffffff00, #ffffff);
+}
+
+.shadow {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
 }
 
 @keyframes move_down {
@@ -27,13 +88,13 @@
 		transform: translateY(0);
 	}
 	to {
-		transform: translateY(0.007rem);
+		transform: translateY(0.005rem);
 	}
 }
 
 @keyframes move_up {
 	from {
-		transform: translateY(0.007rem);
+		transform: translateY(0.005rem);
 	}
 	to {
 		transform: translateY(0);
@@ -81,5 +142,44 @@
 	}
 	to {
 		transform: translateY(0);
+	}
+}
+
+@keyframes roll {
+	from {
+		transform: rotate(0);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes shine_slide_right {
+	from {
+		left: -8%;
+	}
+	to {
+		left: 125%;
+	}
+}
+
+@keyframes shine_slide_left {
+	from {
+		left: 125%;
+	}
+	to {
+		left: -8%;
+	}
+}
+
+@keyframes shine_shadow {
+	0% {
+		background-color: rgba(0, 0, 0, 0);
+	}
+	50% {
+		background-color: rgba(110, 92, 92, 0.05);
+	}
+	100% {
+		background-color: rgba(0, 0, 0, 0);
 	}
 }

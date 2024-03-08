@@ -19,6 +19,7 @@ export default function AdvancedButton(props: IAdvancedButtonProps): JSX.Element
 	const { onClick, config, styles, } = props;
 	const { language, } = useLanguageContext();
 
+	const [init, setInit] = useState<boolean>(true);
 	const [pressed, setPressed] = useState<boolean>(false);
 	const [label, setLabel] = useState<string>("");
 	const [animationClass, setAnimationClass] = useState<string>(animation.none);
@@ -36,18 +37,37 @@ export default function AdvancedButton(props: IAdvancedButtonProps): JSX.Element
 	}, [pressed, language]);
 
 	useEffect(() => {
+		if (init) {
+			setInit(false);
+			return;
+		}
+
 		if (config.pressed?.animation) {
 			if (config.pressed.animation === BUTTON_ANIMATION.MOVE_DOWN) {
+				setAnimationClass(pressed ? animation.move_down : animation.move_up);
+			}
+
+			if (config.pressed.animation === BUTTON_ANIMATION.EMBOSSED) {
+				setAnimationClass(pressed ? animation.embossed_down : animation.embossed_up);
+			}
+
+			if (config.pressed.animation === BUTTON_ANIMATION.ROLL) {
 				if (pressed) {
-					setAnimationClass(animation.move_down);
-				} else {
-					setAnimationClass(animation.move_up);
+					setAnimationClass(animation.roll);
+
+					setTimeout(() => {
+						setAnimationClass(animation.none);
+					}, 800);
 				}
-			} else if (config.pressed.animation === BUTTON_ANIMATION.EMBOSSED) {
+			}
+
+			if (config.pressed.animation === BUTTON_ANIMATION.SHINE) {
 				if (pressed) {
-					setAnimationClass(animation.embossed_down);
-				} else {
-					setAnimationClass(animation.embossed_up);
+					setAnimationClass(animation.shine_in);
+
+					setTimeout(() => {
+						setAnimationClass(animation.none);
+					}, 600);
 				}
 			}
 		} else {
@@ -101,6 +121,13 @@ export default function AdvancedButton(props: IAdvancedButtonProps): JSX.Element
 			}}>
 				{label}
 			</p>
+
+			{config.pressed?.animation === BUTTON_ANIMATION.SHINE && <>
+				<div className={animation.shine1}></div>
+				<div className={animation.shine1_blur}></div>
+				<div className={animation.shine2}></div>
+				<div className={animation.shadow}></div>
+			</>}
 		</div>
 	);
 }
