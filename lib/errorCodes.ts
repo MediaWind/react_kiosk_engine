@@ -12,7 +12,7 @@ export enum ERROR_CODE {
 	A400 = "400-A",
 
 	/**
-	 * 400-B: No appointment key given
+	 * 400-B: Unresponsive eId card
 	 */
 	B400 = "400-B",
 
@@ -30,6 +30,11 @@ export enum ERROR_CODE {
 	 * 400-E: Wrong parameters
 	 */
 	E400 = "400-E",
+
+	/**
+	 * 400-B: No appointment key given
+	 */
+	F400 = "400-F",
 
 	//? -- Unauthorized -- //
 
@@ -104,10 +109,17 @@ export enum ERROR_CODE {
 	 */
 	C409 = "409-C",
 
+	//? -- Unsupported media type -- //
+
+	/**
+	 * 415-A: Invalid eId card
+	 */
+	A415 = "415-A",
+
 	//? -- Too many requests -- //
 
 	/**
-	 * 429-A: Troo many retries
+	 * 429-A: Too many retries
 	 */
 	A429 = "429-A",
 
