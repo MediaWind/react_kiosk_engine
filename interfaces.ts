@@ -146,9 +146,11 @@ export interface IInputAreaContent {
 	name: string;
 	provider: PROVIDER;
 	styles: CSSProperties;
+	filterUnavailable?: boolean;
+	filterIds?: string[];
 	inputsConfig?: {
 		type: INPUT_TYPE;
-		style: CSSProperties;
+		styles: CSSProperties;
 	}
 }
 

@@ -25,11 +25,12 @@ export default function ButtonInput(props: IButtonInputProps) {
 			onClick={devClick}
 			onTouchEnd={clickHandler}
 			style={{
-				outline: "none",
 				position: "absolute",
 				zIndex: 2,
 
+				outline: "none",
 				borderStyle: "none",
+
 				backgroundColor: "transparent",
 
 				...styles,
