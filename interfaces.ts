@@ -109,13 +109,14 @@ export interface IBackgroundImage {
 
 export interface IMedia {
 	type: MEDIA_TYPE;
-	content: IVideoContent | IImageContent | IInputContent;
+	content: IVideoContent | IImageContent | IInputContent | IInputAreaContent;
 }
 
 export enum MEDIA_TYPE {
 	VIDEO = "video",
 	IMAGE = "image",
-	INPUT = "input"
+	INPUT = "input",
+	INPUT_AREA = "input_area",
 }
 
 export interface IVideoContent {
@@ -141,6 +142,16 @@ export enum ANIMATION_TYPE {
 	LEFTRIGHT = "leftToRight"
 }
 
+export interface IInputAreaContent {
+	name: string;
+	provider: PROVIDER;
+	styles: CSSProperties;
+	inputsConfig?: {
+		type: INPUT_TYPE;
+		style: CSSProperties;
+	}
+}
+
 export interface IInputContent {
 	name: string;
 	type: INPUT_TYPE;
@@ -158,7 +169,6 @@ export enum INPUT_TYPE {
 	NUMBER = "number",
 	//TODO: replace "cardReader" by "eIdReader"?
 	CARDREADER = "cardReader",
-	//TODO: replace "qrCode" by "scanner"?
 	SCANNER = "scanner",
 	SELECT = "select",
 }
@@ -194,7 +204,7 @@ export interface ITextInputConfig {
 }
 
 export interface ISelectConfig {
-	provider: SELECT_PROVIDER;
+	provider: PROVIDER;
 	placeholders?: Record<LANGUAGE, string>;
 	options?: IOption[];
 	dropdownStyles?: CSSProperties;
@@ -203,7 +213,7 @@ export interface ISelectConfig {
 	filterIds?: string[];
 }
 
-export enum SELECT_PROVIDER {
+export enum PROVIDER {
 	CUSTOM = "custom",
 	USER_AGENTS = "userAgents",
 	SERVICES = "services"
