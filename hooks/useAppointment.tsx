@@ -7,7 +7,6 @@ import { ERROR_CODE } from "../lib/errorCodes";
 import { Console } from "../utils/console";
 import fetchRetry from "../utils/fetchRetry";
 import capitalizeFirstLetter from "../../core/utils/capitalizeFirstLetter";
-// import { testPDF } from "../utils/testPDF";
 
 export default function useAppointment(dispatchAppointment: React.Dispatch<IAppointmentAction>, dispatchError: React.Dispatch<IErrorAction>): [string, CallableFunction, CallableFunction] {
 	const [appointmentTicketPdf, setAppointmentTicketPDF] = useState<string>("");
@@ -27,18 +26,10 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 		try {
 			const response = await fetchRetry(checkinURL);
 			const data = await response.json();
-			console.log("🚀 ~ checkIn ~ data:", data);
 
 			if (data.status !== 1) {
 				Console.error("Error when trying to check in appointment: data status " + data.status ?? "undefined", { fileName: "useAppointment", functionName: "checkIn", lineNumber: 31, });
 				Console.log(data);
-				// if (Variables.PREVIEW) {
-				// 	dispatchAppointment({
-				// 		type: APPOINTMENT_ACTION_TYPE.UPDATECHECKEDIN,
-				// 		payload: true,
-				// 	});
-				// 	setAppointmentTicketPDF(testPDF);
-				// } else {
 				if (data.status_msg && data.status_msg === "appointment_not_found") {
 					dispatchError({
 						type: ERROR_ACTION_TYPE.SETERROR,
@@ -67,8 +58,6 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 						} as IErrorState,
 					});
 				}
-
-				// }
 			} else {
 				if (data.pdf !== null) {
 					dispatchAppointment({
@@ -78,7 +67,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 
 					setAppointmentTicketPDF(data.pdf);
 				} else {
-					Console.error("Error when trying to check in appointment: pdf is null", { fileName: "useAppointment", functionName: "checkIn", lineNumber: 57, });
+					Console.error("Error when trying to check in appointment: pdf is null", { fileName: "useAppointment", functionName: "checkIn", lineNumber: 70, });
 					dispatchError({
 						type: ERROR_ACTION_TYPE.SETERROR,
 						payload: {
@@ -90,7 +79,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 				}
 			}
 		} catch (err) {
-			Console.error("Error when trying to check in appointment: error caught.", { fileName: "useAppointment", functionName: "checkIn", lineNumber: 69, });
+			Console.error("Error when trying to check in appointment: error caught.", { fileName: "useAppointment", functionName: "checkIn", lineNumber: 82, });
 			Console.error(err);
 			if (err instanceof Error) {
 				if (err.message.split("-")[0].trim() === "fetchRetry") {
@@ -145,10 +134,9 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 		try {
 			const response = await fetchRetry(checkoutURL);
 			const data = await response.json();
-			console.log("🚀 ~ checkOut ~ data:", data);
 
 			if (data.status != 1) {
-				Console.error("Error when trying to check out appointment: data status " + data.status ?? "undefined", { fileName: "useAppointment", functionName: "checkOut", lineNumber: 126, });
+				Console.error("Error when trying to check out appointment: data status " + data.status ?? "undefined", { fileName: "useAppointment", functionName: "checkOut", lineNumber: 139, });
 				if (Variables.PREVIEW) {
 					dispatchAppointment({
 						type: APPOINTMENT_ACTION_TYPE.UPDATECHECKEDOUT,
@@ -160,7 +148,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 						payload: {
 							hasError: true,
 							errorCode: ERROR_CODE.B500,
-							message: "Unable to fetch ticket PDF (Status 0)",
+							message: "Unable to check out (Status 0)",
 						} as IErrorState,
 					});
 				}
@@ -171,7 +159,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 				});
 			}
 		} catch (err) {
-			Console.error("Error when trying to check out appointment: error caught.", { fileName: "useAppointment", functionName: "checkOut", lineNumber: 149, });
+			Console.error("Error when trying to check out appointment: error caught.", { fileName: "useAppointment", functionName: "checkOut", lineNumber: 162, });
 			Console.error(err);
 			if (err instanceof Error) {
 				if (err.message.split("-")[0].trim() === "fetchRetry") {

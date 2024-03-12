@@ -5,7 +5,7 @@ import { eIdStatus } from "../../../core/hooks/useEId";
 import { IInputContent, INPUT_TYPE } from "../../interfaces";
 
 import { useEIdContext } from "../../contexts/eIdContext";
-import { usePrintContext } from "../../contexts/printContext";
+import { useAppointmentContext } from "../../contexts/appointmentContext";
 
 import ButtonInput from "./inputs/ButtonInput";
 import NumberInput from "./inputs/NumberInput";
@@ -21,7 +21,7 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 	const { content, onActionsTrigger, } = props;
 
 	const { status, } = useEIdContext();
-	const { printState, } = usePrintContext();
+	const { appointmentState, } = useAppointmentContext();
 
 	const [eIdBlock, setEIdBlock] = useState<boolean>(false);
 
@@ -39,10 +39,12 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 	}, [content, status]);
 
 	useEffect(() => {
-		if (content.type === INPUT_TYPE.SCANNER && printState.ticketPDF !== undefined && printState.ticketPDF !== "" && printState.ticketPDF !== null) {
-			actionHandler();
+		if (content.type === INPUT_TYPE.SCANNER) {
+			if ((appointmentState.isCheckingIn && appointmentState.isCheckedIn) || (appointmentState.isCheckingOut && appointmentState.isCheckedOut)) {
+				actionHandler();
+			}
 		}
-	}, [printState.ticketPDF]);
+	}, [appointmentState]);
 
 	function actionHandler() {
 		onActionsTrigger(content.actions);
