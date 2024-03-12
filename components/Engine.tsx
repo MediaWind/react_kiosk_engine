@@ -11,7 +11,7 @@ import useSharedVariables from "../../core/hooks/useSharedVariables";
 import useEId, { eIdData, eIdStatus } from "../../core/hooks/useEId";
 import { setIntervalRange } from "../../core/customInterval";
 
-import { ERROR_ACTION_TYPE, IFlow, IPage, LANGUAGE, PRINT_ACTION_TYPE, Route, TICKET_DATA_ACTION_TYPE } from "../interfaces";
+import { APPOINTMENT_ACTION_TYPE, ERROR_ACTION_TYPE, IFlow, IPage, LANGUAGE, PRINT_ACTION_TYPE, Route, TICKET_DATA_ACTION_TYPE } from "../interfaces";
 import { ERROR_CODE } from "../lib/errorCodes";
 
 import ticketDataReducer, { initialTicketState } from "../reducers/ticketDataReducer";
@@ -328,13 +328,19 @@ function Engine(props: IEngineProps): JSX.Element {
 		});
 	}
 
+	function resetAppointments() {
+		dispatchAppointmentState({
+			type: APPOINTMENT_ACTION_TYPE.CLEARALL,
+		});
+	}
+
 	function keydownHandler(e: any) {
 		writeQrCode(e.key);
 	}
 
 	function resetAll() {
-		Console.info("Resetting all data");
 		resetTicketData();
+		resetAppointments();
 		if (qrCode !== "") {
 			resetQrCode();
 		}

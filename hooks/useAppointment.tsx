@@ -111,12 +111,6 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 					},
 				});
 			}
-		} finally {
-			setTimeout(() => {
-				dispatchAppointment({
-					type: APPOINTMENT_ACTION_TYPE.CLEARALL,
-				});
-			}, 1000);
 		}
 	}
 
@@ -191,12 +185,6 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 					},
 				});
 			}
-		} finally {
-			setTimeout(() => {
-				dispatchAppointment({
-					type: APPOINTMENT_ACTION_TYPE.CLEARALL,
-				});
-			}, 1000);
 		}
 	}
 
