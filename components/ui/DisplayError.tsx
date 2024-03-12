@@ -16,6 +16,8 @@ interface IDisplayErrorProps {
 	route: Route | null
 }
 
+const blackList = [ERROR_CODE.C503, ERROR_CODE.B400, ERROR_CODE.A415];
+
 function getErrorImage(image: IErrorManagement, errorCode?: ERROR_CODE, serviceId?: string): IBackgroundImage {
 	switch (errorCode) {
 		case ERROR_CODE.C500: {
@@ -32,6 +34,8 @@ function getErrorImage(image: IErrorManagement, errorCode?: ERROR_CODE, serviceI
 		case ERROR_CODE.A503: return image.notConnectedToInternet ?? image.genericError;
 		case ERROR_CODE.C503: return image.noPaper ?? image.genericError;
 		case ERROR_CODE.A408: return image.eIdTimeout ?? image.genericError;
+		case ERROR_CODE.A415: return image.unknownCard ?? image.genericError;
+		case ERROR_CODE.B400: return image.unresponsiveCard ?? image.genericError;
 		default: return image.genericError;
 	}
 }
@@ -44,7 +48,7 @@ export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 
 	useEffect(() => {
 		const delay = setTimeout(() => {
-			if (route?.errorManagement && errorState.errorCode !== ERROR_CODE.C503) {
+			if (route?.errorManagement && !blackList.includes(errorState.errorCode)) {
 				clickHandler();
 			}
 		}, 10 * 1000);
@@ -55,10 +59,12 @@ export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 	}, []);
 
 	function clickHandler() {
-		dispatchErrorState({
-			type: ERROR_ACTION_TYPE.CLEARERROR,
-			payload: undefined,
-		});
+		if (!blackList.includes(errorState.errorCode)) {
+			dispatchErrorState({
+				type: ERROR_ACTION_TYPE.CLEARERROR,
+				payload: undefined,
+			});
+		}
 	}
 
 	function devClick() {

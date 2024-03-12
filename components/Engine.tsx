@@ -93,9 +93,9 @@ interface IEngineProps {
 }
 
 function Engine(props: IEngineProps): JSX.Element {
-	const [eIdInserted, eIdReaded, eIdRemoved] = useSharedVariables("eid_inserted", "eid_readed", "eid_removed");
-	const [eidStatus, eIdData] = useEId(eIdInserted, eIdReaded, eIdRemoved);
-	const { i18n, } = useTranslation();
+	const [eIdInserted, eIdReaded, eIdRemoved, eIdError] = useSharedVariables("eid_inserted", "eid_readed", "eid_removed", "eid_error");
+	const [eidStatus, eIdData, eidError] = useEId(eIdInserted, eIdReaded, eIdRemoved, eIdError);
+	const { t, i18n, } = useTranslation();
 
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [eIdBlock, setEIdBlock] = useState<boolean>(false);
@@ -222,8 +222,17 @@ function Engine(props: IEngineProps): JSX.Element {
 			dispatchErrorState({ type: ERROR_ACTION_TYPE.CLEARERROR, });
 		}
 
-		if (eidStatus === eIdStatus.READ) {
+		if (eidStatus === eIdStatus.READ && eidError === "") {
 			setEIdBlock(true);
+		} else if (eidStatus === eIdStatus.READ && eidError !== "") {
+			dispatchErrorState({
+				type: ERROR_ACTION_TYPE.SETERROR,
+				payload: {
+					hasError: true,
+					errorCode: eidError === "unknown_card" ? ERROR_CODE.A415 : ERROR_CODE.B400,
+					message: t(`${eidError}`, { ns: "errors", }),
+				},
+			});
 		}
 
 		if (eidStatus === eIdStatus.REMOVED) {
@@ -392,7 +401,8 @@ function Engine(props: IEngineProps): JSX.Element {
 						<Debugger
 							eidData={ticketState.eIdDatas}
 							messages={[
-								`eidstatus: ${eidStatus}`,
+								`eid status: ${eidStatus}`,
+								`eid error: ${eidError}`,
 								`firstname from eiddata: ${eIdData?.firstName}`,
 								isPrinting ? "Printing!" : "",
 								error.hasError ? `Error ${error.errorCode}: ${error.message}` : ""

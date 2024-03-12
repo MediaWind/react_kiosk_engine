@@ -117,7 +117,7 @@ export default function AdvancedButton(props: IAdvancedButtonProps): JSX.Element
 					className={`${animation.bounce_shadow} ${pressed ? animation.shadow_bounce_down : animation.shadow_bounce_up}`}
 					style={{
 						position: "absolute",
-						zIndex: 1,
+						zIndex: 2,
 						...styles,
 						backgroundImage: "none",
 						backgroundColor: "#0000009f",

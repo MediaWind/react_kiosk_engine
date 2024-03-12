@@ -75,6 +75,8 @@ export interface IErrorManagement {
 		[key: string]: IBackgroundImage
 	}
 	eIdTimeout?: IBackgroundImage;
+	unknownCard?: IBackgroundImage;
+	unresponsiveCard?: IBackgroundImage;
 	//TODO: add more error options
 
 	//? Not necessarily errors, might need some refactoring here
