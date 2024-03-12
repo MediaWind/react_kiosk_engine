@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 
 import { eIdStatus } from "../../../core/hooks/useEId";
 
-import { IInputContent, INPUT_TYPE } from "../../interfaces";
+import { APPOINTMENT_ACTION_TYPE, IInputContent, INPUT_TYPE } from "../../interfaces";
 
 import { useEIdContext } from "../../contexts/eIdContext";
+import { useAppointmentContext } from "../../contexts/appointmentContext";
 
 import ButtonInput from "./inputs/ButtonInput";
 import NumberInput from "./inputs/NumberInput";
@@ -20,6 +21,7 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 	const { content, onActionsTrigger, } = props;
 
 	const { status, } = useEIdContext();
+	const { appointmentState, dispatchAppointmentState, } = useAppointmentContext();
 
 	const [eIdBlock, setEIdBlock] = useState<boolean>(false);
 
@@ -37,10 +39,13 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 	}, [content, status]);
 
 	useEffect(() => {
-		if (content.type === INPUT_TYPE.QRCODE) {
-			actionHandler();
+		if (content.type === INPUT_TYPE.SCANNER) {
+			if ((appointmentState.isCheckingIn && appointmentState.isCheckedIn) || (appointmentState.isCheckingOut && appointmentState.isCheckedOut)) {
+				actionHandler();
+				dispatchAppointmentState({ type: APPOINTMENT_ACTION_TYPE.CLEARALL, });
+			}
 		}
-	}, []);
+	}, [appointmentState]);
 
 	function actionHandler() {
 		onActionsTrigger(content.actions);

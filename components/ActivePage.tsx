@@ -102,8 +102,6 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 	useEffect(() => {
 		if (pageInputs.length > 0) {
 			pageInputs.map(input => {
-				//!FIXME: had to add this condition because of a "input.actions is undefined" error
-				// See issue #13 on Github
 				if (input.actions) {
 					input.actions.map(action => {
 						if (
@@ -138,9 +136,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 				setInvalidTextInputs(invalidInputs);
 				return;
 			}
-		}
 
-		if (textInputs.length > 0) {
 			Console.info("Text inputs updated: ");
 			ticketState.textInputDatas.map(input => Console.log(`input ${input.id}: ${input.value.slice(0, 1)}${"*".repeat(input.value.slice(1).trim().length)}`));
 		}

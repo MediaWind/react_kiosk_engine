@@ -144,8 +144,8 @@ export enum ANIMATION_TYPE {
 export interface IInputContent {
 	name: string;
 	type: INPUT_TYPE;
-	actions: IInputAction[];
 	styles: CSSProperties;
+	actions?: IInputAction[];
 	advancedButtonConfig?: IAdvancedButtonConfig;
 	textInputConfig?: ITextInputConfig;
 	selectConfig?: ISelectConfig;
@@ -159,7 +159,7 @@ export enum INPUT_TYPE {
 	//TODO: replace "cardReader" by "eIdReader"?
 	CARDREADER = "cardReader",
 	//TODO: replace "qrCode" by "scanner"?
-	QRCODE = "qrCode",
+	SCANNER = "scanner",
 	SELECT = "select",
 }
 

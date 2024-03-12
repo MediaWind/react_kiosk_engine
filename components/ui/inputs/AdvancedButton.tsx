@@ -133,7 +133,7 @@ export default function AdvancedButton(props: IAdvancedButtonProps): JSX.Element
 				className={`${classes.main} ${animationClass}`}
 				style={{
 					position: "absolute",
-					zIndex: 1,
+					zIndex: 2,
 					backgroundImage: config.backgroundImage ? `url(${(pressed && config.pressed?.backgroundImage) ? config.pressed.backgroundImage.default : config.backgroundImage.default})` : "",
 					backgroundPosition: "center center",
 					backgroundRepeat: "no-repeat",
