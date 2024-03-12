@@ -1,6 +1,17 @@
 import { SetStateAction } from "react";
 
-import { ACTION_TYPE, APPOINTMENT_ACTION_TYPE, IAppointmentAction, IInputAction, IPrintAction, IService, ITicketDataAction, LANGUAGE, PRINT_ACTION_TYPE, TICKET_DATA_ACTION_TYPE } from "../interfaces";
+import {
+	ACTION_TYPE,
+	APPOINTMENT_ACTION_TYPE,
+	IAppointmentAction,
+	IInputAction,
+	IPrintAction,
+	IService,
+	ITicketDataAction,
+	LANGUAGE,
+	PRINT_ACTION_TYPE,
+	TICKET_DATA_ACTION_TYPE
+} from "../interfaces";
 
 interface IDispatchers {
 	router: {

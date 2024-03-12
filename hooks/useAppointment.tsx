@@ -6,7 +6,8 @@ import { ERROR_CODE } from "../lib/errorCodes";
 
 import { Console } from "../utils/console";
 import fetchRetry from "../utils/fetchRetry";
-import { testPDF } from "../utils/testPDF";
+import capitalizeFirstLetter from "../../core/utils/capitalizeFirstLetter";
+// import { testPDF } from "../utils/testPDF";
 
 export default function useAppointment(dispatchAppointment: React.Dispatch<IAppointmentAction>, dispatchError: React.Dispatch<IErrorAction>): [string, CallableFunction, CallableFunction] {
 	const [appointmentTicketPdf, setAppointmentTicketPDF] = useState<string>("");
@@ -20,21 +21,42 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 			id_project=${Variables.W_ID_PROJECT}
 			&serial=${Variables.SERIAL}
 			&qrcode=${qrCode}
-			pdf_ticket=base_64
+			&pdf_ticket=base_64
 		`;
 
 		try {
 			const response = await fetchRetry(checkinURL);
 			const data = await response.json();
+			console.log("🚀 ~ checkIn ~ data:", data);
 
-			if (data.status != 1) {
+			if (data.status !== 1) {
 				Console.error("Error when trying to check in appointment: data status " + data.status ?? "undefined", { fileName: "useAppointment", functionName: "checkIn", lineNumber: 31, });
-				if (Variables.PREVIEW) {
-					dispatchAppointment({
-						type: APPOINTMENT_ACTION_TYPE.UPDATECHECKEDIN,
-						payload: true,
+				Console.log(data);
+				// if (Variables.PREVIEW) {
+				// 	dispatchAppointment({
+				// 		type: APPOINTMENT_ACTION_TYPE.UPDATECHECKEDIN,
+				// 		payload: true,
+				// 	});
+				// 	setAppointmentTicketPDF(testPDF);
+				// } else {
+				if (data.status_msg && data.status_msg === "appointment_not_found") {
+					dispatchError({
+						type: ERROR_ACTION_TYPE.SETERROR,
+						payload: {
+							hasError: true,
+							errorCode: ERROR_CODE.B404,
+							message: "Appointment not found",
+						} as IErrorState,
 					});
-					setAppointmentTicketPDF(testPDF);
+				} else if (data.status_msg) {
+					dispatchError({
+						type: ERROR_ACTION_TYPE.SETERROR,
+						payload: {
+							hasError: true,
+							errorCode: ERROR_CODE.B500,
+							message: capitalizeFirstLetter(data.status_msg.replace("_", " ")),
+						} as IErrorState,
+					});
 				} else {
 					dispatchError({
 						type: ERROR_ACTION_TYPE.SETERROR,
@@ -45,6 +67,8 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 						} as IErrorState,
 					});
 				}
+
+				// }
 			} else {
 				if (data.pdf !== null) {
 					dispatchAppointment({
@@ -108,7 +132,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 	}
 
 	async function checkOut(qrCode: string) {
-		Console.info("Appointment check in...");
+		Console.info("Appointment check out...");
 		setAppointmentTicketPDF("");
 
 		const checkoutURL = `
@@ -121,6 +145,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 		try {
 			const response = await fetchRetry(checkoutURL);
 			const data = await response.json();
+			console.log("🚀 ~ checkOut ~ data:", data);
 
 			if (data.status != 1) {
 				Console.error("Error when trying to check out appointment: data status " + data.status ?? "undefined", { fileName: "useAppointment", functionName: "checkOut", lineNumber: 126, });

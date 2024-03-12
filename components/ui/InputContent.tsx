@@ -5,6 +5,7 @@ import { eIdStatus } from "../../../core/hooks/useEId";
 import { IInputContent, INPUT_TYPE } from "../../interfaces";
 
 import { useEIdContext } from "../../contexts/eIdContext";
+import { usePrintContext } from "../../contexts/printContext";
 
 import ButtonInput from "./inputs/ButtonInput";
 import NumberInput from "./inputs/NumberInput";
@@ -20,6 +21,7 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 	const { content, onActionsTrigger, } = props;
 
 	const { status, } = useEIdContext();
+	const { printState, } = usePrintContext();
 
 	const [eIdBlock, setEIdBlock] = useState<boolean>(false);
 
@@ -37,10 +39,10 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 	}, [content, status]);
 
 	useEffect(() => {
-		if (content.type === INPUT_TYPE.QRCODE) {
+		if (content.type === INPUT_TYPE.SCANNER && printState.ticketPDF !== undefined && printState.ticketPDF !== "" && printState.ticketPDF !== null) {
 			actionHandler();
 		}
-	}, []);
+	}, [printState.ticketPDF]);
 
 	function actionHandler() {
 		onActionsTrigger(content.actions);

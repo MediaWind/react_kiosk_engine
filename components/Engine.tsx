@@ -307,7 +307,7 @@ function Engine(props: IEngineProps): JSX.Element {
 				checkOut(qrCode);
 			}
 
-			writeQrCode("Enter");
+			resetQrCode();
 		}
 	}, [qrCode, appointmentState.isCheckingIn, appointmentState.isCheckingOut]);
 
