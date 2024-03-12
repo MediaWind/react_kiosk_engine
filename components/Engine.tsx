@@ -202,6 +202,19 @@ function Engine(props: IEngineProps): JSX.Element {
 	//Loading on eId inserted
 	useEffect(() => {
 		Console.info("eId status: " + eidStatus);
+
+		if (eidError !== "") {
+			dispatchErrorState({
+				type: ERROR_ACTION_TYPE.SETERROR,
+				payload: {
+					hasError: true,
+					errorCode: eidError === "unknown_card" ? ERROR_CODE.A415 : ERROR_CODE.B400,
+					message: t(`${eidError}`, { ns: "errors", }),
+				},
+			});
+			return;
+		}
+
 		let delay: NodeJS.Timer;
 
 		if (eidStatus === eIdStatus.INSERTED) {
@@ -224,15 +237,6 @@ function Engine(props: IEngineProps): JSX.Element {
 
 		if (eidStatus === eIdStatus.READ && eidError === "") {
 			setEIdBlock(true);
-		} else if (eidStatus === eIdStatus.READ && eidError !== "") {
-			dispatchErrorState({
-				type: ERROR_ACTION_TYPE.SETERROR,
-				payload: {
-					hasError: true,
-					errorCode: eidError === "unknown_card" ? ERROR_CODE.A415 : ERROR_CODE.B400,
-					message: t(`${eidError}`, { ns: "errors", }),
-				},
-			});
 		}
 
 		if (eidStatus === eIdStatus.REMOVED) {
@@ -242,7 +246,7 @@ function Engine(props: IEngineProps): JSX.Element {
 		return () => {
 			clearTimeout(delay);
 		};
-	}, [eidStatus]);
+	}, [eidStatus, eidError]);
 
 	// Updates eId Data in reducer
 	useEffect(() => {
