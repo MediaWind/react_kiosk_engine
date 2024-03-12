@@ -10,7 +10,9 @@
 		"errors": {
 			"default title": "Something went wrong.",
 			"default message": "Please try again or contact the reception.",
-			"unsupported error message": "An unexpected error occured."
+			"unsupported error message": "An unexpected error occured.",
+			"unresponsive_card": "Could not read eId card: make sure the card is correctly inserted.",
+			"unknown_card": "Unknown card: please enter a valid eId card."
 		},
 		"SelectInput": {
 			"default placeholder": "-- Select an option --"
@@ -31,7 +33,9 @@
 		"errors": {
 			"default title": "Une erreur est survenue.",
 			"default message": "Veuillez réessayer ou vous adresser au guichet.",
-			"unsupported error message": "Une erreur inattendue est survenue."
+			"unsupported error message": "Une erreur inattendue est survenue.",
+			"unresponsive_card": "Lecture impossible: assurez-vous d'avoir correctement inséré votre carte.",
+			"unknown_card": "Carte inconnue: assurez-vous d'avoir inséré une carte eId valide."
 		},
 		"SelectInput": {
 			"default placeholder": "-- Sélectionnez une option --"
@@ -52,7 +56,9 @@
 		"errors": {
 			"default title": "Er is een fout opgetreden.",
 			"default message": "Probeer het nog eens opnieuw of ga naar het loket.",
-			"unsupported error message": "Er is een onverwachte fout opgetreden."
+			"unsupported error message": "Er is een onverwachte fout opgetreden.",
+			"unresponsive_card": "Kan eId-kaart niet lezen: controleer of de kaart correct is ingebracht.",
+			"unknown_card": "Onbekende kaart: voer een geldige eId-kaart in."
 		},
 		"SelectInput": {
 			"default placeholder": "-- Selecteer een optie --"
@@ -73,7 +79,9 @@
 		"errors": {
 			"default title": "Algo salió mal.",
 			"default message": "Vuelva a intentarlo o póngase en contacto con la recepción.",
-			"unsupported error message": "Se ha producido un error inesperado."
+			"unsupported error message": "Se ha producido un error inesperado.",
+			"unresponsive_card": "No se ha podido leer la tarjeta eId: asegúrese de que la tarjeta está correctamente insertada.",
+			"unknown_card": "Tarjeta desconocida: introduzca una tarjeta eId válida."
 		},
 		"SelectInput": {
 			"default placeholder": "-- Seleccione una opción --"
