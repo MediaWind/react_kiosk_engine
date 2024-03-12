@@ -7,6 +7,8 @@ export default function useScanner(): [string, CallableFunction, CallableFunctio
 	const [returnedQrCodeText, setReturnedQrCodeText] = useState<string>("");
 
 	function writeQrCode(key: string) {
+		if (key === "ArrowDown") return;
+
 		if (key === "Enter") {
 			Console.info("QR code scanned");
 			setReturnedQrCodeText(currentQrText);
