@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { IInputAction, IInputContent, IInputField, TICKET_DATA_ACTION_TYPE } from "../interfaces";
 import { IKeyboard } from "../lib/keyboardTypes";
 
+import { useFlowContext } from "../contexts/flowContext";
 import { useTicketDataContext } from "../contexts/ticketDataContext";
 
 import TextInput from "./ui/inputs/TextInput";
@@ -31,7 +32,46 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 	const [forceLowerCase, setForceLowerCase] = useState<boolean>(false);
 	const [forceUpperCase, setForceUpperCase] = useState<boolean>(false);
 
+	const { flow, } = useFlowContext();
 	const { ticketState, dispatchTicketState, } = useTicketDataContext();
+
+	useEffect(() => {
+		if (ticketState.eIdDatas) {
+			const firstnameId = flow.ticketParameters?.firstname;
+			const lastnameId = flow.ticketParameters?.lastname;
+			const nationalNumberId = flow.ticketParameters?.nationalNumber;
+
+			if (firstnameId) {
+				dispatchTicketState({
+					type: TICKET_DATA_ACTION_TYPE.INPUTTEXTUPDATE,
+					payload: {
+						id: firstnameId,
+						value: ticketState.eIdDatas.firstName,
+					},
+				});
+			}
+
+			if (lastnameId) {
+				dispatchTicketState({
+					type: TICKET_DATA_ACTION_TYPE.INPUTTEXTUPDATE,
+					payload: {
+						id: lastnameId,
+						value: ticketState.eIdDatas.lastName,
+					},
+				});
+			}
+
+			if (nationalNumberId) {
+				dispatchTicketState({
+					type: TICKET_DATA_ACTION_TYPE.INPUTTEXTUPDATE,
+					payload: {
+						id: nationalNumberId,
+						value: ticketState.eIdDatas.nationalNumber,
+					},
+				});
+			}
+		}
+	}, [ticketState.eIdDatas]);
 
 	useEffect(() => {
 		setFields(() => {
@@ -60,7 +100,7 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 				return [...latest];
 			});
 		}
-	}, [inputs]);
+	}, [inputs, ticketState.textInputDatas]);
 
 	useEffect(() => {
 		const autoFocusOn = inputs.find(input => input.textInputConfig?.autoFocus);
