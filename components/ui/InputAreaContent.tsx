@@ -85,25 +85,16 @@ export default function InputAreaContent(props: IInputAreaContentProps): JSX.Ele
 					...content.styles,
 				}}
 			>
-				{content.provider === PROVIDER.SERVICES && (
-					<p style={{
+				<p
+					style={{
 						fontFamily: content.styles.fontFamily,
 						fontSize: content.styles.fontSize,
 						color: content.styles.color,
 						textAlign: content.styles.textAlign,
 					}}
-					>{t("no service")}</p>
-				)}
-
-				{content.provider === PROVIDER.USER_AGENTS && (
-					<p style={{
-						fontFamily: content.styles.fontFamily,
-						fontSize: content.styles.fontSize,
-						color: content.styles.color,
-						textAlign: content.styles.textAlign,
-					}}
-					>{t("no agent")}</p>
-				)}
+				>
+					{content.provider === PROVIDER.SERVICES ? t("no service") : content.provider === PROVIDER.USER_AGENTS ? t("no agent") : ""}
+				</p>
 			</div>
 		);
 	}
