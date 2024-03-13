@@ -37,6 +37,7 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 	const [autoFocus, setAutoFocus] = useState<boolean>(false);
 
 	const [displayKeyboard, setDisplayKeyboard] = useState<boolean>(false);
+	const [forceHide, setForceHide] = useState<boolean>(false);
 
 	const [forceLowerCase, setForceLowerCase] = useState<boolean>(false);
 	const [forceUpperCase, setForceUpperCase] = useState<boolean>(false);
@@ -44,6 +45,9 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 	useEffect(() => {
 		if (errorState.hasError || status !== eIdStatus.REMOVED) {
 			setDisplayKeyboard(false);
+			setForceHide(true);
+		} else {
+			setForceHide(false);
 		}
 	}, [errorState.hasError, status]);
 
@@ -262,7 +266,7 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 				/>;
 			})}
 
-			<Keyboard
+			{!forceHide && <Keyboard
 				currentValue={currentValue}
 				config={keyboardConfig}
 				onChange={changeHandler}
@@ -273,7 +277,7 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 				enableTextPreview={showPreview}
 				forceLowerCase={forceLowerCase}
 				forceUpperCase={forceUpperCase}
-			/>
+			/>}
 		</>
 	);
 }
