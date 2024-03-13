@@ -157,7 +157,7 @@ function Engine(props: IEngineProps): JSX.Element {
 
 	// Change current with flagged flow if no user interaction
 	useEffect(() => {
-		if (flaggedFlow !== currentFlow && readyToChangeFlow) {
+		if (flaggedFlow?.id !== currentFlow?.id && readyToChangeFlow) {
 			Console.info("Changing flow");
 			setCurrentFlow(flaggedFlow);
 		}

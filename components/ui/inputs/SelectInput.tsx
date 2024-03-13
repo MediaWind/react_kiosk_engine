@@ -7,7 +7,7 @@ import styles from "../../../styles/inputs/SelectInput.module.scss";
 
 import { Variables } from "../../../../variables";
 
-import { AgentData, IOption, ISelectConfig, LANGUAGE, SELECT_PROVIDER, ServiceData, TICKET_DATA_ACTION_TYPE } from "../../../interfaces";
+import { AgentData, IOption, ISelectConfig, LANGUAGE, PROVIDER, ServiceData, TICKET_DATA_ACTION_TYPE } from "../../../interfaces";
 
 import { useLanguageContext } from "../../../contexts/languageContext";
 import { useFlowContext } from "../../../contexts/flowContext";
@@ -48,17 +48,17 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 
 	useEffect(() => {
 		switch (config?.provider) {
-			case SELECT_PROVIDER.CUSTOM:
+			case PROVIDER.CUSTOM:
 				setCustomOptions(config.options ?? []);
 				setAgentOptions([]);
 				setServiceOptions([]);
 				break;
-			case SELECT_PROVIDER.SERVICES:
+			case PROVIDER.SERVICES:
 				getServices(config.filterUnavailable, config.filterIds);
 				setCustomOptions([]);
 				setAgentOptions([]);
 				break;
-			case SELECT_PROVIDER.USER_AGENTS:
+			case PROVIDER.USER_AGENTS:
 				getUserAgents(config.filterIds);
 				setCustomOptions([]);
 				setServiceOptions([]);

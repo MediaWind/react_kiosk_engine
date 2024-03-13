@@ -13,10 +13,12 @@ interface IAdvancedButtonProps {
 	onClick: CallableFunction
 	config: IAdvancedButtonConfig
 	styles: CSSProperties
+	value?: string
+	disabled?: boolean
 }
 
 export default function AdvancedButton(props: IAdvancedButtonProps): JSX.Element {
-	const { onClick, config, styles, } = props;
+	const { onClick, config, styles, value, disabled, } = props;
 	const { language, } = useLanguageContext();
 
 	const [init, setInit] = useState<boolean>(true);
@@ -90,12 +92,16 @@ export default function AdvancedButton(props: IAdvancedButtonProps): JSX.Element
 	}, [pressed]);
 
 	function clickDownHandler() {
-		setPressed(true);
+		if (!disabled) {
+			setPressed(true);
+		}
 	}
 
 	function clickUpHandler() {
-		setPressed(false);
-		onClick();
+		if (!disabled) {
+			setPressed(false);
+			onClick(value);
+		}
 	}
 
 	function devClickDown() {
@@ -147,6 +153,7 @@ export default function AdvancedButton(props: IAdvancedButtonProps): JSX.Element
 					fontSize: pressed && config.pressed?.style.fontSize ? config.pressed.style.fontSize : styles.fontSize,
 					color: pressed && config.pressed?.style.color ? config.pressed.style.color : styles.color,
 					textAlign: pressed && config.pressed?.style.textAlign ? config.pressed.style.textAlign : styles.textAlign,
+					opacity: disabled ? .5 : "",
 				}}>
 					{label}
 				</p>
