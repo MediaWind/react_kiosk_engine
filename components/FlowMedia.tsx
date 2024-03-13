@@ -32,7 +32,7 @@ export default function FlowMedia(props: IFlowMediaProps): JSX.Element {
 		);
 	} else if (media.type === MEDIA_TYPE.INPUT_AREA) {
 		return (
-			<InputAreaContent content={media.content as IInputAreaContent} />
+			<InputAreaContent content={media.content as IInputAreaContent} onActionsTrigger={actionsHandler} />
 		);
 	} else {
 		return (

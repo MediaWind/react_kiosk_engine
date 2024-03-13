@@ -146,6 +146,7 @@ export interface IInputAreaContent {
 	name: string;
 	provider: PROVIDER;
 	styles: CSSProperties;
+	actions?: IInputAction[];
 	filterUnavailable?: boolean;
 	filterIds?: string[];
 	inputsConfig?: {
@@ -177,11 +178,17 @@ export enum INPUT_TYPE {
 
 export interface IAdvancedButtonConfig {
 	backgroundImage?: IBackgroundImage;
-	label?: Record<LANGUAGE, string>;
+	/**
+	 * expects a language code as key
+	 */
+	label?: Record<string, string>;
 	labelStyle?: CSSProperties;
 	pressed?: {
 		backgroundImage?: IBackgroundImage;
-		label?: Record<LANGUAGE, string>;
+		/**
+		 * expects a language code as key
+		 */
+		label?: Record<string, string>;
 		animation?: BUTTON_ANIMATION;
 		style: CSSProperties
 	}
