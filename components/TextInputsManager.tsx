@@ -1,9 +1,13 @@
 import { useEffect, useState } from "react";
 
+import { eIdStatus } from "../../core/hooks/useEId";
+
 import { IInputAction, IInputContent, IInputField, TICKET_DATA_ACTION_TYPE } from "../interfaces";
 import { IKeyboard } from "../lib/keyboardTypes";
 
 import { useFlowContext } from "../contexts/flowContext";
+import { useErrorContext } from "../contexts/errorContext";
+import { useEIdContext } from "../contexts/eIdContext";
 import { useTicketDataContext } from "../contexts/ticketDataContext";
 
 import TextInput from "./ui/inputs/TextInput";
@@ -19,6 +23,11 @@ interface ITextInputsManagerProps {
 export default function TextInputsManager(props: ITextInputsManagerProps): JSX.Element {
 	const { inputs, keyboardConfig, onTriggerActions, invalidTextInputs, } = props;
 
+	const { flow, } = useFlowContext();
+	const { errorState, } = useErrorContext();
+	const { status, } = useEIdContext();
+	const { ticketState, dispatchTicketState, } = useTicketDataContext();
+
 	const [fields, setFields] = useState<IInputField[]>([]);
 	const [focusedField, setFocusedField] = useState<string>("");
 	const [invalidFields, setInvalidFields] = useState<string[]>([]);
@@ -28,12 +37,19 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 	const [autoFocus, setAutoFocus] = useState<boolean>(false);
 
 	const [displayKeyboard, setDisplayKeyboard] = useState<boolean>(false);
+	const [forceHide, setForceHide] = useState<boolean>(false);
 
 	const [forceLowerCase, setForceLowerCase] = useState<boolean>(false);
 	const [forceUpperCase, setForceUpperCase] = useState<boolean>(false);
 
-	const { flow, } = useFlowContext();
-	const { ticketState, dispatchTicketState, } = useTicketDataContext();
+	useEffect(() => {
+		if (errorState.hasError || status !== eIdStatus.REMOVED) {
+			setDisplayKeyboard(false);
+			setForceHide(true);
+		} else {
+			setForceHide(false);
+		}
+	}, [errorState.hasError, status]);
 
 	useEffect(() => {
 		if (ticketState.eIdDatas) {
@@ -250,7 +266,7 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 				/>;
 			})}
 
-			<Keyboard
+			{!forceHide && <Keyboard
 				currentValue={currentValue}
 				config={keyboardConfig}
 				onChange={changeHandler}
@@ -261,7 +277,7 @@ export default function TextInputsManager(props: ITextInputsManagerProps): JSX.E
 				enableTextPreview={showPreview}
 				forceLowerCase={forceLowerCase}
 				forceUpperCase={forceUpperCase}
-			/>
+			/>}
 		</>
 	);
 }

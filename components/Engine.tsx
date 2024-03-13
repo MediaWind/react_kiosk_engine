@@ -221,6 +221,8 @@ function Engine(props: IEngineProps): JSX.Element {
 			setIsLoading(true);
 
 			delay = setTimeout(() => {
+				setIsLoading(false);
+
 				dispatchErrorState({
 					type: ERROR_ACTION_TYPE.SETERROR,
 					payload: {
@@ -413,8 +415,7 @@ function Engine(props: IEngineProps): JSX.Element {
 							messages={[
 								`eid status: ${eidStatus}`,
 								`eid error: ${eidError}`,
-								`firstname from eiddata: ${eIdData?.firstName}`,
-								isPrinting ? "Printing!" : "",
+								`firstname from eid: ${eIdData?.firstName}`,
 								error.hasError ? `Error ${error.errorCode}: ${error.message}` : ""
 							]}
 						/>

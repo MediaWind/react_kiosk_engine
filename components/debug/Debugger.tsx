@@ -19,19 +19,21 @@ export default function Debugger(props: IDebuggerProps): JSX.Element {
 				backgroundColor: "#ffffff",
 			}}
 		>
-			{eidData !== undefined && (
+			<h1>eId data</h1>
+			{eidData ?
 				<>
-					<p>Firstname: {eidData?.firstName ?? "no data"}</p>
-					<p>Lastname: {eidData?.lastName ?? "no data"}</p>
-					<p>Zip Code: {eidData?.addressZip ?? "no data"}</p>
-					<p>Birth date: {eidData?.dateOfBirth ?? "no data"}</p>
-					<p>Birth place: {eidData?.locationOfBirth ?? "no data"}</p>
-					<p>Gender: {eidData?.gender ?? "no data"}</p>
-					<p>National number: {eidData?.nationalNumber ?? "no data"}</p>
-					<p>Nationality: {eidData?.nationality ?? "no data"}</p>
-					<hr />
-				</>
-			)}
+					<p>Firstname: {eidData.firstName}</p>
+					<p>Lastname: {eidData.lastName}</p>
+					<p>Zip Code: {eidData.addressZip}</p>
+					<p>Birth date: {eidData.dateOfBirth}</p>
+					<p>Birth place: {eidData.locationOfBirth}</p>
+					<p>Gender: {eidData.gender}</p>
+					<p>National number: {eidData.nationalNumber}</p>
+					<p>Nationality: {eidData.nationality}</p>
+				</> :
+				<p>no data</p>
+			}
+			<hr />
 
 			{messages && messages.map((message, index) => {
 				return <p key={index}>{message}</p>;
