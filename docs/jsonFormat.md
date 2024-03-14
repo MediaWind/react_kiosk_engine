@@ -34,7 +34,13 @@ This documentation will explain in detail the different properties of a kiosk fl
 	- [Video media](#video-media)
 	- [Image media](#image-media)
 	- [Input media](#input-media)
+		- [Action types](#action-types)
+		- [Advanced button configuration](#advanced-button-configuration)
+		- [Text input configuration](#text-input-configuration)
+		- [Select configuration](#select-configuration)
+		- [Custom action](#custom-action)
 	- [Input area media](#input-area-media)
+	- [Template](#template)
 
 ## Route level
 
@@ -82,7 +88,7 @@ This is the scheduling of the flows.
 }
 ```
 
-`scheduling` have 8 required keys: one for each day of the week + a `publicHoliday´ key.
+`scheduling` have 8 required keys: one for each day of the week + a `publicHoliday` key.
 
 These days items are defined by an array holding a list of schedule items, themselves defined by a required `id`, referencing to a flow, and an optional `startTime`, respecting the **"HH:mm"**, 24h format.
 
@@ -437,13 +443,13 @@ This complex media is the powerhouse of user interaction.
 - `scanner`: this input specifies that the page is ready to read and process the informations from the kiosk scanner.
 - `cardReader`: this input specifies that the page is ready to read and process informations from the kiosk card reader.
 
-`actions` is a list of actions triggered by interacting with the input.
+`actions` is a list of [actions](#action-types) triggered by interacting with the input.
 
-`advancedButtonConfig` is the configaration associated with the `advancedButton` type input.
+`advancedButtonConfig` is the [configaration](#advanced-button-configuration) associated with the `advancedButton` type input.
 
-`textInputConfig` is the configaration associated with the `text` type input.
+`textInputConfig` is the [configaration](#text-input-configuration) associated with the `text` type input.
 
-`selectConfig` is the configaration associated with the `select` type input.
+`selectConfig` is the [configaration](#select-configuration) associated with the `select` type input.
 
 #### Action types
 
@@ -466,7 +472,7 @@ Here are the different action types available and what they do.
 		"service": {
 			"serviceId": 1,
 			"devServiceId": 2,
-			"priority": 0
+			"priority": 1
 		}
 	},
 	{
@@ -502,16 +508,181 @@ An `action` is always defined by its `type`. Here is a break down of each type:
 - `saveservice` saves the service id selected. It must be associated with the `service` object.
 	- This object have a required `serviceId`, representing the <ins>production</ins> service id in the prod EasyQueue module instance. This is the one that will be saved during production.
 	- An optional `devServiceId`, representing the <ins>development</ins> service id in the dev EasyQueue module instance. This is the one that will be saved during development. This was added so the serviceId doesn't need to be adjusted when switching between dev and prod, reducing potential inattention errors.
-	- An optional `priority`
+	- An optional `priority`. It can be 1 for `normal`, 2 for `high` and 3 for `urgent`. The default is 1.
 - `createticket` triggers the ticket creation. To be able to create a ticket, a service id must first be saved.
 - `printticket` sends a request for printing the ticket. To be able to print a ticket, it must be created first. Once the ticket is created and the print is requested, the actual printing is triggered.
 - `changelanguage` must be associated to the `language` property. Switches the current language of the flow globally.
 - `checkin`, usually attached to the `scanner` input, will signify that the page is ready to use the qr code read with the scanner and proceed to check it in in the EasyQueue module.
 - `checkout`, usually attached to the `scanner` input, will signify that the page is ready to use the qr code read with the scanner and proceed to check it out in the EasyQueue module.
 - `checktextinputs`, usually attached to the `text` input, first verify that all required text inputs are filled before proceeding to the rest of the actions.
-- `custom` triggers a custom action. More on that in the [custom actions](#custom-actions) section.
+- `custom` triggers a custom action. More on that in the [custom action](#custom-action) section.
 
-#### Custom actions
+#### Advanced button configuration
+
+```json
+{
+	"type": "input",
+	"content": {
+		"name": "name",
+		"type": "advancedButton",
+		"actions": [],
+		"styles": {},
+
+		"advancedButtonConfig": {
+			"backgroundImage": {
+				"default": "path",
+				"fr": "path"
+			},
+			"label": {
+				"fr": "label"
+			},
+
+			"pressed": {
+				"backgroundImage": {
+				"default": "path",
+				"fr": "path"
+			},
+				"label": {
+					"fr": "label"
+				},
+				"animation": "moveDown",
+				"style":  {}
+			}
+		}
+	}
+}
+```
+
+The `advancedButtonConfig` is always paired with an `advancedButton` input.
+
+Unlike the basic `button` input, you can use this to add an *actual* button above your page's background image, instead of having a clickable div that is placed above a "fake" button on the background image.
+
+Each property in the `advancedButtonConfig` is optional.
+
+`backgroundImage` follows the same structure as a page's [background image](#backgroundimage). It is used to add an image to your button and have it depend on the current language.
+
+`label` is used to manually add a label to your button. Use languages as keys to adapt it to the current language.
+
+`pressed` contains the properties associated when the button is pressed:
+
+- `backgroundImage` follows the convention used above. Use this if you want a different background image when you press the button.
+- `label` follows the convention used above. Use this if you want a different label when you press the button.
+- `animation` can be used to add an animation when you press the button.
+	- `moveDown`: the button moves down on click/touch down and up on click/touch up.
+	- `embossed`: the button is seemingly embossed into the page's background on click/touch down and goes back to its original position on click/touch up.
+	- `flip`: the button flips forward when clicked/touched.
+	- `shine`: a shine effect goes accross the button when clicked/touched.
+	- `roll`: the button rotates clockwise when clicked/touched.
+	- `bounce`: the button moves down on click/touch down and bounces like a spring on click/touch up. A shadow is added to amplify the bouncy effect.
+- `style` are the styles you want to apply when the button is pressed.
+
+
+**<ins>Notes about the styling:</ins>**
+
+- `styles` outside of the `advancedButtonConfig` is the default style of the button.
+- `style` inside the `pressed` property of the `advancedButtonConfig` is additionnal or overriding styles to the above `styles`, applied when the button is pressed.
+- The `label` styles only takes `fontFamily`, `fontSize`, `color` and `textAlign` attributes. Define those in the `input`'s `styles` or in the `advancedButtonConfig`'s `pressed`'s `style`.
+
+#### Text input configuration
+
+```json
+{
+	"type": "input",
+	"content": {
+		"name": "string",
+		"type": "text",
+		"styles": {},
+
+		"textInputConfig": {
+			"textInput": {
+				"id": "id associated with the flow's ticketParameters",
+				"value": "value - usually left empty",
+				"required": false
+			},
+			"placeholder": {
+				"fr": "placeholder"
+			},
+			"autoFocus": true,
+			"textPreview": false,
+			"forceLowerCase": false,
+			"forceUpperCase": true
+		}
+	}
+}
+```
+
+The `textInputConfig` is always paired with a `text` input. Note that each `textInputConfig` is specific to *one* `text` input and not all of them if you have multiple `text` inputs on your page.
+
+`textInput` holds the informations of the input itself. `id` is the id used to link it to the [`ticketParameters`](#ticketparameters). `value` is the value of the input, usually left empty when defined in the JSON. It will be updated whenever we write into the input. `required` is optional and indicates whether the inputs needs to be filled.
+
+`placeholder` is the optional placeholder of your input. Use language codes as keys to adapt your input depending on the language. It disappears as soon as you start typing in your input.
+
+`autoFocus` is optional and defines the input that is focus when you first land on the page. Note that the keyboard displays and hides depending on wheter a `text` input is focused or not.
+
+`textPreview` is optional and enable a window inside the keyboard above the keys to preview the value inside the `text` input. It is usually used when your keyboard covers the tinput of a page.
+
+`forceLowerCase` is optional and forces the keyboard to start and stay in lower case. You can still manually switch to upper case with the shift/capslock key. It is for example used when the input receives an email address.
+
+`forceUpperCase` is optional and forces the keyboard to start and stay in upper case. You can still manually switch to lower case with the shift/capslock key. It is for example used when the input receives a license plate.
+
+*Note: `actions` are not used in a text input.*
+
+#### Select configuration
+
+```json
+{
+	"type": "input",
+	"content": {
+		"name": "string",
+		"type": "select",
+		"styles": {},
+
+		"selectConfig": {
+			"provider": "services",
+			"placeholders": {
+				"fr": "placeholder"
+			},
+			"options": [
+				{
+					"key": "option id",
+					"label": "option label",
+					"value": "option value"
+				}
+			],
+			"dropdownStyles": {},
+			"optionStyles": {},
+			"filterUnavailable": false,
+			"filterIds": [""]
+		}
+	}
+}
+```
+
+The `selectConfig` is always paired with a `select` input.
+
+The `provider` indicates where the select fetches its content. It can be `services`, `userAgents` or `custom`.
+
+`placeholders` are optional and add a custom default text to your input. Use language codes as key to adapt to the current language. Note that if no `placeholders` is defined, a select will still have a default text, adapting to the language. Use this if you need a specific default value to your select.
+
+`options` is optional and used paired with a custom `provider`. Enter your options with a `key`, used to map your options, a `label` to be displayed and a `value` to be saved.
+
+`dropdownStyles` is optional and contains the CSS properties of the dropdown.
+
+`optionStyles` is optional and contains the CSS properties of the options.
+
+`filterUnavailable` is optional and is used to hide the `services` or `userAgents` that are currently closed or not connected.
+
+`filterIds` is optional and is an array of specific `service` ids that you want to be displayed.
+
+**<ins>Note about the styling:</ins>**
+
+- `styles` outside of the `selectConfig` defines the styling of the input.
+- `dropdownStyles` inside of the `selectConfig` defines the styling of the dropdown shown when you click on the input.
+- `optionStyles` inside of the `selectConfig` defines the styling of the options inside of your dropdown.
+
+*Note: `actions` are not used in a select input.*
+
+#### Custom action
 
 If needed, a custom action can be introduced inside the flow. This custom action is defined *outside* of the Engine and entirely managed from the widget using the kiosk Engine.
 
@@ -565,7 +736,151 @@ router: {
 }
 ```
 
-The router `state` is an array of all [pages](#page-level) the end user has navigated through. Call the `dispatcher`'s `
+The router `state` is an array of all [pages](#page-level) the end user has navigated through up to this point.
+
+Call the `dispatcher`'s `nextPage` with a string containing the next page's `id` as a paramter.
+Call the `dispatcher`'s `previousPage` to go back to the previous page. No parameter needed.
+Call the `dispatcher`'s homePage to go back to the home page. No parameter needed.
+
+```ts
+language: {
+	state: LANGUAGE.FRENCH,
+	dispatcher,
+}
+```
+
+The language's `state` is the current language. It can be undefined.
+
+Call `dispatcher` with a `LANGUAGE` or `undefined` as a parameter to define a new language.
+
+```ts
+ticket: {
+	state: {
+		eIdDatas: null,
+		textInputDatas: [
+			{
+				id: "text_input_id",
+				value: "",
+				required: false
+			}
+		],
+		service: undefined,
+		language: undefined,
+	},
+	dispatcher,
+}
+
+ticket.dispatcher({
+	type: TICKET_DATA_ACTION_TYPE.SERVICEUPDATE,
+	payload: {
+		serviceId: 4,
+		devServiceId: 10,
+		priority: 0
+	}
+})
+```
+
+The ticket's `state` is an object containing the usefull informations for ticket creation:
+
+- `eIdDatas` are the saved data from a read eId. It can be `null`.
+- `textInputDatas` is an array of text input fields. The `id` is the link between [`ticketParameters`](#ticketparameters) and text inputs. `value` is the current value of the text input. `required` is optional and defines if the text input is required to be filled.
+- `service` is the currently saved service.
+- `language` is the current language.
+
+Call the `dispatcher` with a `ITicketDataAction` object as a parameter. Refer to the `ticketDataReducer` for more informations.
+
+```ts
+print: {
+	state: {
+		ticketPDF: null,
+		ticketCreationRequested: false,
+		printRequested: false,
+	},
+	dispatcher
+}
+
+ticket.dispatcher({
+	type: PRINT_ACTION_TYPE.REQUESTPRINT,
+	payload: true
+})
+```
+
+The print's `state` is an object containing the current print informations:
+
+- `ticketPDF` is the string of a base64 pdf corresponding to the created ticket. It can also be null.
+- `ticketCreationRequested` is the request triggered with a `createticket` input [action](#action-types)
+- `printRequested` is the request triggered with a `printticket` input [action](#action-types)
+
+Call the `dispatcher` with a `IPrintAction` obejct as a parameter. Refer to the `printReducer` for more informations.
+
+```ts
+appointment: {
+	state: {
+		isCheckingIn: false,
+		isCheckingOut: false,
+		isCheckedIn: false,
+		isCheckedOut: false,
+	},
+	dispatcher,
+}
+
+ticket.dispatcher({
+	type: APPOINTMENT_ACTION_TYPE.UPDATECHECKEDIN,
+	payload: true
+})
+```
+
+The appointment's `state` keeps track of the check in/out state:
+
+- `isCheckingIn` is triggered with a `checkin` input [action](#action-types)
+- `isCheckingOut` is triggered with a `checkout` input [action](#action-types)
+- `isCheckedIn` is updated once the qr code read by the `scanner` has been checked in the EasyQueue module.
+- `isCheckedOut` is updated once the qr code read by the `scanner` has been checked out of the EasyQueue module.
+
+Call the `dispatcher` with a `IAppointmentAction` object as a parameter. Refer to the `appointmentReducer` for more informations.
+
+```ts
+error: {
+	state: {
+		hasError: false,
+		errorCode: ERROR_CODE.A200,
+		message: "",
+	},
+	dispatcher,
+}
+
+error.dispatcher({
+	type: ERROR_ACTION_TYPE.SETERROR,
+	payload: {
+			hasError: true,
+			errorCode: ERROR_CODE.B500,
+			message: "Something went wrong",
+			errorServiceId: 4,
+		}
+})
+```
+
+The error's `state` are the error informations:
+
+- `hasError` triggers the error display
+- `errorCode` is the error code reference. Refers to the documentation provided with the `ERROR_CODE` for details about each code.
+- `message` is a string to be displayed along with the error image for more information about the error.
+- `errorServiceId` is optional and allows to target a specific service for [service closed errors](#errormanagement).
+
+Call the `dispatcher` with a `IErrorAction` object as a parameter. Refer to the `errorReducer` for more informations.
+
+```ts
+customPage: {
+	state: undefined,
+	dispatcher,
+}
+```
+
+The customPage's `state` is the current customPage inserted into the flow. It is defined outside of the Engine on the widget's side. It can be a `JSX.Element` or `undefined`.
+
+Call the `dispatcher` with a `JSX.Element` or `undefined` as a parameter to display or hide your custom page component.
+
+<hr />
 
 ### Input area media
 
@@ -601,3 +916,9 @@ The `inputsConfig` is defined by a `type` following the input types convention a
 <!-- TODO: add link to input types -->
 
 <ins>**Note:**</ins> This is currently one of the newest feature and it will definitely require some reworking as needs become more precise and diverse.
+
+## Template
+
+A route template is provided in the root directory of the `Engine` to help you construct your route under the name `route_template.json`.
+
+It is not required but recommended to store your widget's routes in a `routes` folder in your widget's directory. Don't forget to import them in your widget's `App` and feed the selected one to the `Engine` componant.
