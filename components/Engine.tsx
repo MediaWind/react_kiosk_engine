@@ -68,6 +68,7 @@ interface IEngineProps {
 	 * 	print: { state, dispatcher },
 	 * 	appointment: { state, dispatcher },
 	 * 	error: { state, dispatcher },
+	 * 	customPage: { state, dispatcher }
 	 * }
 	 * ```
 	 *
