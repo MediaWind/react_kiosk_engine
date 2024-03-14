@@ -40,7 +40,7 @@ This documentation will explain in detail the different properties of a kiosk fl
 		- [Select configuration](#select-configuration)
 		- [Custom action](#custom-action)
 	- [Input area media](#input-area-media)
-	- [Template](#template)
+- [Template](#template)
 
 ## Route level
 
@@ -88,7 +88,7 @@ This is the scheduling of the flows.
 }
 ```
 
-`scheduling` have 8 required keys: one for each day of the week + a `publicHoliday` key.
+`scheduling` have 8 required keys: one for each day of the week + a `publicHolidays` key.
 
 These days items are defined by an array holding a list of schedule items, themselves defined by a required `id`, referencing to a flow, and an optional `startTime`, respecting the **"HH:mm"**, 24h format.
 
@@ -130,7 +130,7 @@ The `genericError` key is the only one required if an `errorManagement` is creat
 
 `noPaper` will display images when the printer has no more paper.
 
-`notConnectedToInternet` will display images when the printer is not connected to internet.
+`notConnectedToInternet` will display images when the kiosk is not connected to internet.
 
 `serviceClosed` has a different structure. Instead of going directly to the images paths, we must define a required `default` key that will hold the overall images when a service is closed, and we can also use a service id as a key to display a service closed error for a specific service. This allows displaying a schedule for that particular service, for example. Make sure the service id is the *production* service id, associated with the right EasyQueue module.
 
@@ -140,7 +140,7 @@ The `genericError` key is the only one required if an `errorManagement` is creat
 
 `eIdRead` is **not** an error per say. It will display images for when the card is read and the end user can remove their card from the terminal. This serves as a block that cannot be discarted until the card is removed. This was implemented to make sure no card is left behind by end users when using the kiosk.
 
-This property might need some refactoring in the future, maybe need more error diversity to be able to cover all types of error. The `eIdInserted` and `eIdRead` properties are obviously not error, so the whole property could use at least a renaming, and eventually a more complex structure to cover all UX needs.
+<ins style="color: green;">**Note:**</ins> This property might need some refactoring in the future, maybe need more error diversity to be able to cover all types of error. The `eIdInserted` and `eIdRead` properties are obviously not errors, so the whole property could use at least a renaming, and eventually a more complex structure to cover all UX needs.
 
 ## Flow level
 
@@ -169,7 +169,7 @@ These are the properties defining a flow object, found in the [route level](#rou
 
 ### id
 
-This is a UUID (or any other id as long as it's unique) used in a [sheduling item](#scheduling) to point to a flow.
+This is a UUID (or any other id as long as it's unique) used to link a flow to a [sheduling item](#scheduling).
 
 ### name
 
@@ -177,7 +177,7 @@ This is the name of the flow.
 
 ### homePage
 
-This is the UUID of the home page. It allows the possibility to easily go back to the home page of the flow.
+This is the UUID of the home page. This is the start of your flow and allows the possibility to easily go back to the home page of the flow.
 
 ### navigateToHomePageAfter
 
@@ -200,12 +200,13 @@ This defines the parameters needed for the ticket
 }
 ```
 
-Each key here is optional and are used to specify which information is required for the ticket. The key represent the parameters available at ticket creation and are associated with an `id` pointing to the text input responsible for this parameters. More on that here.
-<!-- TODO: add link to the text input id mapping -->
+Each key here is optional and are used to specify which information is required for the ticket. The keys represent the parameters available at ticket creation and are associated with an `id` pointing to the text input responsible for this parameter. More on that [here](#text-input-configuration).
 
 ### keyboard
 
 This is an optional property defining the configuration of the keyboard displaying on a page with text inputs. It allows full control over the customization of the keyboard.
+
+Here is a simplified representation of the keyboard configuration.
 
 ```json
 "keyboard": {
@@ -218,8 +219,6 @@ This is an optional property defining the configuration of the keyboard displayi
 }
 ```
 
-Here is a simplified representation of the keyboard configuration.
-
 The `layout` property is required. You can use layouts that are already implemented:
 - `classic`: first row are special characters and numbers, the three following rows are letters, finally the last row are actions such as shift/capslock, switch between special characters and numbers, the spacebar, enter and delete.
 - `compact`: first row are special characters and numbers, the two following rows are letters, finally the last row are actions described in the `classic` layout.
@@ -231,7 +230,10 @@ The `layout` property is required. You can use layouts that are already implemen
 
 The `mode` property is optional and enable switching between azerty or qwerty layouts. Defaults to `"azerty"`.
 
-The `slideAnimation` property is optional and specifies the animation used to display or hide the keyboard. If no `slideAnimation` is provided, it will be determined by the keyboard position. More on that in the keyboard doc. Possible animations are:
+The `slideAnimation` property is optional and specifies the animation used to display or hide the keyboard. If no `slideAnimation` is provided, it will be determined by the keyboard position. More on that in the keyboard configuration documentation.
+
+Possible animations are:
+
 - `top`: Keyboard appears from the center top of the screen.
 - `right`: Keyboard appears from the center right of the screen.
 - `left`: Keyboard appears from the center left of the screen.
@@ -254,9 +256,7 @@ This optional property can be used to display the date on the flow.
 ```json
 "displayDate": {
 	"format": "DD MMMM YYYY",
-	"style": {
-		"all": "css properties"
-	}
+	"style": {}
 }
 ```
 
@@ -271,9 +271,7 @@ This optional property can be used to display the time on the flow.
 ```json
 "displayTime": {
 	"format": "HH:mm:ss",
-	"style": {
-		"all": "css properties"
-	}
+	"style": {}
 }
 ```
 
@@ -281,7 +279,7 @@ It is defined by a `format` following the ISO 8601 standard and a `style` contai
 
 The date will be displayed on every page of the flow in its specified zone.
 
-**For more info on the date and time formats, visit the [dayjs documentation](https://day.js.org/docs/en/display/format)**
+**For more info on the date and time formats, visit the [dayjs documentation](https://day.js.org/docs/en/display/format)**.
 
 ### pages
 
@@ -333,7 +331,7 @@ This is the name of the page.
 
 This is the background image to be displayed.
 
-It is defined by a required `default` property pointing to the route of the associated image and the optional `french`, `dutch`, `english` or `spanish` properties pointing to a language specific image's path.
+It is defined by a required `default` property pointing to the route of the associated image and the optional `french`, `dutch`, `english` or `spanish` properties pointing to a language specific image's path that will adapt to the current language.
 
 ### navigateToAfter
 
@@ -351,7 +349,7 @@ An optional property listing all the medias of the page. More info in the [Media
 
 ## Media level
 
-This is a list of the different media of the page that will be displayed above the background image.
+This is a list of the different medias of the page that will be displayed above the background image.
 
 ```json
 "medias": [
@@ -362,7 +360,7 @@ This is a list of the different media of the page that will be displayed above t
 ]
 ```
 
-A `media` is defined by its `type` and the associated `content`
+A `media` is defined by its `type` and the associated `content`.
 
 ### Video media
 
@@ -388,6 +386,8 @@ A `video` type media's content is defined by a `name`, a `src` pointing to the p
 
 **<ins>Note:</ins>** This media has not been used previously and will need testing and refactoring when needed.
 
+<hr />
+
 ### Image media
 
 This media allows to display an image on the page.
@@ -410,6 +410,8 @@ This media allows to display an image on the page.
 An `image` type media's content is defined by a `name`, a `src` pointing to the path of the image, an `animate` allowing animation of said image and `styles` containing CSS properties.
 
 **<ins>Note:</ins>** This media has not been used previously and will need testing and refactoring when needed.
+
+<hr />
 
 ### Input media
 
@@ -435,12 +437,12 @@ This complex media is the powerhouse of user interaction.
 
 `type` defines the type of the input. It can be:
 
-- `button`: a basic button, usually with a transparent background, to be placed above a button on the background image.
+- `button`: a basic button, usually with a transparent background, to be placed above a "fake" button on the background image.
 - `advancedButton`: a more complex button, associated with an `advancedButtonConfig`.
 - `number`: a basic number input. This has never been used before, so it will be perfected when needed.
 - `text`: a text input, associated with a `textInputConfig`.
-- `select`: a select input with a dropdown of items, associated with a `selectConfig`.
-- `scanner`: this input specifies that the page is ready to read and process the informations from the kiosk scanner.
+- `select`: a select input, associated with a `selectConfig`.
+- `scanner`: this input specifies that the page is ready to read and process informations from the kiosk scanner.
 - `cardReader`: this input specifies that the page is ready to read and process informations from the kiosk card reader.
 
 `actions` is a list of [actions](#action-types) triggered by interacting with the input.
@@ -508,13 +510,13 @@ An `action` is always defined by its `type`. Here is a break down of each type:
 - `saveservice` saves the service id selected. It must be associated with the `service` object.
 	- This object have a required `serviceId`, representing the <ins>production</ins> service id in the prod EasyQueue module instance. This is the one that will be saved during production.
 	- An optional `devServiceId`, representing the <ins>development</ins> service id in the dev EasyQueue module instance. This is the one that will be saved during development. This was added so the serviceId doesn't need to be adjusted when switching between dev and prod, reducing potential inattention errors.
-	- An optional `priority`. It can be 1 for `normal`, 2 for `high` and 3 for `urgent`. The default is 1.
-- `createticket` triggers the ticket creation. To be able to create a ticket, a service id must first be saved.
+	- An optional `priority`. It can be 1 for `normal` (default), 2 for `high` or 3 for `urgent`.
+- `createticket` sends a request for creating the ticket. To be able to create a ticket, a service id must first be saved.
 - `printticket` sends a request for printing the ticket. To be able to print a ticket, it must be created first. Once the ticket is created and the print is requested, the actual printing is triggered.
 - `changelanguage` must be associated to the `language` property. Switches the current language of the flow globally.
-- `checkin`, usually attached to the `scanner` input, will signify that the page is ready to use the qr code read with the scanner and proceed to check it in in the EasyQueue module.
-- `checkout`, usually attached to the `scanner` input, will signify that the page is ready to use the qr code read with the scanner and proceed to check it out in the EasyQueue module.
-- `checktextinputs`, usually attached to the `text` input, first verify that all required text inputs are filled before proceeding to the rest of the actions.
+- `checkin`, usually attached to the `scanner` input, will signify that the page is ready to use the qr code read with the scanner and proceed to check it in the EasyQueue module.
+- `checkout`, usually attached to the `scanner` input, will signify that the page is ready to use the qr code read with the scanner and proceed to check it out of the EasyQueue module.
+- `checktextinputs` first verify that all required text inputs on the page are filled before proceeding to the rest of the actions.
 - `custom` triggers a custom action. More on that in the [custom action](#custom-action) section.
 
 #### Advanced button configuration
@@ -617,9 +619,9 @@ The `textInputConfig` is always paired with a `text` input. Note that each `text
 
 `placeholder` is the optional placeholder of your input. Use language codes as keys to adapt your input depending on the language. It disappears as soon as you start typing in your input.
 
-`autoFocus` is optional and defines the input that is focus when you first land on the page. Note that the keyboard displays and hides depending on wheter a `text` input is focused or not.
+`autoFocus` is optional and defines the input that is focused when you first land on the page. Note that the keyboard displays and hides depending on wheter a `text` input is focused or not.
 
-`textPreview` is optional and enable a window inside the keyboard above the keys to preview the value inside the `text` input. It is usually used when your keyboard covers the tinput of a page.
+`textPreview` is optional and enables a window inside the keyboard above the keys to preview the value inside the `text` input. It is usually used when your keyboard covers the focused input of a page.
 
 `forceLowerCase` is optional and forces the keyboard to start and stay in lower case. You can still manually switch to upper case with the shift/capslock key. It is for example used when the input receives an email address.
 
@@ -662,7 +664,7 @@ The `selectConfig` is always paired with a `select` input.
 
 The `provider` indicates where the select fetches its content. It can be `services`, `userAgents` or `custom`.
 
-`placeholders` are optional and add a custom default text to your input. Use language codes as key to adapt to the current language. Note that if no `placeholders` is defined, a select will still have a default text, adapting to the language. Use this if you need a specific default value to your select.
+`placeholders` are optional and add a custom default text to your input. Use language codes as keys to adapt to the current language. Note that if no `placeholders` is defined, a select will still have a default text, adapting to the language. Use this if you need a specific default value to your select.
 
 `options` is optional and used paired with a custom `provider`. Enter your options with a `key`, used to map your options, a `label` to be displayed and a `value` to be saved.
 
@@ -684,9 +686,9 @@ The `provider` indicates where the select fetches its content. It can be `servic
 
 #### Custom action
 
-If needed, a custom action can be introduced inside the flow. This custom action is defined *outside* of the Engine and entirely managed from the widget using the kiosk Engine.
+If needed, a custom action can be introduced inside the flow. This custom action is defined *outside* of the `Engine` and entirely managed from the widget using it.
 
-To use a custom action, a `onCustomAction` prop needs to be passed to the `Engine` componant in the widget's `App`, pointing to a handler that will receive a supercontext containing all of the usefull tools inside the Engine.
+To use a custom action, a `onCustomAction` prop needs to be passed to the `Engine` component in the widget's `App`, pointing to a handler that will receive a supercontext containing all of the usefull tools inside the Engine.
 
 In practice, this supercontext looks like this:
 
@@ -734,19 +736,27 @@ router: {
 		homePage,
 	},
 }
+
+router.dispatcher.nextPage("id")
+router.dispatcher.previousPage()
+router.dispatcher.homePage()
 ```
 
 The router `state` is an array of all [pages](#page-level) the end user has navigated through up to this point.
 
-Call the `dispatcher`'s `nextPage` with a string containing the next page's `id` as a paramter.
+Call the `dispatcher`'s `nextPage` with a string containing the next page's `id` as a parameter.
+
 Call the `dispatcher`'s `previousPage` to go back to the previous page. No parameter needed.
-Call the `dispatcher`'s homePage to go back to the home page. No parameter needed.
+
+Call the `dispatcher`'s `homePage` to go back to the home page. No parameter needed.
 
 ```ts
 language: {
 	state: LANGUAGE.FRENCH,
 	dispatcher,
 }
+
+language.dispatcher(LANGUAGE.DUTCH)
 ```
 
 The language's `state` is the current language. It can be undefined.
@@ -764,7 +774,9 @@ ticket: {
 				required: false
 			}
 		],
-		service: undefined,
+		service: {
+			serviceId: 1
+		},
 		language: undefined,
 	},
 	dispatcher,
@@ -784,7 +796,7 @@ The ticket's `state` is an object containing the usefull informations for ticket
 
 - `eIdDatas` are the saved data from a read eId. It can be `null`.
 - `textInputDatas` is an array of text input fields. The `id` is the link between [`ticketParameters`](#ticketparameters) and text inputs. `value` is the current value of the text input. `required` is optional and defines if the text input is required to be filled.
-- `service` is the currently saved service.
+- `service` is the currently saved service. It can be `undefined`.
 - `language` is the current language.
 
 Call the `dispatcher` with a `ITicketDataAction` object as a parameter. Refer to the `ticketDataReducer` for more informations.
@@ -807,7 +819,7 @@ ticket.dispatcher({
 
 The print's `state` is an object containing the current print informations:
 
-- `ticketPDF` is the string of a base64 pdf corresponding to the created ticket. It can also be null.
+- `ticketPDF` is the string of a base64 pdf corresponding to the created ticket. It can also be `null`.
 - `ticketCreationRequested` is the request triggered with a `createticket` input [action](#action-types)
 - `printRequested` is the request triggered with a `printticket` input [action](#action-types)
 
@@ -832,8 +844,8 @@ ticket.dispatcher({
 
 The appointment's `state` keeps track of the check in/out state:
 
-- `isCheckingIn` is triggered with a `checkin` input [action](#action-types)
-- `isCheckingOut` is triggered with a `checkout` input [action](#action-types)
+- `isCheckingIn` is updated with a `checkin` input [action](#action-types)
+- `isCheckingOut` is updated with a `checkout` input [action](#action-types)
 - `isCheckedIn` is updated once the qr code read by the `scanner` has been checked in the EasyQueue module.
 - `isCheckedOut` is updated once the qr code read by the `scanner` has been checked out of the EasyQueue module.
 
@@ -862,8 +874,8 @@ error.dispatcher({
 
 The error's `state` are the error informations:
 
-- `hasError` triggers the error display
-- `errorCode` is the error code reference. Refers to the documentation provided with the `ERROR_CODE` for details about each code.
+- `hasError` triggers the error display.
+- `errorCode` is the error code reference. Refer to the documentation provided with the `ERROR_CODE` enum definition for details about each code.
 - `message` is a string to be displayed along with the error image for more information about the error.
 - `errorServiceId` is optional and allows to target a specific service for [service closed errors](#errormanagement).
 
@@ -874,6 +886,8 @@ customPage: {
 	state: undefined,
 	dispatcher,
 }
+
+customPage.dispatcher(<MyCustomPage />)
 ```
 
 The customPage's `state` is the current customPage inserted into the flow. It is defined outside of the Engine on the widget's side. It can be a `JSX.Element` or `undefined`.
@@ -884,7 +898,7 @@ Call the `dispatcher` with a `JSX.Element` or `undefined` as a parameter to disp
 
 ### Input area media
 
-This media defines an area dynamically containing a list of inputs.
+This media defines an area containing a list of dynamically created inputs.
 
 For now, it only supports advanced buttons, but in the future, it could be used to support all types of inputs.
 
@@ -907,13 +921,11 @@ For now, it only supports advanced buttons, but in the future, it could be used 
 }
 ```
 
-An `inputArea` medias's content is defined by a `name`, `styles` containing CSS properties and a `provider`. These providers fetch the informations required to automatically spawn the inputs. `services` will fetch the services, `userAgents` will fetch the agents, both defined in the EasyQueue module. `custom` is currently not supported by when there's a need for it, we could manually define the inputs generated in the inputs area.
+An `inputArea` medias's content is defined by a `name`, `styles` containing CSS properties and a `provider`. These providers fetch the informations required to automatically spawn the inputs. `services` will fetch the services, `userAgents` will fetch the agents, both defined in the EasyQueue module. `custom` is currently not supported but when there's a need for it, we could manually define the inputs generated in the inputs area.
 
-The `content` can also contain optional `actions` that will follow the structure of a regular input's `actions` property, `filterUnavailable` that will be passed to the `services` or `userAgents` provider to hide services/agents that are currently closed or not connected, `filterIds` that will be passed to the `services` provider to manually select the ids of the services we want to display and an `inputsConfig`.
-<!-- TODO: add link to input actions -->
+The `content` can also contain optional [`actions`](#action-types) that will follow the structure of a regular input's `actions` property, `filterUnavailable` that will be passed to the `services` or `userAgents` provider to hide services/agents that are currently closed or not connected, `filterIds` that will be passed to the `services` provider to manually select the ids of the services we want to display and an `inputsConfig`.
 
-The `inputsConfig` is defined by a `type` following the input types convention and `styles` containing CSS properties that will be applied on each input.
-<!-- TODO: add link to input types -->
+The `inputsConfig` is defined by a `type` following the [input types](#input-media) convention and `styles` containing CSS properties that will be applied on each input.
 
 <ins>**Note:**</ins> This is currently one of the newest feature and it will definitely require some reworking as needs become more precise and diverse.
 
@@ -921,4 +933,4 @@ The `inputsConfig` is defined by a `type` following the input types convention a
 
 A route template is provided in the root directory of the `Engine` to help you construct your route under the name `route_template.json`.
 
-It is not required but recommended to store your widget's routes in a `routes` folder in your widget's directory. Don't forget to import them in your widget's `App` and feed the selected one to the `Engine` componant.
+It is not required but recommended to store your widget's routes in a `routes` folder in your widget's directory. Don't forget to import them in your widget's `App` and feed the selected one to the `Engine` component.
