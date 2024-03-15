@@ -116,7 +116,7 @@ export enum MEDIA_TYPE {
 	VIDEO = "video",
 	IMAGE = "image",
 	INPUT = "input",
-	INPUT_AREA = "input_area",
+	INPUT_AREA = "inputArea",
 }
 
 export interface IVideoContent {
