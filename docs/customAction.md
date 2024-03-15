@@ -231,7 +231,7 @@ The ticket's `state` is an object containing the usefull informations for ticket
 
 #### Dispatcher
 
-Call the `dispatcher` with a `ITicketDataAction` object as a parameter. Refer to the `ticketDataReducer` for more informations.
+Call the `dispatcher` with a `ITicketDataAction` object as a parameter. Refer to the [`ticketDataReducer`](../reducers/ticketDataReducer.ts) for more informations.
 
 <hr />
 
@@ -265,7 +265,7 @@ The print's `state` is an object containing the current print informations:
 
 #### Dispatcher
 
-Call the `dispatcher` with a `IPrintAction` obejct as a parameter. Refer to the `printReducer` for more informations.
+Call the `dispatcher` with a `IPrintAction` obejct as a parameter. Refer to the [`printReducer`](../reducers/printReducer.ts) for more informations.
 
 <hr />
 
@@ -301,7 +301,7 @@ The appointment's `state` keeps track of the check in/out state:
 
 #### Dispatcher
 
-Call the `dispatcher` with a `IAppointmentAction` object as a parameter. Refer to the `appointmentReducer` for more informations.
+Call the `dispatcher` with a `IAppointmentAction` object as a parameter. Refer to the [`appointmentReducer`](../reducers/appointmentReducer.ts) for more informations.
 
 <hr />
 
@@ -341,7 +341,7 @@ The error's `state` are the error informations:
 
 #### Dispatcher
 
-Call the `dispatcher` with a `IErrorAction` object as a parameter. Refer to the `errorReducer` for more informations.
+Call the `dispatcher` with a `IErrorAction` object as a parameter. Refer to the [`errorReducer`](../reducers/errorReducer.ts) for more informations.
 
 <hr />
 
