@@ -2,7 +2,7 @@
 
 ## Description
 
-This is a detailed documentation about own to configure a keyboard in your route config json file.
+This is a detailed documentation about how to configure a keyboard in your route config json file.
 
 If you don't know what a route is, start by reading the `jsonFormat.md` documentation. We recommend you have a good understanding of how a route works before going forward with this documentation.
 
@@ -60,7 +60,7 @@ For now, you can't lock the keyboard display. Clicking outside of the keyboard o
 
 ### Auto shift
 
-By default, the keyboard will always start in a shift state. So the end user can start typing and not worry about capitalization. The shift will automatically toggle to lower case after the first lettre is typed, then go back to capitalization right after a `-` character.
+By default, the keyboard will always start in a shift state. So the end user can start typing and not worry about capitalization. The shift will automatically toggle to lower case after the first letter is typed, and automatically go back to capitalization right after a `-` character.
 
 You can lock this feature and force the keyboard into lower or upper case if needed by defining a `forceLowerCase` or `forceUpperCase` property on the appropriate `text` input. Note that the end user can still toggle in upper or lower case by simply pressing the shift key.
 
@@ -166,13 +166,13 @@ Also, you don't *have to* use all of this config every time you need a keyboard.
 	}
 }
 ```
-No as threatening now does it?
+Not as threatening now is it?
 
 Now, let's breakdown what all of this config is used for.
 
 ### Layout
 
-The layout is the only required property when defining your keyboard. Multiple layouts are provided so you have a sturdy base.
+The `layout` is the only required property when defining your keyboard. Multiple layouts are provided so you have a sturdy base.
 
 The possible options for the `layout` property are:
 
@@ -182,8 +182,6 @@ The possible options for the `layout` property are:
 	- The last row are actions: shift, special chars toggle, spacebar, enter and backspace.
 
 ![alt text](./img/classic_layout.png)
-
-***Note: the enter key will toggle your keyboard out of the screen.***
 
 - `compact`: Follows the same pattern as the classic layout but letters occupy only two rows. Usefull if you need your keyboard to take as little space as possible but keep in mind that this layout is not natural for end users, who will probably have a difficult time getting used to it.
 
@@ -201,7 +199,7 @@ The possible options for the `layout` property are:
 		- Three rows of letters.
 		- Last row has the same actions as the `classic` layout.
 	- Right zone:
-		- The `numpad`, minus the enter and backspace keys.s
+		- The `numpad`, minus the enter and backspace keys.
 
 
 ![alt text](./img/full_layout.png)
@@ -251,7 +249,10 @@ If you modify your keyboard position, the animation will automatically adjust to
 
 For example: If you position the keyboard on the top with a `top: 0;` CSS property, the keyboard will automatically slide from the center top of the screen.
 
-Note that this automation only work for position values defined at `0`.
+**Notes:**
+- This automation only works for position values defined at `0`.
+- Having two position properties set at `0` will automatically adjust the animation in consequence. Example: If you define a `top: 0;` **and** a `left: 0;` CSS properties, the keybard will slide in and out from the top left of the screen.
+- The rounded borders of the keyboard are automatically adjusted as well.
 
 You can however override this automation by adding a `slideAnimation` property to your config.
 
@@ -275,13 +276,9 @@ Here are the possible options:
 - `bottom_left`: The keyboard will slide in and out from the bottom left corner of the screen.
 - `bottom_right`: The keyboard will slide in and out from the bottom right corner of the screen.
 
-*Note: If you define a `top: 0;` **and** a `left: 0;` CSS properties, the automation will use the `top_left` animation and so on.*
-
 ### Custom layout
 
 This is where you can construct your own keyboard from start to finish. Used with the `"layout": "custom"` property in your keyboard config. The provided layouts use the same mechanics.
-
-If you need an example, check out the [Examples](#examples) section of this documentation.
 
 ```json
 {
@@ -340,9 +337,11 @@ This is an array of the keys in your row. Each key is composed of:
 
 	To construct a `text` key, you can pick `capslockValue` <ins>**or**</ins> `specCharsValue` in addition to your `defaultValue`, but not both.
 
+If you need an example of custom layout, check out the [Examples](#custom-layout-1) section of this documentation.
+
 ### Actions override
 
-When you use a provided `layout`, you can use `actionsOverride` if you want one or more keys to have a different behavior. We recommend you attach your action override to an action key rather than a text key.
+When you use a provided `layout`, you can use `actionsOverride` if you want one or more keys to have a different behavior. For best user experience, we recommend you attach your action override to an action key rather than a text key.
 
 ```json
 {
@@ -416,7 +415,7 @@ When you use a provided `layout`, you can use `actionsOverride` if you want one 
 ]
 ```
 
-If you need an example, check out the [Examples](#examples) section of this documentation.
+If you need an example of action override, check out the [Examples](#action-override) section of this documentation.
 
 ### Style override
 
@@ -456,18 +455,16 @@ This is where you can fully customize the appearance of your keyboard.
 
 #### Board
 
-This optional property is where you can customize the style of the board. You can change its background color, its position, width, height, anything.
-
-Use the `board` property and add your own CSS properties that will override the default ones.
+This optional property is where you can customize the style of the board. Use the `board` property and add your own CSS properties that will override the default ones.
 
 #### Rows
 
-This optional `rows` property is an array of object that target the row you want to customize.
+This optional `rows` property is an array of objects that target the row you want to customize.
 
 - `index`: Specify the targeted row's index. It can either be `"all"` to target all rows at once, or a `0 to (rows number - 1)` number following the same convention as in the `actionsOverride` property.
 - `style`: Optional. Specify the CSS properties of your row to override the default ones.
 - `keys`: Optional. This is where you can target the keys of a row and override its style.
-	- `index`: Specify the targeted key's index of your row. It can either be `"all"` to target all keys of the row at once, or a `0 to (keys in the row number - 1)` number following the same convention as in the `actionsOverride` property.
+	- `index`: Specify the targeted key's index of your row. It can either be `"all"` to target all keys of the row at once, or a `0 to (number of keys in the row - 1)` number following the same convention as in the `actionsOverride` property.
 	- `style`: Specify the CSS properties of your key to override the default ones.
 	- `valueOverride`: Optional. Use this if you want to replace the default value of your key.
 		- On `text` keys, this will replace the value of your key and pressing it will enter the new value. Note that shift and special characters don't apply here.
@@ -481,7 +478,7 @@ This optional `statusDot` property is where you can customize the status dot of 
 - `enabled`: This is the status dot when your shift/special chars key is enabled. Specify the CSS properties to override the default ones.
 - `secondaryEnabled`: Optional. This is the status dot when you shiftlock your keyboard. Specify the CSS properties to override the default ones.
 
-If you need an example of style override, check out the [Examples](#examples) section of this documentation.
+If you need an example of style override, check out the [Examples](#style-override-1) section of this documentation.
 
 ## Examples
 
@@ -651,9 +648,9 @@ Shift and special characters disabled:
 ```
 #### Result
 
-![alt text](./img/example-actions_override.png)
-
 Nothing has changed visually, but now, pressing the `W` key will bring you back to the home page, create a ticket for the service with id 15 in the EasyQueue module and print the ticket.
+
+![alt text](./img/example-actions_override.png)
 
 ### Style override
 
@@ -717,7 +714,7 @@ Nothing has changed visually, but now, pressing the `W` key will bring you back 
 - The `row` at index 0 has a `chartreuse` color background.
 - All `keys` in the row at index 0 have their text aligned in the center of the key.
 - The key at index 5 of row 0 has its default text replaced with an `X`, a red background and a white text.
-- The enabled `shift`'s status dot has a font size of 0.04rem (when enabled, the `special character`'s status dot will have shift that same result).
+- The enabled `shift`'s status dot has a font size of 0.04rem (when enabled, the `special character`'s status dot will have that same result).
 - The disabled `special character`'s status dot is orange (when disabled, the `shift`'s status dot will have that same result).
 - In the second picture, the locked `shift`'s status dot is now blue
 
