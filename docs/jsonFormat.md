@@ -722,6 +722,6 @@ The `inputsConfig` is defined by a `type` following the [input types](#input-med
 
 ## Template
 
-A route template is provided in the root directory of the `Engine` to help you construct your route under the name `route_template.json`.
+A route template is provided in the root directory of the `Engine` to help you construct your route under the name [`route_template.json`](../route_template.json).
 
 It is not required but recommended to store your widget's routes in a `routes` folder in your widget's directory. Don't forget to import them in your widget's `App` and feed the selected one to the `Engine` component.
