@@ -2,7 +2,9 @@
 
 ## Descritpion
 
-This is a detailed documentation about the custom action of a flow. If you don't know what a flow is, start by reading the `jsonFormat.md` documentation.
+This is a detailed documentation about the custom action of a flow.
+
+If you don't know what a flow is, start by reading the `jsonFormat.md` documentation.
 
 ## Table of contents
 
@@ -33,7 +35,6 @@ Assuming your `Engine` component is in your widget's `App`:
 ```json
 {
 	"name": "myRoute",
-	// The rest of your route
 
 	{
 		"type": "input",
@@ -65,7 +66,7 @@ function App() {
 }
 ```
 
-If your forget to define an `onCustomAction` prop, don't worry, you will get a warning in the console.
+If your forget to define an `onCustomAction` prop, you will get a warning in the console.
 
 3. Collect the `supercontext` in your handler's parameters
 
@@ -141,10 +142,13 @@ router: {
 		homePage,
 	},
 }
+```
+```ts
+const lastPage = supercontext.router.dispatcher.state.slice(-1)[0];
 
-router.dispatcher.nextPage("id")
-router.dispatcher.previousPage()
-router.dispatcher.homePage()
+supercontext.router.dispatcher.nextPage("id");
+supercontext.router.dispatcher.previousPage();
+supercontext.router.dispatcher.homePage();
 ```
 #### State
 
@@ -167,8 +171,11 @@ language: {
 	state: LANGUAGE.FRENCH,
 	dispatcher,
 }
+```
+```ts
+const currentLanguage = supercontext.language.state;
 
-language.dispatcher(LANGUAGE.DUTCH)
+supercontext.language.dispatcher(LANGUAGE.DUTCH);
 ```
 #### State
 
@@ -200,22 +207,25 @@ ticket: {
 	},
 	dispatcher,
 }
+```
+```ts
+const currentlySavedService = supercontext.ticket.state.service;
 
-ticket.dispatcher({
+supercontext.ticket.dispatcher({
 	type: TICKET_DATA_ACTION_TYPE.SERVICEUPDATE,
 	payload: {
 		serviceId: 4,
 		devServiceId: 10,
 		priority: 0
 	}
-})
+});
 ```
 #### State
 
 The ticket's `state` is an object containing the usefull informations for ticket creation:
 
 - `eIdDatas` are the saved data from a read eId. It can be `null`.
-- `textInputDatas` is an array of text input fields. The `id` is the link between [`ticketParameters`](#ticketparameters) and text inputs. `value` is the current value of the text input. `required` is optional and defines if the text input is required to be filled.
+- `textInputDatas` is an array of text input fields. The `id` is the link between `ticketParameters` (refer to the main json format doc) and text inputs. `value` is the current value of the text input. `required` is optional and defines if the text input is required to be filled.
 - `service` is the currently saved service. It can be `undefined`.
 - `language` is the current language.
 
@@ -236,11 +246,14 @@ print: {
 	},
 	dispatcher
 }
+```
+```ts
+const isPrintRequested = supercontext.print.printRequested;
 
-ticket.dispatcher({
+supercontext.ticket.dispatcher({
 	type: PRINT_ACTION_TYPE.REQUESTPRINT,
 	payload: true
-})
+});
 ```
 #### State
 
@@ -268,18 +281,21 @@ appointment: {
 	},
 	dispatcher,
 }
+```
+```ts
+const isCheckingIn = supercontext.appointment.state.isCheckingIn;
 
-ticket.dispatcher({
+supercontext.ticket.dispatcher({
 	type: APPOINTMENT_ACTION_TYPE.UPDATECHECKEDIN,
 	payload: true
-})
+});
 ```
 #### State
 
 The appointment's `state` keeps track of the check in/out state:
 
-- `isCheckingIn` is updated with a `checkin` input [action](#action-types)
-- `isCheckingOut` is updated with a `checkout` input [action](#action-types)
+- `isCheckingIn` is updated with a `checkin` input action.
+- `isCheckingOut` is updated with a `checkout` input action.
 - `isCheckedIn` is updated once the qr code read by the `scanner` has been checked in the EasyQueue module.
 - `isCheckedOut` is updated once the qr code read by the `scanner` has been checked out of the EasyQueue module.
 
@@ -300,8 +316,11 @@ error: {
 	},
 	dispatcher,
 }
+```
+```ts
+const currentError = supercontext.error.state;
 
-error.dispatcher({
+supercontext.error.dispatcher({
 	type: ERROR_ACTION_TYPE.SETERROR,
 	payload: {
 			hasError: true,
@@ -309,7 +328,7 @@ error.dispatcher({
 			message: "Something went wrong",
 			errorServiceId: 4,
 		}
-})
+});
 ```
 #### State
 
@@ -318,7 +337,7 @@ The error's `state` are the error informations:
 - `hasError` triggers the error display.
 - `errorCode` is the error code reference. Refer to the documentation provided with the `ERROR_CODE` enum definition for details about each code.
 - `message` is a string to be displayed along with the error image for more information about the error.
-- `errorServiceId` is optional and allows to target a specific service for [service closed errors](#errormanagement).
+- `errorServiceId` is optional and allows to target a specific service for service closed errors.
 
 #### Dispatcher
 
@@ -333,8 +352,11 @@ customPage: {
 	state: undefined,
 	dispatcher,
 }
+```
+```ts
+const currentCustomPage = supercontext.customPage.state;
 
-customPage.dispatcher(<MyCustomPage />)
+supercontext.customPage.dispatcher(<MyCustomPage />);
 ```
 #### State
 
