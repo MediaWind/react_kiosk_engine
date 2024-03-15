@@ -20,6 +20,9 @@ If you don't know what a route is, start by reading the `jsonFormat.md` document
 	- [Actions override](#actions-override)
 	- [Style override](#style-override)
 - [Examples](#examples)
+	- [Custom layout](#custom-layout-1)
+	- [Action override](#action-override)
+	- [Style override](#style-override-1)
 
 ## Usage
 
@@ -37,7 +40,7 @@ If you do have `text` inputs, your keyboard config must be defined on the flow l
 			"name": "My awesome flow",
 			"id": "uuid",
 			"pages": [],
-			//...
+
 			"keyboard": {}
 		}
 	]
@@ -83,8 +86,6 @@ Here is a what a full configuration looks like:
 
 ```json
 {
-	// The rest of your route goes here
-
 	"keyboard": {
 		"layout": "classic|compact|numpad|full|custom",
 
@@ -160,8 +161,6 @@ Also, you don't *have to* use all of this config every time you need a keyboard.
 
 ```json
 {
-	// The rest of your route goes here
-
 	"keyboard": {
 		"layout": "classic",
 	}
@@ -182,19 +181,19 @@ The possible options for the `layout` property are:
 	- The three following rows are letters.
 	- The last row are actions: shift, special chars toggle, spacebar, enter and backspace.
 
-![alt text](classic_layout.png)
+![alt text](./img/classic_layout.png)
 
 ***Note: the enter key will toggle your keyboard out of the screen.***
 
 - `compact`: Follows the same pattern as the classic layout but letters occupy only two rows. Usefull if you need your keyboard to take as little space as possible but keep in mind that this layout is not natural for end users, who will probably have a difficult time getting used to it.
 
-![alt text](compact_layout.png)
+![alt text](./img/compact_layout.png)
 
 - `numpad`: classic numpad as laid out on a regular keyboard.
 	- Three rows of numbers.
 	- Last row has enter, 0 and backspace keys.
 
-![alt text](numpad_layout.png)
+![alt text](./img/numpad_layout.png)
 
 - `full`: This is as close as you'll get of a regular keyboard. Follows the same patterns as a `classic` and a `numpad` layout separated in two zones.
 	- Left zone:
@@ -205,7 +204,7 @@ The possible options for the `layout` property are:
 		- The `numpad`, minus the enter and backspace keys.s
 
 
-![alt text](full_layout.png)
+![alt text](./img/full_layout.png)
 
 - `custom`: Define a `custom` layout if you want to build your own keyboard. Provide it with the `customLayout` property of your config.
 
@@ -217,8 +216,6 @@ By default, all layouts are in azerty. If you want a qwerty keyboard, that's whe
 
 ```json
 {
-	// The rest of your route goes here
-
 	"keyboard": {
 		"layout": "full",
 		"mode": "qwerty"
@@ -230,15 +227,15 @@ Note that, in addition to letters being rearranged, the special characters will 
 
 Here are the special chars options on a full azerty keyboard:
 
-![alt text](azerty_mode-1.png)
+![alt text](./img/azerty_mode-1.png)
 
-![alt text](azerty_mode-2.png)
+![alt text](./img/azerty_mode-2.png)
 
 And here they are on a full qwerty keyboard:
 
-![alt text](qwerty_mode-1.png)
+![alt text](./img/qwerty_mode-1.png)
 
-![alt text](qwerty_mode-2.png)
+![alt text](./img/qwerty_mode-2.png)
 
 #### Why the accentuated letters?
 
@@ -484,6 +481,246 @@ This optional `statusDot` property is where you can customize the status dot of 
 - `enabled`: This is the status dot when your shift/special chars key is enabled. Specify the CSS properties to override the default ones.
 - `secondaryEnabled`: Optional. This is the status dot when you shiftlock your keyboard. Specify the CSS properties to override the default ones.
 
-If you need an example, check out the [Examples](#examples) section of this documentation.
+If you need an example of style override, check out the [Examples](#examples) section of this documentation.
 
 ## Examples
+
+Here are some example configs and their result.
+
+### Custom layout
+
+#### Config
+
+```json
+{
+	"keyboard": {
+		"layout": "custom",
+		"customLaout": {
+			"rows": [
+				{
+					"keys": [
+						{
+							"text": {
+								"defaultValue": "a",
+								"capslockValue": "A"
+							},
+							"style": {
+								"color": "#ff0000"
+							}
+						},
+						{
+							"text": {
+								"defaultValue": "b",
+								"capslockValue": "B"
+							}
+						},
+						{
+							"text": {
+								"defaultValue": "c",
+								"capslockValue": "C"
+							}
+						},
+						{
+							"text": {
+								"defaultValue": "d",
+								"capslockValue": "D"
+							}
+						},
+						{
+							"text": {
+								"defaultValue": "E"
+							},
+							"style": {
+								"backgroundColor": "#1543fb",
+								"color": "#FFFFFF"
+							}
+						},
+						{
+							"text": {
+								"defaultValue": "F"
+							}
+						}
+					]
+				},
+				{
+					"keys": [
+						{
+							"text": {
+								"defaultValue": "1",
+								"specCharsValue": "7"
+							}
+						},
+						{
+							"text": {
+								"defaultValue": "2",
+								"specCharsValue": "8"
+							}
+						},
+						{
+							"text": {
+								"defaultValue": "3",
+								"specCharsValue": "9"
+							}
+						},
+						{
+							"text": {
+								"defaultValue": "4",
+								"specCharsValue": "0"
+							}
+						},
+						{
+							"text": {
+								"defaultValue": "5"
+							}
+						},
+						{
+							"text": {
+								"defaultValue": "6"
+							}
+						}
+					],
+					"style": {
+						"backgroundColor": "#bec412"
+					}
+				},
+				{
+					"keys": [
+						{
+							"action": "shift"
+						},
+						{
+							"action": "spacebar"
+						},
+						{
+							"action": "backspace"
+						},
+						{
+							"action": "enter"
+						},
+						{
+							"action": "specialchars"
+						}
+					]
+				}
+			]
+		}
+	}
+}
+```
+#### Result
+
+Shift and special characters enabled:
+
+![alt text](./img/example-custom_layout-1.png)
+
+Shift and special characters disabled:
+
+![alt text](./img/example-custom_layout-2.png)
+
+### Action override
+
+#### Config
+
+```json
+{
+	"keyboard": {
+	"layout": "classic",
+	"actionsOverride": {
+		"3": {
+			"0": [
+				{
+					"type": "homepage"
+				},
+				{
+					"type": "saveservice",
+					"service": {
+						"serviceId": 15
+					}
+				},
+				{
+					"type": "createticket"
+				},
+				{
+					"type": "printticket"
+				}
+			]
+		}
+	}
+}
+}
+```
+#### Result
+
+![alt text](./img/example-actions_override.png)
+
+Nothing has changed visually, but now, pressing the `W` key will bring you back to the home page, create a ticket for the service with id 15 in the EasyQueue module and print the ticket.
+
+### Style override
+
+#### Config
+
+```json
+{
+	"keyboard": {
+		"layout": "classic",
+		"styleOverride": {
+			"board": {
+				"left": "2%"
+			},
+
+			"rows": [
+				{
+					"index": 0,
+					"style": {
+						"backgroundColor": "chartreuse"
+					},
+
+					"keys": [
+						{
+							"index": "all",
+							"style": {
+								"justifyContent": "center",
+								"alignItems": "center"
+							}
+						},
+						{
+							"index": 5,
+							"style": {
+								"backgroundColor": "#ff0000",
+								"color": "#FFFFFF"
+							},
+							"valueOverride": "X"
+						}
+					]
+				}
+			],
+
+			"statusDot": {
+				"disabled": {
+					"color": "orange"
+				},
+				"enabled": {
+					"fontSize":"0.04rem"
+				},
+				"secondaryEnabled": {
+					"color": "blue"
+				}
+			}
+		}
+	}
+}
+```
+
+#### Result
+
+- The `board` is now positioned 2% from the left border of the screen.
+- The `row` at index 0 has a `chartreuse` color background.
+- All `keys` in the row at index 0 have their text aligned in the center of the key.
+- The key at index 5 of row 0 has its default text replaced with an `X`, a red background and a white text.
+- The enabled `shift`'s status dot has a font size of 0.04rem (when enabled, the `special character`'s status dot will have shift that same result).
+- The disabled `special character`'s status dot is orange (when disabled, the `shift`'s status dot will have that same result).
+- In the second picture, the locked `shift`'s status dot is now blue
+
+![alt text](./img/example-style_override-1.png)
+
+![alt text](./img/example-style_override-2.png)
