@@ -8,7 +8,6 @@ This is a submodule with the engine function used in all kiosk flow widgets
 - [Cloning a project with submodules](#cloning-a-project-with-submodules)
 - [Updating your submodule in your widget](#updating-your-submodule-in-your-widget)
 - [Working on the submodule](#working-on-the-submodule)
-- [Interact with shared variable](#interact-with-shared-variable)
 - [Learn how to use the submodule in your application](#using-the-submodule-in-your-application)
 
 ## Add this submodule to a widget
