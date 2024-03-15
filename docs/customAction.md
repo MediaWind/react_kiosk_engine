@@ -1,6 +1,6 @@
 # Custom action
 
-## Descritpion
+## Description
 
 This is a detailed documentation about the custom action of a flow.
 
@@ -260,8 +260,8 @@ supercontext.ticket.dispatcher({
 The print's `state` is an object containing the current print informations:
 
 - `ticketPDF` is the string of a base64 pdf corresponding to the created ticket. It can also be `null`.
-- `ticketCreationRequested` is the request triggered with a `createticket` input [action](#action-types)
-- `printRequested` is the request triggered with a `printticket` input [action](#action-types)
+- `ticketCreationRequested` is the request triggered with a `createticket` input [action](jsonFormat.md#action-types)
+- `printRequested` is the request triggered with a `printticket` input [action](jsonFormat.md#action-types)
 
 #### Dispatcher
 
