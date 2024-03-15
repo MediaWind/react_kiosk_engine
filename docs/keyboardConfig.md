@@ -4,7 +4,7 @@
 
 This is a detailed documentation about how to configure a keyboard in your route config json file.
 
-If you don't know what a route is, start by reading the `jsonFormat.md` documentation. We recommend you have a good understanding of how a route works before going forward with this documentation.
+If you don't know what a route is, start by reading the [json format documentation](jsonFormat.md). We recommend you have a good understanding of how a route works before going forward with this documentation.
 
 ## Table of content
 
@@ -368,7 +368,7 @@ When you use a provided `layout`, you can use `actionsOverride` if you want one 
 
 2. Then, you need to target the key you want to override. Use the same system as the row by targeting a `0 to (number of keys in the row - 1)` index. The index starts on the key to the far left of your row and works its way to the key on far right of the row. Use it as a property key.
 
-3. There, you need to provide an array of `actions` as described in the main `jsonFormat.md`'s input actions. Here is a reminder of the available `actions`:
+3. There, you need to provide an array of `actions` as described in the main json format documentation's [input actions](jsonFormat.md#action-types). Here is a reminder of the available `actions`:
 
 ```json
 "actions": [

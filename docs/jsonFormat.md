@@ -248,6 +248,8 @@ The `actionsOverride` property is an optional property that allows you to use a 
 
 The `styleOverride` property is an optional property that allows you to use a provided keyboard layout but replace the style of the board, the rows and/or the keys. For a detailed explanation, see the keyboard configuration documentation.
 
+**For a more detailed explantation on how to configure your keyboard, check the [keyboard config documentation](keyboardConfig.md)**
+
 ### displayDate
 
 This optional property can be used to display the date on the flow.
@@ -516,7 +518,7 @@ An `action` is always defined by its `type`. Here is a break down of each type:
 - `checkin`, usually attached to the `scanner` input, will signify that the page is ready to use the qr code read with the scanner and proceed to check it in the EasyQueue module.
 - `checkout`, usually attached to the `scanner` input, will signify that the page is ready to use the qr code read with the scanner and proceed to check it out of the EasyQueue module.
 - `checktextinputs` first verify that all required text inputs on the page are filled before proceeding to the rest of the actions.
-- `custom` triggers a custom action. For more informations, refer to the custom action documentation.
+- `custom` triggers a custom action. For more informations, refer to the [custom action documentation](customAction.md).
 
 #### Advanced button configuration
 

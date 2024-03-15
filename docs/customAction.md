@@ -4,7 +4,7 @@
 
 This is a detailed documentation about the custom action of a flow.
 
-If you don't know what a flow is, start by reading the `jsonFormat.md` documentation.
+If you don't know what a flow is, start by reading the [json format documentation](jsonFormat.md).
 
 ## Table of contents
 
@@ -225,7 +225,7 @@ supercontext.ticket.dispatcher({
 The ticket's `state` is an object containing the usefull informations for ticket creation:
 
 - `eIdDatas` are the saved data from a read eId. It can be `null`.
-- `textInputDatas` is an array of text input fields. The `id` is the link between `ticketParameters` (refer to the main json format doc) and text inputs. `value` is the current value of the text input. `required` is optional and defines if the text input is required to be filled.
+- `textInputDatas` is an array of text input fields. The `id` is the link between [`ticketParameters`](jsonFormat.md#ticketparameters) and text inputs. `value` is the current value of the text input. `required` is optional and defines if the text input is required to be filled.
 - `service` is the currently saved service. It can be `undefined`.
 - `language` is the current language.
 
@@ -294,8 +294,8 @@ supercontext.ticket.dispatcher({
 
 The appointment's `state` keeps track of the check in/out state:
 
-- `isCheckingIn` is updated with a `checkin` input action.
-- `isCheckingOut` is updated with a `checkout` input action.
+- `isCheckingIn` is updated with a `checkin` input [action](jsonFormat.md#action-types).
+- `isCheckingOut` is updated with a `checkout` input [action](jsonFormat.md#action-types).
 - `isCheckedIn` is updated once the qr code read by the `scanner` has been checked in the EasyQueue module.
 - `isCheckedOut` is updated once the qr code read by the `scanner` has been checked out of the EasyQueue module.
 
@@ -337,7 +337,7 @@ The error's `state` are the error informations:
 - `hasError` triggers the error display.
 - `errorCode` is the error code reference. Refer to the documentation provided with the `ERROR_CODE` enum definition for details about each code.
 - `message` is a string to be displayed along with the error image for more information about the error.
-- `errorServiceId` is optional and allows to target a specific service for service closed errors.
+- `errorServiceId` is optional and allows to target a specific service for [service closed errors](jsonFormat.md#errormanagement).
 
 #### Dispatcher
 
