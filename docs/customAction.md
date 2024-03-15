@@ -10,26 +10,42 @@ This is a detailed documentation about the custom action of a flow. If you don't
 - [Table of contents](#table-of-contents)
 - [Usage](#usage)
 - [Supercontext breakdown](#supercontext-breakdown)
+	- [Router](#router)
+	- [Language](#language)
+	- [Ticket](#ticket)
+	- [Print](#print)
+	- [Appointment](#appointment)
+	- [Error](#error)
+	- [Custom page](#custom-page)
 
 ## Usage
 
 A custom action is used to trigger an action that is not supported by the `Engine` and will never be. Example: you need to fetch informations from an external API.
 
+This custom action is defined *outside* of the `Engine` and entirely managed from the widget using it. To use a custom action, a `onCustomAction` prop needs to be passed to the `Engine` component in the widget's `App`, pointing to a handler that will receive a supercontext containing all of the usefull tools inside the `Engine`.
+
+### Step by step
+
 Assuming your `Engine` component is in your widget's `App`:
 
-1. In your route json, use an `input`'s `actions` property to trigger the custom action like so:
+1. In your route's json, use an `input`'s `actions` property to trigger the custom action like so:
 
 ```json
 {
-	"type": "input",
-	"content": {
-		"name": "name",
-		"type": "button",
-		"actions": [
-			{
-				"type": "custom"
-			}
-		]
+	"name": "myRoute",
+	// The rest of your route
+
+	{
+		"type": "input",
+		"content": {
+			"name": "name",
+			"type": "button",
+			"actions": [
+				{
+					"type": "custom"
+				}
+			]
+		}
 	}
 }
 ```
@@ -42,20 +58,20 @@ function App() {
 	// Your App stuff here
 
 	function customActionHandler() {
-		// This is where the magic happens
+		//...
 	}
 
-	return <Engine route={myImportedRoute} onCustomAction={customActionHandler} />;
+	return <Engine route={myRoute} onCustomAction={customActionHandler} />;
 }
 ```
 
-If your forget to define a `onCustomAction` prop, don't worry, you will receive a warning in the console.
+If your forget to define an `onCustomAction` prop, don't worry, you will get a warning in the console.
 
 3. Collect the `supercontext` in your handler's parameters
 
 ```ts
 function customActionHandler(supercontext) {
-	...
+	//...
 }
 ```
 
@@ -63,17 +79,19 @@ function customActionHandler(supercontext) {
 
 ```ts
 function customActionHandler(supercontext) {
-	...
+	supercontext.customPage.dispatcher(<MyCustomPage />);
+
+	if (supercontext.language.state === undefined) {
+		supercontext.language.dispatcher(LANGUAGE.ENGLISH);
+	}
+
+	supercontext.customPage.dispatcher(undefined);
 }
 ```
 
 ## Supercontext breakdown
 
 *Note that the name `supercontext` is used in this documentation as a reference to an otherwise unnamed object.*
-
-If needed, a custom action can be introduced inside the flow. This custom action is defined *outside* of the `Engine` and entirely managed from the widget using it.
-
-To use a custom action, a `onCustomAction` prop needs to be passed to the `Engine` component in the widget's `App`, pointing to a handler that will receive a supercontext containing all of the usefull tools inside the Engine.
 
 In practice, this supercontext looks like this:
 
@@ -110,7 +128,9 @@ In practice, this supercontext looks like this:
 }
 ```
 
-Each context is separated and provides a `state` and a `dispatcher` that operates in a specific way. Here is the break down of how to read and write these contexts:
+Each context of the `Engine` is separated and provides a `state` and a `dispatcher` that operates in a specific way. Here is the break down of how to read and overwrite each of these contexts.
+
+### Router
 
 ```ts
 router: {
@@ -126,14 +146,21 @@ router.dispatcher.nextPage("id")
 router.dispatcher.previousPage()
 router.dispatcher.homePage()
 ```
+#### State
 
-The router `state` is an array of all [pages](#page-level) the end user has navigated through up to this point.
+The router `state` is an array of all pages the end user has navigated through up to this point.
 
-Call the `dispatcher`'s `nextPage` with a string containing the next page's `id` as a parameter.
+#### Dispatcher
+
+Call the `dispatcher`'s `nextPage` with a string containing the next page's `id` as a parameter. Make sure this `id` is a page id defined inside the route's json.
 
 Call the `dispatcher`'s `previousPage` to go back to the previous page. No parameter needed.
 
 Call the `dispatcher`'s `homePage` to go back to the home page. No parameter needed.
+
+<hr />
+
+### Language
 
 ```ts
 language: {
@@ -143,10 +170,17 @@ language: {
 
 language.dispatcher(LANGUAGE.DUTCH)
 ```
+#### State
 
 The language's `state` is the current language. It can be undefined.
 
+#### Dispatcher
+
 Call `dispatcher` with a `LANGUAGE` or `undefined` as a parameter to define a new language.
+
+<hr />
+
+### Ticket
 
 ```ts
 ticket: {
@@ -176,6 +210,7 @@ ticket.dispatcher({
 	}
 })
 ```
+#### State
 
 The ticket's `state` is an object containing the usefull informations for ticket creation:
 
@@ -184,7 +219,13 @@ The ticket's `state` is an object containing the usefull informations for ticket
 - `service` is the currently saved service. It can be `undefined`.
 - `language` is the current language.
 
+#### Dispatcher
+
 Call the `dispatcher` with a `ITicketDataAction` object as a parameter. Refer to the `ticketDataReducer` for more informations.
+
+<hr />
+
+### Print
 
 ```ts
 print: {
@@ -201,6 +242,7 @@ ticket.dispatcher({
 	payload: true
 })
 ```
+#### State
 
 The print's `state` is an object containing the current print informations:
 
@@ -208,7 +250,13 @@ The print's `state` is an object containing the current print informations:
 - `ticketCreationRequested` is the request triggered with a `createticket` input [action](#action-types)
 - `printRequested` is the request triggered with a `printticket` input [action](#action-types)
 
+#### Dispatcher
+
 Call the `dispatcher` with a `IPrintAction` obejct as a parameter. Refer to the `printReducer` for more informations.
+
+<hr />
+
+### Appointment
 
 ```ts
 appointment: {
@@ -226,6 +274,7 @@ ticket.dispatcher({
 	payload: true
 })
 ```
+#### State
 
 The appointment's `state` keeps track of the check in/out state:
 
@@ -234,7 +283,13 @@ The appointment's `state` keeps track of the check in/out state:
 - `isCheckedIn` is updated once the qr code read by the `scanner` has been checked in the EasyQueue module.
 - `isCheckedOut` is updated once the qr code read by the `scanner` has been checked out of the EasyQueue module.
 
+#### Dispatcher
+
 Call the `dispatcher` with a `IAppointmentAction` object as a parameter. Refer to the `appointmentReducer` for more informations.
+
+<hr />
+
+### Error
 
 ```ts
 error: {
@@ -256,6 +311,7 @@ error.dispatcher({
 		}
 })
 ```
+#### State
 
 The error's `state` are the error informations:
 
@@ -264,7 +320,13 @@ The error's `state` are the error informations:
 - `message` is a string to be displayed along with the error image for more information about the error.
 - `errorServiceId` is optional and allows to target a specific service for [service closed errors](#errormanagement).
 
+#### Dispatcher
+
 Call the `dispatcher` with a `IErrorAction` object as a parameter. Refer to the `errorReducer` for more informations.
+
+<hr />
+
+### Custom page
 
 ```ts
 customPage: {
@@ -274,7 +336,10 @@ customPage: {
 
 customPage.dispatcher(<MyCustomPage />)
 ```
+#### State
 
 The customPage's `state` is the current customPage inserted into the flow. It is defined outside of the Engine on the widget's side. It can be a `JSX.Element` or `undefined`.
+
+#### Dispatcher
 
 Call the `dispatcher` with a `JSX.Element` or `undefined` as a parameter to display or hide your custom page component.
