@@ -67,7 +67,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 			return;
 		}
 
-		setTimeout(() => {
+		const delay = setTimeout(() => {
 			if (page.navigateToAfter) {
 				if (page.navigateToAfter.service) {
 					dispatchTicketState({
@@ -84,6 +84,10 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 				nextPage(page.navigateToAfter.navigateTo);
 			}
 		}, page.navigateToAfter.delay * 1000);
+
+		return () => {
+			clearTimeout(delay);
+		};
 	}, [page]);
 
 	useEffect(() => {
