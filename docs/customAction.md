@@ -68,11 +68,19 @@ function App() {
 
 If your forget to define an `onCustomAction` prop, you will get a warning in the console.
 
-3. Collect the `supercontext` in your handler's parameters
+3. Collect the supercontext in your handler's parameters. You can explicit its type by importing the `SuperContext` type.
 
 ```ts
-function customActionHandler(supercontext) {
-	//...
+import { SuperContext } from "./engine/interfaces";
+
+function App() {
+	// Your App stuff here
+
+	function customActionHandler(supercontext: SuperContext) {
+		//...
+	}
+
+	return <Engine route={myRoute} onCustomAction={customActionHandler} />;
 }
 ```
 
@@ -91,8 +99,6 @@ function customActionHandler(supercontext) {
 ```
 
 ## Supercontext breakdown
-
-*Note that the name `supercontext` is used in this documentation as a reference to an otherwise unnamed object.*
 
 In practice, this supercontext looks like this:
 
