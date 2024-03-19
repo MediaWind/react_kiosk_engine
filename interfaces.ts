@@ -1,4 +1,4 @@
-import { CSSProperties } from "react";
+import { CSSProperties, SetStateAction } from "react";
 
 import { eIdData } from "../core/hooks/useEId";
 
@@ -475,5 +475,40 @@ export type ServiceData = {
 		id_waiting_room_temp: string,
 		ref_external: string,
 		id_bms: string
+	}
+}
+
+export type SuperContext = {
+	router: {
+		state: IPage[],
+		dispatcher: {
+			nextPage: CallableFunction,
+			previousPage: CallableFunction
+			homePage: CallableFunction,
+		},
+	},
+	language: {
+		state: LANGUAGE | undefined,
+		dispatcher: React.Dispatch<SetStateAction<LANGUAGE | undefined>>,
+	},
+	ticket: {
+		state: ITicketDataState,
+		dispatcher: React.Dispatch<ITicketDataAction>,
+	},
+	appointment: {
+		state: IAppointmentState,
+		dispatcher: React.Dispatch<IAppointmentAction>,
+	},
+	print: {
+		state: IPrintState,
+		dispatcher: React.Dispatch<IPrintAction>,
+	},
+	error: {
+		state: IErrorState,
+		dispatcher: React.Dispatch<IErrorAction>,
+	},
+	customPage: {
+		state: JSX.Element | undefined,
+		dispatcher: React.Dispatch<React.SetStateAction<JSX.Element | undefined>>,
 	}
 }
