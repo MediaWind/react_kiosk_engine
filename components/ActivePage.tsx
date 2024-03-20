@@ -159,6 +159,14 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 		});
 	}
 
+	if (customPage) {
+		return (
+			<>
+				{customPage}
+			</>
+		);
+	}
+
 	return (
 		<>
 			{(page.medias && page.medias.length > 0) &&
@@ -177,8 +185,6 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 			/>}
 
 			<BackgroundImage image={page.backgroundImage} />
-
-			{customPage}
 		</>
 	);
 }
