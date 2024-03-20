@@ -18,7 +18,7 @@ export default function getTicketingURL(ticketState: ITicketDataState, flow: IFl
 	&lang=${ticketState.language ?? "fr"}
 	`;
 
-	if (ticketState.eIdDatas != null) {
+	if (ticketState.eIdDatas) {
 		params += `
 		&firstname=${encodeURIComponent(ticketState.eIdDatas.firstName)}
 		&lastname=${encodeURIComponent(ticketState.eIdDatas.lastName)}

@@ -252,7 +252,8 @@ export enum ACTION_TYPE {
 	CHECKIN = "checkin",
 	CHECKOUT = "checkout",
 	CUSTOM = "custom",
-	CHECKTEXTINPUTS = "checktextinputs"
+	CHECKTEXTINPUTS = "checktextinputs",
+	RESETCUSTOMPAGE = "resetcustompage",
 }
 
 export interface IService {
