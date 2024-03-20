@@ -67,6 +67,10 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 			delay = setTimeout(() => {
 				setRouter([homePage]);
 				onReset();
+
+				if(customPage) {
+					setCustomPage(undefined);
+				}
 			}, flow.navigateToHomePageAfter * 1000);
 		}
 
