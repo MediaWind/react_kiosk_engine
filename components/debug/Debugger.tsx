@@ -11,7 +11,7 @@ export default function Debugger(props: IDebuggerProps): JSX.Element {
 	return (
 		<div
 			style={{
-				position: "relative",
+				position: "absolute",
 				top: "0",
 				left: "0",
 				zIndex: "10",
