@@ -30,7 +30,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 	const { dispatchPrintState, } = usePrintContext();
 	const { ticketState, dispatchTicketState, } = useTicketDataContext();
 	const { appointmentState, dispatchAppointmentState, } = useAppointmentContext();
-	const { triggerCustomAction, customPage, } = useCustomActionContext();
+	const { triggerCustomAction, customPage, setCustomPage, } = useCustomActionContext();
 
 	const [pageMedias, setPageMedias] = useState<IMedia[]>([]);
 	const [pageInputs, setPageInputs] = useState<IInputContent[]>([]);
@@ -156,15 +156,8 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 			setLanguage,
 			dispatchAppointmentState,
 			triggerCustomAction,
+			setCustomPage,
 		});
-	}
-
-	if (customPage) {
-		return (
-			<>
-				{customPage}
-			</>
-		);
 	}
 
 	return (
@@ -185,6 +178,8 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 			/>}
 
 			<BackgroundImage image={page.backgroundImage} />
+
+			{customPage}
 		</>
 	);
 }

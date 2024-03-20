@@ -24,6 +24,7 @@ interface IDispatchers {
 	setLanguage: React.Dispatch<SetStateAction<LANGUAGE | undefined>>
 	dispatchAppointmentState: React.Dispatch<IAppointmentAction>
 	triggerCustomAction: CallableFunction
+	setCustomPage: React.Dispatch<SetStateAction<JSX.Element | undefined>>
 }
 
 export default function doActions(actions: IInputAction[], dispatchers: IDispatchers) {
@@ -69,6 +70,9 @@ export default function doActions(actions: IInputAction[], dispatchers: IDispatc
 				break;
 			case ACTION_TYPE.CUSTOM:
 				dispatchers.triggerCustomAction();
+				break;
+			case ACTION_TYPE.RESETCUSTOMPAGE:
+				dispatchers.setCustomPage(undefined);
 				break;
 			default:
 				break;
