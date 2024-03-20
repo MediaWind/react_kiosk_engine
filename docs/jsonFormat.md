@@ -499,6 +499,9 @@ Here are the different action types available and what they do.
 	},
 	{
 		"type": "custom"
+	},
+	{
+		"type": "resetcustompage"
 	}
 ]
 ```
@@ -519,6 +522,7 @@ An `action` is always defined by its `type`. Here is a break down of each type:
 - `checkout`, usually attached to the `scanner` input, will signify that the page is ready to use the qr code read with the scanner and proceed to check it out of the EasyQueue module.
 - `checktextinputs` first verify that all required text inputs on the page are filled before proceeding to the rest of the actions.
 - `custom` triggers a custom action. For more informations, refer to the [custom action documentation](customAction.md).
+- `resetcustompage` sets the custom page to undefined.
 
 #### Advanced button configuration
 
