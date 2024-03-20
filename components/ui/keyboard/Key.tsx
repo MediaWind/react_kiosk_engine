@@ -129,7 +129,17 @@ export default function Key(props: IKeyProps): JSX.Element {
 			onMouseDown={devClickDown}
 			onMouseUp={devClickUp}
 		>
-			<p style={{ ...config.style, ...customStyles, }}>{text}</p>
+			<p style={{
+				fontFamily: customStyles?.fontFamily ?? config.style?.fontFamily,
+				fontSize: customStyles?.fontSize ?? config.style?.fontSize,
+
+				color: customStyles?.color ?? config.style?.color,
+
+				textAlign: customStyles?.textAlign ?? config.style?.textAlign,
+				textTransform: customStyles?.textTransform ?? config.style?.textTransform,
+			}}>
+				{text}
+			</p>
 		</div>
 	);
 }

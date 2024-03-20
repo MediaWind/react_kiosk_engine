@@ -189,7 +189,21 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 			onMouseUp={devClickUp}
 			onDoubleClick={doubleClickHandler}
 		>
-			{config.customText !== "" && <p style={{ ...config.config.style, ...config.customStyles, }}>{config.customText}</p>}
+			{config.customText !== "" && (
+				<p
+					style={{
+						fontFamily: config.customStyles?.fontFamily ?? config.config.style?.fontFamily,
+						fontSize: config.customStyles?.fontSize ?? config.config.style?.fontSize,
+
+						color: config.customStyles?.color ?? config.config.style?.color,
+
+						textAlign: config.customStyles?.textAlign ?? config.config.style?.textAlign,
+						textTransform: config.customStyles?.textTransform ?? config.config.style?.textTransform,
+					}}
+				>
+					{config.customText}
+				</p>
+			)}
 
 			{(icon && config.customText === "") && <FontAwesomeIcon
 				icon={icon}
