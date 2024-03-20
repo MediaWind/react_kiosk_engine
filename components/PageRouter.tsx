@@ -68,7 +68,7 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 				setRouter([homePage]);
 				onReset();
 
-				if(customPage) {
+				if (customPage) {
 					setCustomPage(undefined);
 				}
 			}, flow.navigateToHomePageAfter * 1000);
@@ -77,7 +77,7 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 		return () => {
 			clearTimeout(delay);
 		};
-	}, [router, userIsInteracting]);
+	}, [router, userIsInteracting, customPage]);
 
 	useEffect(() => {
 		if (router.slice(-1)[0] === homePage) {
