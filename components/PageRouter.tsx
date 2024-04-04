@@ -57,6 +57,10 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 	useEffect(() => {
 		if(!errorState.hasError) {
 			setRouter([homePage]);
+
+			if (customPage) {
+				setCustomPage(undefined);
+			}
 		}
 	}, [errorState.hasError]);
 
