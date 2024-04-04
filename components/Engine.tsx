@@ -234,7 +234,6 @@ function Engine(props: IEngineProps): JSX.Element {
 				});
 			}, 15 * 1000);
 		} else {
-			setIsLoading(false);
 			dispatchErrorState({ type: ERROR_ACTION_TYPE.CLEARERROR, });
 		}
 
@@ -248,6 +247,7 @@ function Engine(props: IEngineProps): JSX.Element {
 
 		return () => {
 			clearTimeout(delay);
+			setIsLoading(false);
 		};
 	}, [eidStatus, eidError]);
 
@@ -417,7 +417,8 @@ function Engine(props: IEngineProps): JSX.Element {
 								`eid status: ${eidStatus}`,
 								`eid error: ${eidError}`,
 								`firstname from eid: ${eIdData?.firstName}`,
-								error.hasError ? `Error ${error.errorCode}: ${error.message}` : ""
+								error.hasError ? `Error ${error.errorCode}: ${error.message}` : "",
+								isLoading ? "Loading..." : ""
 							]}
 						/>
 					)}
