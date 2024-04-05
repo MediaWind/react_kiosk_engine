@@ -18,15 +18,13 @@ export default function getTicketingURL(ticketState: ITicketDataState, flow: IFl
 	&lang=${ticketState.language ?? "fr"}
 	`;
 
-	if (ticketState.eIdDatas) {
-		params += `
-		&firstname=${encodeURIComponent(ticketState.eIdDatas.firstName)}
-		&lastname=${encodeURIComponent(ticketState.eIdDatas.lastName)}
-		&registre_national=${encodeURIComponent(ticketState.eIdDatas.nationalNumber)}
-		`;
-	} else if (ticketState.textInputDatas) {
-		const firstname = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.firstname);
-		const lastname = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.lastname);
+	let paramsFirstName = "";
+	let paramsLastName = "";
+	let paramsNationalNumber = "";
+
+	if (ticketState.textInputDatas) {
+		const firstName = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.firstname);
+		const lastName = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.lastname);
 		const nationalNumber = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.nationalNumber);
 		const email = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.email);
 		const phone = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.phone);
@@ -34,10 +32,11 @@ export default function getTicketingURL(ticketState: ITicketDataState, flow: IFl
 		const comment = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.comment);
 		const idUserAgent = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.idUserAgent);
 
+		paramsFirstName = encodeURIComponent(firstName?.value ?? "");
+		paramsLastName = encodeURIComponent(lastName?.value ?? "");
+		paramsNationalNumber = encodeURIComponent(nationalNumber?.value ?? "");
+
 		params += `
-		&firstname=${encodeURIComponent(firstname?.value ?? "")}
-		&lastname=${encodeURIComponent(lastname?.value ?? "")}
-		&registre_national=${encodeURIComponent(nationalNumber?.value ?? "")}
 		&email=${encodeURIComponent(email?.value ?? "")}
 		&phone=${encodeURIComponent(phone?.value ?? "")}
 		&company=${encodeURIComponent(company?.value ?? "")}
@@ -45,6 +44,18 @@ export default function getTicketingURL(ticketState: ITicketDataState, flow: IFl
 		&id_userAgent=${encodeURIComponent(idUserAgent?.value ?? "")}
 		`;
 	}
+
+	if (ticketState.eIdDatas) {
+		paramsFirstName = encodeURIComponent(ticketState.eIdDatas.firstName);
+		paramsLastName = encodeURIComponent(ticketState.eIdDatas.lastName);
+		paramsNationalNumber = encodeURIComponent(ticketState.eIdDatas.nationalNumber);
+	}
+
+	params += `
+	&firstname=${encodeURIComponent(paramsFirstName)}
+	&lastname=${encodeURIComponent(paramsLastName)}
+	&registre_national=${encodeURIComponent(paramsNationalNumber)}
+	`;
 
 	return new URL(baseURL + params);
 }
