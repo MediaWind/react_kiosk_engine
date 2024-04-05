@@ -32,9 +32,9 @@ export default function getTicketingURL(ticketState: ITicketDataState, flow: IFl
 		const comment = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.comment);
 		const idUserAgent = ticketState.textInputDatas.find((input) => input.id === flow.ticketParameters?.idUserAgent);
 
-		paramsFirstName = encodeURIComponent(firstName?.value ?? "");
-		paramsLastName = encodeURIComponent(lastName?.value ?? "");
-		paramsNationalNumber = encodeURIComponent(nationalNumber?.value ?? "");
+		paramsFirstName = firstName?.value ?? "";
+		paramsLastName = lastName?.value ?? "";
+		paramsNationalNumber = nationalNumber?.value ?? "";
 
 		params += `
 		&email=${encodeURIComponent(email?.value ?? "")}
@@ -46,9 +46,9 @@ export default function getTicketingURL(ticketState: ITicketDataState, flow: IFl
 	}
 
 	if (ticketState.eIdDatas) {
-		paramsFirstName = encodeURIComponent(ticketState.eIdDatas.firstName);
-		paramsLastName = encodeURIComponent(ticketState.eIdDatas.lastName);
-		paramsNationalNumber = encodeURIComponent(ticketState.eIdDatas.nationalNumber);
+		paramsFirstName = ticketState.eIdDatas.firstName;
+		paramsLastName = ticketState.eIdDatas.lastName;
+		paramsNationalNumber = ticketState.eIdDatas.nationalNumber;
 	}
 
 	params += `
