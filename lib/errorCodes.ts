@@ -58,7 +58,7 @@ export enum ERROR_CODE {
 	/**
 	 * 404-C: Ticket not found
 	 */
-	C404 = "404-B",
+	C404 = "404-C",
 
 	/**
 	 * 404-D: Service secretariat not found
