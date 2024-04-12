@@ -78,7 +78,6 @@ export default function getTicketingURL(ticketState: ITicketDataState, flow: IFl
 		paramsLastName = ticketState.eIdDatas.lastName;
 		paramsNationalNumber = ticketState.eIdDatas.nationalNumber;
 		paramsBirthDate = formatBirthDate(ticketState.eIdDatas);
-		console.log("🚀 ~ getTicketingURL ~ paramsBirthDate:", paramsBirthDate);
 		paramsAddress = ticketState.eIdDatas.addressStreetAndNumber;
 		paramsZipAndCity = `${ticketState.eIdDatas.addressZip} ${ticketState.eIdDatas.addressMunicipality}`;
 	}
