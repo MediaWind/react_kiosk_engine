@@ -54,6 +54,9 @@ export interface IFlow {
 export interface ITicketParameters {
 	firstname?: string;
 	lastname?: string;
+	birthDate?: string;
+	address?: string;
+	zipAndCity?: string;
 	nationalNumber?: string;
 	email?: string;
 	phone?: string;
