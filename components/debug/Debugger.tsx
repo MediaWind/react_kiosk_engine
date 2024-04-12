@@ -22,14 +22,19 @@ export default function Debugger(props: IDebuggerProps): JSX.Element {
 			<h1>eId data</h1>
 			{eidData ?
 				<>
-					<p>Firstname: {eidData.firstName}</p>
-					<p>Lastname: {eidData.lastName}</p>
-					<p>Zip Code: {eidData.addressZip}</p>
-					<p>Birth date: {eidData.dateOfBirth}</p>
-					<p>Birth place: {eidData.locationOfBirth}</p>
-					<p>Gender: {eidData.gender}</p>
-					<p>National number: {eidData.nationalNumber}</p>
-					<p>Nationality: {eidData.nationality}</p>
+					<p>firstName: {eidData.firstName}</p>
+					<p>lastName: {eidData.lastName}</p>
+					<p>addressStreetAndNumber: {eidData.addressStreetAndNumber}</p>
+					<p>addressZip: {eidData.addressZip}</p>
+					<p>addressMunicipality: {eidData.addressMunicipality}</p>
+					<p>dateOfBirth: {eidData.dateOfBirth}</p>
+					<p>locationOfBirth: {eidData.locationOfBirth}</p>
+					<p>nationalNumber: {eidData.nationalNumber}</p>
+					<p>nationality: {eidData.nationality}</p>
+					<p>gender: {eidData.gender}</p>
+					<p>cardNumber: {eidData.cardNumber}</p>
+					<p>validityBeginDate: {eidData.validityBeginDate}</p>
+					<p>validityEndDate: {eidData.validityEndDate}</p>
 				</> :
 				<p>no data</p>
 			}
