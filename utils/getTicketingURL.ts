@@ -87,7 +87,7 @@ export default function getTicketingURL(ticketState: ITicketDataState, flow: IFl
 	&lastname=${encodeURIComponent(paramsLastName)}
 	&registre_national=${encodeURIComponent(paramsNationalNumber)}
 	&birth_date=${encodeURIComponent(paramsBirthDate)}
-	&adress=${encodeURIComponent(paramsAddress)}
+	&address=${encodeURIComponent(paramsAddress)}
 	&postal_code_city=${encodeURIComponent(paramsZipAndCity)}
 	`;
 
