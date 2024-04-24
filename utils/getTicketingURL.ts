@@ -32,7 +32,7 @@ export default function getTicketingURL(ticketState: ITicketDataState, flow: IFl
 	let params = `
 	id_project=${Variables.W_ID_PROJECT}
 	&serial=${Variables.SERIAL_PLAYER}
-	&id_service=${serviceId}
+	${ticketState.service?.serviceFlowId ? `&id_service_flow=${ticketState.service.serviceFlowId}` : `&id_service=${serviceId}`}
 	&priority=${ticketState.service?.priority ?? 1}
 	&lang=${ticketState.language ?? "fr"}
 	`;
