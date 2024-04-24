@@ -119,8 +119,10 @@ Here is a what a full configuration looks like:
 						"type": "nextpage|saveservice|changelanguage|...",
 						"navigateTo": "UUID",
 						"service": {
-							"serviceId": 1,
-							"devServiceId": 2,
+							"serviceID": 1,
+							"serviceFlowId": 2,
+							"devServiceId": 10,
+							"devServiceFlowId": 11,
 							"priority": 0
 						},
 						"language": "fr|en|es|nl"
@@ -352,8 +354,10 @@ When you use a provided `layout`, you can use `actionsOverride` if you want one 
 					"type": "nextpage|previouspage|homepage|printticket|saveservice|changelanguage|checkin|checkout...",
 					"navigateTo": "UUID",
 					"service": {
-						"serviceId": 1,
-						"devServiceId": 2,
+						"serviceID": 1,
+						"serviceFlowId": 2,
+						"devServiceId": 10,
+						"devServiceFlowId": 11,
 						"priority": 0
 					},
 					"language": "fr|en|es|nl"
@@ -385,9 +389,11 @@ When you use a provided `layout`, you can use `actionsOverride` if you want one 
 	{
 		"type": "saveservice",
 		"service": {
-			"serviceId": 1,
-			"devServiceId": 2,
-			"priority": 1
+			"serviceID": 1,
+			"serviceFlowId": 2,
+			"devServiceId": 10,
+			"devServiceFlowId": 11,
+			"priority": 0
 		}
 	},
 	{

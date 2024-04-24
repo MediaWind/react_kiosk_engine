@@ -309,8 +309,10 @@ These are the properties defining a page object, found in the [flow level](#flow
 			"delay": 5,
 			"printTicket": true,
 			"service": {
-				"serviceId": 10,
-				"devServiceId": 20,
+				"serviceID": 1,
+				"serviceFlowId": 2,
+				"devServiceId": 10,
+				"devServiceFlowId": 11,
 				"priority": 0
 			}
 		},
@@ -473,9 +475,11 @@ Here are the different action types available and what they do.
 	{
 		"type": "saveservice",
 		"service": {
-			"serviceId": 1,
-			"devServiceId": 2,
-			"priority": 1
+			"serviceID": 1,
+			"serviceFlowId": 2,
+			"devServiceId": 10,
+			"devServiceFlowId": 11,
+			"priority": 0
 		}
 	},
 	{
@@ -512,8 +516,10 @@ An `action` is always defined by its `type`. Here is a break down of each type:
 - `previouspage` indicates to the router that we are going back to the previous page.
 - `homepage` indicates to the router that we are going back to the home page. Anytime we go back to the home page, the router and all saved data are reset.
 - `saveservice` saves the service id selected. It must be associated with the `service` object.
-	- This object have a required `serviceId`, representing the <ins>production</ins> service id in the prod EasyQueue module instance. This is the one that will be saved during production.
+	- This object have an optional `serviceId`, representing the <ins>production</ins> service id in the prod EasyQueue module instance. This is the one that will be saved during production.
+	- An optional `serviceFlowId`, representing the <ins>production</ins> service flow id in the prod EasyQueue module instance. This is the one that will be saved during production. The `serviceFlowId` (and the following `devServiceFlowId`) is used for step/stage tickets.
 	- An optional `devServiceId`, representing the <ins>development</ins> service id in the dev EasyQueue module instance. This is the one that will be saved during development. This was added so the serviceId doesn't need to be adjusted when switching between dev and prod, reducing potential inattention errors.
+	- An optional `devServiceFlowId`, representing the <ins>development</ins> service flow id in the dev EasyQueue module instance.
 	- An optional `priority`. It can be 1 for `normal` (default), 2 for `high` or 3 for `urgent`.
 - `createticket` sends a request for creating the ticket. To be able to create a ticket, a service id must first be saved.
 - `printticket` sends a request for printing the ticket. To be able to print a ticket, it must be created first. Once the ticket is created and the print is requested, the actual printing is triggered.
