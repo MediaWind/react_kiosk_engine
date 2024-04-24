@@ -263,6 +263,7 @@ export interface IService {
 	serviceId?: number;
 	serviceFlowId?: number;
 	devServiceId?: number;
+	devServiceFlowId?: number;
 	/**
  * 1 = normal
  * 2 = high

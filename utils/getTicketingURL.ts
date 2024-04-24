@@ -23,16 +23,23 @@ function formatBirthDate(eIdInfo: eIdData): string {
 
 export default function getTicketingURL(ticketState: ITicketDataState, flow: IFlow): URL {
 	let serviceId = ticketState.service?.serviceId;
+	let serviceFlowId = ticketState.service?.serviceFlowId;
 
-	if (ticketState.service?.devServiceId && (process.env.NODE_ENV !== "production" || Variables.DOMAINE === "modules.greenplayer.com")) {
-		serviceId = ticketState.service.devServiceId;
+	if (process.env.NODE_ENV !== "production" || Variables.DOMAINE === "modules.greenplayer.com") {
+		if (ticketState.service?.devServiceId) {
+			serviceId = ticketState.service.devServiceId;
+		}
+
+		if (ticketState.service?.devServiceFlowId) {
+			serviceFlowId = ticketState.service.devServiceFlowId;
+		}
 	}
 
 	const baseURL = `${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/ticket.php?`;
 	let params = `
 	id_project=${Variables.W_ID_PROJECT}
 	&serial=${Variables.SERIAL_PLAYER}
-	${ticketState.service?.serviceFlowId ? `&id_service_flow=${ticketState.service.serviceFlowId}` : `&id_service=${serviceId}`}
+	${serviceFlowId ? `&id_service_flow=${serviceFlowId}` : `&id_service=${serviceId}`}
 	&priority=${ticketState.service?.priority ?? 1}
 	&lang=${ticketState.language ?? "fr"}
 	`;
