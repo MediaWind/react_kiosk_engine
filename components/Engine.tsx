@@ -352,6 +352,8 @@ function Engine(props: IEngineProps): JSX.Element {
 			resetQrCode();
 		}
 
+		dispatchPrintState({ type: PRINT_ACTION_TYPE.CLEARALL, });
+
 		setReadyToChangeFlow(true);
 		setLanguage(undefined);
 	}

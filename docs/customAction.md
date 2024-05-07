@@ -220,8 +220,10 @@ const currentlySavedService = supercontext.ticket.state.service;
 supercontext.ticket.dispatcher({
 	type: TICKET_DATA_ACTION_TYPE.SERVICEUPDATE,
 	payload: {
-		serviceId: 4,
+		serviceID: 1,
+		serviceFlowId: 2,
 		devServiceId: 10,
+		devServiceFlowId: 11,
 		priority: 0
 	}
 });
