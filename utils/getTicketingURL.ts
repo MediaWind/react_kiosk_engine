@@ -40,7 +40,7 @@ export default function getTicketingURL(ticketState: ITicketDataState, flow: IFl
 	id_project=${Variables.W_ID_PROJECT}
 	&serial=${Variables.SERIAL_PLAYER}
 	${serviceFlowId ? `&id_service_flow=${serviceFlowId}` : `&id_service=${serviceId}`}
-	&priority=${ticketState.service?.priority ?? 1}
+	&priority=${ticketState.service?.priority ?? 0}
 	&lang=${ticketState.language ?? "fr"}
 	`;
 
