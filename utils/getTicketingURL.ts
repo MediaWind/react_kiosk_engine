@@ -72,11 +72,11 @@ export default function getTicketingURL(ticketState: ITicketDataState, flow: IFl
 		paramsZipAndCity = zipAndCity?.value ?? "";
 
 		params += `
-		&email=${encodeURIComponent(email?.value ?? "")}
-		&phone=${encodeURIComponent(phone?.value ?? "")}
-		&company=${encodeURIComponent(company?.value ?? "")}
-		&comment=${encodeURIComponent(comment?.value ?? "")}
-		&id_userAgent=${encodeURIComponent(idUserAgent?.value ?? "")}
+		${email?.value ? `&email=${encodeURIComponent(email.value)}` : ""}
+		${phone?.value ? `&phone=${encodeURIComponent(phone.value)}` : ""}
+		${company?.value ? `&company=${encodeURIComponent(company.value)}` : ""}
+		${comment?.value ? `&comment=${encodeURIComponent(comment.value)}` : ""}
+		${idUserAgent?.value ? `&id_userAgent=${encodeURIComponent(idUserAgent.value)}` : ""}
 		`;
 	}
 
@@ -90,12 +90,12 @@ export default function getTicketingURL(ticketState: ITicketDataState, flow: IFl
 	}
 
 	params += `
-	&firstname=${encodeURIComponent(paramsFirstName)}
-	&lastname=${encodeURIComponent(paramsLastName)}
-	&registre_national=${encodeURIComponent(paramsNationalNumber)}
-	&birth_date=${encodeURIComponent(paramsBirthDate)}
-	&address=${encodeURIComponent(paramsAddress)}
-	&postal_code_city=${encodeURIComponent(paramsZipAndCity)}
+	${paramsFirstName !== "" ? `&firstname=${encodeURIComponent(paramsFirstName)}` : ""}
+	${paramsLastName !== "" ? `&lastname=${encodeURIComponent(paramsLastName)}` : ""}
+	${paramsNationalNumber !== "" ? `&registre_national=${encodeURIComponent(paramsNationalNumber)}` : ""}
+	${paramsBirthDate !== "" ? `&birth_date=${encodeURIComponent(paramsBirthDate)}` : ""}
+	${paramsAddress !== "" ? `&address=${encodeURIComponent(paramsAddress)}` : ""}
+	${paramsZipAndCity !== "" ? `&postal_code_city=${encodeURIComponent(paramsZipAndCity)}` : ""}
 	`;
 
 	return new URL(baseURL + params);
