@@ -90,6 +90,7 @@ interface IEngineProps {
 		```
 	 */
 	onCustomAction?: CallableFunction
+	waitSecondsAfterPrint?: number
 	debug?: boolean
 }
 
@@ -288,7 +289,7 @@ function Engine(props: IEngineProps): JSX.Element {
 		}
 
 		if (printState.printRequested && printState.ticketPDF) {
-			printTicket(printState.ticketPDF);
+			printTicket(printState.ticketPDF, props.waitSecondsAfterPrint);
 
 			dispatchPrintState({ type: PRINT_ACTION_TYPE.CLEARALL,});
 			resetTicketData();
