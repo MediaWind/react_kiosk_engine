@@ -289,7 +289,7 @@ function Engine(props: IEngineProps): JSX.Element {
 		}
 
 		if (printState.printRequested && printState.ticketPDF) {
-			printTicket(printState.ticketPDF, props.waitSecondsAfterPrint);
+			printTicket(printState.ticketPDF, props.waitSecondsAfterPrint ?? 5);
 
 			dispatchPrintState({ type: PRINT_ACTION_TYPE.CLEARALL,});
 			resetTicketData();
