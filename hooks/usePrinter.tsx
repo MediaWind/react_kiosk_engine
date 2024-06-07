@@ -96,7 +96,7 @@ export default function usePrinter(dispatchError: React.Dispatch<IErrorAction>):
 		}
 	}
 
-	async function print(pdf: string) {
+	async function print(pdf: string, waitTime = 5) {
 		if (isPrinting) {
 			return;
 		}
@@ -134,7 +134,7 @@ export default function usePrinter(dispatchError: React.Dispatch<IErrorAction>):
 		} finally {
 			setTimeout(() => {
 				setIsPrinting(false);
-			}, 5 * 1000);
+			}, waitTime * 1000);
 		}
 	}
 
