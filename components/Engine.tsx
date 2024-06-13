@@ -238,6 +238,19 @@ function Engine(props: IEngineProps): JSX.Element {
 			dispatchErrorState({ type: ERROR_ACTION_TYPE.CLEARERROR, });
 		}
 
+		if (eidStatus === eIdStatus.READ && eIdData === null) {
+			dispatchErrorState({
+				type: ERROR_ACTION_TYPE.SETERROR,
+				payload: {
+					hasError: true,
+					errorCode: ERROR_CODE.F500,
+					message: "ID card reader could not find any data",
+				},
+			});
+
+			return;
+		}
+
 		if (eidStatus === eIdStatus.READ && eidError === "") {
 			setEIdBlock(true);
 		}

@@ -150,6 +150,11 @@ export enum ERROR_CODE {
 	 */
 	E500 = "500-E",
 
+	/**
+	 * 500-F: eId has been read but data is null
+	 */
+	F500 = "500-F",
+
 	//? -- Service unavailable/hardware errors -- //
 
 	/**
