@@ -16,7 +16,7 @@ interface IDisplayErrorProps {
 	route: Route | null
 }
 
-const blackList = [ERROR_CODE.C503, ERROR_CODE.B400, ERROR_CODE.A415];
+const blackList = [ERROR_CODE.C503, ERROR_CODE.B400, ERROR_CODE.A415, ERROR_CODE.F500];
 
 function getErrorImage(image: IErrorManagement, errorCode?: ERROR_CODE, serviceId?: string): IBackgroundImage {
 	switch (errorCode) {
@@ -36,6 +36,7 @@ function getErrorImage(image: IErrorManagement, errorCode?: ERROR_CODE, serviceI
 		case ERROR_CODE.A408: return image.eIdTimeout ?? image.genericError;
 		case ERROR_CODE.A415: return image.unknownCard ?? image.genericError;
 		case ERROR_CODE.B400: return image.unresponsiveCard ?? image.genericError;
+		case ERROR_CODE.F500: return image.unreadableCard ?? image.genericError;
 		default: return image.genericError;
 	}
 }
