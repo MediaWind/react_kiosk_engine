@@ -117,6 +117,9 @@ This is an optional property to display error specific custom images. If no `err
 		"10": {}
 	},
 	"eIdTimeout": {},
+	"unknownCard": {},
+	"unresponsiveCard": {},
+	"unreadableCard": {},
 
 	"eIdInserted": {},
 	"eIdRead": {}
@@ -134,6 +137,12 @@ The `genericError` key is the only one required if an `errorManagement` is creat
 `serviceClosed` has a different structure. Instead of going directly to the images paths, we must define a required `default` key that will hold the overall images when a service is closed, and we can also use a service id as a key to display a service closed error for a specific service. This allows displaying a schedule for that particular service, for example. Make sure the service id is the *production* service id, associated with the right EasyQueue module.
 
 `eIdTimeout` will display images when the card reader takes more than 15 seconds to read the card.
+
+`unknownCard` will display images when an invalid card is inserted. This is were you can suggest to end users to make sure they are using a valid Belgian eId card.
+
+`unresponsiveCard` will display images when a card is inserted incorrectly or the chip is damaged. This is were you can suggest to end users to make sure they have inserted their card chip up.
+
+`unreadableCard` will display images when a card has been inserted and read, but eId data is null.
 
 `eIdInserted` is **not** an error per say. It will display images for when a card is inserted in the card reader, usually informing the end user that the card is currently being read and inviting them to not remove their card from the terminal.
 
@@ -309,7 +318,7 @@ These are the properties defining a page object, found in the [flow level](#flow
 			"delay": 5,
 			"printTicket": true,
 			"service": {
-				"serviceID": 1,
+				"serviceId": 1,
 				"serviceFlowId": 2,
 				"devServiceId": 10,
 				"devServiceFlowId": 11,
