@@ -441,6 +441,24 @@
 			"dutch": "optional path",
 			"english": "optional path"
 		},
+		"unknownCard": {
+			"default": "required path",
+			"french": "optional path",
+			"dutch": "optional path",
+			"english": "optional path"
+		},
+		"unresponsiveCard": {
+			"default": "required path",
+			"french": "optional path",
+			"dutch": "optional path",
+			"english": "optional path"
+		},
+		"unreadableCard": {
+			"default": "required path",
+			"french": "optional path",
+			"dutch": "optional path",
+			"english": "optional path"
+		},
 
 		"eIdInserted": {
 			"default": "required path",
