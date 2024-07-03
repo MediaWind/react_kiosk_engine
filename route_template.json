@@ -220,7 +220,7 @@
 									{
 										"type": "saveservice",
 										"service": {
-											"serviceID": 1,
+											"serviceId": 1,
 											"serviceFlowId": 2,
 											"devServiceId": 10,
 											"devServiceFlowId": 11,
@@ -436,6 +436,24 @@
 			}
 		},
 		"eIdTimeout": {
+			"default": "required path",
+			"french": "optional path",
+			"dutch": "optional path",
+			"english": "optional path"
+		},
+		"unknownCard": {
+			"default": "required path",
+			"french": "optional path",
+			"dutch": "optional path",
+			"english": "optional path"
+		},
+		"unresponsiveCard": {
+			"default": "required path",
+			"french": "optional path",
+			"dutch": "optional path",
+			"english": "optional path"
+		},
+		"unreadableCard": {
 			"default": "required path",
 			"french": "optional path",
 			"dutch": "optional path",
