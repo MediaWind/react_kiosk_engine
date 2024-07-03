@@ -220,7 +220,7 @@
 									{
 										"type": "saveservice",
 										"service": {
-											"serviceID": 1,
+											"serviceId": 1,
 											"serviceFlowId": 2,
 											"devServiceId": 10,
 											"devServiceFlowId": 11,
