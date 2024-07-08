@@ -81,6 +81,9 @@ export interface IErrorManagement {
 	unknownCard?: IBackgroundImage;
 	unresponsiveCard?: IBackgroundImage;
 	unreadableCard?: IBackgroundImage;
+	serviceQuotaLimitExceeded?: {
+		[key: string]: IBackgroundImage
+	}
 	//TODO: add more error options
 
 	//? Not necessarily errors, might need some refactoring here
