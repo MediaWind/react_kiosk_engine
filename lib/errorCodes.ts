@@ -123,6 +123,11 @@ export enum ERROR_CODE {
 	 */
 	A429 = "429-A",
 
+	/**
+	 * 429-B: Service quota limit exceeded
+	 */
+	B429 = "429-B",
+
 	//? -- Internal server error --//
 
 	/**

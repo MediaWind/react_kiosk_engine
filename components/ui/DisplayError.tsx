@@ -31,6 +31,17 @@ function getErrorImage(image: IErrorManagement, errorCode?: ERROR_CODE, serviceI
 
 			return image.genericError;
 		}
+		case ERROR_CODE.B429: {
+			if (image.serviceQuotaLimitExceeded) {
+				if (serviceId && image.serviceQuotaLimitExceeded[serviceId]) {
+					return image.serviceQuotaLimitExceeded[serviceId];
+				}	else if (image.serviceQuotaLimitExceeded["default"]) {
+					return image.serviceQuotaLimitExceeded["default"];
+				}
+			}
+
+			return image.genericError;
+		}
 		case ERROR_CODE.A503: return image.notConnectedToInternet ?? image.genericError;
 		case ERROR_CODE.C503: return image.noPaper ?? image.genericError;
 		case ERROR_CODE.A408: return image.eIdTimeout ?? image.genericError;
