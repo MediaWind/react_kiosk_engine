@@ -120,6 +120,10 @@ This is an optional property to display error specific custom images. If no `err
 	"unknownCard": {},
 	"unresponsiveCard": {},
 	"unreadableCard": {},
+	"serviceQuotaLimitExceeded": {
+		"default": {},
+		"10": {}
+	},
 
 	"eIdInserted": {},
 	"eIdRead": {}
@@ -143,6 +147,8 @@ The `genericError` key is the only one required if an `errorManagement` is creat
 `unresponsiveCard` will display images when a card is inserted incorrectly or the chip is damaged. This is were you can suggest to end users to make sure they have inserted their card chip up.
 
 `unreadableCard` will display images when a card has been inserted and read, but eId data is null.
+
+`serviceQuotaLimitExceeded`, like `serviceClosed`, can be specific to one or more services. It will display a `default` image for all services or a unique image based on the *production* service id. This image will be displayed when we exceeded the service's tickets quota limit if there is one set up on the module.
 
 `eIdInserted` is **not** an error per say. It will display images for when a card is inserted in the card reader, usually informing the end user that the card is currently being read and inviting them to not remove their card from the terminal.
 
