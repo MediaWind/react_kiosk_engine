@@ -66,6 +66,17 @@ export default function useTicket(dispatchPrintState: React.Dispatch<IPrintActio
 								},
 							});
 							break;
+						case "quota_limit_exceeded":
+							dispatchError({
+								type: ERROR_ACTION_TYPE.SETERROR,
+								payload: {
+									hasError: true,
+									errorCode: ERROR_CODE.B429,
+									message: "Service quota limit exceeded",
+									errorServiceId: ticketState.service?.serviceId ? `${ticketState.service.serviceId}` : undefined,
+								},
+							});
+							break;
 						default:
 							dispatchError({
 								type: ERROR_ACTION_TYPE.SETERROR,
