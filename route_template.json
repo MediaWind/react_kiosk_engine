@@ -459,6 +459,14 @@
 			"dutch": "optional path",
 			"english": "optional path"
 		},
+		"serviceQuotaLimitExceeded": {
+			"_use 'default' or service id": {
+				"default": "required path",
+				"french": "optional path",
+				"dutch": "optional path",
+				"english": "optional path"
+			}
+		},
 
 		"eIdInserted": {
 			"default": "required path",
