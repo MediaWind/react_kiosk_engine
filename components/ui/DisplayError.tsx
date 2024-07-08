@@ -32,10 +32,12 @@ function getErrorImage(image: IErrorManagement, errorCode?: ERROR_CODE, serviceI
 			return image.genericError;
 		}
 		case ERROR_CODE.B429: {
-			if (serviceId && image.serviceQuotaLimitExceeded && image.serviceQuotaLimitExceeded[serviceId]) {
-				return image.serviceQuotaLimitExceeded[serviceId];
-			}	else if (image.serviceQuotaLimitExceeded && image.serviceQuotaLimitExceeded["default"]) {
-				return image.serviceQuotaLimitExceeded["default"];
+			if (image.serviceQuotaLimitExceeded) {
+				if (serviceId && image.serviceQuotaLimitExceeded[serviceId]) {
+					return image.serviceQuotaLimitExceeded[serviceId];
+				}	else if (image.serviceQuotaLimitExceeded["default"]) {
+					return image.serviceQuotaLimitExceeded["default"];
+				}
 			}
 
 			return image.genericError;
