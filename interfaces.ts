@@ -23,7 +23,7 @@ export interface IInternationalization {
 }
 
 export enum COUNTRY {
-	BELGIUM = "Belgium",
+	BELGIUM = "be",
 }
 
 export enum LANGUAGE {
