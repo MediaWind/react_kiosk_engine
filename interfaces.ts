@@ -10,8 +10,7 @@ import { IKeyboard } from "./lib/keyboardTypes";
 //* --------------------------- *//
 export type Route = {
 	name: string,
-	i18n?: IInternationalization
-	languages: LANGUAGE[],
+	i18n: IInternationalization
 	scheduling: ISchedule,
 	flows: IFlow[]
 	errorManagement?: IErrorManagement
