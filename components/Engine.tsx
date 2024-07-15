@@ -411,6 +411,7 @@ function Engine(props: IEngineProps): JSX.Element {
 				tabIndex={0}
 			>
 				<ContextsWrapper values={{
+					defaultLanguage: props.route.i18n?.defaultLanguage,
 					language,
 					setLanguage,
 					ticketState,
