@@ -21,7 +21,7 @@ interface IDispatchers {
 	},
 	dispatchPrintState: React.Dispatch<IPrintAction>
 	dispatchTicketState: React.Dispatch<ITicketDataAction>
-	setLanguage: React.Dispatch<SetStateAction<LANGUAGE | undefined>>
+	setLanguage: React.Dispatch<SetStateAction<LANGUAGE>>
 	dispatchAppointmentState: React.Dispatch<IAppointmentAction>
 	triggerCustomAction: CallableFunction
 	setCustomPage: React.Dispatch<SetStateAction<JSX.Element | undefined>>

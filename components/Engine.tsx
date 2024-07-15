@@ -102,7 +102,8 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [eIdBlock, setEIdBlock] = useState<boolean>(false);
 
-	const [language, setLanguage] = useState<LANGUAGE | undefined>();
+	let defaultLanguage = LANGUAGE.FRENCH;
+	const [language, setLanguage] = useState<LANGUAGE>(LANGUAGE.FRENCH);
 
 	const [currentFlow, setCurrentFlow] = useState<IFlow>();
 	const [flaggedFlow, setFlaggedFlow] = useState<IFlow>();
@@ -140,6 +141,10 @@ function Engine(props: IEngineProps): JSX.Element {
 	// Checks flow every minute
 	useEffect(() => {
 		if (props.route) {
+			if (props.route.i18n?.defaultLanguage) {
+				defaultLanguage = props.route.i18n.defaultLanguage;
+			}
+
 			const updateFlow = () => {
 				const currentScheduleItem = checkCurrentFlow(props.route);
 
@@ -369,7 +374,7 @@ function Engine(props: IEngineProps): JSX.Element {
 		dispatchPrintState({ type: PRINT_ACTION_TYPE.CLEARALL, });
 
 		setReadyToChangeFlow(true);
-		setLanguage(undefined);
+		setLanguage(defaultLanguage);
 	}
 
 	function triggerCustomAction(routerStates: IRouterContexts) {
@@ -411,7 +416,7 @@ function Engine(props: IEngineProps): JSX.Element {
 				tabIndex={0}
 			>
 				<ContextsWrapper values={{
-					defaultLanguage: props.route.i18n?.defaultLanguage,
+					defaultLanguage,
 					language,
 					setLanguage,
 					ticketState,

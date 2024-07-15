@@ -26,9 +26,9 @@ import { TicketDataContext } from "../contexts/ticketDataContext";
 interface IContextsWrapperProps {
 	children: ReactNode[]
 	values: {
-		defaultLanguage: LANGUAGE | undefined
-		language: LANGUAGE | undefined
-		setLanguage: React.Dispatch<React.SetStateAction<LANGUAGE | undefined>>
+		defaultLanguage: LANGUAGE
+		language: LANGUAGE
+		setLanguage: React.Dispatch<React.SetStateAction<LANGUAGE>>
 		ticketState: ITicketDataState
 		dispatchTicketState: React.Dispatch<ITicketDataAction>
 		appointmentState: IAppointmentState

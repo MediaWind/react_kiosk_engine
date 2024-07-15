@@ -4,14 +4,14 @@ import { LANGUAGE } from "../interfaces";
 
 type languageContext = {
 	defaultLangue: LANGUAGE,
-	language: LANGUAGE | undefined,
-	setLanguage: React.Dispatch<React.SetStateAction<LANGUAGE | undefined>>
+	language: LANGUAGE,
+	setLanguage: React.Dispatch<React.SetStateAction<LANGUAGE>>
 }
 
 export const LanguageContext = createContext<languageContext>({
 	defaultLangue: LANGUAGE.FRENCH,
-	language: undefined,
-	setLanguage: () => undefined,
+	language: LANGUAGE.FRENCH,
+	setLanguage: () => LANGUAGE.FRENCH,
 });
 
 export const useLanguageContext = () => useContext(LanguageContext);
