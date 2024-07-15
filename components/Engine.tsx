@@ -102,7 +102,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [eIdBlock, setEIdBlock] = useState<boolean>(false);
 
-	let defaultLanguage = LANGUAGE.FRENCH;
+	const [defaultLanguage, setDefaultLanguage] = useState<LANGUAGE>(LANGUAGE.FRENCH);
 	const [language, setLanguage] = useState<LANGUAGE>(LANGUAGE.FRENCH);
 
 	const [currentFlow, setCurrentFlow] = useState<IFlow>();
@@ -141,9 +141,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	// Checks flow every minute
 	useEffect(() => {
 		if (props.route) {
-			if (props.route.i18n?.defaultLanguage) {
-				defaultLanguage = props.route.i18n.defaultLanguage;
-			}
+			setDefaultLanguage(props.route.i18n.defaultLanguage);
 
 			const updateFlow = () => {
 				const currentScheduleItem = checkCurrentFlow(props.route);
