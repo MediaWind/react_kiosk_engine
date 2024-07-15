@@ -10,11 +10,22 @@ import { IKeyboard } from "./lib/keyboardTypes";
 //* --------------------------- *//
 export type Route = {
 	name: string,
+	i18n?: IInternationalization
 	languages: LANGUAGE[],
 	scheduling: ISchedule,
 	flows: IFlow[]
 	errorManagement?: IErrorManagement
 };
+
+export interface IInternationalization {
+	country: COUNTRY //* setting up dynamic public holidays
+	defaultLanguage: LANGUAGE
+	languages: LANGUAGE[]
+}
+
+export enum COUNTRY {
+	BELGIUM = "Belgium",
+}
 
 export enum LANGUAGE {
 	FRENCH = "fr",
