@@ -91,7 +91,7 @@ function customActionHandler(supercontext) {
 	supercontext.customPage.dispatcher(<MyCustomPage />);
 
 	if (supercontext.language.state === undefined) {
-		supercontext.language.dispatcher(LANGUAGE.ENGLISH);
+		supercontext.language.dispatcher("en");
 	}
 
 	supercontext.customPage.dispatcher(undefined);
@@ -174,14 +174,14 @@ Call the `dispatcher`'s `homePage` to go back to the home page. No parameter nee
 
 ```ts
 language: {
-	state: LANGUAGE.FRENCH,
+	state: "fr",
 	dispatcher,
 }
 ```
 ```ts
 const currentLanguage = supercontext.language.state;
 
-supercontext.language.dispatcher(LANGUAGE.DUTCH);
+supercontext.language.dispatcher("nl");
 ```
 #### State
 
@@ -189,7 +189,7 @@ The language's `state` is the current language. It can be undefined.
 
 #### Dispatcher
 
-Call `dispatcher` with a `LANGUAGE` or `undefined` as a parameter to define a new language.
+Call `dispatcher` with a `string` matching the [ISO 639-1 convention](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes) as a parameter to define a new language.
 
 <hr />
 

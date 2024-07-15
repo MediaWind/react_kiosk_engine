@@ -75,7 +75,7 @@ It is defined by a required `country`, following the [ISO 3166-1 alpha-2 convent
 
 It is also defined by a required `defaultLanguage`, defining which fallback language should be used. The default is French.
 
-Finally, a list of `languages` to declare which languages are used in the route. The languages follow the [ISO 639-1 convention](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes). The current supported languages are French, Dutch, English and Spanish.
+Finally, a list of `languages` to declare which languages are used in the route. The languages follow the [ISO 639-1 convention](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes).
 
 ### scheduling
 
