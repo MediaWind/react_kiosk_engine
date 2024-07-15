@@ -10,7 +10,7 @@ This documentation will explain in detail the different properties of a kiosk fl
 - [Table of content](#table-of-content)
 - [Route level](#route-level)
 	- [name](#name)
-	- [languages](#languages)
+	- [i18n](#i18n)
 	- [scheduling](#scheduling)
 	- [flows](#flows)
 	- [errorManagement](#errormanagement)
@@ -48,7 +48,7 @@ These are the properties found on the route level, the root of the JSON structur
 ```json
 {
 	"name": "The name of the route",
-	"languages": ["fr", "en", "nl"],
+	"i18n": {},
 	"scheduling": {},
 	"flows": [{}],
 	"errorManagement": {}
@@ -59,11 +59,23 @@ These are the properties found on the route level, the root of the JSON structur
 
 This is the name of the route.
 
-### languages
+### i18n
 
-This property is a list of languages used in the route. We expect this property to have at least one language defined.
+This is the language contextualization of the route.
 
-<ins>To do:</ins> In the near future, we will have to add a `defaultLanguage` property to fall back on. Right now this default language is French, we want to be able to set that explicitly in the config JSON file.
+```json
+"i18n": {
+	"country": "be",
+	"defaultLanguage": "fr",
+	"languages": ["fr", "nl", "en", "es"]
+},
+```
+
+It is defined by a required `country`, following the [ISO 3166-1 alpha-2 convention](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2). This is set up to be able to have dynamic public holidays in the future. For now, only Belgium's public holidays are supported, so `country` should always be `"be"`.
+
+It is also defined by a required `defaultLanguage`, defining which fallback language should be used. The default is French.
+
+Finally, a list of `languages` to declare which languages are used in the route. The languages follow the [ISO 639-1 convention](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes). The current supported languages are French, Dutch, English and Spanish.
 
 ### scheduling
 
