@@ -1,9 +1,13 @@
 {
 	"name": "name",
 
-	"languages": [
-		"fr", "nl", "en", "es"
-	],
+	"i18n": {
+		"country": "be",
+		"defaultLanguage": "fr",
+		"languages": [
+			"fr", "nl", "en", "es"
+		]
+	},
 
 	"scheduling": {
 		"monday": [
