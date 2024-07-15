@@ -43,7 +43,7 @@ function getLabel(option: ServiceData, defaultLanguage: string, language: string
 		return option.name_en;
 	}
 
-	if (language === "nl") {
+	if (defaultLanguage === "nl") {
 		return option.name_nl;
 	}
 
