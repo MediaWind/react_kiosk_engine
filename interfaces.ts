@@ -118,10 +118,7 @@ export interface ITimer {
 
 export interface IBackgroundImage {
 	default: string;
-	french?: string;
-	dutch?: string;
-	english?: string
-	spanish?: string;
+	[key: string]: string;
 }
 
 export interface IMedia {
