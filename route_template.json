@@ -179,10 +179,10 @@
 
 					"backgroundImage": {
 						"default": "required path",
-						"french": "optional path",
-						"dutch": "optional path",
-						"english": "optional path",
-						"spanish": "optional path"
+						"fr": "optional path",
+						"nl": "optional path",
+						"en": "optional path",
+						"es": "optional path"
 					},
 
 					"navigateToAfter": {
@@ -415,74 +415,52 @@
 	"errorManagement": {
 		"genericError": {
 			"default": "required path",
-			"french": "optional path",
-			"dutch": "optional path",
-			"english": "optional path"
+			"fr|nl|en|es": "optional path"
 		},
 		"noPaper": {
 			"default": "required path",
-			"french": "optional path",
-			"dutch": "optional path",
-			"english": "optional path"
+			"fr|nl|en|es": "optional path"
 		},
 		"notConnectedToInternet": {
 			"default": "required path",
-			"french": "optional path",
-			"dutch": "optional path",
-			"english": "optional path"
+			"fr|nl|en|es": "optional path"
 		},
 		"serviceClosed": {
 			"_use 'default' or service id": {
 				"default": "required path",
-				"french": "optional path",
-				"dutch": "optional path",
-				"english": "optional path"
+				"fr|nl|en|es": "optional path"
 			}
 		},
 		"eIdTimeout": {
 			"default": "required path",
-			"french": "optional path",
-			"dutch": "optional path",
-			"english": "optional path"
+			"fr|nl|en|es": "optional path"
 		},
 		"unknownCard": {
 			"default": "required path",
-			"french": "optional path",
-			"dutch": "optional path",
-			"english": "optional path"
+			"fr|nl|en|es": "optional path"
 		},
 		"unresponsiveCard": {
 			"default": "required path",
-			"french": "optional path",
-			"dutch": "optional path",
-			"english": "optional path"
+			"fr|nl|en|es": "optional path"
 		},
 		"unreadableCard": {
 			"default": "required path",
-			"french": "optional path",
-			"dutch": "optional path",
-			"english": "optional path"
+			"fr|nl|en|es": "optional path"
 		},
 		"serviceQuotaLimitExceeded": {
 			"_use 'default' or service id": {
 				"default": "required path",
-				"french": "optional path",
-				"dutch": "optional path",
-				"english": "optional path"
+				"fr|nl|en|es": "optional path"
 			}
 		},
 
 		"eIdInserted": {
 			"default": "required path",
-			"french": "optional path",
-			"dutch": "optional path",
-			"english": "optional path"
+			"fr|nl|en|es": "optional path"
 		},
 		"eIdRead": {
 			"default": "required path",
-			"french": "optional path",
-			"dutch": "optional path",
-			"english": "optional path"
+			"fr|nl|en|es": "optional path"
 		}
 	}
 }

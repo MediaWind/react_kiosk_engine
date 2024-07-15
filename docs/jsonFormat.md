@@ -71,7 +71,7 @@ This is the language contextualization of the route.
 },
 ```
 
-It is defined by a required `country`, following the [ISO 3166-1 alpha-2 convention](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2). This is set up to be able to have dynamic public holidays in the future. For now, only Belgium's public holidays are supported, so `country` should always be `"be"`.
+It is defined by a required `country`, following the [ISO 3166-1 alpha-2 convention](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) in lower case. This is set up to be able to have dynamic public holidays in the future. For now, only Belgium's public holidays are supported, so `country` should always be `"be"`.
 
 It is also defined by a required `defaultLanguage`, defining which fallback language should be used. The default is French.
 
@@ -117,10 +117,7 @@ This is an optional property to display error specific custom images. If no `err
 "errorManagement": {
 	"genericError": {
 		"default": "required path",
-		"french": "optional path",
-		"dutch": "optional path",
-		"english": "optional path",
-		"spanish": "optional path"
+		"fr|nl|en|es": "optional path"
 	},
 	"noPaper": {},
 	"notConnectedToInternet": {},
@@ -142,7 +139,7 @@ This is an optional property to display error specific custom images. If no `err
 }
 ```
 
-The `errorManagement` object have keys associated with a type of error that will display an image on this error. Each key is defined by an object with the required `default` key, indicating the path to the default image for this error, and the optional `french`, `dutch`, `english` or `spanish` keys pointing to a language adapted image path.
+The `errorManagement` object have keys associated with a type of error that will display an image on this error. Each key is defined by an object with the required `default` key, indicating the path to the default image for this error, and optional language keys, following the same [ISO 639-1 convention](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes) as in the [i18n](#i18n) language declaration, pointing to a language adapted image path.
 
 The `genericError` key is the only one required if an `errorManagement` is created. This is the fallback image for unsupported error types.
 
@@ -325,10 +322,7 @@ These are the properties defining a page object, found in the [flow level](#flow
 
 		"backgroundImage": {
 			"default": "required path",
-			"french": "optional path",
-			"dutch": "optional path",
-			"english": "optional path",
-			"spanish": "optional path"
+			"fr|nl|en|es": "optional path"
 		},
 
 		"navigateToAfter": {
@@ -361,7 +355,7 @@ This is the name of the page.
 
 This is the background image to be displayed.
 
-It is defined by a required `default` property pointing to the route of the associated image and the optional `french`, `dutch`, `english` or `spanish` properties pointing to a language specific image's path that will adapt to the current language.
+It is defined by a required `default` property pointing to the route of the associated image and optional language keys, following the same [ISO 639-1 convention](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes) as in the [i18n](#i18n) language declaration, pointing to a language specific image's path that will adapt to the current language.
 
 ### navigateToAfter
 
