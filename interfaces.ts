@@ -18,19 +18,12 @@ export type Route = {
 
 export interface IInternationalization {
 	country: COUNTRY //* setting up dynamic public holidays
-	defaultLanguage: LANGUAGE
-	languages: LANGUAGE[]
+	defaultLanguage: string
+	languages: string[]
 }
 
 export enum COUNTRY {
 	BELGIUM = "be",
-}
-
-export enum LANGUAGE {
-	FRENCH = "fr",
-	DUTCH = "nl",
-	ENGLISH = "en",
-	SPANISH = "es"
 }
 
 export interface ISchedule {
@@ -219,7 +212,7 @@ export enum BUTTON_ANIMATION {
 
 export interface ITextInputConfig {
 	textInput: IInputField;
-	placeholder?: Record<LANGUAGE, string>;
+	placeholder?: Record<string, string>;
 	autoFocus?: boolean;
 	textPreview?: boolean;
 	forceLowerCase?: boolean;
@@ -228,7 +221,7 @@ export interface ITextInputConfig {
 
 export interface ISelectConfig {
 	provider: PROVIDER;
-	placeholders?: Record<LANGUAGE, string>;
+	placeholders?: Record<string, string>;
 	options?: IOption[];
 	dropdownStyles?: CSSProperties;
 	optionStyles?: CSSProperties;
@@ -252,7 +245,7 @@ export interface IInputAction {
 	type: ACTION_TYPE;
 	navigateTo?: string;
 	service?: IService;
-	language?: LANGUAGE;
+	language?: string;
 }
 
 export enum ACTION_TYPE {
@@ -296,12 +289,12 @@ export interface ITicketDataState {
 	eIdDatas: eIdData | null,
 	textInputDatas: IInputField[],
 	service: IService | undefined,
-	language: LANGUAGE | undefined
+	language: string
 }
 
 export interface ITicketDataAction {
 	type: TICKET_DATA_ACTION_TYPE
-	payload: eIdData | IInputField | IService | boolean | LANGUAGE | undefined
+	payload: eIdData | IInputField | IService | boolean | string | undefined
 }
 
 export enum TICKET_DATA_ACTION_TYPE {
@@ -505,8 +498,8 @@ export type SuperContext = {
 		},
 	},
 	language: {
-		state: LANGUAGE | undefined,
-		dispatcher: React.Dispatch<SetStateAction<LANGUAGE | undefined>>,
+		state: string,
+		dispatcher: React.Dispatch<SetStateAction<string>>,
 	},
 	ticket: {
 		state: ITicketDataState,
