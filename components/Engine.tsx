@@ -11,7 +11,7 @@ import useSharedVariables from "../../core/hooks/useSharedVariables";
 import useEId, { eIdData, eIdStatus } from "../../core/hooks/useEId";
 import { setIntervalRange } from "../../core/customInterval";
 
-import { APPOINTMENT_ACTION_TYPE, ERROR_ACTION_TYPE, IFlow, IPage, LANGUAGE, PRINT_ACTION_TYPE, Route, SuperContext, TICKET_DATA_ACTION_TYPE } from "../interfaces";
+import { APPOINTMENT_ACTION_TYPE, ERROR_ACTION_TYPE, IFlow, IPage, PRINT_ACTION_TYPE, Route, SuperContext, TICKET_DATA_ACTION_TYPE } from "../interfaces";
 import { ERROR_CODE } from "../lib/errorCodes";
 
 import ticketDataReducer, { initialTicketState } from "../reducers/ticketDataReducer";
@@ -79,7 +79,7 @@ interface IEngineProps {
 	 *
 	 * ```ts
 	 * function customAction(value) {
-	 *		if (value.language.state === LANGUAGE.ENGLISH) {
+	 *		if (value.language.state === "en") {
 	 *			value.router.dispatcher("05987761-0c07-4856-8160-db3d5659eede");
 	 *		}
 	 *
@@ -102,8 +102,8 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [eIdBlock, setEIdBlock] = useState<boolean>(false);
 
-	const [defaultLanguage, setDefaultLanguage] = useState<LANGUAGE>(LANGUAGE.FRENCH);
-	const [language, setLanguage] = useState<LANGUAGE>(LANGUAGE.FRENCH);
+	const [defaultLanguage, setDefaultLanguage] = useState<string>("fr");
+	const [language, setLanguage] = useState<string>("fr");
 
 	const [currentFlow, setCurrentFlow] = useState<IFlow>();
 	const [flaggedFlow, setFlaggedFlow] = useState<IFlow>();

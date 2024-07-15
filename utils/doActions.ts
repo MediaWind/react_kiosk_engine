@@ -8,7 +8,6 @@ import {
 	IPrintAction,
 	IService,
 	ITicketDataAction,
-	LANGUAGE,
 	PRINT_ACTION_TYPE,
 	TICKET_DATA_ACTION_TYPE
 } from "../interfaces";
@@ -21,7 +20,7 @@ interface IDispatchers {
 	},
 	dispatchPrintState: React.Dispatch<IPrintAction>
 	dispatchTicketState: React.Dispatch<ITicketDataAction>
-	setLanguage: React.Dispatch<SetStateAction<LANGUAGE>>
+	setLanguage: React.Dispatch<SetStateAction<string>>
 	dispatchAppointmentState: React.Dispatch<IAppointmentAction>
 	triggerCustomAction: CallableFunction
 	setCustomPage: React.Dispatch<SetStateAction<JSX.Element | undefined>>

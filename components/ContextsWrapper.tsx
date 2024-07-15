@@ -11,8 +11,7 @@ import {
 	IPrintAction,
 	IPrintState,
 	ITicketDataAction,
-	ITicketDataState,
-	LANGUAGE
+	ITicketDataState
 } from "../interfaces";
 
 import { AppointmentContext } from "../contexts/appointmentContext";
@@ -26,9 +25,9 @@ import { TicketDataContext } from "../contexts/ticketDataContext";
 interface IContextsWrapperProps {
 	children: ReactNode[]
 	values: {
-		defaultLanguage: LANGUAGE
-		language: LANGUAGE
-		setLanguage: React.Dispatch<React.SetStateAction<LANGUAGE>>
+		defaultLanguage: string
+		language: string
+		setLanguage: React.Dispatch<React.SetStateAction<string>>
 		ticketState: ITicketDataState
 		dispatchTicketState: React.Dispatch<ITicketDataAction>
 		appointmentState: IAppointmentState

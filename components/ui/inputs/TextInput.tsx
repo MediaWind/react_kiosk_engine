@@ -4,8 +4,6 @@ import styling from "../../../styles/inputs/TextInput.module.scss";
 
 import { Variables } from "../../../../variables";
 
-import { LANGUAGE } from "../../../interfaces";
-
 import getFontSize from "../../../utils/getFontSize";
 
 import { useLanguageContext } from "../../../contexts/languageContext";
@@ -17,7 +15,7 @@ interface ITextInputProps {
 	onFocus: CallableFunction
 	invalid: boolean
 	styles: CSSProperties
-	placeholder?: Record<LANGUAGE, string>
+	placeholder?: Record<string, string>
 }
 
 export default function TextInput(props: ITextInputProps): JSX.Element {

@@ -5,7 +5,6 @@ import {
 	IService,
 	ITicketDataAction,
 	ITicketDataState,
-	LANGUAGE,
 	TICKET_DATA_ACTION_TYPE
 } from "../interfaces";
 
@@ -30,7 +29,7 @@ export default function ticketDataReducer(ticketData: ITicketDataState, action: 
 		};
 		case TICKET_DATA_ACTION_TYPE.LANGUAGEUPDATE: return {
 			...ticketData,
-			language: action.payload as LANGUAGE,
+			language: action.payload as string,
 		};
 		case TICKET_DATA_ACTION_TYPE.CLEARDATA: return initialTicketState;
 		default: return {
@@ -43,5 +42,5 @@ export const initialTicketState: ITicketDataState = {
 	eIdDatas: null,
 	textInputDatas: [],
 	service: undefined,
-	language: undefined,
+	language: "fr",
 };
