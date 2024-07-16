@@ -48,7 +48,7 @@ export function getPentecost(year: number = new Date().getFullYear()): Date {
 	return new Date(easter);
 }
 
-export default function isPublicHoliday(date: Date = new Date()): boolean {
+function isBelgianPublicHoliday(date: Date): boolean {
 	const year = date.getFullYear();
 	const month = date.getMonth();
 	const day = date.getDate();
@@ -92,6 +92,14 @@ export default function isPublicHoliday(date: Date = new Date()): boolean {
 	) {
 		//* Easter Monday + Ascension + Pentecost Monday
 		return true;
+	}
+
+	return false;
+}
+
+export default function isPublicHoliday(date: Date = new Date(), country: string): boolean {
+	if (country.toLowerCase().trim() === "be") {
+		return isBelgianPublicHoliday(date);
 	}
 
 	return false;
