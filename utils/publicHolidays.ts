@@ -74,7 +74,56 @@ function isBelgianPublicHoliday(date: Date): boolean {
 	}
 
 	if (month === 10 && (day === 1 || day === 11)) {
-		//* All Saints + Armistice
+		//* All Saints + 1918 Armistice
+		return true;
+	}
+
+	if (month === 11 && day === 25) {
+		//* Christmas
+		return true;
+	}
+
+	const stringifyedDate = date.toDateString();
+
+	if (
+		stringifyedDate === getEasterMonday(year).toDateString() ||
+		stringifyedDate === getAscension(year).toDateString() ||
+		stringifyedDate === getPentecost(year).toDateString()
+	) {
+		//* Easter Monday + Ascension + Pentecost Monday
+		return true;
+	}
+
+	return false;
+}
+
+function isFrenchPublicHoliday(date: Date): boolean {
+	const year = date.getFullYear();
+	const month = date.getMonth();
+	const day = date.getDate();
+
+	if (month === 0 && day === 1) {
+		//* New Year
+		return true;
+	}
+
+	if (month === 4 && (day === 1 || day === 8)) {
+		//* May Day + 1945 Armistice
+		return true;
+	}
+
+	if (month === 6 && day === 14) {
+		//* National day
+		return true;
+	}
+
+	if (month === 7 && day === 15) {
+		//* Assumption
+		return true;
+	}
+
+	if (month === 10 && (day === 1 || day === 11)) {
+		//* All Saints + 1918 Armistice
 		return true;
 	}
 
@@ -100,6 +149,10 @@ function isBelgianPublicHoliday(date: Date): boolean {
 export default function isPublicHoliday(date: Date = new Date(), country: string): boolean {
 	if (country.toLowerCase().trim() === "be") {
 		return isBelgianPublicHoliday(date);
+	}
+
+	if (country.toLowerCase().trim() === "fr") {
+		return isFrenchPublicHoliday(date);
 	}
 
 	return false;
