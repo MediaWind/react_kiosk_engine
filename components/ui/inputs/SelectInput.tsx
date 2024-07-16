@@ -7,7 +7,7 @@ import styles from "../../../styles/inputs/SelectInput.module.scss";
 
 import { Variables } from "../../../../variables";
 
-import { AgentData, IOption, ISelectConfig, LANGUAGE, PROVIDER, ServiceData, TICKET_DATA_ACTION_TYPE } from "../../../interfaces";
+import { AgentData, IOption, ISelectConfig, PROVIDER, ServiceData, TICKET_DATA_ACTION_TYPE } from "../../../interfaces";
 
 import { useLanguageContext } from "../../../contexts/languageContext";
 import { useFlowContext } from "../../../contexts/flowContext";
@@ -26,12 +26,36 @@ interface ISelectInputProps {
 	config: ISelectConfig | undefined
 }
 
+function getLabel(option: ServiceData, defaultLanguage: string, language: string): string {
+	if (language === "en") {
+		return option.name_en;
+	}
+
+	if (language === "fr") {
+		return option.name_fr;
+	}
+
+	if (language === "nl") {
+		return option.name_nl;
+	}
+
+	if (defaultLanguage === "en") {
+		return option.name_en;
+	}
+
+	if (defaultLanguage === "nl") {
+		return option.name_nl;
+	}
+
+	return option.name_fr;
+}
+
 export default function SelectInput(props: ISelectInputProps): JSX.Element {
 	const { selectStyles, config, } = props;
 
 	const { t, } = useTranslation("SelectInput");
 
-	const { language, } = useLanguageContext();
+	const { defaultLangue, language, } = useLanguageContext();
 	const { flow, } = useFlowContext();
 	const { dispatchTicketState, } = useTicketDataContext();
 	const { dispatchErrorState, } = useErrorContext();
@@ -168,7 +192,7 @@ export default function SelectInput(props: ISelectInputProps): JSX.Element {
 
 					{serviceOptions.length > 0 && serviceOptions.map(option => <SelectOption
 						key={option.id}
-						label={language === LANGUAGE.ENGLISH ? option.name_en : language === LANGUAGE.DUTCH ? option.name_nl : option.name_fr}
+						label={getLabel(option, defaultLangue, language)}
 						value={option.id}
 						onChange={changeHandler}
 						styles={config?.optionStyles} />)

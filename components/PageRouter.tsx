@@ -40,7 +40,7 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 	const { isPrinting, onReset, onCustomAction, } = props;
 
 	const { flow, setReload, } = useFlowContext();
-	const { setLanguage, } = useLanguageContext();
+	const { defaultLangue, setLanguage, } = useLanguageContext();
 	const { errorState, } = useErrorContext();
 
 	const [homePage, setHomePage] = useState<IPage>(getHomePage(flow));
@@ -94,7 +94,7 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 	useEffect(() => {
 		if (!isPrinting) {
 			setRouter([homePage]);
-			setLanguage(undefined);
+			setLanguage(defaultLangue);
 			onReset();
 		}
 	}, [isPrinting]);

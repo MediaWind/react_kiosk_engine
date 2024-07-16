@@ -8,7 +8,7 @@ i18n
 	.use(initReactI18next)
 	.init({
 		resources,
-		lng: route.languages[0],
+		lng: route.i18n.defaultLanguage,
 		interpolation: {
 			escapeValue: false,
 		},

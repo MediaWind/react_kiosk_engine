@@ -10,7 +10,7 @@ This documentation will explain in detail the different properties of a kiosk fl
 - [Table of content](#table-of-content)
 - [Route level](#route-level)
 	- [name](#name)
-	- [languages](#languages)
+	- [i18n](#i18n)
 	- [scheduling](#scheduling)
 	- [flows](#flows)
 	- [errorManagement](#errormanagement)
@@ -48,7 +48,7 @@ These are the properties found on the route level, the root of the JSON structur
 ```json
 {
 	"name": "The name of the route",
-	"languages": ["fr", "en", "nl"],
+	"i18n": {},
 	"scheduling": {},
 	"flows": [{}],
 	"errorManagement": {}
@@ -59,11 +59,23 @@ These are the properties found on the route level, the root of the JSON structur
 
 This is the name of the route.
 
-### languages
+### i18n
 
-This property is a list of languages used in the route. We expect this property to have at least one language defined.
+This is the language contextualization of the route.
 
-<ins>To do:</ins> In the near future, we will have to add a `defaultLanguage` property to fall back on. Right now this default language is French, we want to be able to set that explicitly in the config JSON file.
+```json
+"i18n": {
+	"country": "be",
+	"defaultLanguage": "fr",
+	"languages": ["fr", "nl", "en", "es"]
+},
+```
+
+It is defined by a required `country`, following the [ISO 3166-1 alpha-2 convention](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) in lower case. This is set up to be able to have dynamic public holidays in the future. For now, only Belgium's public holidays are supported, so `country` should always be `"be"`.
+
+It is also defined by a required `defaultLanguage`, defining which fallback language should be used. The default is French.
+
+Finally, a list of `languages` to declare which languages are used in the route. The languages follow the [ISO 639-1 convention](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes).
 
 ### scheduling
 
@@ -105,10 +117,7 @@ This is an optional property to display error specific custom images. If no `err
 "errorManagement": {
 	"genericError": {
 		"default": "required path",
-		"french": "optional path",
-		"dutch": "optional path",
-		"english": "optional path",
-		"spanish": "optional path"
+		"fr|nl|en|es": "optional path"
 	},
 	"noPaper": {},
 	"notConnectedToInternet": {},
@@ -130,7 +139,7 @@ This is an optional property to display error specific custom images. If no `err
 }
 ```
 
-The `errorManagement` object have keys associated with a type of error that will display an image on this error. Each key is defined by an object with the required `default` key, indicating the path to the default image for this error, and the optional `french`, `dutch`, `english` or `spanish` keys pointing to a language adapted image path.
+The `errorManagement` object have keys associated with a type of error that will display an image on this error. Each key is defined by an object with the required `default` key, indicating the path to the default image for this error, and optional language keys, following the same [ISO 639-1 convention](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes) as in the [i18n](#i18n) language declaration, pointing to a language adapted image path.
 
 The `genericError` key is the only one required if an `errorManagement` is created. This is the fallback image for unsupported error types.
 
@@ -313,10 +322,7 @@ These are the properties defining a page object, found in the [flow level](#flow
 
 		"backgroundImage": {
 			"default": "required path",
-			"french": "optional path",
-			"dutch": "optional path",
-			"english": "optional path",
-			"spanish": "optional path"
+			"fr|nl|en|es": "optional path"
 		},
 
 		"navigateToAfter": {
@@ -349,7 +355,7 @@ This is the name of the page.
 
 This is the background image to be displayed.
 
-It is defined by a required `default` property pointing to the route of the associated image and the optional `french`, `dutch`, `english` or `spanish` properties pointing to a language specific image's path that will adapt to the current language.
+It is defined by a required `default` property pointing to the route of the associated image and optional language keys, following the same [ISO 639-1 convention](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes) as in the [i18n](#i18n) language declaration, pointing to a language specific image's path that will adapt to the current language.
 
 ### navigateToAfter
 

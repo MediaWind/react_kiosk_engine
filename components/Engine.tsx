@@ -11,7 +11,7 @@ import useSharedVariables from "../../core/hooks/useSharedVariables";
 import useEId, { eIdData, eIdStatus } from "../../core/hooks/useEId";
 import { setIntervalRange } from "../../core/customInterval";
 
-import { APPOINTMENT_ACTION_TYPE, ERROR_ACTION_TYPE, IFlow, IPage, LANGUAGE, PRINT_ACTION_TYPE, Route, SuperContext, TICKET_DATA_ACTION_TYPE } from "../interfaces";
+import { APPOINTMENT_ACTION_TYPE, ERROR_ACTION_TYPE, IFlow, IPage, PRINT_ACTION_TYPE, Route, SuperContext, TICKET_DATA_ACTION_TYPE } from "../interfaces";
 import { ERROR_CODE } from "../lib/errorCodes";
 
 import ticketDataReducer, { initialTicketState } from "../reducers/ticketDataReducer";
@@ -79,7 +79,7 @@ interface IEngineProps {
 	 *
 	 * ```ts
 	 * function customAction(value) {
-	 *		if (value.language.state === LANGUAGE.ENGLISH) {
+	 *		if (value.language.state === "en") {
 	 *			value.router.dispatcher("05987761-0c07-4856-8160-db3d5659eede");
 	 *		}
 	 *
@@ -102,13 +102,14 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [eIdBlock, setEIdBlock] = useState<boolean>(false);
 
-	const [language, setLanguage] = useState<LANGUAGE | undefined>();
+	const [defaultLanguage, setDefaultLanguage] = useState<string>("fr");
+	const [language, setLanguage] = useState<string>("fr");
 
 	const [currentFlow, setCurrentFlow] = useState<IFlow>();
 	const [flaggedFlow, setFlaggedFlow] = useState<IFlow>();
 	const [readyToChangeFlow, setReadyToChangeFlow] = useState<boolean>(true);
 
-	const [ticketState, dispatchTicketState] = useReducer(ticketDataReducer, initialTicketState);
+	const [ticketState, dispatchTicketState] = useReducer(ticketDataReducer, { ...initialTicketState, language: props.route.i18n.defaultLanguage,  });
 	const [appointmentState, dispatchAppointmentState] = useReducer(appointmentReducer, initialAppointmentState);
 	const [printState, dispatchPrintState] = useReducer(printReducer, initialPrintState);
 	const [error, dispatchErrorState] = useReducer(errorReducer, initialErrorState);
@@ -140,6 +141,8 @@ function Engine(props: IEngineProps): JSX.Element {
 	// Checks flow every minute
 	useEffect(() => {
 		if (props.route) {
+			setDefaultLanguage(props.route.i18n.defaultLanguage);
+
 			const updateFlow = () => {
 				const currentScheduleItem = checkCurrentFlow(props.route);
 
@@ -347,6 +350,11 @@ function Engine(props: IEngineProps): JSX.Element {
 			type: TICKET_DATA_ACTION_TYPE.CLEARDATA,
 			payload: undefined,
 		});
+
+		dispatchTicketState({
+			type: TICKET_DATA_ACTION_TYPE.LANGUAGEUPDATE,
+			payload: defaultLanguage,
+		});
 	}
 
 	function resetAppointments() {
@@ -369,7 +377,7 @@ function Engine(props: IEngineProps): JSX.Element {
 		dispatchPrintState({ type: PRINT_ACTION_TYPE.CLEARALL, });
 
 		setReadyToChangeFlow(true);
-		setLanguage(undefined);
+		setLanguage(defaultLanguage);
 	}
 
 	function triggerCustomAction(routerStates: IRouterContexts) {
@@ -411,6 +419,7 @@ function Engine(props: IEngineProps): JSX.Element {
 				tabIndex={0}
 			>
 				<ContextsWrapper values={{
+					defaultLanguage,
 					language,
 					setLanguage,
 					ticketState,

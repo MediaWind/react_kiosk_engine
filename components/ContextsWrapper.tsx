@@ -11,8 +11,7 @@ import {
 	IPrintAction,
 	IPrintState,
 	ITicketDataAction,
-	ITicketDataState,
-	LANGUAGE
+	ITicketDataState
 } from "../interfaces";
 
 import { AppointmentContext } from "../contexts/appointmentContext";
@@ -26,8 +25,9 @@ import { TicketDataContext } from "../contexts/ticketDataContext";
 interface IContextsWrapperProps {
 	children: ReactNode[]
 	values: {
-		language: LANGUAGE | undefined
-		setLanguage: React.Dispatch<React.SetStateAction<LANGUAGE | undefined>>
+		defaultLanguage: string
+		language: string
+		setLanguage: React.Dispatch<React.SetStateAction<string>>
 		ticketState: ITicketDataState
 		dispatchTicketState: React.Dispatch<ITicketDataAction>
 		appointmentState: IAppointmentState
@@ -46,7 +46,7 @@ export default function ContextsWrapper(props: IContextsWrapperProps): JSX.Eleme
 	const { children, values, } = props;
 
 	return (
-		<LanguageContext.Provider value={{ language: values.language, setLanguage: values.setLanguage, }}>
+		<LanguageContext.Provider value={{ defaultLangue: values.defaultLanguage, language: values.language, setLanguage: values.setLanguage, }}>
 			<TicketDataContext.Provider value={{ ticketState: values.ticketState, dispatchTicketState: values.dispatchTicketState, }}>
 				<AppointmentContext.Provider value={{ appointmentState: values.appointmentState, dispatchAppointmentState: values.dispatchAppointmentState, }}>
 					<FlowContext.Provider value={{ flow: values.currentFlow, setReload: values.setReadyToChangeFlow, }}>
