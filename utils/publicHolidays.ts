@@ -147,13 +147,9 @@ function isFrenchPublicHoliday(date: Date): boolean {
 }
 
 export default function isPublicHoliday(date: Date = new Date(), country: string): boolean {
-	if (country.toLowerCase().trim() === "be") {
-		return isBelgianPublicHoliday(date);
+	switch (country.toLowerCase().trim()) {
+		case "fr": return isFrenchPublicHoliday(date);
+		case "be":
+		default: return isBelgianPublicHoliday(date);
 	}
-
-	if (country.toLowerCase().trim() === "fr") {
-		return isFrenchPublicHoliday(date);
-	}
-
-	return false;
 }
