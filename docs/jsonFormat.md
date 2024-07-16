@@ -71,7 +71,7 @@ This is the language contextualization of the route.
 },
 ```
 
-It is defined by a required `country`, following the [ISO 3166-1 alpha-2 convention](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) in lower case. This is set up to be able to have dynamic public holidays in the future. For now, only Belgium's public holidays are supported, so `country` should always be `"be"`.
+It is defined by a required `country`, following the [ISO 3166-1 alpha-2 convention](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) in lower case. This is set up to be able to have dynamic public holidays. For now, only Belgium and France's public holidays are supported, so `country` should always be `"be"` or `"fr"`.
 
 It is also defined by a required `defaultLanguage`, defining which fallback language should be used. The default is French.
 
