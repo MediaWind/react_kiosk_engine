@@ -42,5 +42,5 @@ export const initialTicketState: ITicketDataState = {
 	eIdDatas: null,
 	textInputDatas: [],
 	service: undefined,
-	language: "fr",
+	language: "",
 };

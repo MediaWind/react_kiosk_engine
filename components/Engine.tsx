@@ -109,7 +109,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [flaggedFlow, setFlaggedFlow] = useState<IFlow>();
 	const [readyToChangeFlow, setReadyToChangeFlow] = useState<boolean>(true);
 
-	const [ticketState, dispatchTicketState] = useReducer(ticketDataReducer, initialTicketState);
+	const [ticketState, dispatchTicketState] = useReducer(ticketDataReducer, { ...initialTicketState, language: props.route.i18n.defaultLanguage,  });
 	const [appointmentState, dispatchAppointmentState] = useReducer(appointmentReducer, initialAppointmentState);
 	const [printState, dispatchPrintState] = useReducer(printReducer, initialPrintState);
 	const [error, dispatchErrorState] = useReducer(errorReducer, initialErrorState);
@@ -349,6 +349,11 @@ function Engine(props: IEngineProps): JSX.Element {
 		dispatchTicketState({
 			type: TICKET_DATA_ACTION_TYPE.CLEARDATA,
 			payload: undefined,
+		});
+
+		dispatchTicketState({
+			type: TICKET_DATA_ACTION_TYPE.LANGUAGEUPDATE,
+			payload: defaultLanguage,
 		});
 	}
 
