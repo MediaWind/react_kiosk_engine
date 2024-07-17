@@ -68,7 +68,7 @@ export default function doActions(actions: IInputAction[], dispatchers: IDispatc
 				});
 				break;
 			case ACTION_TYPE.CUSTOM:
-				dispatchers.triggerCustomAction();
+				dispatchers.triggerCustomAction(action.id);
 				break;
 			case ACTION_TYPE.RESETCUSTOMPAGE:
 				dispatchers.setCustomPage(undefined);

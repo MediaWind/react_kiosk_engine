@@ -118,7 +118,7 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 		setRouter([homePage]);
 	}
 
-	function triggerCustomActionHandler() {
+	function triggerCustomActionHandler(id?: string) {
 		if (onCustomAction) {
 			onCustomAction({
 				router: {
@@ -129,8 +129,11 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 						homePage: homePageHandler,
 					},
 				},
-				customPage: {
-					state: customPage,
+				customAction: {
+					state: {
+						page: customPage,
+						id: id,
+					},
 					dispatcher: setCustomPage,
 				},
 			});
