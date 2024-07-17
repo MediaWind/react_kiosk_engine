@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { Variables } from "../../variables";
 
-import { IFlow, IPage } from "../interfaces";
+import { IDateTime, IFlow, IPage } from "../interfaces";
 
 import { useFlowContext } from "../contexts/flowContext";
 import { useLanguageContext } from "../contexts/languageContext";
@@ -164,8 +164,8 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 			onMouseDown={devClickDown}
 			onMouseUp={devClickUp}
 		>
-			{flow.displayDate && <Date format={flow.displayDate.format} style={flow.displayDate.style} />}
-			{flow.displayTime && <Time format={flow.displayTime.format} style={flow.displayTime.style} />}
+			{router.slice(-1)[0].displayDate ? <Date format={(router.slice(-1)[0].displayDate as IDateTime).format} style={(router.slice(-1)[0].displayDate as IDateTime).style ?? {}} /> : (flow.displayDate && <Date format={flow.displayDate.format} style={flow.displayDate.style} />)}
+			{router.slice(-1)[0].displayTime ? <Time format={(router.slice(-1)[0].displayTime as IDateTime).format} style={(router.slice(-1)[0].displayTime as IDateTime).style ?? {}} /> : (flow.displayTime && <Time format={flow.displayTime.format} style={flow.displayTime.style} />)}
 
 			<CustomActionContext.Provider value={{ triggerCustomAction: triggerCustomActionHandler, customPage, setCustomPage, }}>
 				<RouterContext.Provider value={{ nextPage: nextPageHandler, previousPage: previousPageHandler, homePage: homePageHandler, }}>
