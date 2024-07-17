@@ -302,7 +302,7 @@ This optional property can be used to display the time on the flow.
 
 It is defined by a `format` following the ISO 8601 standard and a `style` containing CSS properties.
 
-The date will be displayed on every page of the flow in its specified zone.
+The time will be displayed on every page of the flow in its specified zone.
 
 **For more info on the date and time formats, visit the [dayjs documentation](https://day.js.org/docs/en/display/format)**.
 
@@ -338,6 +338,9 @@ These are the properties defining a page object, found in the [flow level](#flow
 			}
 		},
 
+		"displayDate": {},
+		"displayTime": {},
+
 		"medias": [{}]
 	}
 ]
@@ -366,6 +369,14 @@ This property is defined by a required `navigateTo` key, pointing to the id of t
 `printTicket` is optional and allows to trigger the printing of a ticket **after** waiting `delay` seconds. The associated `service` property is used to save the service informations for the ticket creation.
 
 <ins>**Note:**</ins> This property is currently the subject of a discussion for refactoring and improvement. See issues #4 and #27 for more information.
+
+### displayDate
+
+Same principle as [displayDate](#displaydate) on the flow level, but specific to the page where it is declared. This will override the flow level's displayDate.
+
+### displayTime
+
+Same principle as [displayTime](#displaytime) on the flow level, but specific to the page where it is declared. This will override the flow level's displayTime.
 
 ### medias
 
