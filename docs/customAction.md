@@ -18,7 +18,7 @@ If you don't know what a flow is, start by reading the [json format documentatio
 	- [Print](#print)
 	- [Appointment](#appointment)
 	- [Error](#error)
-	- [Custom page](#custom-page)
+	- [Custom action](#custom-action-1)
 
 ## Usage
 
@@ -353,22 +353,83 @@ Call the `dispatcher` with a `IErrorAction` object as a parameter. Refer to the 
 
 <hr />
 
-### Custom page
+### Custom action
 
 ```ts
-customPage: {
-	state: undefined,
+customAction: {
+	state: {
+		page: undefined,
+		id: "action1",
+	},
 	dispatcher,
 }
 ```
 ```ts
-const currentCustomPage = supercontext.customPage.state;
+const currentCustomPage = supercontext.customPage.state.page;
 
 supercontext.customPage.dispatcher(<MyCustomPage />);
 ```
+
 #### State
 
-The customPage's `state` is the current customPage inserted into the flow. It is defined outside of the Engine on the widget's side. It can be a `JSX.Element` or `undefined`.
+The customPage's `state` is the an object containing the current custom `page` inserted into the flow and an optional `id`.
+
+The `page` is defined outside of the Engine on the widget's side. It can be a `JSX.Element` or `undefined`.
+
+The `id` is declared in the [JSON](jsonFormat.md) document to be able to manage multiple custom actions. In your App's custom action handler, use the `id` to adapt the flow's behavior.
+
+Example:
+
+Your JSON file's custom actions will look something like this:
+
+```json
+{ //...
+	[ //...
+		{
+			"type": "input",
+			"content": {
+				"name": "Custom action 1",
+				"type": "button",
+				"actions": [
+					{
+						"type": "custom",
+						"id": "action1"
+					}
+				],
+				"styles": { }
+			}
+		},
+		{
+			"type": "input",
+			"content": {
+				"name": "Custom action 2",
+				"type": "button",
+				"actions": [
+					{
+						"type": "custom",
+						"id": "action2"
+					}
+				],
+				"styles": { }
+			}
+		}
+	]
+}
+```
+
+And your App's custom actions handler will look something like this:
+
+```ts
+function customActionHandler(supercontext: SuperContext) {
+	if (supercontext.customAction.state.id === "action1") {
+		supercontext.customAction.dispatcher(<MyCustomPage1 />);
+		supercontext.language.dispatcher("fr");
+	} else {
+		supercontext.customAction.dispatcher(<MyCustomPage2 />);
+		supercontext.language.dispatcher("nl");
+	}
+}
+```
 
 #### Dispatcher
 
