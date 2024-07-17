@@ -100,6 +100,8 @@ export interface IPage {
 	backgroundImage: IBackgroundImage;
 	navigateToAfter?: ITimer
 	medias?: IMedia[];
+	displayDate?: IDateTime;
+	displayTime?: IDateTime;
 }
 
 export interface ITimer {
