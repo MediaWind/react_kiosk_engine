@@ -4,6 +4,7 @@ type customActionContext = {
 	triggerCustomAction: CallableFunction
 	customPage: JSX.Element | undefined
 	setCustomPage: React.Dispatch<SetStateAction<JSX.Element | undefined>>
+	id?: string
 }
 
 export const CustomActionContext = createContext<customActionContext>({

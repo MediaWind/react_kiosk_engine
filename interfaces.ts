@@ -248,6 +248,7 @@ export interface IInputAction {
 	navigateTo?: string;
 	service?: IService;
 	language?: string;
+	id?: string;
 }
 
 export enum ACTION_TYPE {
@@ -519,8 +520,11 @@ export type SuperContext = {
 		state: IErrorState,
 		dispatcher: React.Dispatch<IErrorAction>,
 	},
-	customPage: {
-		state: JSX.Element | undefined,
+	customAction: {
+		state: {
+			page: JSX.Element | undefined
+			id?: string
+		},
 		dispatcher: React.Dispatch<React.SetStateAction<JSX.Element | undefined>>,
 	}
 }

@@ -43,8 +43,11 @@ interface IRouterContexts {
 			homePage: CallableFunction,
 		},
 	},
-	customPage: {
-		state: JSX.Element | undefined,
+	customAction: {
+		state: {
+			page: JSX.Element | undefined
+			id?: string
+		},
 		dispatcher: React.Dispatch<React.SetStateAction<JSX.Element | undefined>>,
 	}
 }
