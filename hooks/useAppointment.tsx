@@ -188,7 +188,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 		}
 	}
 
-	async function getAppointments(birthDate: Date | null = null, nationalNumber: string | null = null) : Promise<object | undefined> {
+	async function getAppointments(birthDate: string | null = null, nationalNumber: string | null = null) : Promise<object | undefined> {
 		Console.info("Getting appointments...");
 
 		let appointmentsURL = `
@@ -196,17 +196,13 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 			id_project=${Variables.W_ID_PROJECT}
 			&serial=${Variables.SERIAL}
 		`;
-		if(birthDate) 	appointmentsURL += `&birth_date=${birthDate.toISOString().split("T")[0]}`;
+
+		if(birthDate) 	appointmentsURL += `&birth_date=${birthDate}`;
 		if(nationalNumber) 	appointmentsURL += `&registre_national=${nationalNumber}`;
-
-		console.log(appointmentsURL);
-
 
 		try {
 			const response = await fetchRetry(appointmentsURL);
 			const data = await response.json();
-			console.log(data);
-
 
 			if(!data) {
 				Console.error("Error when trying to get appointments: data is null", { fileName: "useAppointment", functionName: "getAppointments", lineNumber: 209, });
@@ -222,7 +218,6 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 			}
 
 			if (data.status === 1) {
-				console.log(data);
 				return data;
 			} else {
 				Console.error("Error when trying to get appointments: data status " + data.status ?? "undefined", { fileName: "useAppointment", functionName: "getAppointments", lineNumber: 209, });
