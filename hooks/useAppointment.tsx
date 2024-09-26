@@ -8,7 +8,7 @@ import { Console } from "../utils/console";
 import fetchRetry from "../utils/fetchRetry";
 import capitalizeFirstLetter from "../../core/utils/capitalizeFirstLetter";
 
-export default function useAppointment(dispatchAppointment: React.Dispatch<IAppointmentAction>, dispatchError: React.Dispatch<IErrorAction>): [string, CallableFunction, CallableFunction] {
+export default function useAppointment(dispatchAppointment: React.Dispatch<IAppointmentAction>, dispatchError: React.Dispatch<IErrorAction>): [string, CallableFunction, CallableFunction, CallableFunction] {
 	const [appointmentTicketPdf, setAppointmentTicketPDF] = useState<string>("");
 
 	async function checkIn(qrCode: string) {
@@ -188,9 +188,113 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 		}
 	}
 
+	async function getAppointments(birthDate: Date | null = null, nationalNumber: string | null = null) : Promise<object | undefined> {
+		Console.info("Getting appointments...");
+
+		let appointmentsURL = `
+			${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/appointments.php?
+			id_project=${Variables.W_ID_PROJECT}
+			&serial=${Variables.SERIAL}
+		`;
+		if(birthDate) 	appointmentsURL += `&birth_date=${birthDate.toISOString().split("T")[0]}`;
+		if(nationalNumber) 	appointmentsURL += `&registre_national=${nationalNumber}`;
+
+		console.log(appointmentsURL);
+
+
+		try {
+			const response = await fetchRetry(appointmentsURL);
+			const data = await response.json();
+			console.log(data);
+
+
+			if(!data) {
+				Console.error("Error when trying to get appointments: data is null", { fileName: "useAppointment", functionName: "getAppointments", lineNumber: 209, });
+				dispatchError({
+					type: ERROR_ACTION_TYPE.SETERROR,
+					payload: {
+						hasError: true,
+						errorCode: ERROR_CODE.B500,
+						message: "Unable to fetch ticket PDF (Data is null)",
+					},
+				});
+				return undefined;
+			}
+
+			if (data.status === 1) {
+				console.log(data);
+				return data;
+			} else {
+				Console.error("Error when trying to get appointments: data status " + data.status ?? "undefined", { fileName: "useAppointment", functionName: "getAppointments", lineNumber: 209, });
+				if (data.status_msg && data.status_msg === "appointment_not_found") {
+					dispatchError({
+						type: ERROR_ACTION_TYPE.SETERROR,
+						payload: {
+							hasError: true,
+							errorCode: ERROR_CODE.B404,
+							message: "Appointment not found",
+						} as IErrorState,
+					});
+				} else if (data.status_msg) {
+					dispatchError({
+						type: ERROR_ACTION_TYPE.SETERROR,
+						payload: {
+							hasError: true,
+							errorCode: ERROR_CODE.B500,
+							message: capitalizeFirstLetter(data.status_msg.replace("_", " ")),
+						} as IErrorState,
+					});
+				} else {
+					dispatchError({
+						type: ERROR_ACTION_TYPE.SETERROR,
+						payload: {
+							hasError: true,
+							errorCode: ERROR_CODE.B500,
+							message: "Unable to fetch ticket PDF (Status 0)",
+						} as IErrorState,
+					});
+				}
+			}
+		} catch (err) {
+			Console.error("Error when trying to get appointments: error caught.", { fileName: "useAppointment", functionName: "getAppointments", lineNumber: 252, });
+			Console.error(err);
+			if (err instanceof Error) {
+				if (err.message.split("-")[0].trim() === "fetchRetry") {
+					dispatchError({
+						type: ERROR_ACTION_TYPE.SETERROR,
+						payload: {
+							hasError: true,
+							errorCode: ERROR_CODE.A429,
+							message: "Too many retries",
+						},
+					});
+				} else {
+					dispatchError({
+						type: ERROR_ACTION_TYPE.SETERROR,
+						payload: {
+							hasError: true,
+							errorCode: ERROR_CODE.B500,
+							message: "Error caught - " + err.message,
+						},
+					});
+				}
+			} else {
+				dispatchError({
+					type: ERROR_ACTION_TYPE.SETERROR,
+					payload: {
+						hasError: true,
+						errorCode: ERROR_CODE.B500,
+						message: "Error caught - Unable to create ticket",
+					},
+				});
+			}
+		}
+	}
+
 	return [
 		appointmentTicketPdf,
 		checkIn,
-		checkOut
+		checkOut,
+		getAppointments
 	];
 }
