@@ -196,6 +196,19 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 			&serial=${Variables.SERIAL}
 		`;
 
+		if(!birthDate && !nationalNumber) {
+			Console.error("Error when trying to get appointments: birthDate and nationalNumber are both null or empty", { fileName: "useAppointment", functionName: "getAppointments", lineNumber: 200, });
+			dispatchError({
+				type: ERROR_ACTION_TYPE.SETERROR,
+				payload: {
+					hasError: true,
+					errorCode: ERROR_CODE.B400,
+					message: "Birth date and national number are both empty",
+				},
+			});
+			return undefined;
+		}
+
 		// ADD FILTERS
 		if(birthDate) 		appointmentsURL += `&birth_date=${birthDate}`;
 		if(nationalNumber) 	appointmentsURL += `&registre_national=${nationalNumber}`;
@@ -216,7 +229,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 			const data = await response.json();
 
 			if(!data) {
-				Console.error("Error when trying to get appointments: data is null", { fileName: "useAppointment", functionName: "getAppointments", lineNumber: 209, });
+				Console.error("Error when trying to get appointments: data is null", { fileName: "useAppointment", functionName: "getAppointments", lineNumber: 232, });
 				dispatchError({
 					type: ERROR_ACTION_TYPE.SETERROR,
 					payload: {
@@ -231,7 +244,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 			if (data.status === 1) {
 				return data;
 			} else {
-				Console.error("Error when trying to get appointments: data status " + data.status ?? "undefined", { fileName: "useAppointment", functionName: "getAppointments", lineNumber: 209, });
+				Console.error("Error when trying to get appointments: data status " + data.status ?? "undefined", { fileName: "useAppointment", functionName: "getAppointments", lineNumber: 247, });
 				if (data.status_msg && data.status_msg === "appointment_not_found") {
 					dispatchError({
 						type: ERROR_ACTION_TYPE.SETERROR,
@@ -262,7 +275,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 				}
 			}
 		} catch (err) {
-			Console.error("Error when trying to get appointments: error caught.", { fileName: "useAppointment", functionName: "getAppointments", lineNumber: 252, });
+			Console.error("Error when trying to get appointments: error caught.", { fileName: "useAppointment", functionName: "getAppointments", lineNumber: 278, });
 			Console.error(err);
 			if (err instanceof Error) {
 				if (err.message.split("-")[0].trim() === "fetchRetry") {
