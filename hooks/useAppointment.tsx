@@ -29,7 +29,6 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 
 			if (data.status !== 1) {
 				Console.error("Error when trying to check in appointment: data status " + data.status ?? "undefined", { fileName: "useAppointment", functionName: "checkIn", lineNumber: 31, });
-				Console.log(data);
 				if (data.status_msg && data.status_msg === "appointment_not_found") {
 					dispatchError({
 						type: ERROR_ACTION_TYPE.SETERROR,
@@ -197,8 +196,20 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 			&serial=${Variables.SERIAL}
 		`;
 
-		if(birthDate) 	appointmentsURL += `&birth_date=${birthDate}`;
+		// ADD FILTERS
+		if(birthDate) 		appointmentsURL += `&birth_date=${birthDate}`;
 		if(nationalNumber) 	appointmentsURL += `&registre_national=${nationalNumber}`;
+		if(Variables.W_ID_SERVICE_FILTER && !isNaN(Variables.W_ID_SERVICE_FILTER)) 	appointmentsURL += `&id_service=${Variables.W_ID_SERVICE_FILTER}`;
+
+		// add time filter
+		const timeStart = new Date();
+		timeStart.setHours(timeStart.getHours() - 1);
+		const timeEnd = new Date();
+		timeEnd.setHours(timeEnd.getHours() + 2);
+
+		const formattedTimeStart = `${timeStart.getHours()}:${timeStart.getMinutes()}:${timeStart.getSeconds()}`;
+		const formattedTimeEnd = `${timeEnd.getHours()}:${timeEnd.getMinutes()}:${timeEnd.getSeconds()}`;
+		appointmentsURL += `&time_start=${formattedTimeStart}&time_end=${formattedTimeEnd}`;
 
 		try {
 			const response = await fetchRetry(appointmentsURL);
