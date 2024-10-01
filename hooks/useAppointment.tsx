@@ -216,9 +216,9 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 
 		// add time filter
 		const timeStart = new Date();
-		timeStart.setHours(timeStart.getMinutes() - minBeforeAppointment);
+		timeStart.setMinutes(timeStart.getMinutes() - minBeforeAppointment);
 		const timeEnd = new Date();
-		timeEnd.setHours(timeEnd.getMinutes() + minAfterAppointment);
+		timeEnd.setMinutes(timeEnd.getMinutes() + minAfterAppointment);
 
 		const formattedTimeStart = `${timeStart.getHours()}:${timeStart.getMinutes()}:${timeStart.getSeconds()}`;
 		const formattedTimeEnd = `${timeEnd.getHours()}:${timeEnd.getMinutes()}:${timeEnd.getSeconds()}`;
