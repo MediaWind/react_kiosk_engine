@@ -187,7 +187,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 		}
 	}
 
-	async function getAppointments(birthDate: string | null = null, nationalNumber: string | null = null) : Promise<object | undefined> {
+	async function getAppointments(birthDate: string | null = null, nationalNumber: string | null = null, minBeforeAppointment = 60, minAfterAppointment = 120) : Promise<object | undefined> {
 		Console.info("Getting appointments...");
 
 		let appointmentsURL = `
@@ -216,9 +216,9 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 
 		// add time filter
 		const timeStart = new Date();
-		timeStart.setHours(timeStart.getHours() - 1);
+		timeStart.setHours(timeStart.getMinutes() - minBeforeAppointment);
 		const timeEnd = new Date();
-		timeEnd.setHours(timeEnd.getHours() + 2);
+		timeEnd.setHours(timeEnd.getMinutes() + minAfterAppointment);
 
 		const formattedTimeStart = `${timeStart.getHours()}:${timeStart.getMinutes()}:${timeStart.getSeconds()}`;
 		const formattedTimeEnd = `${timeEnd.getHours()}:${timeEnd.getMinutes()}:${timeEnd.getSeconds()}`;
