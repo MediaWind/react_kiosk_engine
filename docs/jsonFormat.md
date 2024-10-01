@@ -534,7 +534,8 @@ Here are the different action types available and what they do.
 		"type": "checktextinputs"
 	},
 	{
-		"type": "custom"
+		"type": "custom",
+		"id": "UUID"
 	},
 	{
 		"type": "resetcustompage"

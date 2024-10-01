@@ -43,8 +43,11 @@ interface IRouterContexts {
 			homePage: CallableFunction,
 		},
 	},
-	customPage: {
-		state: JSX.Element | undefined,
+	customAction: {
+		state: {
+			page: JSX.Element | undefined
+			id?: string
+		},
 		dispatcher: React.Dispatch<React.SetStateAction<JSX.Element | undefined>>,
 	}
 }
@@ -117,7 +120,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [qrCode, writeQrCode, resetQrCode] = useScanner();
 	const [printTicket, isPrinting , checkPrinterStatus] = usePrinter(dispatchErrorState);
 	const [createTicket] = useTicket(dispatchPrintState, dispatchErrorState);
-	const [appointmentTicketPDF, checkIn, checkOut] = useAppointment(dispatchAppointmentState, dispatchErrorState);
+	const [appointmentTicketPDF, checkIn, checkOut, getAppointments] = useAppointment(dispatchAppointmentState, dispatchErrorState);
 
 	useEffect(() => {
 		if (Variables.C_ORIENTATION() === ORIENTATION.HORIZONTAL) {
@@ -395,6 +398,9 @@ function Engine(props: IEngineProps): JSX.Element {
 				appointment: {
 					state: appointmentState,
 					dispatcher: dispatchAppointmentState,
+				},
+				hooks: {
+					useAppointment : [appointmentTicketPDF, checkIn, checkOut, getAppointments],
 				},
 				print: {
 					state: printState,
