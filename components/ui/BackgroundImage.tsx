@@ -15,6 +15,9 @@ export default function BackgroundImage(props: IBackgroundImageProps): JSX.Eleme
 	const { language, } = useLanguageContext();
 
 	return (
-		<img src={image[language] ?? image.default} className={styles.main} style={{ width: Variables.WIDTH, height: Variables.HEIGHT, }}/>
+		<div>
+			<img src={typeof image[language] === "string" ? (image[language] as string) : image.default} className={styles.main} style={{ width: Variables.WIDTH, height: Variables.HEIGHT, }}/>
+			{image.gif && <img src={image.gif.src} className={styles.gif} style={{ position: "absolute", ...image.gif.styles, }}/>}
+		</div>
 	);
 }

@@ -111,9 +111,15 @@ export interface ITimer {
 	service?: IService;
 }
 
+export interface IGif {
+	src: string;
+	styles: CSSProperties;
+}
+
 export interface IBackgroundImage {
 	default: string;
-	[key: string]: string;
+	gif?: IGif;
+	[key: string]: string | IGif | undefined;
 }
 
 export interface IMedia {

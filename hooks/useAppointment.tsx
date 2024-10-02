@@ -246,14 +246,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 			} else {
 				Console.error("Error when trying to get appointments: data status " + data.status ?? "undefined", { fileName: "useAppointment", functionName: "getAppointments", lineNumber: 247, });
 				if (data.status_msg && data.status_msg === "appointment_not_found") {
-					dispatchError({
-						type: ERROR_ACTION_TYPE.SETERROR,
-						payload: {
-							hasError: true,
-							errorCode: ERROR_CODE.B404,
-							message: "Appointment not found",
-						} as IErrorState,
-					});
+					console.log("appointment_not_found");
 				} else if (data.status_msg) {
 					dispatchError({
 						type: ERROR_ACTION_TYPE.SETERROR,

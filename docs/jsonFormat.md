@@ -135,7 +135,20 @@ This is an optional property to display error specific custom images. If no `err
 	},
 
 	"eIdInserted": {},
-	"eIdRead": {}
+	"eIdRead": {
+		"default": "required path",
+		"fr|nl|en|es": "optional path",
+		"gif" : {
+			"src": "{widget_folder}/img/name.gif",
+				"styles": {
+					"top": "30%",
+					"left": "62%",
+					"width": "17%",
+					"height": "55%"
+				}
+			}
+		}
+	}
 }
 ```
 
