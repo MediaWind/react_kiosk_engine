@@ -33,6 +33,7 @@ import LoadingScreen from "../components/ui/LoadingScreen";
 import Debugger from "../components/debug/Debugger";
 import DisplayError from "../components/ui/DisplayError";
 import EIdBlock from "./ui/EIdBlock";
+import ActivePage from "./ActivePage";
 
 interface IRouterContexts {
 	router: {
@@ -457,10 +458,11 @@ function Engine(props: IEngineProps): JSX.Element {
 					{error.hasError && <DisplayError route={props.route} />}
 
 					{isLoading && <LoadingScreen customImages={props.route.errorManagement} />}
-					{eIdBlock && <EIdBlock customImages={props.route.errorManagement} />}
+					{(eIdBlock && !(props.route.eventManagement && props.route.eventManagement.eIdRead)) && <EIdBlock customImages={props.route.errorManagement} />}
 
 					<PageRouter isPrinting={isPrinting} onReset={resetAll} onCustomAction={triggerCustomAction} />
 
+					{(eIdBlock && props.route.eventManagement && props.route.eventManagement.eIdRead) && <ActivePage page={props.route.eventManagement.eIdRead} />}
 				</ContextsWrapper>
 			</div>
 		);

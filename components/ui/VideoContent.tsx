@@ -29,6 +29,8 @@ export default function VideoContent(props: IVideoContentProps): JSX.Element {
 				bottom={content.styles.bottom ? getNumbersOnly(`${content.styles.bottom}`) : 0}
 				left={getNumbersOnly(`${content.styles.left}`)}
 				right={content.styles.right ? getNumbersOnly(`${content.styles.right}`) : 0}
+				width={content.styles.width ? getNumbersOnly(`${content.styles.width}`) : undefined}
+				height={content.styles.height ? getNumbersOnly(`${content.styles.height}`) : undefined}
 				muted={true}
 			/>
 		</div>

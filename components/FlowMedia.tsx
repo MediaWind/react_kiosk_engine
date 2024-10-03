@@ -4,6 +4,7 @@ import ImageContent from "./ui/ImageContent";
 import InputContent from "./ui/InputContent";
 import VideoContent from "./ui/VideoContent";
 import InputAreaContent from "./ui/InputAreaContent";
+import { useEffect } from "react";
 
 interface IFlowMediaProps {
 	id: string
@@ -13,6 +14,16 @@ interface IFlowMediaProps {
 
 export default function FlowMedia(props: IFlowMediaProps): JSX.Element {
 	const { id, media, onActionsTrigger, } = props;
+
+	useEffect(() => {
+		// Remove media element if they are generated outside the classic flow
+		return () => {
+			const element = document.getElementById(id);
+			if (element) {
+				element.remove();
+			}
+		};
+	},[]);
 
 	function actionsHandler(actions: IInputAction[]) {
 		onActionsTrigger(actions);
