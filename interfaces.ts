@@ -14,6 +14,7 @@ export type Route = {
 	scheduling: ISchedule,
 	flows: IFlow[]
 	errorManagement?: IErrorManagement
+	eventManagement?: IEventManagement
 };
 
 export interface IInternationalization {
@@ -92,6 +93,10 @@ export interface IErrorManagement {
 	//? Not necessarily errors, might need some refactoring here
 	eIdInserted?: IBackgroundImage;
 	eIdRead?: IBackgroundImage;
+}
+
+export interface IEventManagement {
+	eIdRead? : IPage
 }
 
 export interface IPage {
