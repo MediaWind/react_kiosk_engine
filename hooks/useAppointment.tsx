@@ -212,7 +212,15 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 		// ADD FILTERS
 		if(birthDate) 		appointmentsURL += `&birth_date=${birthDate}`;
 		if(nationalNumber) 	appointmentsURL += `&registre_national=${nationalNumber}`;
-		if(Variables.W_ID_SERVICE_FILTER && !isNaN(Variables.W_ID_SERVICE_FILTER)) 	appointmentsURL += `&id_service=${Variables.W_ID_SERVICE_FILTER}`;
+
+
+		// ADD SERVICE FILTER
+		const services = [];
+		if(Variables.W_ID_SERVICE_FILTER_LABO) 		services.push(Variables.W_ID_SERVICE_FILTER_LABO);
+		if(Variables.W_ID_SERVICE_FILTER_PEDIA) 	services.push(Variables.W_ID_SERVICE_FILTER_PEDIA);
+		if(services.length > 0) {
+			appointmentsURL += `&id_services=${services.join(",")}`;
+		}
 
 		// add time filter
 		const timeStart = new Date();
