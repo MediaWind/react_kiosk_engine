@@ -219,7 +219,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 		if(Variables.W_ID_SERVICE_FILTER_LABO) 		services.push(Variables.W_ID_SERVICE_FILTER_LABO);
 		if(Variables.W_ID_SERVICE_FILTER_PEDIA) 	services.push(Variables.W_ID_SERVICE_FILTER_PEDIA);
 		if(services.length > 0) {
-			appointmentsURL += `&id_services=${services.join(",")}`;
+			appointmentsURL += `&id_service=${services.join(",")}`;
 		}
 
 		// add time filter
