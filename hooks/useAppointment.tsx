@@ -187,7 +187,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 		}
 	}
 
-	async function getAppointments(birthDate: string | null = null, nationalNumber: string | null = null, minBeforeAppointment = 60, minAfterAppointment = 120) : Promise<object | undefined> {
+	async function getAppointments(birthDate: string | null = null, nationalNumber: string | null = null, minBeforeAppointment = 60, minAfterAppointment = 120, services: Array<number> | null = null) : Promise<object | undefined> {
 		Console.info("Getting appointments...");
 
 		let appointmentsURL = `
@@ -212,15 +212,8 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 		// ADD FILTERS
 		if(birthDate) 		appointmentsURL += `&birth_date=${birthDate}`;
 		if(nationalNumber) 	appointmentsURL += `&registre_national=${nationalNumber}`;
-
-
-		// ADD SERVICE FILTER
-		const services = [];
-		if(Variables.W_ID_SERVICE_FILTER_LABO) 		services.push(Variables.W_ID_SERVICE_FILTER_LABO);
-		if(Variables.W_ID_SERVICE_FILTER_PEDIA) 	services.push(Variables.W_ID_SERVICE_FILTER_PEDIA);
-		if(services.length > 0) {
-			appointmentsURL += `&id_service=${services.join(",")}`;
-		}
+		if(services && services.length > 0) appointmentsURL += `&id_service=${services.join(",")}`;
+		
 
 		// add time filter
 		const timeStart = new Date();
