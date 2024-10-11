@@ -9,7 +9,9 @@ import {
 	IService,
 	ITicketDataAction,
 	PRINT_ACTION_TYPE,
-	TICKET_DATA_ACTION_TYPE
+	TICKET_DATA_ACTION_TYPE,
+	APPOINTMENTS_ACTION_TYPE,
+	IAppointmentsAction
 } from "../interfaces";
 
 interface IDispatchers {
@@ -24,15 +26,27 @@ interface IDispatchers {
 	dispatchAppointmentState: React.Dispatch<IAppointmentAction>
 	triggerCustomAction: CallableFunction
 	setCustomPage: React.Dispatch<SetStateAction<JSX.Element | undefined>>
+	dispatchAppointmentsState: React.Dispatch<IAppointmentsAction>
+	triggerActions: CallableFunction
+	runConditionFunction: { [key: string]: CallableFunction }
 }
 
-export default function doActions(actions: IInputAction[], dispatchers: IDispatchers) {
-	actions.map((action) => doAction(action));
+export default async function doActions(actions: IInputAction[], dispatchers: IDispatchers, syncActions = false) {
+	if (syncActions) {
+		for (const action of actions) {
+			await doAction(action);
+		}
+	} else {
+		await Promise.all(actions.map((action) => doAction(action)));
+	}
 
-	function doAction(action: IInputAction) {
+	async function doAction(action: IInputAction) {
 		switch (action.type) {
 			case ACTION_TYPE.NEXTPAGE:
 				dispatchers.router.nextPage(action.navigateTo);
+				break;
+			case ACTION_TYPE.CONDITION:
+				conditionHandler(action.onSuccess, action.onFailure, action.conditions);
 				break;
 			case ACTION_TYPE.PREVIOUSPAGE:
 				dispatchers.router.previousPage();
@@ -67,6 +81,12 @@ export default function doActions(actions: IInputAction[], dispatchers: IDispatc
 					payload: true,
 				});
 				break;
+			case ACTION_TYPE.GETAPPOINTMENTS:
+				dispatchers.dispatchAppointmentsState({
+					type: APPOINTMENTS_ACTION_TYPE.GETAPPOINTMENTS,
+					payload: { status: true, params: action.params, },
+				});
+				break;
 			case ACTION_TYPE.CUSTOM:
 				dispatchers.triggerCustomAction(action.id);
 				break;
@@ -75,6 +95,65 @@ export default function doActions(actions: IInputAction[], dispatchers: IDispatc
 				break;
 			default:
 				break;
+		}
+	}
+
+	type ConditionOperator = "&&" | "||" | "==" | "!=" | ">" | "<" | ">=" | "<=";
+	type ConditionValue = string | number | boolean;
+
+	interface Condition {
+		[key: string]: ConditionValue[] | Condition[];
+	}
+
+	function evaluateCondition(condition: Condition): boolean {
+		if (typeof condition === "boolean") {
+			return condition;
+		}
+	
+		const operator = Object.keys(condition)[0] as ConditionOperator;
+		const operands = condition[operator];
+
+		if(operator === "&&"){
+			return (operands as Condition[]).every((operand: Condition) => evaluateCondition(operand));
+		}
+
+		if(operator === "||"){
+			return (operands as Condition[]).some((operand: Condition) => evaluateCondition(operand));
+		}
+
+		const operand0 = (operands as ConditionValue[])[0];
+		const operand1 = (operands as ConditionValue[])[1];
+		const value0 = typeof operand0 === "string" && dispatchers.runConditionFunction[operand0] ? dispatchers.runConditionFunction[operand0]() : operand0;
+		const value1 = typeof operand1 === "string" && dispatchers.runConditionFunction[operand1] ? dispatchers.runConditionFunction[operand1]() : operand1;
+
+		switch (operator) {
+			case "==": 
+				return value0 === value1;
+			case "!=": 
+				return value0 !== value1;
+			case ">":
+				return value0 > value1;
+			case "<":
+				return value0 < value1;
+			case ">=":
+				return value0 >= value1;
+			case "<=":
+				return value0 <= value1;
+			default:
+				return false;
+		}
+	}
+	
+	function conditionHandler(onSuccess?: IInputAction[], onFailure?: IInputAction[], conditions?: Condition) {
+		if(conditions) console.log("conditionHandler", evaluateCondition(conditions));
+		if (conditions && evaluateCondition(conditions)) {
+			if (onSuccess) {
+				dispatchers.triggerActions(onSuccess);
+			}
+		} else {
+			if (onFailure) {
+				dispatchers.triggerActions(onFailure);
+			}
 		}
 	}
 }
