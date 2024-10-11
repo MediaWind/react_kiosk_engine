@@ -200,6 +200,7 @@ export interface IInputContent {
 	advancedButtonConfig?: IAdvancedButtonConfig;
 	textInputConfig?: ITextInputConfig;
 	selectConfig?: ISelectConfig;
+	syncActions?: boolean;
 }
 
 export enum INPUT_TYPE {
@@ -271,12 +272,22 @@ export interface IOption {
 	value: string;
 }
 
+type ConditionValue = string | number | boolean;
+
+interface Condition {
+	[key: string]: ConditionValue[] | Condition[];
+}
+
 export interface IInputAction {
 	type: ACTION_TYPE;
 	navigateTo?: string;
 	service?: IService;
 	language?: string;
 	id?: string;
+	params?: [string?];
+	onSuccess?: IInputAction[];
+	onFailure?: IInputAction[];
+	conditions?: Condition;
 }
 
 export enum ACTION_TYPE {
@@ -292,6 +303,8 @@ export enum ACTION_TYPE {
 	CUSTOM = "custom",
 	CHECKTEXTINPUTS = "checktextinputs",
 	RESETCUSTOMPAGE = "resetcustompage",
+	GETAPPOINTMENTS = "getappointments",
+	CONDITION = "condition",
 }
 
 export interface IService {
@@ -377,6 +390,32 @@ export enum APPOINTMENT_ACTION_TYPE {
 	UPDATECHECKINGOUT = "updateCheckOut",
 	UPDATECHECKEDIN = "updateCheckedIn",
 	UPDATECHECKEDOUT = "updateCheckedOut",
+	CLEARALL = "clearAll",
+}
+
+//* ------------------- *//
+//* Appointments Reducer *//
+//* ------------------- *//
+
+export interface IAppointmentsRequested {
+	status: boolean
+	params?: [string?]
+}
+
+export interface IAppointmentsState {
+	appointments: Appointment[]
+	getAppointmentsRequested: IAppointmentsRequested
+}
+
+export interface IAppointmentsAction {
+	type: APPOINTMENTS_ACTION_TYPE
+	payload?: IAppointmentsRequested | Appointment[]
+}
+
+export enum APPOINTMENTS_ACTION_TYPE {
+	GETAPPOINTMENTS = "getAppointments",
+	UPDATEAPPOINTMENTS = "updateAppointments",
+	STOREPARAMSAPPOINTMENTS = "storeParamsAppointments",
 	CLEARALL = "clearAll",
 }
 
@@ -518,6 +557,69 @@ export type ServiceData = {
 		id_bms: string
 	}
 }
+
+//* ------------ *//
+//* Appointments *//
+//* ------------ *//
+
+export type Appointment = {
+	key_protect_daily: string;
+	id: string;
+	id_project: string;
+	key_protect: string;
+	company: string;
+	firstname: string;
+	lastname: string;
+	phone: string;
+	email: string;
+	ref_external_visitor: string;
+	dateCreate: string;
+	dateCheckin: string;
+	id_service: string;
+	id_userAgent: string;
+	date_appointment: string;
+	time_appointment: string;
+	time_fixed: string;
+	priority: string;
+	status: string;
+	registre_national: string;
+	ref_external: string;
+	id_userCreate: string;
+	duration_estimated: string;
+	lang: string;
+	source: string;
+	comment: string;
+	pmr: string;
+	ref_external_userAgent: string;
+	type_id: string;
+	type_name: string;
+	connexe_order: string;
+	connexe_size: string;
+	connexe_id: string;
+	birth_date: string;
+	dateCheckout: string;
+	array_ticket: any[];
+	qrcode_value: string;
+	agent?: {
+		id_project: string;
+		id_user: string;
+		id_desk: string;
+		use_group: string;
+		id_user_create: string;
+		type: string;
+		url_ics_availibility: string;
+		url_ics_no_availibility: string;
+		notify_sms: string;
+		notify_email: string;
+		notify_display: string;
+		services_restricted: string;
+		ref_external: string;
+		cannot_select_desk: string;
+		firstname: string;
+		lastname: string;
+	};
+};
+
 
 export type SuperContext = {
 	router: {

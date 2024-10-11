@@ -19,6 +19,8 @@ import appointmentReducer, { initialAppointmentState } from "../reducers/appoint
 import printReducer, { initialPrintState } from "../reducers/printReducer";
 import errorReducer, { initialErrorState } from "../reducers/errorReducer";
 
+import appointmentsReducer, { initialAppointmentsState } from "../reducers/appointmentsReducer";
+
 import useScanner from "../hooks/useScanner";
 import usePrinter from "../hooks/usePrinter";
 import useTicket from "../hooks/useTicket";
@@ -121,7 +123,8 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [qrCode, writeQrCode, resetQrCode] = useScanner();
 	const [printTicket, isPrinting , checkPrinterStatus] = usePrinter(dispatchErrorState);
 	const [createTicket] = useTicket(dispatchPrintState, dispatchErrorState);
-	const [appointmentTicketPDF, checkIn, checkOut, getAppointments] = useAppointment(dispatchAppointmentState, dispatchErrorState);
+	const [appointmentsState, dispatchAppointmentsState] = useReducer(appointmentsReducer, initialAppointmentsState);
+	const [appointmentTicketPDF, checkIn, checkOut, getAppointments] = useAppointment(dispatchAppointmentState, dispatchErrorState, dispatchAppointmentsState);
 
 	useEffect(() => {
 		if (Variables.C_ORIENTATION() === ORIENTATION.HORIZONTAL) {
@@ -371,7 +374,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	}, [appointmentTicketPDF]);
 
 	//* ------------ *//
-	//* Appointments *//
+	//* Appointment *//
 	//* ------------ *//
 	// Sends checkin/checkout requests when qrCode is ready then resets it
 	useEffect(() => {
@@ -387,6 +390,39 @@ function Engine(props: IEngineProps): JSX.Element {
 			resetQrCode();
 		}
 	}, [qrCode, appointmentState.isCheckingIn, appointmentState.isCheckingOut]);
+
+	//* ---------- *//
+	//* Appointments *//
+	//* ---------- *//
+	// Monitors appointmentsState to trigger appointments requests
+	useEffect(() => {
+		console.log("appointmentsState", appointmentsState);
+
+		if(currentFlow){
+			console.log(currentFlow.ticketParameters);
+		} else {
+			console.log("currentFlow is null");
+		}
+		
+
+		if(currentFlow) {
+			if (appointmentsState.getAppointmentsRequested.status) {
+				const params = appointmentsState.getAppointmentsRequested.params;
+
+				// Get services id
+				const services = new Array<number>();
+				if(Variables.W_ID_SERVICE_FILTER_LABO) 	services.push(Variables.W_ID_SERVICE_FILTER_LABO);
+				if(Variables.W_ID_SERVICE_FILTER_PEDIA) services.push(Variables.W_ID_SERVICE_FILTER_PEDIA);
+	
+				if(params && params.includes("nationalNumber") && eIdData && eIdData.nationalNumber) {	
+					getAppointments(null, eIdData.nationalNumber, Variables.W_MIN_BEFORE_APPOINTMENT ?? 60, Variables.W_MIN_AFTER_APPOINTMENT ?? 120, services);
+				}
+				
+				// TODO : add birthdate
+			}
+		}
+			
+	}, [appointmentsState, eIdData]);
 
 	// ---------- Handlers ---------- //
 	function resetTicketData() {
@@ -480,6 +516,8 @@ function Engine(props: IEngineProps): JSX.Element {
 					printState,
 					dispatchPrintState,
 					eidStatus,
+					appointmentsState,
+					dispatchAppointmentsState,
 				}}>
 
 					{props.debug && (

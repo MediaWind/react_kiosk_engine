@@ -9,6 +9,8 @@ import { usePrintContext } from "../contexts/printContext";
 import { useTicketDataContext } from "../contexts/ticketDataContext";
 import { useAppointmentContext } from "../contexts/appointmentContext";
 import { useCustomActionContext } from "../contexts/customActionContext";
+import { useAppointmentsContext } from "../contexts/appointmentsContext";
+import { condition } from "../utils/condition";
 
 import { Console } from "../utils/console";
 import doActions from "../utils/doActions";
@@ -31,6 +33,9 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 	const { ticketState, dispatchTicketState, } = useTicketDataContext();
 	const { appointmentState, dispatchAppointmentState, } = useAppointmentContext();
 	const { triggerCustomAction, customPage, setCustomPage, } = useCustomActionContext();
+	const { appointmentsState, dispatchAppointmentsState, } = useAppointmentsContext();
+
+	const runConditionFunction = condition(appointmentsState);
 
 	const [pageMedias, setPageMedias] = useState<IMedia[]>([]);
 	const [pageInputs, setPageInputs] = useState<IInputContent[]>([]);
@@ -121,7 +126,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 		}
 	}, [appointmentState]);
 
-	function triggerActions(actions: IInputAction[]) {
+	function triggerActions(actions: IInputAction[], syncActions = false) {
 		if (textInputs.length > 0 && actions.find(action => action.type === ACTION_TYPE.CHECKTEXTINPUTS)) {
 			setInvalidTextInputs([]);
 			const invalidInputs: string[] = [];
@@ -157,7 +162,10 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 			dispatchAppointmentState,
 			triggerCustomAction,
 			setCustomPage,
-		});
+			dispatchAppointmentsState,
+			triggerActions,
+			runConditionFunction,
+		}, syncActions);
 	}
 
 	useEffect(() => {

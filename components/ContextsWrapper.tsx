@@ -11,7 +11,9 @@ import {
 	IPrintAction,
 	IPrintState,
 	ITicketDataAction,
-	ITicketDataState
+	ITicketDataState,
+	IAppointmentsAction,
+	IAppointmentsState
 } from "../interfaces";
 
 import { AppointmentContext } from "../contexts/appointmentContext";
@@ -21,6 +23,7 @@ import { FlowContext } from "../contexts/flowContext";
 import { LanguageContext } from "../contexts/languageContext";
 import { PrintContext } from "../contexts/printContext";
 import { TicketDataContext } from "../contexts/ticketDataContext";
+import { AppointmentsContext } from "../contexts/appointmentsContext";
 
 interface IContextsWrapperProps {
 	children: ReactNode[]
@@ -39,6 +42,8 @@ interface IContextsWrapperProps {
 		printState: IPrintState
 		dispatchPrintState: React.Dispatch<IPrintAction>
 		eidStatus: eIdStatus
+		appointmentsState: IAppointmentsState
+		dispatchAppointmentsState: React.Dispatch<IAppointmentsAction>
 	}
 }
 
@@ -48,19 +53,21 @@ export default function ContextsWrapper(props: IContextsWrapperProps): JSX.Eleme
 	return (
 		<LanguageContext.Provider value={{ defaultLangue: values.defaultLanguage, language: values.language, setLanguage: values.setLanguage, }}>
 			<TicketDataContext.Provider value={{ ticketState: values.ticketState, dispatchTicketState: values.dispatchTicketState, }}>
-				<AppointmentContext.Provider value={{ appointmentState: values.appointmentState, dispatchAppointmentState: values.dispatchAppointmentState, }}>
-					<FlowContext.Provider value={{ flow: values.currentFlow, setReload: values.setReadyToChangeFlow, }}>
-						<ErrorContext.Provider value={{ errorState: values.error, dispatchErrorState: values.dispatchErrorState, }}>
-							<PrintContext.Provider value={{ printState: values.printState, dispatchPrintState: values.dispatchPrintState, }}>
-								<EIdContext.Provider value={{ status: values.eidStatus, }}>
+				<AppointmentsContext.Provider value={{ appointmentsState: values.appointmentsState, dispatchAppointmentsState: values.dispatchAppointmentsState, }}>
+					<AppointmentContext.Provider value={{ appointmentState: values.appointmentState, dispatchAppointmentState: values.dispatchAppointmentState, }}>
+						<FlowContext.Provider value={{ flow: values.currentFlow, setReload: values.setReadyToChangeFlow, }}>
+							<ErrorContext.Provider value={{ errorState: values.error, dispatchErrorState: values.dispatchErrorState, }}>
+								<PrintContext.Provider value={{ printState: values.printState, dispatchPrintState: values.dispatchPrintState, }}>
+									<EIdContext.Provider value={{ status: values.eidStatus, }}>
 
-									{children}
+										{children}
 
-								</EIdContext.Provider>
-							</PrintContext.Provider>
-						</ErrorContext.Provider>
-					</FlowContext.Provider>
-				</AppointmentContext.Provider>
+									</EIdContext.Provider>
+								</PrintContext.Provider>
+							</ErrorContext.Provider>
+						</FlowContext.Provider>
+					</AppointmentContext.Provider>
+				</AppointmentsContext.Provider>
 			</TicketDataContext.Provider>
 		</LanguageContext.Provider>
 	);
