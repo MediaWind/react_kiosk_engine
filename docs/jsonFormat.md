@@ -341,7 +341,8 @@ These are the properties defining a page object, found in the [flow level](#flow
 		"displayDate": {},
 		"displayTime": {},
 
-		"medias": [{}]
+		"medias": [{}],
+		"zIndex": 999
 	}
 ]
 ```
@@ -381,6 +382,10 @@ Same principle as [displayTime](#displaytime) on the flow level, but specific to
 ### medias
 
 An optional property listing all the medias of the page. More info in the [Media level](#media-level) section.
+
+### zIndex
+Add an optionall property to addd a zIndex on the page.
+
 
 ## Media level
 
