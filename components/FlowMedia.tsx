@@ -16,7 +16,8 @@ export default function FlowMedia(props: IFlowMediaProps): JSX.Element {
 
 
 	function actionsHandler(actions: IInputAction[]) {
-		onActionsTrigger(actions);
+		const content = media.content as IInputContent;
+		onActionsTrigger(actions, content.syncActions ?? content.syncActions);
 	}
 
 	if (media.type === MEDIA_TYPE.IMAGE) {
