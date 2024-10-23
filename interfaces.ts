@@ -107,6 +107,7 @@ export interface IPage {
 	medias?: IMedia[];
 	displayDate?: IDateTime;
 	displayTime?: IDateTime;
+	zIndex?: number;
 }
 
 export interface ITimer {
