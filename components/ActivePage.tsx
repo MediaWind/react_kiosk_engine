@@ -160,8 +160,22 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 		});
 	}
 
+	useEffect(() => {
+		// Bring zIndex medias to front
+		if (page.zIndex) {
+			if(page.medias) {
+				page.medias.forEach((media, index) => {
+					const element = document.getElementById(`${page.id}__${index}`);
+					if (element) {
+						element.style.zIndex = page.zIndex ? page.zIndex.toString() : "1";
+					}
+				});
+			}
+		}
+	});
+
 	return (
-		<>
+		<div style={page.zIndex ? { position:  "absolute", zIndex: page.zIndex, } : undefined}>
 			{(page.medias && page.medias.length > 0) &&
 				page.medias.map((media, index) => {
 					return (
@@ -180,6 +194,6 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 			<BackgroundImage image={page.backgroundImage} />
 
 			{customPage}
-		</>
+		</div>
 	);
 }
