@@ -161,13 +161,13 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 	}
 
 	useEffect(() => {
-		// Bring frontView medias to front
-		if (page.frontView) {
+		// Bring zIndex medias to front
+		if (page.zIndex) {
 			if(page.medias) {
 				page.medias.forEach((media, index) => {
 					const element = document.getElementById(`${page.id}__${index}`);
 					if (element) {
-						element.style.zIndex = "9999";
+						element.style.zIndex = page.zIndex ? page.zIndex.toString() : "1";
 					}
 				});
 			}
@@ -175,7 +175,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 	});
 
 	return (
-		<div style={page.frontView ? { position:  "absolute", zIndex: 9999, } : undefined}>
+		<div style={page.zIndex ? { position:  "absolute", zIndex: page.zIndex, } : undefined}>
 			{(page.medias && page.medias.length > 0) &&
 				page.medias.map((media, index) => {
 					return (
