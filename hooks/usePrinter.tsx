@@ -105,6 +105,19 @@ export default function usePrinter(dispatchError: React.Dispatch<IErrorAction>):
 		setIsPrinting(true);
 
 		try {
+			if(!pdf) {
+				Console.error("Error when trying to print: pdf is empty.", { fileName: "usePrinter", functionName: "print", lineNumber: 109, });
+				dispatchError({
+					type: ERROR_ACTION_TYPE.SETERROR,
+					payload: {
+						hasError: true,
+						errorCode: ERROR_CODE.A500,
+						message: "Unable to print ticket PDF (Empty PDF / No Template?)",
+					} as IErrorState,
+				});
+				return;
+			}
+
 			if (!Variables.PREVIEW) {
 				const result = await Printer.print(pdf);
 
