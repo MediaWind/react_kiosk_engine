@@ -187,7 +187,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 		}
 	}
 
-	async function getAppointments(birthDate: string | null = null, nationalNumber: string | null = null, minBeforeAppointment = 60, minAfterAppointment = 120, services: Array<number> | null = null) : Promise<object | undefined> {
+	async function getAppointments(birthDate: string | null = null, nationalNumber: string | null = null, minBeforeAppointment = null, minAfterAppointment = null, services: Array<number> | null = null) : Promise<object | undefined> {
 		Console.info("Getting appointments...");
 
 		let appointmentsURL = `
@@ -213,17 +213,10 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 		if(birthDate) 		appointmentsURL += `&birth_date=${birthDate}`;
 		if(nationalNumber) 	appointmentsURL += `&registre_national=${nationalNumber}`;
 		if(services && services.length > 0) appointmentsURL += `&id_service=${services.join(",")}`;
-		
 
 		// add time filter
-		const timeStart = new Date();
-		timeStart.setMinutes(timeStart.getMinutes() - minBeforeAppointment);
-		const timeEnd = new Date();
-		timeEnd.setMinutes(timeEnd.getMinutes() + minAfterAppointment);
-
-		const formattedTimeStart = `${timeStart.getHours()}:${timeStart.getMinutes()}:${timeStart.getSeconds()}`;
-		const formattedTimeEnd = `${timeEnd.getHours()}:${timeEnd.getMinutes()}:${timeEnd.getSeconds()}`;
-		appointmentsURL += `&time_start=${formattedTimeStart}&time_end=${formattedTimeEnd}`;
+		if(minBeforeAppointment) 	appointmentsURL += `&time_before_appointment=${minBeforeAppointment}`;
+		if(minAfterAppointment) 	appointmentsURL += `&time_after_appointment=${minAfterAppointment}`;
 
 		try {
 			const response = await fetchRetry(appointmentsURL);
