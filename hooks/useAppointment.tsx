@@ -213,10 +213,10 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 		if(birthDate) 		appointmentsURL += `&birth_date=${birthDate}`;
 		if(nationalNumber) 	appointmentsURL += `&registre_national=${nationalNumber}`;
 		if(services && services.length > 0) appointmentsURL += `&id_service=${services.join(",")}`;
-		
 
 		// add time filter
-		if(minBeforeAppointment && minAfterAppointment) appointmentsURL += `&time_before_appointment=${minBeforeAppointment}&time_after_appointment=${minAfterAppointment}`;
+		if(minBeforeAppointment) 	appointmentsURL += `&time_before_appointment=${minBeforeAppointment}`;
+		if(minAfterAppointment) 	appointmentsURL += `&time_after_appointment=${minAfterAppointment}`;
 
 		try {
 			const response = await fetchRetry(appointmentsURL);
