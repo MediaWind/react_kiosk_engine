@@ -14,10 +14,22 @@ export default function useTicket(dispatchPrintState: React.Dispatch<IPrintActio
 			const data = await response.json();
 
 			if (data.status == 1) {
-				dispatchPrintState({
-					type: PRINT_ACTION_TYPE.UPDATETICKETPDF,
-					payload: data.pdf,
-				});
+				if(data.pdf) {
+					dispatchPrintState({
+						type: PRINT_ACTION_TYPE.UPDATETICKETPDF,
+						payload: data.pdf,
+					});
+				} else {
+					Console.error("Error when trying to create ticket - data.pdf: " + data.pdf, { fileName: "useTicket", functionName: "createTicket", lineNumber: 23, });
+					dispatchError({
+						type: ERROR_ACTION_TYPE.SETERROR,
+						payload: {
+							hasError: true,
+							errorCode: ERROR_CODE.B500,
+							message: "Unable to create ticket (No PDF)",
+						},
+					});
+				}
 			} else {
 				if (data.status_reason) {
 					Console.error("Error when trying to create ticket - data.status_reason: " + data.status_reason, { fileName: "useTicket", functionName: "createTicket", lineNumber: 23, });
