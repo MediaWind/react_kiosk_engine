@@ -11,7 +11,7 @@ import useSharedVariables from "../../core/hooks/useSharedVariables";
 import useEId, { eIdData, eIdStatus } from "../../core/hooks/useEId";
 import { setIntervalRange } from "../../core/customInterval";
 
-import { APPOINTMENT_ACTION_TYPE, ERROR_ACTION_TYPE, IFlow, IPage, PRINT_ACTION_TYPE, Route, SuperContext, TICKET_DATA_ACTION_TYPE } from "../interfaces";
+import { APPOINTMENT_ACTION_TYPE, ERROR_ACTION_TYPE, IFlow, IPage, IReadAction, PRINT_ACTION_TYPE, Route, SuperContext, TICKET_DATA_ACTION_TYPE } from "../interfaces";
 import { ERROR_CODE } from "../lib/errorCodes";
 
 import ticketDataReducer, { initialTicketState } from "../reducers/ticketDataReducer";
@@ -34,6 +34,7 @@ import Debugger from "../components/debug/Debugger";
 import DisplayError from "../components/ui/DisplayError";
 import EIdBlock from "./ui/EIdBlock";
 import ActivePage from "./ActivePage";
+import axios from "axios";
 
 interface IRouterContexts {
 	router: {
@@ -281,6 +282,19 @@ function Engine(props: IEngineProps): JSX.Element {
 				type: TICKET_DATA_ACTION_TYPE.EIDUPDATE,
 				payload: eIdData as eIdData,
 			});
+
+			// If there is an eIdRead action, it will trigger the action
+			const eidRead = props.route.eventManagement?.eIdRead as IReadAction;
+
+			if(eidRead && eidRead.actions) {
+				eidRead.actions.map(action => {
+					if(action.type === "POST") {
+						axios.post(action.endpoint, eIdData, {
+							headers: action.headers,
+						});
+					}
+				});
+			}
 		}
 	}, [eIdData]);
 
@@ -462,7 +476,7 @@ function Engine(props: IEngineProps): JSX.Element {
 
 					<PageRouter isPrinting={isPrinting} onReset={resetAll} onCustomAction={triggerCustomAction} />
 
-					{(eIdBlock && props.route.eventManagement && props.route.eventManagement.eIdRead) && <ActivePage page={props.route.eventManagement.eIdRead} />}
+					{(eIdBlock && props.route.eventManagement?.eIdRead && !(props.route.eventManagement.eIdRead as IReadAction).actions) && <ActivePage page={props.route.eventManagement.eIdRead as IPage} />}
 				</ContextsWrapper>
 			</div>
 		);

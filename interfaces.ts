@@ -96,7 +96,20 @@ export interface IErrorManagement {
 }
 
 export interface IEventManagement {
-	eIdRead? : IPage
+	eIdRead? : IPage | IReadAction;
+}
+
+export interface IReadAction {
+	actions : {
+		type: IReadActionType;
+		endpoint: string;
+		headers: Record<string, string>;
+		body?: Record<string, string>;
+	}[]
+}
+
+export enum IReadActionType {
+	POST = "POST",
 }
 
 export interface IPage {
