@@ -171,21 +171,6 @@ This optional property allows you to define actions to be executed when a specif
 ```json
 "eventManagement" :{
 		"eIdRead" : {
-			"actions": [
-				{
-					"type": "POST",
-					"endpoint": "{DOMAINE}/modules/Modules/QueueManagement/services/cpo_adapter.php",
-					"headers": {
-						"Content-Type": "application/json",
-					},
-					"body": {}
-				}
-			]
-		},
-
-		/// OR ///
-
-		"eIdRead" : {
 			"id" : "eIdRead",
 			"name": "eIdRead",
 			"backgroundImage": {
@@ -207,12 +192,22 @@ This optional property allows you to define actions to be executed when a specif
 						}
 					}
 				}
+			],
+			"actions": [
+				{
+					"type": "POST",
+					"endpoint": "http://localhost:8080/eid",
+					"headers": {
+						"Content-Type": "application/json",
+						"USER": "user"
+					}
+				}
 			]
 		}
 	},
 ```
 
-The `eIdRead` property can function similarly to a page or an array of actions. These actions or the specified page will be executed whenever the `EidData` changes.
+The `eIdRead` property can function similarly to a page but with an array og actions (optional). These actions and the specified page will be executed whenever the `EidData` changes.
 
 
 ## Flow level

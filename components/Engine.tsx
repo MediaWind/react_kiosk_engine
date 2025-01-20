@@ -11,7 +11,7 @@ import useSharedVariables from "../../core/hooks/useSharedVariables";
 import useEId, { eIdData, eIdStatus } from "../../core/hooks/useEId";
 import { setIntervalRange } from "../../core/customInterval";
 
-import { APPOINTMENT_ACTION_TYPE, ERROR_ACTION_TYPE, IFlow, IPage, IReadAction, PRINT_ACTION_TYPE, Route, SuperContext, TICKET_DATA_ACTION_TYPE } from "../interfaces";
+import { APPOINTMENT_ACTION_TYPE, ERROR_ACTION_TYPE, IFlow, IPage, IReadPage, PRINT_ACTION_TYPE, Route, SuperContext, TICKET_DATA_ACTION_TYPE } from "../interfaces";
 import { ERROR_CODE } from "../lib/errorCodes";
 
 import ticketDataReducer, { initialTicketState } from "../reducers/ticketDataReducer";
@@ -284,7 +284,7 @@ function Engine(props: IEngineProps): JSX.Element {
 			});
 
 			// If there is an eIdRead action, it will trigger the action
-			const eidRead = props.route.eventManagement?.eIdRead as IReadAction;
+			const eidRead = props.route.eventManagement?.eIdRead as IReadPage;
 
 			if(eidRead && eidRead.actions) {
 				eidRead.actions.map(action => {
@@ -507,7 +507,7 @@ function Engine(props: IEngineProps): JSX.Element {
 
 					<PageRouter isPrinting={isPrinting} onReset={resetAll} onCustomAction={triggerCustomAction} />
 
-					{(eIdBlock && props.route.eventManagement?.eIdRead && !(props.route.eventManagement.eIdRead as IReadAction).actions) && <ActivePage page={props.route.eventManagement.eIdRead as IPage} />}
+					{(eIdBlock && props.route.eventManagement?.eIdRead && !(props.route.eventManagement.eIdRead as IReadPage).actions) && <ActivePage page={props.route.eventManagement.eIdRead as IPage} />}
 				</ContextsWrapper>
 			</div>
 		);

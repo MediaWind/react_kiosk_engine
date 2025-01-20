@@ -96,11 +96,19 @@ export interface IErrorManagement {
 }
 
 export interface IEventManagement {
-	eIdRead? : IPage | IReadAction;
+	eIdRead? : IReadPage;
 }
 
-export interface IReadAction {
-	actions : {
+export interface IReadPage {
+	id: string;
+	name: string;
+	backgroundImage: IBackgroundImage;
+	navigateToAfter?: ITimer
+	medias?: IMedia[];
+	displayDate?: IDateTime;
+	displayTime?: IDateTime;
+	zIndex?: number;
+	actions? : {
 		type: IReadActionType;
 		endpoint: string;
 		headers: Record<string, string>;
