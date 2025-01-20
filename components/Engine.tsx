@@ -288,10 +288,41 @@ function Engine(props: IEngineProps): JSX.Element {
 
 			if(eidRead && eidRead.actions) {
 				eidRead.actions.map(action => {
-					if(action.type === "POST") {
-						axios.post(action.endpoint, eIdData, {
-							headers: action.headers,
-						});
+					if(action.endpoint.includes("{DOMAINE}")) {
+						action.endpoint = action.endpoint.replace("{DOMAINE}", Variables.DOMAINE_HTTP);
+					}
+
+					if(action.type === "POST" || action.type === "PUT") {
+						const body: { [key: string]: any } = {};
+
+						for (const key in action.body) {
+							if((eIdData as any)[key]) {
+								const data = (eIdData as any)[key];
+								body[action.body[key]] = data;
+							}
+						}
+
+						if(action.type === "POST") {
+							axios.post(action.endpoint, body, {
+								headers: {
+									"Content-Type": "application/json",
+								},
+							}).then(response => {
+								console.log(response);
+							}).catch(error => {
+								console.error(error);
+							});
+						} else {
+							axios.put(action.endpoint, body, {
+								headers: {
+									"Content-Type": "application/json",
+								},
+							}).then(response => {
+								console.log(response);
+							}).catch(error => {
+								console.error(error);
+							});
+						}
 					}
 				});
 			}

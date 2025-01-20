@@ -174,11 +174,11 @@ This optional property allows you to define actions to be executed when a specif
 			"actions": [
 				{
 					"type": "POST",
-					"endpoint": "http://localhost:8080/eid",
+					"endpoint": "{DOMAINE}/modules/Modules/QueueManagement/services/cpo_adapter.php",
 					"headers": {
 						"Content-Type": "application/json",
-						"USER": "user"
-					}
+					},
+					"body": {}
 				}
 			]
 		},

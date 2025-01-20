@@ -110,6 +110,7 @@ export interface IReadAction {
 
 export enum IReadActionType {
 	POST = "POST",
+	PUT = "PUT",
 }
 
 export interface IPage {
