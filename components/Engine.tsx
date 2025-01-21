@@ -34,7 +34,6 @@ import Debugger from "../components/debug/Debugger";
 import DisplayError from "../components/ui/DisplayError";
 import EIdBlock from "./ui/EIdBlock";
 import ActivePage from "./ActivePage";
-import axios from "axios";
 
 interface IRouterContexts {
 	router: {
@@ -290,6 +289,10 @@ function Engine(props: IEngineProps): JSX.Element {
 				eidRead.actions.map(action => {
 					if(action.endpoint.includes("{DOMAINE}")) {
 						action.endpoint = action.endpoint.replace("{DOMAINE}", Variables.DOMAINE_HTTP);
+					} else if (action.endpoint.includes("{KEY_PLAYER}")) {
+						action.endpoint = action.endpoint.replace("{KEY_PLAYER}", Variables.KEY_PLAYER);
+					} else if (action.endpoint.includes("{SERIAL_PLAYER}")) {
+						action.endpoint = action.endpoint.replace("{SERIAL_PLAYER}", Variables.SERIAL_PLAYER);
 					}
 
 					if(action.type === "POST" || action.type === "PUT") {
@@ -301,28 +304,19 @@ function Engine(props: IEngineProps): JSX.Element {
 								body[action.body[key]] = data;
 							}
 						}
-
-						if(action.type === "POST") {
-							axios.post(action.endpoint, body, {
-								headers: {
-									"Content-Type": "application/json",
-								},
-							}).then(response => {
-								console.log(response);
-							}).catch(error => {
-								console.error(error);
-							});
-						} else {
-							axios.put(action.endpoint, body, {
-								headers: {
-									"Content-Type": "application/json",
-								},
-							}).then(response => {
-								console.log(response);
-							}).catch(error => {
-								console.error(error);
-							});
-						}
+						
+						fetch(action.endpoint, {
+							method: action.type,
+							headers: action.headers,
+							body: JSON.stringify(body),
+						})
+						.then(response => response.json())
+						.then(data => {
+							console.log(data);
+						})
+						.catch(error => {
+							console.error(error);
+						});
 					}
 				});
 			}
@@ -507,7 +501,7 @@ function Engine(props: IEngineProps): JSX.Element {
 
 					<PageRouter isPrinting={isPrinting} onReset={resetAll} onCustomAction={triggerCustomAction} />
 
-					{(eIdBlock && props.route.eventManagement?.eIdRead && !(props.route.eventManagement.eIdRead as IReadPage).actions) && <ActivePage page={props.route.eventManagement.eIdRead as IPage} />}
+					{eIdBlock && props.route.eventManagement?.eIdRead && <ActivePage page={props.route.eventManagement.eIdRead as IPage} />}
 				</ContextsWrapper>
 			</div>
 		);
