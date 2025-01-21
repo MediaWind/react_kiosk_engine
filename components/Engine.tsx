@@ -287,36 +287,30 @@ function Engine(props: IEngineProps): JSX.Element {
 
 			if(eidRead && eidRead.actions) {
 				eidRead.actions.map(action => {
-					if(action.endpoint.includes("{DOMAINE}")) {
-						action.endpoint = action.endpoint.replace("{DOMAINE}", Variables.DOMAINE_HTTP);
-					} else if (action.endpoint.includes("{KEY_PLAYER}")) {
-						action.endpoint = action.endpoint.replace("{KEY_PLAYER}", Variables.KEY_PLAYER);
-					} else if (action.endpoint.includes("{SERIAL_PLAYER}")) {
-						action.endpoint = action.endpoint.replace("{SERIAL_PLAYER}", Variables.SERIAL_PLAYER);
-					}
+					if(action.endpoint.includes("{DOMAINE}")) 			action.endpoint = action.endpoint.replace("{DOMAINE}", Variables.DOMAINE_HTTP);
+					if(action.endpoint.includes("{KEY_PLAYER}")) 		action.endpoint = action.endpoint.replace("{KEY_PLAYER}", Variables.KEY_PLAYER);
+					if(action.endpoint.includes("{SERIAL_PLAYER}")) 	action.endpoint = action.endpoint.replace("{SERIAL_PLAYER}", Variables.SERIAL_PLAYER);
 
 					if(action.type === "POST" || action.type === "PUT") {
 						const body: { [key: string]: any } = {};
 
 						for (const key in action.body) {
-							if((eIdData as any)[key]) {
-								const data = (eIdData as any)[key];
-								body[action.body[key]] = data;
-							}
+							const data = (eIdData as any)[key];
+							body[action.body[key]] = data;
 						}
-						
+
 						fetch(action.endpoint, {
 							method: action.type,
 							headers: action.headers,
 							body: JSON.stringify(body),
 						})
-						.then(response => response.json())
-						.then(data => {
-							console.log(data);
-						})
-						.catch(error => {
-							console.error(error);
-						});
+							.then(response => response.json())
+							.then(data => {
+								console.log(data);
+							})
+							.catch(error => {
+								console.error(error);
+							});
 					}
 				});
 			}
