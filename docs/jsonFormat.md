@@ -165,6 +165,51 @@ The `genericError` key is the only one required if an `errorManagement` is creat
 
 <ins style="color: green;">**Note:**</ins> This property might need some refactoring in the future, maybe need more error diversity to be able to cover all types of error. The `eIdInserted` and `eIdRead` properties are obviously not errors, so the whole property could use at least a renaming, and eventually a more complex structure to cover all UX needs.
 
+## eventManagement
+This optional property allows you to define actions to be executed when a specific event is triggered.
+
+```json
+"eventManagement" :{
+		"eIdRead" : {
+			"id" : "eIdRead",
+			"name": "eIdRead",
+			"backgroundImage": {
+				"default": "{widget_folder}/img/remove-eid.png"
+			},
+			"zIndex": 900,
+			"medias": [
+				{
+					"type": "image",
+					"content": {
+						"name": "test",
+						"src": "{widget_folder}/img/out-id-card.gif",
+						"styles": {
+							"top": "29%",
+							"left": "68%",
+
+							"width": "20%",
+							"height": "50%"
+						}
+					}
+				}
+			],
+			"actions": [
+				{
+					"type": "POST",
+					"endpoint": "http://localhost:8080/eid",
+					"headers": {
+						"Content-Type": "application/json",
+						"USER": "user"
+					}
+				}
+			]
+		}
+	},
+```
+
+The `eIdRead` property can function similarly to a page but with an array og actions (optional). These actions and the specified page will be executed whenever the `EidData` changes.
+
+
 ## Flow level
 
 These are the properties defining a flow object, found in the [route level](#route-level) under the `flows` property.
