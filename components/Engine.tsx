@@ -287,6 +287,8 @@ function Engine(props: IEngineProps): JSX.Element {
 
 			if(eidRead && eidRead.actions) {
 				eidRead.actions.map(action => {
+					// This regex will match all the variables in the endpoint with the format {variable}
+					// It will then replace the match with the value of the match in <Variables>
 					const regex = /\{([^}]+)\}/g; 
 					const matches = [...action.endpoint.matchAll(regex)].map(m => m[1]);
 
