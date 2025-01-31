@@ -287,10 +287,17 @@ function Engine(props: IEngineProps): JSX.Element {
 
 			if(eidRead && eidRead.actions) {
 				eidRead.actions.map(action => {
-					if(action.endpoint.includes("{DOMAINE}")) 			action.endpoint = action.endpoint.replace("{DOMAINE}", Variables.DOMAINE_HTTP);
-					if(action.endpoint.includes("{KEY_PLAYER}")) 		action.endpoint = action.endpoint.replace("{KEY_PLAYER}", Variables.KEY_PLAYER);
-					if(action.endpoint.includes("{SERIAL_PLAYER}")) 	action.endpoint = action.endpoint.replace("{SERIAL_PLAYER}", Variables.SERIAL_PLAYER);
+					// This regex will match all the variables in the endpoint with the format {variable}
+					// It will then replace the match with the value of the match in <Variables>
+					const regex = /\{([^}]+)\}/g; 
+					const matches = [...action.endpoint.matchAll(regex)].map(m => m[1]);
 
+					matches.map(match => {
+						if(Variables[match as keyof typeof Variables]) {
+							action.endpoint = action.endpoint.replace(`{${match}}`, Variables[match as keyof typeof Variables].toString());
+						}
+					});
+				
 					if(action.type === "POST" || action.type === "PUT") {
 						const body: { [key: string]: any } = {};
 

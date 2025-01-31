@@ -196,10 +196,27 @@ This optional property allows you to define actions to be executed when a specif
 			"actions": [
 				{
 					"type": "POST",
-					"endpoint": "http://localhost:8080/eid",
+					"endpoint": "http://localhost:8080/eid?id_project={W_ID_PROJECT}",
 					"headers": {
 						"Content-Type": "application/json",
-						"USER": "user"
+					},
+					"body": {
+						"firstName": "firstnames",
+						"lastName": "surname",
+						"addressStreetAndNumber": "address_street_and_number",
+						"addressZip": "address_zip",
+						"addressMunicipality": "address_municipality",
+						"dateOfBirth": "date_of_birth",
+						"locationOfBirth": "location_of_birth",
+						"nationalNumber": "national_number",
+						"nationality": "nationality",
+						"gender": "gender",
+						"cardNumber": "card_number",
+						"validityBeginDate": "validity_begin_date",
+						"validityEndDate": "validity_end_date",
+						"issuingMunicipality": "issuing_municipality",
+						"firstLetterOfThirdGivenName": "first_letter_of_third_given_name",
+						"specialStatus": "special_status"
 					}
 				}
 			]
@@ -209,6 +226,8 @@ This optional property allows you to define actions to be executed when a specif
 
 The `eIdRead` property can function similarly to a page but with an array og actions (optional). These actions and the specified page will be executed whenever the `EidData` changes.
 
+You can use project variables by enclosing them in {} in the endpoint. These variables will be replaced by their respective values at runtime.
+In the body, the keys are the readData we want to retrieve and the values are the key names we want to pass to the query body.
 
 ## Flow level
 
