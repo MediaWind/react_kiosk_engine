@@ -528,6 +528,7 @@ This complex media is the powerhouse of user interaction.
 		"name": "name",
 		"type": "button",
 		"styles": {},
+		"syncActions": true,
 		"actions": [],
 
 		"advancedButtonConfig": {},
@@ -550,6 +551,8 @@ This complex media is the powerhouse of user interaction.
 - `cardReader`: this input specifies that the page is ready to read and process informations from the kiosk card reader.
 
 `actions` is a list of [actions](#action-types) triggered by interacting with the input.
+
+`syncActions` indicates whether to execute actions synchronously or asynchronously. It is false by default.
 
 `advancedButtonConfig` is the [configaration](#advanced-button-configuration) associated with the `advancedButton` type input.
 
@@ -608,6 +611,41 @@ Here are the different action types available and what they do.
 	},
 	{
 		"type": "resetcustompage"
+	},
+	{
+		"type": "getappointments",
+		"params": ["nationalNumber", "birthDate"]
+	},
+	{
+		"type": "condition",
+		"onSuccess": [
+			{
+				"type": "nextpage",
+				"navigateTo": "e34eee63-7671-4862-ba6a-528956d72709"
+			}, ...
+		],
+		"onFailure": [
+			{
+				"type": "nextpage",
+				"navigateTo": "e34eee63-7671-4862-ba6a-528956d72709"
+			}, ...
+		],
+		"conditions": {
+			"&&": [
+				{
+					"==": [
+						"appointmentsLength",
+						1
+					]
+				},
+				{
+					">": [
+						5,
+						4
+					]
+				}
+			]
+		}
 	}
 ]
 ```
@@ -631,7 +669,8 @@ An `action` is always defined by its `type`. Here is a break down of each type:
 - `checktextinputs` first verify that all required text inputs on the page are filled before proceeding to the rest of the actions.
 - `custom` triggers a custom action. For more informations, refer to the [custom action documentation](customAction.md).
 - `resetcustompage` sets the custom page to undefined.
-
+- `getappointments` executes a function to retrieve a person's appointments based on their national number or birth date.
+- `condition` is an action that allows other actions to be performed depending on the result of certain conditions. For example, custom functions like `appointmentsLength` can be created in the file [condition.ts](../utils/condition.ts) and used in conditions to determine if actions should be executed. These custom functions evaluate specific criteria and return a result that dictates the subsequent actions.
 #### Advanced button configuration
 
 ```json
