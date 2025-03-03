@@ -43,7 +43,7 @@ export default function useAgents(dispatchErrorState: React.Dispatch<IErrorActio
 					return returnedAgents;
 				});
 			} else {
-				Console.error("Error when trying to fetch agents: data status " + data.status ?? "undefined", { fileName: "useAgents", functionName: "getUserAgents", lineNumber: 46, });
+				Console.error(data.status ? "Error when trying to fetch agents: data status " + data.status : "undefined", { fileName: "useAgents", functionName: "getUserAgents", lineNumber: 46, });
 				dispatchErrorState({
 					type: ERROR_ACTION_TYPE.SETERROR,
 					payload: {

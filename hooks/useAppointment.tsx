@@ -28,7 +28,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 			const data = await response.json();
 
 			if (data.status !== 1) {
-				Console.error("Error when trying to check in appointment: data status " + data.status ?? "undefined", { fileName: "useAppointment", functionName: "checkIn", lineNumber: 31, });
+				Console.error(data.status ? "Error when trying to fetch agents: data status " + data.status : "undefined", { fileName: "useAppointment", functionName: "checkIn", lineNumber: 31, });
 				if (data.status_msg && data.status_msg === "appointment_not_found") {
 					dispatchError({
 						type: ERROR_ACTION_TYPE.SETERROR,
@@ -129,7 +129,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 			const data = await response.json();
 
 			if (data.status != 1) {
-				Console.error("Error when trying to check out appointment: data status " + data.status ?? "undefined", { fileName: "useAppointment", functionName: "checkOut", lineNumber: 139, });
+				Console.error(data.status ? "Error when trying to check out appointment: data status " + data.status : "undefined", { fileName: "useAppointment", functionName: "checkOut", lineNumber: 139, });
 				if (Variables.PREVIEW) {
 					dispatchAppointment({
 						type: APPOINTMENT_ACTION_TYPE.UPDATECHECKEDOUT,
@@ -238,7 +238,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 			if (data.status === 1) {
 				return data;
 			} else {
-				Console.error("Error when trying to get appointments: data status " + data.status ?? "undefined", { fileName: "useAppointment", functionName: "getAppointments", lineNumber: 247, });
+				Console.error(data.status ? "Error when trying to get appointments: data status " + data.status : "undefined", { fileName: "useAppointment", functionName: "getAppointments", lineNumber: 247, });
 				if (data.status_msg && data.status_msg === "appointment_not_found") {
 					console.log("appointment not found");
 				} else if (data.status_msg) {

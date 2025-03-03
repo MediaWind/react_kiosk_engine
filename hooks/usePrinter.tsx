@@ -75,7 +75,7 @@ export default function usePrinter(dispatchError: React.Dispatch<IErrorAction>):
 						payload: {
 							hasError: true,
 							errorCode: ERROR_CODE.D503,
-							message: "Printer error: data status " + data.status?.status ?? "undefined",
+							message: data.status?.status ? "Printer error: data status " + data.status?.status : "undefined",
 						} as IErrorState,
 					});
 				}
