@@ -224,7 +224,7 @@ function Engine(props: IEngineProps): JSX.Element {
 			return;
 		}
 
-		let delay: NodeJS.Timer;
+		let delay: NodeJS.Timeout;
 
 		if (eidStatus === eIdStatus.INSERTED) {
 			setIsLoading(true);

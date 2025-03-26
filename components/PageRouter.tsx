@@ -65,7 +65,7 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 	}, [errorState.hasError]);
 
 	useEffect(() => {
-		let delay: NodeJS.Timer;
+		let delay: NodeJS.Timeout;
 
 		if (flow.navigateToHomePageAfter && router.slice(-1)[0] !== homePage) {
 			delay = setTimeout(() => {

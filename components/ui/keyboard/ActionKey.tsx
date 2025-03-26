@@ -87,10 +87,10 @@ export default function ActionKey(props: IActionKeyProps): JSX.Element {
 	}, [capslock, specChars, shiftLock]);
 
 	useEffect(() => {
-		let timeOut1: NodeJS.Timer;
-		let interval1: NodeJS.Timer;
-		let timeOut2: NodeJS.Timer;
-		let interval2: NodeJS.Timer;
+		let timeOut1: NodeJS.Timeout;
+		let interval1: NodeJS.Timeout;
+		let timeOut2: NodeJS.Timeout;
+		let interval2: NodeJS.Timeout;
 
 		if (pressed) {
 			setClassNames(latest => [...latest, styles.pressed]);
