@@ -28,5 +28,5 @@ export default function appointmentsReducer(appointmentsState: IAppointmentsStat
 
 export const initialAppointmentsState: IAppointmentsState = {
 	appointments: [],
-	getAppointmentsRequested: {status: false, params: [],},
+	getAppointmentsRequested: {status: false, params: {},},
 };

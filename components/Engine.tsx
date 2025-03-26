@@ -409,13 +409,15 @@ function Engine(props: IEngineProps): JSX.Element {
 			if (appointmentsState.getAppointmentsRequested.status) {
 				const params = appointmentsState.getAppointmentsRequested.params;
 
+				if(!params)  return;
+
+				const services = params.services ? params.services : [];
+				const minBeforeAppointment = params.minBeforeAppointment ? params.minBeforeAppointment : 60;
+				const minAfterAppointment = params.minAfterAppointment ? params.minAfterAppointment : 120;
+
 				// Get services id
-				const services = new Array<number>();
-				if(Variables.W_ID_SERVICE_FILTER_LABO) 	services.push(Variables.W_ID_SERVICE_FILTER_LABO);
-				if(Variables.W_ID_SERVICE_FILTER_PEDIA) services.push(Variables.W_ID_SERVICE_FILTER_PEDIA);
-	
-				if(params && params.includes("nationalNumber") && eIdData && eIdData.nationalNumber) {	
-					getAppointments(null, eIdData.nationalNumber, Variables.W_MIN_BEFORE_APPOINTMENT ?? 60, Variables.W_MIN_AFTER_APPOINTMENT ?? 120, services);
+				if(params && params.nationalNumber && eIdData && eIdData.nationalNumber) {	
+					getAppointments(null, eIdData.nationalNumber, minBeforeAppointment, minAfterAppointment, services);
 				}
 				
 				// TODO : add birthdate

@@ -243,7 +243,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 
 				dispatchAppointments({
 					type: APPOINTMENTS_ACTION_TYPE.GETAPPOINTMENTS,
-					payload: {status: false, params: [],},
+					payload: {status: false, params: {},},
 				});
 
 				return data;

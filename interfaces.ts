@@ -284,10 +284,18 @@ export interface IInputAction {
 	service?: IService;
 	language?: string;
 	id?: string;
-	params?: [string?];
+	params?: IInputActionParams;
 	onSuccess?: IInputAction[];
 	onFailure?: IInputAction[];
 	conditions?: Condition;
+}
+
+export interface IInputActionParams {
+	nationalNumber?: boolean;
+	birthDate?: boolean;
+	services?: [number];
+	minBeforeAppointment?: number;
+	minAfterAppointment?: number;
 }
 
 export enum ACTION_TYPE {
@@ -399,7 +407,7 @@ export enum APPOINTMENT_ACTION_TYPE {
 
 export interface IAppointmentsRequested {
 	status: boolean
-	params?: [string?]
+	params?: IInputActionParams
 }
 
 export interface IAppointmentsState {

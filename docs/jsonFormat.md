@@ -614,7 +614,13 @@ Here are the different action types available and what they do.
 	},
 	{
 		"type": "getappointments",
-		"params": ["nationalNumber", "birthDate"]
+		"params": {
+			"nationalNumber" : true,
+			"birthDate" : true, // TODO
+			"services": [12, 15],
+			"minBeforeAppointment" : 60,
+			"minAfterAppointment" : 120
+		}
 	},
 	{
 		"type": "condition",
@@ -669,7 +675,7 @@ An `action` is always defined by its `type`. Here is a break down of each type:
 - `checktextinputs` first verify that all required text inputs on the page are filled before proceeding to the rest of the actions.
 - `custom` triggers a custom action. For more informations, refer to the [custom action documentation](customAction.md).
 - `resetcustompage` sets the custom page to undefined.
-- `getappointments` executes a function to retrieve a person's appointments based on their national number or birth date.
+- `getappointments` retrieves a person's appointments based on their national number, birth date, or specified services. You can set `minBeforeAppointment` and `minAfterAppointment` to filter appointments within a specific time range relative to the current date.
 - `condition` is an action that allows other actions to be performed depending on the result of certain conditions. For example, custom functions like `appointmentsLength` can be created in the file [condition.ts](../utils/condition.ts) and used in conditions to determine if actions should be executed. These custom functions evaluate specific criteria and return a result that dictates the subsequent actions.
 #### Advanced button configuration
 

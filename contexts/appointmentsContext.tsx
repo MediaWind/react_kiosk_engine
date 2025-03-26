@@ -9,7 +9,7 @@ type appointmentsContext = {
 export const AppointmentsContext = createContext<appointmentsContext>({
 	appointmentsState: {
 		appointments: [],
-		getAppointmentsRequested: {status: false, params: [],},
+		getAppointmentsRequested: {status: false, params: {},},
 	},
 	dispatchAppointmentsState: () => null,
 });
