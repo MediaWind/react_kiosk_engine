@@ -24,15 +24,24 @@ interface IDispatchers {
 	dispatchAppointmentState: React.Dispatch<IAppointmentAction>
 	triggerCustomAction: CallableFunction
 	setCustomPage: React.Dispatch<SetStateAction<JSX.Element | undefined>>
+	triggerActions: CallableFunction
+	triggerConditions: CallableFunction
 }
 
 export default function doActions(actions: IInputAction[], dispatchers: IDispatchers) {
-	actions.map((action) => doAction(action));
+	const conditionsFunc: { [key: string]: CallableFunction } = dispatchers.triggerConditions();
 
-	function doAction(action: IInputAction) {
+	for (const action of actions) {
+		doAction(action);
+	}
+
+	async function doAction(action: IInputAction) {
 		switch (action.type) {
 			case ACTION_TYPE.NEXTPAGE:
 				dispatchers.router.nextPage(action.navigateTo);
+				break;
+			case ACTION_TYPE.CONDITION:
+				conditionHandler(action.onSuccess, action.onFailure, action.conditions);
 				break;
 			case ACTION_TYPE.PREVIOUSPAGE:
 				dispatchers.router.previousPage();
@@ -75,6 +84,70 @@ export default function doActions(actions: IInputAction[], dispatchers: IDispatc
 				break;
 			default:
 				break;
+		}
+	}
+
+	type ConditionOperator = "&&" | "||" | "==" | "!=" | ">" | "<" | ">=" | "<=";
+	type ConditionValue = string | number | boolean;
+
+	interface Condition {
+		[key: string]: ConditionValue[] | Condition[];
+	}
+
+	async function evaluateCondition(condition: Condition): Promise<boolean> {
+		if (typeof condition === "boolean") {
+			return condition;
+		}
+
+		const operator = Object.keys(condition)[0] as ConditionOperator;
+		const operands = condition[operator];
+
+		if (operator === "&&") {
+			return (operands as Condition[]).every((operand: Condition) => evaluateCondition(operand));
+		}
+
+		if (operator === "||") {
+			return (operands as Condition[]).some((operand: Condition) => evaluateCondition(operand));
+		}
+
+		const operand0 = (operands as ConditionValue[])[0];
+		const operand1 = (operands as ConditionValue[])[1];
+		const value0 = typeof operand0 === "string" && conditionsFunc[operand0] ? await conditionsFunc[operand0]() : operand0;
+		const value1 = typeof operand1 === "string" && conditionsFunc[operand1] ? await conditionsFunc[operand1]() : operand1;
+
+		switch (operator) {
+			case "==":
+				return value0 === value1;
+			case "!=":
+				return value0 !== value1;
+			case ">":
+				return value0 > value1;
+			case "<":
+				return value0 < value1;
+			case ">=":
+				return value0 >= value1;
+			case "<=":
+				return value0 <= value1;
+			default:
+				return false;
+		}
+	}
+
+	async function conditionHandler(onSuccess?: IInputAction[], onFailure?: IInputAction[], conditions?: Condition) {
+		if (conditions) {
+			const result = await evaluateCondition(conditions);
+
+			if (result && onSuccess) {
+				dispatchers.triggerActions(onSuccess);
+			}
+
+			if (!result && onFailure) {
+				dispatchers.triggerActions(onFailure);
+			}
+		} else {
+			if (onFailure) {
+				dispatchers.triggerActions(onFailure);
+			}
 		}
 	}
 }

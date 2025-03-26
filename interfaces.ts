@@ -271,12 +271,30 @@ export interface IOption {
 	value: string;
 }
 
+type ConditionValue = string | number | boolean;
+
+interface Condition {
+	[key: string]: ConditionValue[] | Condition[];
+}
+
 export interface IInputAction {
 	type: ACTION_TYPE;
 	navigateTo?: string;
 	service?: IService;
 	language?: string;
 	id?: string;
+	params?: IInputActionParams;
+	onSuccess?: IInputAction[];
+	onFailure?: IInputAction[];
+	conditions?: Condition;
+}
+
+export interface IInputActionParams {
+	nationalNumber?: boolean;
+	birthDate?: boolean;
+	services?: [number];
+	minBeforeAppointment?: number;
+	minAfterAppointment?: number;
 }
 
 export enum ACTION_TYPE {
@@ -292,6 +310,7 @@ export enum ACTION_TYPE {
 	CUSTOM = "custom",
 	CHECKTEXTINPUTS = "checktextinputs",
 	RESETCUSTOMPAGE = "resetcustompage",
+	CONDITION = "condition",
 }
 
 export interface IService {

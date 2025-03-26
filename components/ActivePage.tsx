@@ -9,6 +9,7 @@ import { usePrintContext } from "../contexts/printContext";
 import { useTicketDataContext } from "../contexts/ticketDataContext";
 import { useAppointmentContext } from "../contexts/appointmentContext";
 import { useCustomActionContext } from "../contexts/customActionContext";
+import { useConditionsContext } from "../contexts/conditionsContext";
 
 import { Console } from "../utils/console";
 import doActions from "../utils/doActions";
@@ -31,6 +32,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 	const { ticketState, dispatchTicketState, } = useTicketDataContext();
 	const { appointmentState, dispatchAppointmentState, } = useAppointmentContext();
 	const { triggerCustomAction, customPage, setCustomPage, } = useCustomActionContext();
+	const { triggerConditions, } = useConditionsContext();
 
 	const [pageMedias, setPageMedias] = useState<IMedia[]>([]);
 	const [pageInputs, setPageInputs] = useState<IInputContent[]>([]);
@@ -157,6 +159,8 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 			dispatchAppointmentState,
 			triggerCustomAction,
 			setCustomPage,
+			triggerActions,
+			triggerConditions,
 		});
 	}
 

@@ -94,6 +94,7 @@ interface IEngineProps {
 		```
 	 */
 	onCustomAction?: CallableFunction
+	onConditions?: CallableFunction
 	waitSecondsAfterPrint?: number
 	debug?: boolean
 }
@@ -457,6 +458,39 @@ function Engine(props: IEngineProps): JSX.Element {
 		}
 	}
 
+	function triggerConditions(routerStates: IRouterContexts) {
+		if (props.onConditions) {
+			return props.onConditions({
+				...routerStates,
+				language: {
+					state: language,
+					dispatcher: setLanguage,
+				},
+				ticket: {
+					state: ticketState,
+					dispatcher: dispatchTicketState,
+				},
+				appointment: {
+					state: appointmentState,
+					dispatcher: dispatchAppointmentState,
+				},
+				hooks: {
+					useAppointment : [appointmentTicketPDF, checkIn, checkOut, getAppointments],
+				},
+				print: {
+					state: printState,
+					dispatcher: dispatchPrintState,
+				},
+				error: {
+					state: error,
+					dispatcher: dispatchErrorState,
+				},
+			} as SuperContext);
+		} else {
+			Console.warn("You tried to trigger a custom action, but no action was passed to Engine. Use onCustomAction as a prop to trigger a custom action.");
+		}
+	}
+
 	if (currentFlow) {
 		return (
 			<div
@@ -500,7 +534,7 @@ function Engine(props: IEngineProps): JSX.Element {
 					{isLoading && <LoadingScreen customImages={props.route.errorManagement} />}
 					{(eIdBlock && !(props.route.eventManagement && props.route.eventManagement.eIdRead)) && <EIdBlock customImages={props.route.errorManagement} />}
 
-					<PageRouter isPrinting={isPrinting} onReset={resetAll} onCustomAction={triggerCustomAction} />
+					<PageRouter isPrinting={isPrinting} onReset={resetAll} onCustomAction={triggerCustomAction} onConditions={triggerConditions} />
 
 					{eIdBlock && props.route.eventManagement?.eIdRead && <ActivePage page={props.route.eventManagement.eIdRead as IPage} />}
 				</ContextsWrapper>
