@@ -311,6 +311,7 @@ export enum ACTION_TYPE {
 	CHECKTEXTINPUTS = "checktextinputs",
 	RESETCUSTOMPAGE = "resetcustompage",
 	CONDITION = "condition",
+	GETAPPOINTMENTS = "getappointments",
 }
 
 export interface IService {
@@ -417,6 +418,32 @@ export enum PRINT_ACTION_TYPE {
 	REQUESTPRINT = "requestPrint",
 	REQUESTTICKETCREATION = "requestTicketCreation",
 	UPDATETICKETPDF = "updateTicketPDF",
+	CLEARALL = "clearAll",
+}
+
+//* ------------------- *//
+//* Appointments Reducer *//
+//* ------------------- *//
+
+export interface IAppointmentsRequested {
+	status: boolean
+	params?: IInputActionParams
+}
+
+export interface IAppointmentsState {
+	appointments: Appointment[] | undefined
+	getAppointmentsRequested: IAppointmentsRequested
+}
+
+export interface IAppointmentsAction {
+	type: APPOINTMENTS_ACTION_TYPE
+	payload?: IAppointmentsRequested | Appointment[]
+}
+
+export enum APPOINTMENTS_ACTION_TYPE {
+	GETAPPOINTMENTS = "getAppointments",
+	UPDATEAPPOINTMENTS = "updateAppointments",
+	STOREPARAMSAPPOINTMENTS = "storeParamsAppointments",
 	CLEARALL = "clearAll",
 }
 
@@ -538,6 +565,69 @@ export type ServiceData = {
 	}
 }
 
+//* ------------ *//
+//* Appointments *//
+//* ------------ *//
+
+export type Appointment = {
+	key_protect_daily: string;
+	id: string;
+	id_project: string;
+	key_protect: string;
+	company: string;
+	firstname: string;
+	lastname: string;
+	phone: string;
+	email: string;
+	ref_external_visitor: string;
+	dateCreate: string;
+	dateCheckin: string;
+	id_service: string;
+	service_name: string;
+	id_userAgent: string;
+	date_appointment: string;
+	time_appointment: string;
+	time_fixed: string;
+	priority: string;
+	status: string;
+	registre_national: string;
+	ref_external: string;
+	id_userCreate: string;
+	duration_estimated: string;
+	lang: string;
+	source: string;
+	comment: string;
+	pmr: string;
+	ref_external_userAgent: string;
+	type_id: string;
+	type_name: string;
+	connexe_order: string;
+	connexe_size: string;
+	connexe_id: string;
+	birth_date: string;
+	dateCheckout: string;
+	array_ticket: any[];
+	qrcode_value: string;
+	agent?: {
+		id_project: string;
+		id_user: string;
+		id_desk: string;
+		use_group: string;
+		id_user_create: string;
+		type: string;
+		url_ics_availibility: string;
+		url_ics_no_availibility: string;
+		notify_sms: string;
+		notify_email: string;
+		notify_display: string;
+		services_restricted: string;
+		ref_external: string;
+		cannot_select_desk: string;
+		firstname: string;
+		lastname: string;
+	};
+};
+
 export type SuperContext = {
 	router: {
 		state: IPage[],
@@ -558,6 +648,10 @@ export type SuperContext = {
 	appointment: {
 		state: IAppointmentState,
 		dispatcher: React.Dispatch<IAppointmentAction>,
+	},
+	appointments: {
+		state: IAppointmentsState,
+		dispatcher: React.Dispatch<IAppointmentsAction>,
 	},
 	hooks: {
 		useAppointment: [string, CallableFunction, CallableFunction, CallableFunction],

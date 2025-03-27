@@ -18,6 +18,7 @@ import ticketDataReducer, { initialTicketState } from "../reducers/ticketDataRed
 import appointmentReducer, { initialAppointmentState } from "../reducers/appointmentReducer";
 import printReducer, { initialPrintState } from "../reducers/printReducer";
 import errorReducer, { initialErrorState } from "../reducers/errorReducer";
+import appointmentsReducer, { initialAppointmentsState } from "../reducers/appointmentsReducer";
 
 import useScanner from "../hooks/useScanner";
 import usePrinter from "../hooks/usePrinter";
@@ -118,11 +119,13 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [appointmentState, dispatchAppointmentState] = useReducer(appointmentReducer, initialAppointmentState);
 	const [printState, dispatchPrintState] = useReducer(printReducer, initialPrintState);
 	const [error, dispatchErrorState] = useReducer(errorReducer, initialErrorState);
+	const [appointmentsState, dispatchAppointmentsState] = useReducer(appointmentsReducer, initialAppointmentsState);
 
 	const [qrCode, writeQrCode, resetQrCode] = useScanner();
 	const [printTicket, isPrinting , checkPrinterStatus] = usePrinter(dispatchErrorState);
 	const [createTicket] = useTicket(dispatchPrintState, dispatchErrorState);
-	const [appointmentTicketPDF, checkIn, checkOut, getAppointments] = useAppointment(dispatchAppointmentState, dispatchErrorState);
+	const [appointmentTicketPDF, checkIn, checkOut, getAppointments] = useAppointment(dispatchAppointmentState, dispatchErrorState, dispatchAppointmentsState);
+
 
 	useEffect(() => {
 		if (Variables.C_ORIENTATION() === ORIENTATION.HORIZONTAL) {
@@ -372,7 +375,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	}, [appointmentTicketPDF]);
 
 	//* ------------ *//
-	//* Appointments *//
+	//* Appointment *//
 	//* ------------ *//
 	// Sends checkin/checkout requests when qrCode is ready then resets it
 	useEffect(() => {
@@ -388,6 +391,41 @@ function Engine(props: IEngineProps): JSX.Element {
 			resetQrCode();
 		}
 	}, [qrCode, appointmentState.isCheckingIn, appointmentState.isCheckingOut]);
+
+	//* ---------- *//
+	//* Appointments *//
+	//* ---------- *//
+	// Monitors appointmentsState to trigger appointments requests
+	useEffect(() => {
+		console.log("appointmentsState", appointmentsState);
+
+		if(currentFlow){
+			console.log(currentFlow.ticketParameters);
+		} else {
+			console.log("currentFlow is null");
+		}
+
+
+		if(currentFlow) {
+			if (appointmentsState.getAppointmentsRequested.status) {
+				const params = appointmentsState.getAppointmentsRequested.params;
+
+				if(!params)  return;
+
+				const services = params.services ? params.services : [];
+				const minBeforeAppointment = params.minBeforeAppointment ? params.minBeforeAppointment : null;
+				const minAfterAppointment = params.minAfterAppointment ? params.minAfterAppointment : null;
+
+				// Get services id
+				if(params && params.nationalNumber) {	
+					getAppointments(null, eIdData?.nationalNumber, minBeforeAppointment, minAfterAppointment, services);
+				}
+
+				// TODO : add birthdate
+			}
+		}
+
+	}, [appointmentsState, eIdData]);
 
 	// ---------- Handlers ---------- //
 	function resetTicketData() {
@@ -441,6 +479,10 @@ function Engine(props: IEngineProps): JSX.Element {
 					state: appointmentState,
 					dispatcher: dispatchAppointmentState,
 				},
+				appointments: {
+					state: appointmentsState,
+					dispatcher: dispatchAppointmentsState,
+				},
 				hooks: {
 					useAppointment : [appointmentTicketPDF, checkIn, checkOut, getAppointments],
 				},
@@ -473,6 +515,10 @@ function Engine(props: IEngineProps): JSX.Element {
 				appointment: {
 					state: appointmentState,
 					dispatcher: dispatchAppointmentState,
+				},
+				appointments: {
+					state: appointmentsState,
+					dispatcher: dispatchAppointmentsState,
 				},
 				hooks: {
 					useAppointment : [appointmentTicketPDF, checkIn, checkOut, getAppointments],
@@ -514,6 +560,8 @@ function Engine(props: IEngineProps): JSX.Element {
 					printState,
 					dispatchPrintState,
 					eidStatus,
+					appointmentsState,
+					dispatchAppointmentsState,
 				}}>
 
 					{props.debug && (

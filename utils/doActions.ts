@@ -9,7 +9,9 @@ import {
 	IService,
 	ITicketDataAction,
 	PRINT_ACTION_TYPE,
-	TICKET_DATA_ACTION_TYPE
+	TICKET_DATA_ACTION_TYPE,
+	APPOINTMENTS_ACTION_TYPE,
+	IAppointmentsAction
 } from "../interfaces";
 
 interface IDispatchers {
@@ -26,6 +28,7 @@ interface IDispatchers {
 	setCustomPage: React.Dispatch<SetStateAction<JSX.Element | undefined>>
 	triggerActions: CallableFunction
 	triggerConditions: CallableFunction
+	dispatchAppointmentsState: React.Dispatch<IAppointmentsAction>
 }
 
 export default function doActions(actions: IInputAction[], dispatchers: IDispatchers) {
@@ -68,6 +71,12 @@ export default function doActions(actions: IInputAction[], dispatchers: IDispatc
 				dispatchers.dispatchAppointmentState({
 					type: APPOINTMENT_ACTION_TYPE.UPDATECHECKINGIN,
 					payload: true,
+				});
+				break;
+			case ACTION_TYPE.GETAPPOINTMENTS:
+				dispatchers.dispatchAppointmentsState({
+					type: APPOINTMENTS_ACTION_TYPE.GETAPPOINTMENTS,
+					payload: { status: true, params: action.params, },
 				});
 				break;
 			case ACTION_TYPE.CHECKOUT:
