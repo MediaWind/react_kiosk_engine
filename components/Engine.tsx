@@ -11,7 +11,7 @@ import useSharedVariables from "../../core/hooks/useSharedVariables";
 import useEId, { eIdData, eIdStatus } from "../../core/hooks/useEId";
 import { setIntervalRange } from "../../core/customInterval";
 
-import { APPOINTMENT_ACTION_TYPE, ERROR_ACTION_TYPE, IFlow, IPage, IReadPage, PRINT_ACTION_TYPE, Route, SuperContext, TICKET_DATA_ACTION_TYPE } from "../interfaces";
+import { APPOINTMENT_ACTION_TYPE, APPOINTMENTS_ACTION_TYPE, ERROR_ACTION_TYPE, IFlow, IPage, IReadPage, PRINT_ACTION_TYPE, Route, SuperContext, TICKET_DATA_ACTION_TYPE } from "../interfaces";
 import { ERROR_CODE } from "../lib/errorCodes";
 
 import ticketDataReducer, { initialTicketState } from "../reducers/ticketDataReducer";
@@ -443,6 +443,10 @@ function Engine(props: IEngineProps): JSX.Element {
 	function resetAppointments() {
 		dispatchAppointmentState({
 			type: APPOINTMENT_ACTION_TYPE.CLEARALL,
+		});
+
+		dispatchAppointmentsState({
+			type: APPOINTMENTS_ACTION_TYPE.CLEARALL,
 		});
 	}
 
