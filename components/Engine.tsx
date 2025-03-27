@@ -417,7 +417,7 @@ function Engine(props: IEngineProps): JSX.Element {
 				const minAfterAppointment = params.minAfterAppointment ? params.minAfterAppointment : null;
 
 				// Get services id
-				if(params && params.nationalNumber) {	
+				if(params && params.nationalNumber && eIdData && eIdData.nationalNumber) {	
 					getAppointments(null, eIdData?.nationalNumber, minBeforeAppointment, minAfterAppointment, services);
 				}
 
