@@ -398,34 +398,28 @@ function Engine(props: IEngineProps): JSX.Element {
 	// Monitors appointmentsState to trigger appointments requests
 	useEffect(() => {
 		console.log("appointmentsState", appointmentsState);
-
-		if(currentFlow){
-			console.log(currentFlow.ticketParameters);
-		} else {
-			console.log("currentFlow is null");
-		}
-
+		console.log("ticketState", ticketState);
 
 		if(currentFlow) {
 			if (appointmentsState.getAppointmentsRequested.status) {
 				const params = appointmentsState.getAppointmentsRequested.params;
 
-				if(!params)  return;
+				if(!params) return;
 
 				const services = params.services ? params.services : [];
 				const minBeforeAppointment = params.minBeforeAppointment ? params.minBeforeAppointment : null;
 				const minAfterAppointment = params.minAfterAppointment ? params.minAfterAppointment : null;
 
 				// Get services id
-				if(params && params.nationalNumber && eIdData && eIdData.nationalNumber) {	
-					getAppointments(null, eIdData?.nationalNumber, minBeforeAppointment, minAfterAppointment, services);
+				if(params && params.nationalNumber && ticketState.eIdDatas && ticketState.eIdDatas.nationalNumber) {	
+					getAppointments(null, ticketState.eIdDatas.nationalNumber, minBeforeAppointment, minAfterAppointment, services);
 				}
 
 				// TODO : add birthdate
 			}
 		}
 
-	}, [appointmentsState, eIdData]);
+	}, [appointmentsState, ticketState.eIdDatas]);
 
 	// ---------- Handlers ---------- //
 	function resetTicketData() {

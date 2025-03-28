@@ -64,6 +64,8 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 					});
 
 					setAppointmentTicketPDF(data.pdf);
+
+					return data.pdf;
 				} else {
 					Console.error("Error when trying to check in appointment: pdf is null", { fileName: "useAppointment", functionName: "checkIn", lineNumber: 70, });
 					dispatchError({
@@ -217,6 +219,8 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 		if(minBeforeAppointment) 	appointmentsURL += `&time_before_appointment=${minBeforeAppointment}`;
 		if(minAfterAppointment) 	appointmentsURL += `&time_after_appointment=${minAfterAppointment}`;
 
+		console.log("appointmentsURL", appointmentsURL);
+
 		try {
 			const response = await fetchRetry(appointmentsURL);
 			const data = await response.json();
@@ -244,6 +248,8 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 					type: APPOINTMENTS_ACTION_TYPE.GETAPPOINTMENTS,
 					payload: {status: false, params: {},},
 				});
+
+				console.log("data", data);
 
 				return data;
 			} else {
