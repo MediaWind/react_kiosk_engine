@@ -97,6 +97,12 @@ export interface IErrorManagement {
 
 export interface IEventManagement {
 	eIdRead? : IReadPage;
+	customLoader?: ICustomLoader;
+}
+
+export interface ICustomLoader {	
+	image: IBackgroundImage;
+	duration? : number;
 }
 
 export interface IReadPage {

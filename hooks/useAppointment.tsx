@@ -65,6 +65,8 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 					});
 
 					setAppointmentTicketPDF(data.pdf);
+
+					return data;
 				} else {
 					Console.error("Error when trying to check in appointment: pdf is null", { fileName: "useAppointment", functionName: "checkIn", lineNumber: 70, });
 					dispatchError({
