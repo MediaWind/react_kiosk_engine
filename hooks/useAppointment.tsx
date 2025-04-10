@@ -8,7 +8,8 @@ import { Console } from "../utils/console";
 import fetchRetry from "../utils/fetchRetry";
 import capitalizeFirstLetter from "../../core/utils/capitalizeFirstLetter";
 
-export default function useAppointment(dispatchAppointment: React.Dispatch<IAppointmentAction>, dispatchError: React.Dispatch<IErrorAction>, dispatchAppointments: React.Dispatch<IAppointmentsAction>): [string, CallableFunction, CallableFunction, CallableFunction] {	const [appointmentTicketPdf, setAppointmentTicketPDF] = useState<string>("");
+export default function useAppointment(dispatchAppointment: React.Dispatch<IAppointmentAction>, dispatchError: React.Dispatch<IErrorAction>, dispatchAppointments: React.Dispatch<IAppointmentsAction>): [string, CallableFunction, CallableFunction, CallableFunction] {
+	const [appointmentTicketPdf, setAppointmentTicketPDF] = useState<string>("");
 
 	async function checkIn(qrCode: string) {
 		Console.info("Appointment check in...");

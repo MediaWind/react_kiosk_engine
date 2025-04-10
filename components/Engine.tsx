@@ -397,8 +397,6 @@ function Engine(props: IEngineProps): JSX.Element {
 	//* ---------- *//
 	// Monitors appointmentsState to trigger appointments requests
 	useEffect(() => {
-		console.log("appointmentsState", appointmentsState);
-		console.log("ticketState", ticketState);
 
 		if(currentFlow) {
 			if (appointmentsState.getAppointmentsRequested.status) {
