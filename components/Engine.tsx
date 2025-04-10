@@ -215,6 +215,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	//Loading on eId inserted
 	useEffect(() => {
 		Console.info("eId status: " + eidStatus);
+		const delayCustomLoader = props.route.eventManagement?.customLoader?.duration ?? 0;
 
 		if (eidError !== "") {
 			dispatchErrorState({
@@ -263,7 +264,9 @@ function Engine(props: IEngineProps): JSX.Element {
 		}
 
 		if (eidStatus === eIdStatus.READ && eidError === "") {
-			setEIdBlock(true);
+			setTimeout(() => {
+				setEIdBlock(true);
+			}, delayCustomLoader * 1000);
 		}
 
 		if (eidStatus === eIdStatus.REMOVED) {
@@ -272,7 +275,9 @@ function Engine(props: IEngineProps): JSX.Element {
 
 		return () => {
 			clearTimeout(delay);
-			setIsLoading(false);
+			setTimeout(() => {
+				setIsLoading(false);
+			}, (delayCustomLoader * 1000) + 1000);
 		};
 	}, [eidStatus, eidError]);
 
@@ -575,7 +580,7 @@ function Engine(props: IEngineProps): JSX.Element {
 
 					{error.hasError && <DisplayError route={props.route} />}
 
-					{isLoading && <LoadingScreen customImages={props.route.errorManagement} />}
+					{isLoading && <LoadingScreen customImages={props.route.errorManagement} customLoader={props.route.eventManagement?.customLoader} />}
 					{(eIdBlock && !(props.route.eventManagement && props.route.eventManagement.eIdRead)) && <EIdBlock customImages={props.route.errorManagement} />}
 
 					<PageRouter isPrinting={isPrinting} onReset={resetAll} onCustomAction={triggerCustomAction} onConditions={triggerConditions} />
