@@ -9,6 +9,7 @@ import { useLanguageContext } from "../contexts/languageContext";
 import { useErrorContext } from "../contexts/errorContext";
 import { RouterContext } from "../contexts/routerContext";
 import { CustomActionContext } from "../contexts/customActionContext";
+import { ConditionsContext } from "../contexts/conditionsContext";
 
 import ActivePage from "./ActivePage";
 import Date from "./ui/Date";
@@ -18,6 +19,7 @@ interface IFlowDispatcherProps {
 	isPrinting: boolean
 	onReset: CallableFunction
 	onCustomAction?: CallableFunction
+	onConditions?: CallableFunction
 }
 
 function getHomePage(flow: IFlow): IPage {
@@ -37,7 +39,7 @@ function getHomePage(flow: IFlow): IPage {
 }
 
 export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
-	const { isPrinting, onReset, onCustomAction, } = props;
+	const { isPrinting, onReset, onCustomAction, onConditions, } = props;
 
 	const { flow, setReload, } = useFlowContext();
 	const { defaultLangue, setLanguage, } = useLanguageContext();
@@ -140,6 +142,27 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 		}
 	}
 
+	function triggerConditionsHandler() {
+		if (onConditions) {
+			return onConditions({
+				router: {
+					state: router,
+					dispatcher: {
+						nextPage: nextPageHandler,
+						previousPage: previousPageHandler,
+						homePage: homePageHandler,
+					},
+				},
+				customAction: {
+					state: {
+						page: customPage,
+					},
+					dispatcher: setCustomPage,
+				},
+			});
+		}
+	}
+
 	function userInteractionStart() {
 		setUserIsInteracting(true);
 	}
@@ -170,11 +193,13 @@ export default function PageRouter(props: IFlowDispatcherProps): JSX.Element {
 			{router.slice(-1)[0].displayDate ? <Date format={(router.slice(-1)[0].displayDate as IDateTime).format} style={(router.slice(-1)[0].displayDate as IDateTime).style ?? {}} /> : (flow.displayDate && <Date format={flow.displayDate.format} style={flow.displayDate.style} />)}
 			{router.slice(-1)[0].displayTime ? <Time format={(router.slice(-1)[0].displayTime as IDateTime).format} style={(router.slice(-1)[0].displayTime as IDateTime).style ?? {}} /> : (flow.displayTime && <Time format={flow.displayTime.format} style={flow.displayTime.style} />)}
 
-			<CustomActionContext.Provider value={{ triggerCustomAction: triggerCustomActionHandler, customPage, setCustomPage, }}>
-				<RouterContext.Provider value={{ nextPage: nextPageHandler, previousPage: previousPageHandler, homePage: homePageHandler, }}>
-					<ActivePage page={router.slice(-1)[0]} />
-				</RouterContext.Provider>
-			</CustomActionContext.Provider>
+			<ConditionsContext.Provider value={{ triggerConditions: triggerConditionsHandler, }}>
+				<CustomActionContext.Provider value={{ triggerCustomAction: triggerCustomActionHandler, customPage, setCustomPage, }}>
+					<RouterContext.Provider value={{ nextPage: nextPageHandler, previousPage: previousPageHandler, homePage: homePageHandler, }}>
+						<ActivePage page={router.slice(-1)[0]} />
+					</RouterContext.Provider>
+				</CustomActionContext.Provider>
+			</ConditionsContext.Provider>
 		</div>
 	);
 }

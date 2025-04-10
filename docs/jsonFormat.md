@@ -608,6 +608,47 @@ Here are the different action types available and what they do.
 	},
 	{
 		"type": "resetcustompage"
+	},
+	{
+		"type": "getappointments",
+		"params": {
+			"nationalNumber" : true,
+			"birthDate" : true, // TODO
+			"services": [12, 15],
+			"minBeforeAppointment" : 60,
+			"minAfterAppointment" : 120
+		}
+	},
+	{
+		"type": "condition",
+		"onSuccess": [
+			{
+				"type": "nextpage",
+				"navigateTo": "e34eee63-7671-4862-ba6a-528956d72709"
+			}, ...
+		],
+		"onFailure": [
+			{
+				"type": "nextpage",
+				"navigateTo": "e34eee63-7671-4862-ba6a-528956d72709"
+			}, ...
+		],
+		"conditions": {
+			"&&": [
+				{
+					"==": [
+						"appointmentsLength",
+						1
+					]
+				},
+				{
+					">": [
+						5,
+						4
+					]
+				}
+			]
+		}
 	}
 ]
 ```
@@ -631,6 +672,35 @@ An `action` is always defined by its `type`. Here is a break down of each type:
 - `checktextinputs` first verify that all required text inputs on the page are filled before proceeding to the rest of the actions.
 - `custom` triggers a custom action. For more informations, refer to the [custom action documentation](customAction.md).
 - `resetcustompage` sets the custom page to undefined.
+- `getappointments` retrieves a person's appointments based on their national number, birth date, or specified services. You can set `minBeforeAppointment` and `minAfterAppointment` to filter appointments within a specific time range relative to the current date. Warning, actions are asynchronous so maybe verify that appointmentsState is already set before using it.
+- `condition` action allows you to perform other actions based on the result of specific conditions. For example, you can create custom functions like appointmentsLength inside a conditionsHandler function and pass it to the engine using the onConditions prop (e.g., onConditions={conditionsHandler}). These custom functions can then be used in the condition action by referencing the name defined in conditionsHandler, as shown in the example below.
+
+```ts
+export function conditionsHandler(supercontext: SuperContext) {
+	async function checkAppointment() {
+		return true
+	}
+
+	function appointmentsLength() {
+		console.log("appointmentsLength");
+		const getAppointments = supercontext.hooks.useAppointment[3];
+		const appointments = getAppointments();
+
+		if (appointments && appointments.length > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	const runConditionFunction: { [key: string]: () => any } = {
+		"appointmentsLength": appointmentsLength,
+		"checkAppointment": checkAppointment,
+	};
+
+	return runConditionFunction;
+}
+```
 
 #### Advanced button configuration
 

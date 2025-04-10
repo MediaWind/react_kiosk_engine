@@ -11,13 +11,14 @@ import useSharedVariables from "../../core/hooks/useSharedVariables";
 import useEId, { eIdData, eIdStatus } from "../../core/hooks/useEId";
 import { setIntervalRange } from "../../core/customInterval";
 
-import { APPOINTMENT_ACTION_TYPE, ERROR_ACTION_TYPE, IFlow, IPage, IReadPage, PRINT_ACTION_TYPE, Route, SuperContext, TICKET_DATA_ACTION_TYPE } from "../interfaces";
+import { APPOINTMENT_ACTION_TYPE, APPOINTMENTS_ACTION_TYPE, ERROR_ACTION_TYPE, IFlow, IPage, IReadPage, PRINT_ACTION_TYPE, Route, SuperContext, TICKET_DATA_ACTION_TYPE } from "../interfaces";
 import { ERROR_CODE } from "../lib/errorCodes";
 
 import ticketDataReducer, { initialTicketState } from "../reducers/ticketDataReducer";
 import appointmentReducer, { initialAppointmentState } from "../reducers/appointmentReducer";
 import printReducer, { initialPrintState } from "../reducers/printReducer";
 import errorReducer, { initialErrorState } from "../reducers/errorReducer";
+import appointmentsReducer, { initialAppointmentsState } from "../reducers/appointmentsReducer";
 
 import useScanner from "../hooks/useScanner";
 import usePrinter from "../hooks/usePrinter";
@@ -94,6 +95,7 @@ interface IEngineProps {
 		```
 	 */
 	onCustomAction?: CallableFunction
+	onConditions?: CallableFunction
 	waitSecondsAfterPrint?: number
 	debug?: boolean
 }
@@ -117,11 +119,13 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [appointmentState, dispatchAppointmentState] = useReducer(appointmentReducer, initialAppointmentState);
 	const [printState, dispatchPrintState] = useReducer(printReducer, initialPrintState);
 	const [error, dispatchErrorState] = useReducer(errorReducer, initialErrorState);
+	const [appointmentsState, dispatchAppointmentsState] = useReducer(appointmentsReducer, initialAppointmentsState);
 
 	const [qrCode, writeQrCode, resetQrCode] = useScanner();
 	const [printTicket, isPrinting , checkPrinterStatus] = usePrinter(dispatchErrorState);
 	const [createTicket] = useTicket(dispatchPrintState, dispatchErrorState);
-	const [appointmentTicketPDF, checkIn, checkOut, getAppointments] = useAppointment(dispatchAppointmentState, dispatchErrorState);
+	const [appointmentTicketPDF, checkIn, checkOut, getAppointments] = useAppointment(dispatchAppointmentState, dispatchErrorState, dispatchAppointmentsState);
+
 
 	useEffect(() => {
 		if (Variables.C_ORIENTATION() === ORIENTATION.HORIZONTAL) {
@@ -376,7 +380,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	}, [appointmentTicketPDF]);
 
 	//* ------------ *//
-	//* Appointments *//
+	//* Appointment *//
 	//* ------------ *//
 	// Sends checkin/checkout requests when qrCode is ready then resets it
 	useEffect(() => {
@@ -392,6 +396,33 @@ function Engine(props: IEngineProps): JSX.Element {
 			resetQrCode();
 		}
 	}, [qrCode, appointmentState.isCheckingIn, appointmentState.isCheckingOut]);
+
+	//* ---------- *//
+	//* Appointments *//
+	//* ---------- *//
+	// Monitors appointmentsState to trigger appointments requests
+	useEffect(() => {
+
+		if(currentFlow) {
+			if (appointmentsState.getAppointmentsRequested.status) {
+				const params = appointmentsState.getAppointmentsRequested.params;
+
+				if(!params) return;
+
+				const services = params.services ? params.services : [];
+				const minBeforeAppointment = params.minBeforeAppointment ? params.minBeforeAppointment : null;
+				const minAfterAppointment = params.minAfterAppointment ? params.minAfterAppointment : null;
+
+				// Get services id
+				if(params && params.nationalNumber && ticketState.eIdDatas && ticketState.eIdDatas.nationalNumber) {	
+					getAppointments(null, ticketState.eIdDatas.nationalNumber, minBeforeAppointment, minAfterAppointment, services);
+				}
+
+				// TODO : add birthdate
+			}
+		}
+
+	}, [appointmentsState, ticketState.eIdDatas]);
 
 	// ---------- Handlers ---------- //
 	function resetTicketData() {
@@ -409,6 +440,10 @@ function Engine(props: IEngineProps): JSX.Element {
 	function resetAppointments() {
 		dispatchAppointmentState({
 			type: APPOINTMENT_ACTION_TYPE.CLEARALL,
+		});
+
+		dispatchAppointmentsState({
+			type: APPOINTMENTS_ACTION_TYPE.CLEARALL,
 		});
 	}
 
@@ -444,6 +479,47 @@ function Engine(props: IEngineProps): JSX.Element {
 				appointment: {
 					state: appointmentState,
 					dispatcher: dispatchAppointmentState,
+				},
+				appointments: {
+					state: appointmentsState,
+					dispatcher: dispatchAppointmentsState,
+				},
+				hooks: {
+					useAppointment : [appointmentTicketPDF, checkIn, checkOut, getAppointments],
+				},
+				print: {
+					state: printState,
+					dispatcher: dispatchPrintState,
+				},
+				error: {
+					state: error,
+					dispatcher: dispatchErrorState,
+				},
+			} as SuperContext);
+		} else {
+			Console.warn("You tried to trigger a custom action, but no action was passed to Engine. Use onCustomAction as a prop to trigger a custom action.");
+		}
+	}
+
+	function triggerConditions(routerStates: IRouterContexts) {
+		if (props.onConditions) {
+			return props.onConditions({
+				...routerStates,
+				language: {
+					state: language,
+					dispatcher: setLanguage,
+				},
+				ticket: {
+					state: ticketState,
+					dispatcher: dispatchTicketState,
+				},
+				appointment: {
+					state: appointmentState,
+					dispatcher: dispatchAppointmentState,
+				},
+				appointments: {
+					state: appointmentsState,
+					dispatcher: dispatchAppointmentsState,
 				},
 				hooks: {
 					useAppointment : [appointmentTicketPDF, checkIn, checkOut, getAppointments],
@@ -485,6 +561,8 @@ function Engine(props: IEngineProps): JSX.Element {
 					printState,
 					dispatchPrintState,
 					eidStatus,
+					appointmentsState,
+					dispatchAppointmentsState,
 				}}>
 
 					{props.debug && (
@@ -505,7 +583,7 @@ function Engine(props: IEngineProps): JSX.Element {
 					{isLoading && <LoadingScreen customImages={props.route.errorManagement} customLoader={props.route.eventManagement?.customLoader} />}
 					{(eIdBlock && !(props.route.eventManagement && props.route.eventManagement.eIdRead)) && <EIdBlock customImages={props.route.errorManagement} />}
 
-					<PageRouter isPrinting={isPrinting} onReset={resetAll} onCustomAction={triggerCustomAction} />
+					<PageRouter isPrinting={isPrinting} onReset={resetAll} onCustomAction={triggerCustomAction} onConditions={triggerConditions} />
 
 					{eIdBlock && props.route.eventManagement?.eIdRead && <ActivePage page={props.route.eventManagement.eIdRead as IPage} />}
 				</ContextsWrapper>

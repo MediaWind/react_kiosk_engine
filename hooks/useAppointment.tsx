@@ -1,14 +1,14 @@
 import { useState } from "react";
 
 import { Variables } from "../../variables";
-import { APPOINTMENT_ACTION_TYPE, ERROR_ACTION_TYPE, IAppointmentAction, IErrorAction, IErrorState } from "../interfaces";
+import { APPOINTMENT_ACTION_TYPE, ERROR_ACTION_TYPE, IAppointmentAction, IErrorAction, IErrorState, IAppointmentsAction, APPOINTMENTS_ACTION_TYPE } from "../interfaces";
 import { ERROR_CODE } from "../lib/errorCodes";
 
 import { Console } from "../utils/console";
 import fetchRetry from "../utils/fetchRetry";
 import capitalizeFirstLetter from "../../core/utils/capitalizeFirstLetter";
 
-export default function useAppointment(dispatchAppointment: React.Dispatch<IAppointmentAction>, dispatchError: React.Dispatch<IErrorAction>): [string, CallableFunction, CallableFunction, CallableFunction] {
+export default function useAppointment(dispatchAppointment: React.Dispatch<IAppointmentAction>, dispatchError: React.Dispatch<IErrorAction>, dispatchAppointments: React.Dispatch<IAppointmentsAction>): [string, CallableFunction, CallableFunction, CallableFunction] {
 	const [appointmentTicketPdf, setAppointmentTicketPDF] = useState<string>("");
 
 	async function checkIn(qrCode: string) {
@@ -28,7 +28,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 			const data = await response.json();
 
 			if (data.status !== 1) {
-				Console.error(data.status ? "Error when trying to fetch agents: data status " + data.status : "undefined", { fileName: "useAppointment", functionName: "checkIn", lineNumber: 31, });
+				Console.error("Error when trying to check in appointment: data status " + data.status, { fileName: "useAppointment", functionName: "checkIn", lineNumber: 31, });
 				if (data.status_msg && data.status_msg === "appointment_not_found") {
 					dispatchError({
 						type: ERROR_ACTION_TYPE.SETERROR,
@@ -67,6 +67,7 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 					setAppointmentTicketPDF(data.pdf);
 
 					return data;
+
 				} else {
 					Console.error("Error when trying to check in appointment: pdf is null", { fileName: "useAppointment", functionName: "checkIn", lineNumber: 70, });
 					dispatchError({
@@ -220,6 +221,8 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 		if(minBeforeAppointment) 	appointmentsURL += `&time_before_appointment=${minBeforeAppointment}`;
 		if(minAfterAppointment) 	appointmentsURL += `&time_after_appointment=${minAfterAppointment}`;
 
+		console.log("appointmentsURL", appointmentsURL);
+
 		try {
 			const response = await fetchRetry(appointmentsURL);
 			const data = await response.json();
@@ -238,6 +241,18 @@ export default function useAppointment(dispatchAppointment: React.Dispatch<IAppo
 			}
 
 			if (data.status === 1) {
+				dispatchAppointments({
+					type: APPOINTMENTS_ACTION_TYPE.UPDATEAPPOINTMENTS,
+					payload: data.appointments,
+				});
+
+				dispatchAppointments({
+					type: APPOINTMENTS_ACTION_TYPE.GETAPPOINTMENTS,
+					payload: {status: false, params: {},},
+				});
+
+				console.log("data", data);
+
 				return data;
 			} else {
 				Console.error(data.status ? "Error when trying to get appointments: data status " + data.status : "undefined", { fileName: "useAppointment", functionName: "getAppointments", lineNumber: 247, });
