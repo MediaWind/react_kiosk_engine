@@ -270,7 +270,9 @@ function Engine(props: IEngineProps): JSX.Element {
 		}
 
 		if (eidStatus === eIdStatus.REMOVED) {
-			setEIdBlock(false);
+			setTimeout(() => {
+				setEIdBlock(false);
+			}, 1000);
 		}
 
 		return () => {
