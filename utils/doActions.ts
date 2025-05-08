@@ -1,4 +1,5 @@
 import { SetStateAction } from "react";
+import { Variables } from "../../variables";
 
 import {
 	ACTION_TYPE,
@@ -52,12 +53,36 @@ export default function doActions(actions: IInputAction[], dispatchers: IDispatc
 			case ACTION_TYPE.HOMEPAGE:
 				dispatchers.router.homePage();
 				break;
-			case ACTION_TYPE.SAVESERVICE:
+			case ACTION_TYPE.SAVESERVICE: {
+				let serviceId = action.service?.serviceId?.toString();
+				let devServiceId = action.service?.devServiceId?.toString();
+
+				// Check if the serviceId is a dynamic variable and replace it with the actual value
+				const regex = /^\{.*\}$/;
+				if(serviceId && regex.test(serviceId)) {
+					serviceId = serviceId.replace(/^\{(.*)\}$/, (_, key) => {
+						return Variables[key as keyof typeof Variables] as string;
+					});
+				}
+
+				if(devServiceId && regex.test(devServiceId)) {
+					devServiceId = devServiceId.replace(/^\{(.*)\}$/, (_, key) => {
+						return Variables[key as keyof typeof Variables] as string;
+					});
+				}
+
+				action.service = {
+					...action.service,
+					serviceId: serviceId ? parseInt(serviceId) : undefined,
+					devServiceId: devServiceId ? parseInt(devServiceId) : undefined,
+				};
+
 				dispatchers.dispatchTicketState({
 					type: TICKET_DATA_ACTION_TYPE.SERVICEUPDATE,
 					payload: action.service as IService,
 				});
 				break;
+			}
 			case ACTION_TYPE.CREATETICKET:
 				dispatchers.dispatchPrintState({ type: PRINT_ACTION_TYPE.REQUESTTICKETCREATION, payload: true, });
 				break;

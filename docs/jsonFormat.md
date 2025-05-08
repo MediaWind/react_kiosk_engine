@@ -659,7 +659,18 @@ An `action` is always defined by its `type`. Here is a break down of each type:
 - `previouspage` indicates to the router that we are going back to the previous page.
 - `homepage` indicates to the router that we are going back to the home page. Anytime we go back to the home page, the router and all saved data are reset.
 - `saveservice` saves the service id selected. It must be associated with the `service` object.
-	- This object have an optional `serviceId`, representing the <ins>production</ins> service id in the prod EasyQueue module instance. This is the one that will be saved during production.
+	- This object have an optional `serviceId`, representing the <ins>production</ins> service id in the prod EasyQueue module instance. This is the one that will be saved during production. The value can be a dynamic variable create in the `Variables.ts`. Example: 
+	```json
+	{
+		"type": "saveservice",
+		"service": {
+			"serviceID": "{W_ID_SERVICE_PRINT}",
+			"devServiceId": "{W_ID_SERVICE_PRINT}",
+			"priority": 0
+		}
+	},
+	```
+
 	- An optional `serviceFlowId`, representing the <ins>production</ins> service flow id in the prod EasyQueue module instance. This is the one that will be saved during production. The `serviceFlowId` (and the following `devServiceFlowId`) is used for step/stage tickets.
 	- An optional `devServiceId`, representing the <ins>development</ins> service id in the dev EasyQueue module instance. This is the one that will be saved during development. This was added so the serviceId doesn't need to be adjusted when switching between dev and prod, reducing potential inattention errors.
 	- An optional `devServiceFlowId`, representing the <ins>development</ins> service flow id in the dev EasyQueue module instance.
