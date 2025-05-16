@@ -265,6 +265,7 @@ function Engine(props: IEngineProps): JSX.Element {
 
 		if (eidStatus === eIdStatus.READ && eidError === "") {
 			setTimeout(() => {
+				setIsLoading(false);
 				setEIdBlock(true);
 			}, delayCustomLoader * 1000);
 		}
@@ -277,9 +278,6 @@ function Engine(props: IEngineProps): JSX.Element {
 
 		return () => {
 			clearTimeout(delay);
-			setTimeout(() => {
-				setIsLoading(false);
-			}, (delayCustomLoader * 1000) + 1000);
 		};
 	}, [eidStatus, eidError]);
 
