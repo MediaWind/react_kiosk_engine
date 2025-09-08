@@ -81,6 +81,12 @@ export interface IErrorManagement {
 	serviceClosed?: {
 		[key: string]: IBackgroundImage
 	}
+	serviceDisabled?: {
+		[key: string]: IBackgroundImage
+	}
+	serviceClosedDay?: {
+		[key: string]: IBackgroundImage
+	}
 	eIdTimeout?: IBackgroundImage;
 	unknownCard?: IBackgroundImage;
 	unresponsiveCard?: IBackgroundImage;

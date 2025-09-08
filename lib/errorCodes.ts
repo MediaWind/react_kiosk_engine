@@ -160,6 +160,16 @@ export enum ERROR_CODE {
 	 */
 	F500 = "500-F",
 
+	/**
+	 * 500-G: Service Disabled
+	 */
+	G500 = "500-G",
+
+	/**
+	 * 500-H: Service closed day
+	 */
+	H500 = "500-H",
+
 	//? -- Service unavailable/hardware errors -- //
 
 	/**

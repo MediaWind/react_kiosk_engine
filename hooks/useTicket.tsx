@@ -34,17 +34,31 @@ export default function useTicket(dispatchPrintState: React.Dispatch<IPrintActio
 				if (data.status_reason) {
 					Console.error("Error when trying to create ticket - data.status_reason: " + data.status_reason, { fileName: "useTicket", functionName: "createTicket", lineNumber: 23, });
 					switch (data.status_reason) {
-						case "service_closed":
+						case "service_closed": {
+							let message = "Service is closed";
+							let errorCode = ERROR_CODE.C500;
+
+							if(data.closed_reason == "closed_day") {
+								message = data.msg_reason;
+								errorCode = ERROR_CODE.H500;
+							}
+
+							if(data.closed_reason == "service_disabled") {
+								message = "Service is disabled";
+								errorCode = ERROR_CODE.G500;
+							}
+
 							dispatchError({
 								type: ERROR_ACTION_TYPE.SETERROR,
 								payload: {
 									hasError: true,
-									errorCode: ERROR_CODE.C500,
-									message: "Service is closed",
+									errorCode: errorCode,
+									message: message,
 									errorServiceId: ticketState.service ? `${ticketState.service.serviceId}` : undefined,
 								},
 							});
 							break;
+						}
 						case "ticket_not_found":
 							dispatchError({
 								type: ERROR_ACTION_TYPE.SETERROR,
