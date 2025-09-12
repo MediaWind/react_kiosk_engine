@@ -13,7 +13,7 @@ export default function useServices(dispatchErrorState: React.Dispatch<IErrorAct
 
 	async function getServices(filterClosed?: boolean, filterIds?: string[]) {
 		Console.info("Fetching services...");
-		const url = `${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/services.php?id_project=${Variables.W_ID_PROJECT}&serial=${Variables.SERIAL}`;
+		const url = `${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/services.php?id_project=${Variables.W_ID_PROJECT}&serial=${Variables.SERIAL}&mode=child`;
 
 		try {
 			const response = await fetchRetry(url);
