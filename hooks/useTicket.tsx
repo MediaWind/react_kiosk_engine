@@ -38,13 +38,13 @@ export default function useTicket(dispatchPrintState: React.Dispatch<IPrintActio
 							let message = "Service is closed";
 							let errorCode = ERROR_CODE.C500;
 
-							if(data.closed_reason == "closed_day") {
+							if(data.closed_reason && data.closed_reason.type == "closed_day") {
 								message = data.msg_reason;
 								errorCode = ERROR_CODE.H500;
 							}
 
-							if(data.closed_reason == "service_disabled") {
-								message = "Service is disabled";
+							if(data.closed_reason && data.closed_reason.type == "service_disabled") {
+								message = "Service is disabled : " + data.closed_reason.info;
 								errorCode = ERROR_CODE.G500;
 							}
 
