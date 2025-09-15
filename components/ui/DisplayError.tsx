@@ -38,16 +38,8 @@ function getErrorImage(image: IErrorManagement, errorCode?: ERROR_CODE, serviceI
 				}	else if (image.serviceDisabled["default"]) {
 					return image.serviceDisabled["default"];
 				}
-			} else {
-				if (image.serviceClosed) {
-					if (serviceId && image.serviceClosed[serviceId]) {
-						return image.serviceClosed[serviceId];
-					} else if (image.serviceClosed["default"]) {
-						return image.serviceClosed["default"];
-					}
-				}
-			}
-
+			} 
+			
 			return image.genericError;
 		}
 		case ERROR_CODE.H500: {
@@ -58,14 +50,6 @@ function getErrorImage(image: IErrorManagement, errorCode?: ERROR_CODE, serviceI
 					return image.serviceClosedDay[serviceId];
 				}	else if (image.serviceClosedDay["default"]) {
 					return image.serviceClosedDay["default"];
-				}
-			} else {
-				if (image.serviceClosed) {
-					if (serviceId && image.serviceClosed[serviceId]) {
-						return image.serviceClosed[serviceId];
-					} else if (image.serviceClosed["default"]) {
-						return image.serviceClosed["default"];
-					}
 				}
 			}
 
