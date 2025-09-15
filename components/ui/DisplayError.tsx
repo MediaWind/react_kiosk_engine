@@ -31,6 +31,30 @@ function getErrorImage(image: IErrorManagement, errorCode?: ERROR_CODE, serviceI
 
 			return image.genericError;
 		}
+		case ERROR_CODE.G500: {
+			if (image.serviceDisabled) {
+				if (serviceId && image.serviceDisabled[serviceId]) {
+					return image.serviceDisabled[serviceId];
+				}	else if (image.serviceDisabled["default"]) {
+					return image.serviceDisabled["default"];
+				}
+			} 
+			
+			return image.genericError;
+		}
+		case ERROR_CODE.H500: {
+			console.log(image);
+			if (image.serviceClosedDay) {
+				console.log("service closed day image", image.serviceClosedDay);
+				if (serviceId && image.serviceClosedDay[serviceId]) {
+					return image.serviceClosedDay[serviceId];
+				}	else if (image.serviceClosedDay["default"]) {
+					return image.serviceClosedDay["default"];
+				}
+			}
+
+			return image.genericError;
+		}
 		case ERROR_CODE.B429: {
 			if (image.serviceQuotaLimitExceeded) {
 				if (serviceId && image.serviceQuotaLimitExceeded[serviceId]) {

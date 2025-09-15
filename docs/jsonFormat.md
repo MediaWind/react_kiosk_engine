@@ -125,6 +125,14 @@ This is an optional property to display error specific custom images. If no `err
 		"default": {},
 		"10": {}
 	},
+	"serviceDisabled": {
+		"default": {},
+		"10": {}
+	},
+	"serviceClosedDay": {
+		"default": {},
+		"10": {}
+	},
 	"eIdTimeout": {},
 	"unknownCard": {},
 	"unresponsiveCard": {},
