@@ -31,7 +31,7 @@ export default function ButtonInput(props: IButtonInputProps) {
 				outline: "none",
 				borderStyle: "none",
 
-				backgroundColor: "transparent",
+				backgroundColor: Variables.W_DEBUG ? "rgba(0, 0, 0, 0.8)" : "transparent",
 
 				...styles,
 			}}

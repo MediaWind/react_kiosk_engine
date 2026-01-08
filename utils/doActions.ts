@@ -71,6 +71,15 @@ export default function doActions(actions: IInputAction[], dispatchers: IDispatc
 					});
 				}
 
+				// Check if serviceId and devServiceId have | and get the first part
+				if (serviceId && serviceId.includes("|")) {
+					serviceId = serviceId.split("|")[0];
+				}
+
+				if (devServiceId && devServiceId.includes("|")) {
+					devServiceId = devServiceId.split("|")[0];
+				}
+
 				action.service = {
 					...action.service,
 					serviceId: serviceId ? parseInt(serviceId) : undefined,

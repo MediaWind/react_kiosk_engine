@@ -74,12 +74,24 @@ export interface IDateTime {
 	style: CSSProperties
 }
 
+
+export interface INextOpeningHourData {
+	format: string;
+	style: CSSProperties;
+}
+
+export interface INextOpeningHour {
+	default: string;
+	nextOpeningHour: INextOpeningHourData;
+	[key: string]: string | INextOpeningHourData;
+}
+
 export interface IErrorManagement {
 	genericError: IBackgroundImage;
 	noPaper?: IBackgroundImage;
 	notConnectedToInternet?: IBackgroundImage;
 	serviceClosed?: {
-		[key: string]: IBackgroundImage
+		[key: string]: IBackgroundImage | INextOpeningHour
 	}
 	serviceDisabled?: {
 		[key: string]: IBackgroundImage

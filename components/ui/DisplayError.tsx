@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import styles from "../../styles/ui/Error.module.scss";
@@ -7,10 +7,12 @@ import { Variables } from "../../../variables";
 
 import { useErrorContext } from "../../contexts/errorContext";
 
-import { ERROR_ACTION_TYPE, IBackgroundImage, IErrorManagement, Route } from "../../interfaces";
+import { ERROR_ACTION_TYPE, IBackgroundImage, IErrorManagement, INextOpeningHourData, Route } from "../../interfaces";
 import { ERROR_CODE } from "../../lib/errorCodes";
 
 import BackgroundImage from "./BackgroundImage";
+import fetchRetry from "../../utils/fetchRetry";
+import dayjs from "dayjs";
 
 interface IDisplayErrorProps {
 	route: Route | null
@@ -23,9 +25,9 @@ function getErrorImage(image: IErrorManagement, errorCode?: ERROR_CODE, serviceI
 		case ERROR_CODE.C500: {
 			if (image.serviceClosed) {
 				if (serviceId && image.serviceClosed[serviceId]) {
-					return image.serviceClosed[serviceId];
+					return image.serviceClosed[serviceId] as IBackgroundImage;
 				} else if (image.serviceClosed["default"]) {
-					return image.serviceClosed["default"];
+					return image.serviceClosed["default"] as IBackgroundImage;
 				}
 			}
 
@@ -59,7 +61,7 @@ function getErrorImage(image: IErrorManagement, errorCode?: ERROR_CODE, serviceI
 			if (image.serviceQuotaLimitExceeded) {
 				if (serviceId && image.serviceQuotaLimitExceeded[serviceId]) {
 					return image.serviceQuotaLimitExceeded[serviceId];
-				}	else if (image.serviceQuotaLimitExceeded["default"]) {
+				} else if (image.serviceQuotaLimitExceeded["default"]) {
 					return image.serviceQuotaLimitExceeded["default"];
 				}
 			}
@@ -75,6 +77,49 @@ function getErrorImage(image: IErrorManagement, errorCode?: ERROR_CODE, serviceI
 		default: return image.genericError;
 	}
 }
+
+async function getNextOpeningHour(serviceId: string, format: string | undefined): Promise<string | null> {
+	const url = `${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/services.php?id_project=${Variables.W_ID_PROJECT}&serial=${Variables.SERIAL}&id_service=${serviceId}&all=1`;
+
+	try {
+		const serviceResponse = await fetchRetry(url);
+		const data = await serviceResponse.json();
+
+		if (!data || data.length === 0) return null;
+
+		const service = data[0];
+		const currentDayNumber = new Date().getDay();
+		const schedule = service.schedule[currentDayNumber];
+
+		// Get next opening hour
+		const now = new Date();
+		let nextOpeningHour = null;
+		for (const slot of schedule) {
+			const [h, m] = slot.hour_start.split(":").map(Number);
+
+			const start = new Date();
+			start.setHours(h, m, 0, 0);
+
+			if (start > now) {
+				nextOpeningHour = start;
+				break;
+			}
+		}
+
+		format = format ? format : "HH:mm";
+
+		const nextOpeningHourFormated = nextOpeningHour
+			? dayjs(nextOpeningHour).format(format)
+			: null;
+
+		return nextOpeningHourFormated;
+
+	} catch (error) {
+		console.error("Error fetching service schedule:", error);
+		return null;
+	}
+}
+
 
 export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 	const { route, } = props;
@@ -111,6 +156,43 @@ export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 
 	if (route?.errorManagement) {
 		const image = getErrorImage(route.errorManagement, errorState.errorCode, errorState.errorServiceId);
+
+		const [nextOpeningHour, setNextOpeningHour] = React.useState<string | null>(null);
+
+		const serviceId = errorState.errorServiceId && !errorState.errorServiceId.startsWith("{w_") ? errorState.errorServiceId : null;
+		let serviceClosed = null;
+
+		if (route?.errorManagement?.serviceClosed) {
+			serviceClosed = route.errorManagement.serviceClosed[serviceId as string] ?? route.errorManagement.serviceClosed["default"];
+		}
+
+		const nextOpeningHourData = serviceClosed?.nextOpeningHour as INextOpeningHourData | undefined;
+
+		// If C500 fetch next opening hour
+		useEffect(() => {
+			async function fetchNextOpeningHour() {
+				if (
+					errorState.errorCode === ERROR_CODE.C500 &&
+					serviceId &&
+					nextOpeningHourData
+				) {
+					const hour = await getNextOpeningHour(
+						serviceId,
+						nextOpeningHourData?.format
+					);
+
+					console.log("Next opening hour:", hour);
+
+					setNextOpeningHour(hour);
+				} else {
+					setNextOpeningHour(null);
+				}
+			}
+
+			fetchNextOpeningHour();
+
+		}, [errorState.errorCode, errorState.errorServiceId, route.errorManagement?.serviceClosed?.nextOpeningHour]);
+
 		return (
 			<div className={styles.error_management_main} onTouchEnd={clickHandler} onClick={devClick}>
 				{image === route.errorManagement.genericError &&
@@ -119,6 +201,12 @@ export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 						{errorState.errorCode && <p id={styles.error_code}>Error code: <b>{errorState.errorCode}</b></p>}
 					</div>
 				}
+
+				{/* If C500 display next opening hour */}
+				{nextOpeningHour &&
+					<div style={{...nextOpeningHourData?.style, position: "absolute", zIndex: 2, }}>{nextOpeningHour}</div>
+				}
+
 				<BackgroundImage image={image} />
 			</div>
 		);
