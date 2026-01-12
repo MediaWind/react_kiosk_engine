@@ -27,6 +27,8 @@ import useAppointment from "../hooks/useAppointment";
 
 import { Console } from "../utils/console";
 import checkCurrentFlow from "../utils/checkCurrentFlow";
+import getKioskFlowURL from "../utils/getKioskFlowURL";
+import substVariables from "../utils/substVariables";
 
 import ContextsWrapper from "./ContextsWrapper";
 import PageRouter from "../components/PageRouter";
@@ -98,6 +100,7 @@ interface IEngineProps {
 	onConditions?: CallableFunction
 	waitSecondsAfterPrint?: number
 	debug?: boolean
+	flow?: number // KioskFlow id_project used in "dynamic" route service URL
 }
 
 function Engine(props: IEngineProps): JSX.Element {
@@ -115,7 +118,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [flaggedFlow, setFlaggedFlow] = useState<IFlow>();
 	const [readyToChangeFlow, setReadyToChangeFlow] = useState<boolean>(true);
 
-	const [ticketState, dispatchTicketState] = useReducer(ticketDataReducer, { ...initialTicketState, language: props.route.i18n.defaultLanguage,  });
+	const [ticketState, dispatchTicketState] = useReducer(ticketDataReducer, { ...initialTicketState, language: props.route.i18n?.defaultLanguage ?? "fr",  });
 	const [appointmentState, dispatchAppointmentState] = useReducer(appointmentReducer, initialAppointmentState);
 	const [printState, dispatchPrintState] = useReducer(printReducer, initialPrintState);
 	const [error, dispatchErrorState] = useReducer(errorReducer, initialErrorState);
@@ -125,7 +128,6 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [printTicket, isPrinting , checkPrinterStatus] = usePrinter(dispatchErrorState);
 	const [createTicket] = useTicket(dispatchPrintState, dispatchErrorState);
 	const [appointmentTicketPDF, checkIn, checkOut, getAppointments] = useAppointment(dispatchAppointmentState, dispatchErrorState, dispatchAppointmentsState);
-
 
 	useEffect(() => {
 		if (Variables.C_ORIENTATION() === ORIENTATION.HORIZONTAL) {
@@ -149,22 +151,45 @@ function Engine(props: IEngineProps): JSX.Element {
 	// Checks flow every minute
 	useEffect(() => {
 		if (props.route) {
-			setDefaultLanguage(props.route.i18n.defaultLanguage);
 
-			const updateFlow = () => {
-				const currentScheduleItem = checkCurrentFlow(props.route);
+			if (props.flow) {
+				fetch(getKioskFlowURL())
+					.then(response => response.json())
+					.then(data => {
+						if (data.file && data.file.content) {
+							try {
+								const json = substVariables(JSON.stringify(data.file.content, null, 2));
+								data.file.content = JSON.parse(json);
+								const routeKeys = Object.keys(props.route);
+								if (routeKeys.length > 0) {
+									for (const key of routeKeys) {
+										const routeKey = (key as keyof typeof props.route);
+										if (routeKey in data.file.content) {
+											props.route[routeKey] = data.file.content[routeKey];
+										}
+									}
+								} else {
+									props.route = data.file.content as Route;
+								}
+								updateFlow(props);
 
-				if (currentScheduleItem) {
-					const flow = props.route.flows.find((flow) => flow.id === currentScheduleItem.id);
-					setFlaggedFlow(flow);
-				}
-			};
+								return;
+							} catch(error) {
+								console.debug(error);
+								updateFlow(props); // fallback
+							}
+						}
+						updateFlow(props); // fallback
+					})
+					.catch(error => {
+						console.error(error);
+						updateFlow(props); // fallback
+					});
 
-			updateFlow();
+				return;
+			}
 
-			setInterval(() => {
-				updateFlow();
-			}, 60 * 1000);
+			updateFlow(props);
 		}
 	}, [props.route]);
 
@@ -462,6 +487,25 @@ function Engine(props: IEngineProps): JSX.Element {
 
 		setReadyToChangeFlow(true);
 		setLanguage(defaultLanguage);
+	}
+
+	function updateFlow(props: IEngineProps) {
+		setDefaultLanguage(props.route.i18n?.defaultLanguage ?? "fr");
+
+		const updateFlow = () => {
+			const currentScheduleItem = checkCurrentFlow(props.route);
+
+			if (currentScheduleItem) {
+				const flow = props.route.flows.find((flow) => flow.id === currentScheduleItem.id);
+				setFlaggedFlow(flow);
+			}
+		};
+
+		updateFlow();
+
+		setInterval(() => {
+			updateFlow();
+		}, 60 * 1000);		
 	}
 
 	function triggerCustomAction(routerStates: IRouterContexts) {

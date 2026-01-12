@@ -4,7 +4,7 @@ import isPublicHoliday from "./publicHolidays";
 
 export default function checkCurrentFlow(route: Route): IScheduleItem | undefined {
 	const now = new Date();
-	const country = route.i18n.country;
+	const country = route.i18n?.country ?? "be";
 
 	let currentDaySchedule;
 
