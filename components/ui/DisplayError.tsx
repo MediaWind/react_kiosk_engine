@@ -37,11 +37,11 @@ function getErrorImage(image: IErrorManagement, errorCode?: ERROR_CODE, serviceI
 			if (image.serviceDisabled) {
 				if (serviceId && image.serviceDisabled[serviceId]) {
 					return image.serviceDisabled[serviceId];
-				}	else if (image.serviceDisabled["default"]) {
+				} else if (image.serviceDisabled["default"]) {
 					return image.serviceDisabled["default"];
 				}
-			} 
-			
+			}
+
 			return image.genericError;
 		}
 		case ERROR_CODE.H500: {
@@ -50,7 +50,7 @@ function getErrorImage(image: IErrorManagement, errorCode?: ERROR_CODE, serviceI
 				console.log("service closed day image", image.serviceClosedDay);
 				if (serviceId && image.serviceClosedDay[serviceId]) {
 					return image.serviceClosedDay[serviceId];
-				}	else if (image.serviceClosedDay["default"]) {
+				} else if (image.serviceClosedDay["default"]) {
 					return image.serviceClosedDay["default"];
 				}
 			}
@@ -158,6 +158,7 @@ export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 		const image = getErrorImage(route.errorManagement, errorState.errorCode, errorState.errorServiceId);
 
 		const [nextOpeningHour, setNextOpeningHour] = React.useState<string | null>(null);
+		const [noNextOpeningHourImg, setNoNextOpeningHourImg] = React.useState<IBackgroundImage | null>(null);
 
 		const serviceId = errorState.errorServiceId && !errorState.errorServiceId.startsWith("{w_") ? errorState.errorServiceId : null;
 		let serviceClosed = null;
@@ -183,6 +184,10 @@ export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 
 					console.log("Next opening hour:", hour);
 
+					if (!hour && nextOpeningHourData?.noNextOpeningHourImg) {
+						setNoNextOpeningHourImg(nextOpeningHourData.noNextOpeningHourImg);
+					}
+
 					setNextOpeningHour(hour);
 				} else {
 					setNextOpeningHour(null);
@@ -204,10 +209,15 @@ export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 
 				{/* If C500 display next opening hour */}
 				{nextOpeningHour &&
-					<div style={{...nextOpeningHourData?.style, position: "absolute", zIndex: 2, }}>{nextOpeningHour}</div>
+					<div style={{ ...nextOpeningHourData?.style, position: "absolute", zIndex: 2, }}>{nextOpeningHour}</div>
 				}
 
-				<BackgroundImage image={image} />
+				{
+					noNextOpeningHourImg ?
+						<BackgroundImage image={noNextOpeningHourImg} />
+						:
+						<BackgroundImage image={image} />
+				}
 			</div>
 		);
 	} else {

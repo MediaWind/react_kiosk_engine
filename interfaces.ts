@@ -78,6 +78,7 @@ export interface IDateTime {
 export interface INextOpeningHourData {
 	format: string;
 	style: CSSProperties;
+	noNextOpeningHourImg?: IBackgroundImage;
 }
 
 export interface INextOpeningHour {

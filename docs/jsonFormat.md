@@ -122,7 +122,12 @@ This is an optional property to display error specific custom images. If no `err
 	"noPaper": {},
 	"notConnectedToInternet": {},
 	"serviceClosed": {
-		"default": {},
+		"default": {
+			"nextOpeningHour": {
+				"format": "HH:mm",
+				"style": {}
+			}
+		},
 		"10": {}
 	},
 	"serviceDisabled": {
@@ -156,6 +161,16 @@ The `genericError` key is the only one required if an `errorManagement` is creat
 `notConnectedToInternet` will display images when the kiosk is not connected to internet.
 
 `serviceClosed` has a different structure. Instead of going directly to the images paths, we must define a required `default` key that will hold the overall images when a service is closed, and we can also use a service id as a key to display a service closed error for a specific service. This allows displaying a schedule for that particular service, for example. Make sure the service id is the *production* service id, associated with the right EasyQueue module.
+
+`serviceClosed.default` supports an optional `nextOpeningHour` object to display the next opening hour on top of the service-closed image. It is defined by a `format` following the same [dayjs documentation](https://day.js.org/docs/en/display/format) used elsewhere and a `style` containing CSS properties (positioning, font, color, etc.).
+
+You can also provide a `noNextOpeningHourImg` object under `serviceClosed.default` to display a fallback image when no next opening hour can be computed:
+
+```json
+"noNextOpeningHourImg": {
+	"default": "{widget_folder}/img/no-opening-hour.png"
+}
+```
 
 `eIdTimeout` will display images when the card reader takes more than 15 seconds to read the card.
 
@@ -236,6 +251,17 @@ The `eIdRead` property can function similarly to a page but with an array og act
 
 You can use project variables by enclosing them in {} in the endpoint. These variables will be replaced by their respective values at runtime.
 In the body, the keys are the readData we want to retrieve and the values are the key names we want to pass to the query body.
+
+`customLoader` is an optional property to override the loading screen with a custom image and an optional duration (in seconds) before continuing the flow.
+
+```json
+"customLoader": {
+	"image": {
+		"default": "{widget_folder}/img/reading-card.png"
+	},
+	"duration": 3
+}
+```
 
 ## Flow level
 
