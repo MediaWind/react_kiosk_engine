@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useReducer, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import "../i18n";
@@ -126,6 +126,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [createTicket] = useTicket(dispatchPrintState, dispatchErrorState);
 	const [appointmentTicketPDF, checkIn, checkOut, getAppointments] = useAppointment(dispatchAppointmentState, dispatchErrorState, dispatchAppointmentsState);
 
+	const timeOutEidBlock = useRef<NodeJS.Timeout>();
 
 	useEffect(() => {
 		if (Variables.C_ORIENTATION() === ORIENTATION.HORIZONTAL) {
@@ -264,13 +265,20 @@ function Engine(props: IEngineProps): JSX.Element {
 		}
 
 		if (eidStatus === eIdStatus.READ && eidError === "") {
-			setTimeout(() => {
+			timeOutEidBlock.current = setTimeout(() => {
 				setIsLoading(false);
 				setEIdBlock(true);
 			}, delayCustomLoader * 1000);
 		}
 
 		if (eidStatus === eIdStatus.REMOVED) {
+			if (timeOutEidBlock.current) {
+				clearTimeout(timeOutEidBlock.current);
+				timeOutEidBlock.current = undefined;
+			}
+
+			setIsLoading(false);
+
 			setTimeout(() => {
 				setEIdBlock(false);
 			}, 1000);
