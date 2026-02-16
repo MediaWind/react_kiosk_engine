@@ -35,6 +35,7 @@ import Debugger from "../components/debug/Debugger";
 import DisplayError from "../components/ui/DisplayError";
 import EIdBlock from "./ui/EIdBlock";
 import ActivePage from "./ActivePage";
+import birthDateYYYYMMDDFromNiss from "../../core/utils/birthDateFromNiss";
 
 interface IRouterContexts {
 	router: {
@@ -421,12 +422,40 @@ function Engine(props: IEngineProps): JSX.Element {
 				const minBeforeAppointment = params.minBeforeAppointment ? params.minBeforeAppointment : null;
 				const minAfterAppointment = params.minAfterAppointment ? params.minAfterAppointment : null;
 
-				// Get services id
-				if(params && params.nationalNumber && ticketState.eIdDatas && ticketState.eIdDatas.nationalNumber) {	
-					getAppointments(null, ticketState.eIdDatas.nationalNumber, minBeforeAppointment, minAfterAppointment, services);
-				}
+				if (ticketState.eIdDatas && ticketState.eIdDatas.nationalNumber && params) {
 
-				// TODO : add birthdate
+					// National number or Birth date
+					if (params.nationalNumber && params.birthDate) {
+
+						getAppointments(null, ticketState.eIdDatas.nationalNumber, minBeforeAppointment, minAfterAppointment, services).then((data: any) => {
+							if(data && data.status === 1) {
+								console.log("Fetched appointments:", data.appointments);
+							} else {
+								const birthDate = birthDateYYYYMMDDFromNiss(ticketState?.eIdDatas?.nationalNumber || "");
+								if (!birthDate) return;
+
+								getAppointments(birthDate, null, minBeforeAppointment, minAfterAppointment, services);
+							}
+						});
+
+						return;
+					}
+
+					// Only National number
+					if(params.nationalNumber) {	
+						getAppointments(null, ticketState.eIdDatas.nationalNumber, minBeforeAppointment, minAfterAppointment, services);
+
+						return;
+					}
+
+					// Only Birth date
+					if(params.birthDate) {
+						const birthDate = birthDateYYYYMMDDFromNiss(ticketState.eIdDatas.nationalNumber || "");
+						if (!birthDate) return;
+
+						getAppointments(birthDate, null, minBeforeAppointment, minAfterAppointment, services);
+					}
+				}
 			}
 		}
 
