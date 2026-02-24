@@ -171,7 +171,7 @@ export interface IBackgroundImage {
 
 export interface IMedia {
 	type: MEDIA_TYPE;
-	content: IVideoContent | IImageContent | IInputContent | IInputAreaContent;
+	content: IVideoContent | IImageContent | IInputContent | IInputAreaContent | IServiceScheduleContent;
 }
 
 export enum MEDIA_TYPE {
@@ -179,6 +179,7 @@ export enum MEDIA_TYPE {
 	IMAGE = "image",
 	INPUT = "input",
 	INPUT_AREA = "inputArea",
+	SERVICE_SCHEDULE = "serviceSchedule",
 }
 
 export interface IVideoContent {
@@ -225,6 +226,14 @@ export interface IInputContent {
 	advancedButtonConfig?: IAdvancedButtonConfig;
 	textInputConfig?: ITextInputConfig;
 	selectConfig?: ISelectConfig;
+}
+
+export interface IServiceScheduleContent {
+	name: string;
+	styles: CSSProperties;
+	format?: string;
+	serviceIds?: string[];
+	emptyLabel?: string;
 }
 
 export enum INPUT_TYPE {

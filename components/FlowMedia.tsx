@@ -1,9 +1,10 @@
-import { IImageContent, IInputAction, IInputAreaContent, IInputContent, IMedia, IVideoContent, MEDIA_TYPE } from "../interfaces";
+import { IImageContent, IInputAction, IInputAreaContent, IInputContent, IMedia, IServiceScheduleContent, IVideoContent, MEDIA_TYPE } from "../interfaces";
 
 import ImageContent from "./ui/ImageContent";
 import InputContent from "./ui/InputContent";
 import VideoContent from "./ui/VideoContent";
 import InputAreaContent from "./ui/InputAreaContent";
+import ServiceScheduleContent from "./ui/ServiceScheduleContent";
 
 interface IFlowMediaProps {
 	id: string
@@ -34,6 +35,10 @@ export default function FlowMedia(props: IFlowMediaProps): JSX.Element {
 	} else if (media.type === MEDIA_TYPE.INPUT_AREA) {
 		return (
 			<InputAreaContent content={media.content as IInputAreaContent} onActionsTrigger={actionsHandler} />
+		);
+	} else if (media.type === MEDIA_TYPE.SERVICE_SCHEDULE) {
+		return (
+			<ServiceScheduleContent content={media.content as IServiceScheduleContent} />
 		);
 	} else {
 		return (
