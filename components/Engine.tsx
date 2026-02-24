@@ -35,7 +35,7 @@ import Debugger from "../components/debug/Debugger";
 import DisplayError from "../components/ui/DisplayError";
 import EIdBlock from "./ui/EIdBlock";
 import ActivePage from "./ActivePage";
-import birthDateYYYYMMDDFromNiss from "../../core/utils/birthDateFromNiss";
+import birthDateYYYYMMDDFromNiss from "../utils/birthDateFromNiss";
 
 interface IRouterContexts {
 	router: {
