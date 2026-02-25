@@ -6,13 +6,15 @@ import styles from "../../styles/ui/Error.module.scss";
 import { Variables } from "../../../variables";
 
 import { useErrorContext } from "../../contexts/errorContext";
+import { useFlowContext } from "../../contexts/flowContext";
 
-import { ERROR_ACTION_TYPE, IBackgroundImage, IErrorManagement, INextOpeningHourData, Route } from "../../interfaces";
+import { ERROR_ACTION_TYPE, IBackgroundImage, IErrorManagement, IErrorNavigateTo, INextOpeningHourData, Route } from "../../interfaces";
 import { ERROR_CODE } from "../../lib/errorCodes";
 
 import BackgroundImage from "./BackgroundImage";
 import fetchRetry from "../../utils/fetchRetry";
 import dayjs from "dayjs";
+import ActivePage from "../ActivePage";
 
 interface IDisplayErrorProps {
 	route: Route | null
@@ -25,9 +27,17 @@ function getErrorImage(image: IErrorManagement, errorCode?: ERROR_CODE, serviceI
 		case ERROR_CODE.C500: {
 			if (image.serviceClosed) {
 				if (serviceId && image.serviceClosed[serviceId]) {
-					return image.serviceClosed[serviceId] as IBackgroundImage;
+					const content = image.serviceClosed[serviceId] as IBackgroundImage | IErrorNavigateTo;
+					if ("navigateTo" in content) {
+						return image.genericError;
+					}
+					return content as IBackgroundImage;
 				} else if (image.serviceClosed["default"]) {
-					return image.serviceClosed["default"] as IBackgroundImage;
+					const content = image.serviceClosed["default"] as IBackgroundImage | IErrorNavigateTo;
+					if ("navigateTo" in content) {
+						return image.genericError;
+					}
+					return content as IBackgroundImage;
 				}
 			}
 
@@ -45,9 +55,7 @@ function getErrorImage(image: IErrorManagement, errorCode?: ERROR_CODE, serviceI
 			return image.genericError;
 		}
 		case ERROR_CODE.H500: {
-			console.log(image);
 			if (image.serviceClosedDay) {
-				console.log("service closed day image", image.serviceClosedDay);
 				if (serviceId && image.serviceClosedDay[serviceId]) {
 					return image.serviceClosedDay[serviceId];
 				} else if (image.serviceClosedDay["default"]) {
@@ -125,6 +133,7 @@ export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 	const { route, } = props;
 
 	const { errorState, dispatchErrorState, } = useErrorContext();
+	const { flow, } = useFlowContext();
 	const { t, } = useTranslation("errors");
 
 	useEffect(() => {
@@ -155,8 +164,6 @@ export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 	}
 
 	if (route?.errorManagement) {
-		const image = getErrorImage(route.errorManagement, errorState.errorCode, errorState.errorServiceId);
-
 		const [nextOpeningHour, setNextOpeningHour] = React.useState<string | null>(null);
 		const [noNextOpeningHourImg, setNoNextOpeningHourImg] = React.useState<IBackgroundImage | null>(null);
 
@@ -167,7 +174,33 @@ export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 			serviceClosed = route.errorManagement.serviceClosed[serviceId as string] ?? route.errorManagement.serviceClosed["default"];
 		}
 
-		const nextOpeningHourData = serviceClosed?.nextOpeningHour as INextOpeningHourData | undefined;
+		const serviceClosedNavigateTo = (serviceClosed as IErrorNavigateTo | null)?.navigateTo;
+		const serviceClosedPage = (errorState.errorCode === ERROR_CODE.C500 && serviceClosedNavigateTo)
+			? flow.pages.find(page => page.id === serviceClosedNavigateTo)
+			: undefined;
+
+		const nextOpeningHourData = serviceClosed && "nextOpeningHour" in serviceClosed
+			? serviceClosed.nextOpeningHour as INextOpeningHourData
+			: undefined;
+
+		if (serviceClosedPage) {
+			return (
+				<div
+					style={{
+						position: "absolute",
+						top: 0,
+						right: 0,
+						bottom: 0,
+						left: 0,
+						zIndex: 30,
+					}}
+				>
+					<ActivePage page={serviceClosedPage} />
+				</div>
+			);
+		}
+
+		const image = getErrorImage(route.errorManagement, errorState.errorCode, errorState.errorServiceId);
 
 		// If C500 fetch next opening hour
 		useEffect(() => {
@@ -181,8 +214,6 @@ export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 						serviceId,
 						nextOpeningHourData?.format
 					);
-
-					console.log("Next opening hour:", hour);
 
 					if (!hour && nextOpeningHourData?.noNextOpeningHourImg) {
 						setNoNextOpeningHourImg(nextOpeningHourData.noNextOpeningHourImg);

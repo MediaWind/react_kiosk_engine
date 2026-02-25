@@ -12,6 +12,7 @@ This documentation will explain in detail the different properties of a kiosk fl
 	- [name](#name)
 	- [i18n](#i18n)
 	- [scheduling](#scheduling)
+		- [Dynamic route scheduling](#dynamic-route-scheduling)
 	- [flows](#flows)
 	- [errorManagement](#errormanagement)
 - [Flow level](#flow-level)
@@ -33,6 +34,7 @@ This documentation will explain in detail the different properties of a kiosk fl
 - [Media level](#media-level)
 	- [Video media](#video-media)
 	- [Image media](#image-media)
+	- [Service schedule media](#service-schedule-media)
 	- [Input media](#input-media)
 		- [Action types](#action-types)
 		- [Advanced button configuration](#advanced-button-configuration)
@@ -105,6 +107,29 @@ These days items are defined by an array holding a list of schedule items, thems
 
 In practice, a single day item can hold multiple schedule items. The referenced flow will start at the `startTime` and keep going until the `startTime` of the next item is reached. If there is only one continuous flow on that day, we don't need to specify a `startTime`.
 
+#### Dynamic route scheduling
+
+The engine can override the local `scheduling` at runtime by fetching a remote KioskFlow config.
+
+This behavior is enabled when `Variables.W_ID_FLOW` is defined.
+
+The request is sent to:
+
+```txt
+{DOMAINE_HTTP}/modules/Modules/KioskFlow/services/flows/findOne.php
+```
+
+with:
+
+- `id_project={W_ID_FLOW}`
+- `serial={SERIAL}`
+- `key_protect={KEY_PLAYER}`
+- `id_easyqueue={W_ID_PROJECT}`
+
+If the response contains `file.content.scheduling`, the engine validates that every scheduled flow id exists in your local `flows` array. If valid, it replaces `route.scheduling` with the fetched one. If not valid, the local scheduling is kept.
+
+Use this only to update planning dynamically. Flow/page/media definitions still come from your local route JSON.
+
 ### flows
 
 This is a list of all the flows associated with the route. More on that in the [Flow level](#flow-level) section.
@@ -123,6 +148,8 @@ This is an optional property to display error specific custom images. If no `err
 	"notConnectedToInternet": {},
 	"serviceClosed": {
 		"default": {
+			"default": "optional path",
+			"navigateTo": "optional page UUID",
 			"nextOpeningHour": {
 				"format": "HH:mm",
 				"style": {}
@@ -160,15 +187,30 @@ The `genericError` key is the only one required if an `errorManagement` is creat
 
 `notConnectedToInternet` will display images when the kiosk is not connected to internet.
 
-`serviceClosed` has a different structure. Instead of going directly to the images paths, we must define a required `default` key that will hold the overall images when a service is closed, and we can also use a service id as a key to display a service closed error for a specific service. This allows displaying a schedule for that particular service, for example. Make sure the service id is the *production* service id, associated with the right EasyQueue module.
+`serviceClosed` has a different structure. We define a required `default` key and can optionally add service ids as keys for specific cases. Service ids must be *production* service ids.
 
-`serviceClosed.default` supports an optional `nextOpeningHour` object to display the next opening hour on top of the service-closed image. It is defined by a `format` following the same [dayjs documentation](https://day.js.org/docs/en/display/format) used elsewhere and a `style` containing CSS properties (positioning, font, color, etc.).
+`serviceClosed.default` supports two behaviors:
+
+- **Image mode** (legacy/compatible): provide a `default` image path (and optional language paths), and optionally a `nextOpeningHour` object.
+- **Page mode**: provide a `navigateTo` pointing to a page id in the current flow. In that case the engine displays that page directly instead of rendering the error image layer.
+
+`nextOpeningHour` can be used in image mode to display the next opening hour on top of the service-closed image. It is defined by a `format` following the same [dayjs documentation](https://day.js.org/docs/en/display/format) and a `style` containing CSS properties (positioning, font, color, etc.).
 
 You can also provide a `noNextOpeningHourImg` object under `serviceClosed.default` to display a fallback image when no next opening hour can be computed:
 
 ```json
 "noNextOpeningHourImg": {
 	"default": "{widget_folder}/img/no-opening-hour.png"
+}
+```
+
+Example of `navigateTo` mode:
+
+```json
+"serviceClosed": {
+	"default": {
+		"navigateTo": "5b57beda-6aa1-4261-969b-close-page-id"
+	}
 }
 ```
 
@@ -548,6 +590,35 @@ This media allows to display an image on the page.
 An `image` type media's content is defined by a `name`, a `src` pointing to the path of the image, an `animate` allowing animation of said image and `styles` containing CSS properties.
 
 **<ins>Note:</ins>** This media has not been used previously and will need testing and refactoring when needed.
+
+<hr />
+
+### Service schedule media
+
+This media displays the opening schedule of services for the current day.
+
+```json
+{
+	"type": "serviceSchedule",
+	"content": {
+		"name": "services-horaires",
+		"styles": {},
+		"format": "HH:mm",
+		"serviceIds": [12, 15, 22],
+		"emptyLabel": "Le service est fermé pour aujourd'hui"
+	}
+}
+```
+
+`serviceSchedule` content is defined by:
+
+- `name`: media name.
+- `styles`: CSS properties for the main container.
+- `format` (optional): hour format (`HH:mm` by default).
+- `serviceIds` (optional): list of service ids to request. When provided, they are passed to the services endpoint through `id_service=...`.
+- `emptyLabel` (optional): label shown when no schedule can be displayed.
+
+The media fetches services from QueueManagement (`services.php`) with `all=1`. Labels are resolved from `array_translations` using the current language when available, with fallback to French.
 
 <hr />
 

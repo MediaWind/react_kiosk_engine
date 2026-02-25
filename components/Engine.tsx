@@ -36,6 +36,7 @@ import DisplayError from "../components/ui/DisplayError";
 import EIdBlock from "./ui/EIdBlock";
 import ActivePage from "./ActivePage";
 import birthDateYYYYMMDDFromNiss from "../utils/birthDateFromNiss";
+import getKioskFlowURL from "../utils/getKioskFlowURL";
 
 interface IRouterContexts {
 	router: {
@@ -102,6 +103,8 @@ interface IEngineProps {
 }
 
 function Engine(props: IEngineProps): JSX.Element {
+	const [route, setRoute] = useState<Route>(props.route);
+
 	const [eIdInserted, eIdReaded, eIdRemoved, eIdError] = useSharedVariables("eid_inserted", "eid_readed", "eid_removed", "eid_error");
 	const [eidStatus, eIdData, eidError] = useEId(eIdInserted, eIdReaded, eIdRemoved, eIdError);
 	const { t, i18n, } = useTranslation();
@@ -116,14 +119,14 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [flaggedFlow, setFlaggedFlow] = useState<IFlow>();
 	const [readyToChangeFlow, setReadyToChangeFlow] = useState<boolean>(true);
 
-	const [ticketState, dispatchTicketState] = useReducer(ticketDataReducer, { ...initialTicketState, language: props.route.i18n.defaultLanguage,  });
+	const [ticketState, dispatchTicketState] = useReducer(ticketDataReducer, { ...initialTicketState, language: route.i18n.defaultLanguage, });
 	const [appointmentState, dispatchAppointmentState] = useReducer(appointmentReducer, initialAppointmentState);
 	const [printState, dispatchPrintState] = useReducer(printReducer, initialPrintState);
 	const [error, dispatchErrorState] = useReducer(errorReducer, initialErrorState);
 	const [appointmentsState, dispatchAppointmentsState] = useReducer(appointmentsReducer, initialAppointmentsState);
 
 	const [qrCode, writeQrCode, resetQrCode] = useScanner();
-	const [printTicket, isPrinting , checkPrinterStatus] = usePrinter(dispatchErrorState);
+	const [printTicket, isPrinting, checkPrinterStatus] = usePrinter(dispatchErrorState);
 	const [createTicket] = useTicket(dispatchPrintState, dispatchErrorState);
 	const [appointmentTicketPDF, checkIn, checkOut, getAppointments] = useAppointment(dispatchAppointmentState, dispatchErrorState, dispatchAppointmentsState);
 
@@ -145,30 +148,80 @@ function Engine(props: IEngineProps): JSX.Element {
 		}
 	}, []);
 
+	/*****************
+	 * DYNAMIC ROUTE *
+	 *****************/
+
+	useEffect(() => {
+		if (!Variables.W_ID_FLOW) return;
+
+		const checkDynamicRoute = async () => {
+			try {
+				const url = getKioskFlowURL();
+				const response = await fetch(url);
+				const data = await response.json();
+
+				const newScheduling = data?.file?.content?.scheduling;
+				if (!newScheduling) return;
+
+				setRoute((prevRoute) => {
+					// Verify flows exist
+					const allFlowsExistInRoute = Object.values(newScheduling).every((day: any) =>
+						day.every((scheduledFlow: IFlow) =>
+							prevRoute.flows.some((routeFlow) => routeFlow.id === scheduledFlow.id)
+						)
+					);
+
+					if (!allFlowsExistInRoute) {
+						console.error("The new schedule contains flows that do not exist in the current route.");
+						return prevRoute;
+					}
+
+					const same = JSON.stringify(prevRoute.scheduling) === JSON.stringify(newScheduling);
+					if (same) return prevRoute;
+
+					console.info("Schedule updated", newScheduling);
+
+					return { ...prevRoute, scheduling: newScheduling, } as Route;
+				});
+			} catch (e) {
+				console.error("Failed to fetch dynamic route schedule", e);
+			}
+		};
+
+		checkDynamicRoute();
+	}, []);
+
 	//* ---- *//
 	//* Flow *//
 	//* ---- *//
 	// Checks flow every minute
 	useEffect(() => {
-		if (props.route) {
-			setDefaultLanguage(props.route.i18n.defaultLanguage);
+		let interval: NodeJS.Timeout;
+
+		if (route) {
+			setDefaultLanguage(route.i18n.defaultLanguage);
 
 			const updateFlow = () => {
-				const currentScheduleItem = checkCurrentFlow(props.route);
+				const currentScheduleItem = checkCurrentFlow(route);
 
 				if (currentScheduleItem) {
-					const flow = props.route.flows.find((flow) => flow.id === currentScheduleItem.id);
+					const flow = route.flows.find((flow) => flow.id === currentScheduleItem.id);
 					setFlaggedFlow(flow);
 				}
 			};
 
 			updateFlow();
 
-			setInterval(() => {
+			interval = setInterval(() => {
 				updateFlow();
 			}, 60 * 1000);
 		}
-	}, [props.route]);
+
+		return () => {
+			clearInterval(interval);
+		};
+	}, [route]);
 
 	// Change current with flagged flow if no user interaction
 	useEffect(() => {
@@ -217,7 +270,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	//Loading on eId inserted
 	useEffect(() => {
 		Console.info("eId status: " + eidStatus);
-		const delayCustomLoader = props.route.eventManagement?.customLoader?.duration ?? 0;
+		const delayCustomLoader = route.eventManagement?.customLoader?.duration ?? 0;
 
 		if (eidError !== "") {
 			dispatchErrorState({
@@ -301,22 +354,22 @@ function Engine(props: IEngineProps): JSX.Element {
 			});
 
 			// If there is an eIdRead action, it will trigger the action
-			const eidRead = props.route.eventManagement?.eIdRead as IReadPage;
+			const eidRead = route.eventManagement?.eIdRead as IReadPage;
 
-			if(eidRead && eidRead.actions) {
+			if (eidRead && eidRead.actions) {
 				eidRead.actions.map(action => {
 					// This regex will match all the variables in the endpoint with the format {variable}
 					// It will then replace the match with the value of the match in <Variables>
-					const regex = /\{([^}]+)\}/g; 
+					const regex = /\{([^}]+)\}/g;
 					const matches = [...action.endpoint.matchAll(regex)].map(m => m[1]);
 
 					matches.map(match => {
-						if(Variables[match as keyof typeof Variables]) {
+						if (Variables[match as keyof typeof Variables]) {
 							action.endpoint = action.endpoint.replace(`{${match}}`, Variables[match as keyof typeof Variables].toString());
 						}
 					});
-				
-					if(action.type === "POST" || action.type === "PUT") {
+
+					if (action.type === "POST" || action.type === "PUT") {
 						const body: { [key: string]: any } = {};
 
 						for (const key in action.body) {
@@ -358,7 +411,18 @@ function Engine(props: IEngineProps): JSX.Element {
 	// Monitors printState to trigger ticket creation/print
 	useEffect(() => {
 		if (printState.ticketCreationRequested) {
-			createTicket(ticketState, currentFlow);
+			setIsLoading(true);
+
+			const start = Date.now();
+			createTicket(ticketState, currentFlow).then(() => {
+				const end = Date.now();
+
+				// If the ticket creation takes less than 500ms, we wait the remaining time to reach 500ms
+				const delay = end - start < 500 ? 500 - (end - start) : 0;
+				setTimeout(() => {
+					setIsLoading(false);
+				}, delay);	
+			});
 
 			dispatchPrintState({
 				type: PRINT_ACTION_TYPE.REQUESTTICKETCREATION,
@@ -369,7 +433,7 @@ function Engine(props: IEngineProps): JSX.Element {
 		if (printState.printRequested && printState.ticketPDF) {
 			printTicket(printState.ticketPDF, props.waitSecondsAfterPrint ?? 5);
 
-			dispatchPrintState({ type: PRINT_ACTION_TYPE.CLEARALL,});
+			dispatchPrintState({ type: PRINT_ACTION_TYPE.CLEARALL, });
 			resetTicketData();
 		}
 	}, [printState]);
@@ -412,11 +476,11 @@ function Engine(props: IEngineProps): JSX.Element {
 	// Monitors appointmentsState to trigger appointments requests
 	useEffect(() => {
 
-		if(currentFlow) {
+		if (currentFlow) {
 			if (appointmentsState.getAppointmentsRequested.status) {
 				const params = appointmentsState.getAppointmentsRequested.params;
 
-				if(!params) return;
+				if (!params) return;
 
 				const services = params.services ? params.services : [];
 				const minBeforeAppointment = params.minBeforeAppointment ? params.minBeforeAppointment : null;
@@ -428,7 +492,7 @@ function Engine(props: IEngineProps): JSX.Element {
 					if (params.nationalNumber && params.birthDate) {
 
 						getAppointments(null, ticketState.eIdDatas.nationalNumber, minBeforeAppointment, minAfterAppointment, services).then((data: any) => {
-							if(data && data.status === 1) {
+							if (data && data.status === 1) {
 								console.log("Fetched appointments:", data.appointments);
 							} else {
 								const birthDate = birthDateYYYYMMDDFromNiss(ticketState?.eIdDatas?.nationalNumber || "");
@@ -442,14 +506,14 @@ function Engine(props: IEngineProps): JSX.Element {
 					}
 
 					// Only National number
-					if(params.nationalNumber) {	
+					if (params.nationalNumber) {
 						getAppointments(null, ticketState.eIdDatas.nationalNumber, minBeforeAppointment, minAfterAppointment, services);
 
 						return;
 					}
 
 					// Only Birth date
-					if(params.birthDate) {
+					if (params.birthDate) {
 						const birthDate = birthDateYYYYMMDDFromNiss(ticketState.eIdDatas.nationalNumber || "");
 						if (!birthDate) return;
 
@@ -522,7 +586,7 @@ function Engine(props: IEngineProps): JSX.Element {
 					dispatcher: dispatchAppointmentsState,
 				},
 				hooks: {
-					useAppointment : [appointmentTicketPDF, checkIn, checkOut, getAppointments],
+					useAppointment: [appointmentTicketPDF, checkIn, checkOut, getAppointments],
 				},
 				print: {
 					state: printState,
@@ -559,7 +623,7 @@ function Engine(props: IEngineProps): JSX.Element {
 					dispatcher: dispatchAppointmentsState,
 				},
 				hooks: {
-					useAppointment : [appointmentTicketPDF, checkIn, checkOut, getAppointments],
+					useAppointment: [appointmentTicketPDF, checkIn, checkOut, getAppointments],
 				},
 				print: {
 					state: printState,
@@ -615,14 +679,14 @@ function Engine(props: IEngineProps): JSX.Element {
 						/>
 					)}
 
-					{error.hasError && <DisplayError route={props.route} />}
+					{error.hasError && <DisplayError route={route} />}
 
-					{isLoading && <LoadingScreen customImages={props.route.errorManagement} customLoader={props.route.eventManagement?.customLoader} />}
-					{(eIdBlock && !(props.route.eventManagement && props.route.eventManagement.eIdRead)) && <EIdBlock customImages={props.route.errorManagement} />}
+					{isLoading && <LoadingScreen customImages={route.errorManagement} customLoader={route.eventManagement?.customLoader} />}
+					{(eIdBlock && !(route.eventManagement && route.eventManagement.eIdRead)) && <EIdBlock customImages={route.errorManagement} />}
 
 					<PageRouter isPrinting={isPrinting} onReset={resetAll} onCustomAction={triggerCustomAction} onConditions={triggerConditions} />
 
-					{eIdBlock && props.route.eventManagement?.eIdRead && <ActivePage page={props.route.eventManagement.eIdRead as IPage} />}
+					{eIdBlock && route.eventManagement?.eIdRead && <ActivePage page={route.eventManagement.eIdRead as IPage} />}
 				</ContextsWrapper>
 			</div>
 		);
