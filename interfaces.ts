@@ -87,12 +87,16 @@ export interface INextOpeningHour {
 	[key: string]: string | INextOpeningHourData;
 }
 
+export interface IErrorNavigateTo {
+	navigateTo: string;
+}
+
 export interface IErrorManagement {
 	genericError: IBackgroundImage;
 	noPaper?: IBackgroundImage;
 	notConnectedToInternet?: IBackgroundImage;
 	serviceClosed?: {
-		[key: string]: IBackgroundImage | INextOpeningHour
+		[key: string]: IBackgroundImage | INextOpeningHour | IErrorNavigateTo
 	}
 	serviceDisabled?: {
 		[key: string]: IBackgroundImage

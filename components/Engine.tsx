@@ -416,7 +416,18 @@ function Engine(props: IEngineProps): JSX.Element {
 	// Monitors printState to trigger ticket creation/print
 	useEffect(() => {
 		if (printState.ticketCreationRequested) {
-			createTicket(ticketState, currentFlow);
+			setIsLoading(true);
+
+			const start = Date.now();
+			createTicket(ticketState, currentFlow).then(() => {
+				const end = Date.now();
+
+				// If the ticket creation takes less than 500ms, we wait the remaining time to reach 500ms
+				const delay = end - start < 500 ? 500 - (end - start) : 0;
+				setTimeout(() => {
+					setIsLoading(false);
+				}, delay);	
+			});
 
 			dispatchPrintState({
 				type: PRINT_ACTION_TYPE.REQUESTTICKETCREATION,
