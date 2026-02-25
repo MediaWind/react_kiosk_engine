@@ -190,11 +190,6 @@ function Engine(props: IEngineProps): JSX.Element {
 		};
 
 		checkDynamicRoute();
-		const interval = setInterval(checkDynamicRoute, 60_000);
-
-		return () => {
-			clearInterval(interval);
-		};
 	}, []);
 
 	//* ---- *//
