@@ -1,0 +1,45 @@
+.main {
+	position: absolute;
+	z-index: 2;
+}
+
+.list {
+	flex: 1 1 auto;
+	height: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.list::-webkit-scrollbar {
+	display: none;
+}
+
+.controls {
+	flex: 0 0 84px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 14px;
+}
+
+.scroll_btn {
+	height: 76px;
+	width: 76px;
+	border: 2px solid #d0d0d0;
+	border-radius: 50%;
+	background-color: #f6f6f6;
+	box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+	color: #5a5a5a;
+	font-size: 36px;
+	line-height: 1;
+	font-weight: 600;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}

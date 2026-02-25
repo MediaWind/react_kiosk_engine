@@ -25,7 +25,7 @@ export default function getTicketingURL(ticketState: ITicketDataState, flow: IFl
 	let serviceId = ticketState.service?.serviceId;
 	let serviceFlowId = ticketState.service?.serviceFlowId;
 
-	if (process.env.NODE_ENV !== "production" || Variables.DOMAINE === "modules.greenplayer.com") {
+	if (process.env.NODE_ENV !== "production" || Variables.DOMAINE === "maxime.greenplayer.com") {
 		if (ticketState.service?.devServiceId) {
 			serviceId = ticketState.service.devServiceId;
 		}
