@@ -1,10 +1,11 @@
-import { IImageContent, IInputAction, IInputAreaContent, IInputContent, IMedia, IServiceScheduleContent, IVideoContent, MEDIA_TYPE } from "../interfaces";
+import { IImageContent, IInputAction, IInputAreaContent, IInputContent, IMedia, IServiceButtonsContent, IServiceScheduleContent, IVideoContent, MEDIA_TYPE } from "../interfaces";
 
 import ImageContent from "./ui/ImageContent";
 import InputContent from "./ui/InputContent";
 import VideoContent from "./ui/VideoContent";
 import InputAreaContent from "./ui/InputAreaContent";
 import ServiceScheduleContent from "./ui/ServiceScheduleContent";
+import ServiceButtonsContent from "./ui/ServiceButtonsContent";
 
 interface IFlowMediaProps {
 	id: string
@@ -39,6 +40,10 @@ export default function FlowMedia(props: IFlowMediaProps): JSX.Element {
 	} else if (media.type === MEDIA_TYPE.SERVICE_SCHEDULE) {
 		return (
 			<ServiceScheduleContent content={media.content as IServiceScheduleContent} />
+		);
+	} else if (media.type === MEDIA_TYPE.SERVICE_BUTTONS) {
+		return (
+			<ServiceButtonsContent content={media.content as IServiceButtonsContent} onActionsTrigger={actionsHandler} />
 		);
 	} else {
 		return (

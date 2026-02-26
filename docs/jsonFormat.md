@@ -34,6 +34,7 @@ This documentation will explain in detail the different properties of a kiosk fl
 - [Media level](#media-level)
 	- [Video media](#video-media)
 	- [Image media](#image-media)
+	- [Service buttons media](#service-buttons-media)
 	- [Service schedule media](#service-schedule-media)
 	- [Input media](#input-media)
 		- [Action types](#action-types)
@@ -590,6 +591,49 @@ This media allows to display an image on the page.
 An `image` type media's content is defined by a `name`, a `src` pointing to the path of the image, an `animate` allowing animation of said image and `styles` containing CSS properties.
 
 **<ins>Note:</ins>** This media has not been used previously and will need testing and refactoring when needed.
+
+<hr />
+
+### Service buttons media
+
+This media displays a list of services as clickable buttons.
+
+```json
+{
+	"type": "serviceButtons",
+	"content": {
+		"name": "services-list",
+		"styles": {},
+		"buttonStyles": {},
+		"serviceIds": [],
+		"hideClosedService": true,
+		"emptyLabel": "Aucun service disponible",
+		"scrollStep": 140,
+		"actions": [
+			{
+				"type": "custom",
+				"id": "irm"
+			}
+		]
+	}
+}
+```
+
+`serviceButtons` content is defined by:
+
+- `name`: media name.
+- `styles`: CSS properties for the main container.
+- `buttonStyles`: CSS properties applied to each button.
+- `serviceIds` (optional): list of service ids to display. If omitted, all services are fetched.
+- `hideClosedService` (optional): hides closed services when true.
+- `emptyLabel` (optional): label shown when no service is available.
+- `scrollStep` (optional): scroll amount (in px) when using the scroll arrows.
+- `actions`: list of actions triggered when a service is clicked.
+
+Specific behaviors:
+
+- Do **not** add a `saveservice` action here; the component saves the selected service automatically when a button is pressed.
+- For `custom` actions, the `id` received by your custom action handler is suffixed with the selected service id: `"<configured_id>=<service_id>"` (e.g., `irm=12`). Use this to know which service triggered the custom logic.
 
 <hr />
 

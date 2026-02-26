@@ -175,7 +175,7 @@ export interface IBackgroundImage {
 
 export interface IMedia {
 	type: MEDIA_TYPE;
-	content: IVideoContent | IImageContent | IInputContent | IInputAreaContent | IServiceScheduleContent;
+	content: IVideoContent | IImageContent | IInputContent | IInputAreaContent | IServiceScheduleContent | IServiceButtonsContent;
 }
 
 export enum MEDIA_TYPE {
@@ -184,6 +184,7 @@ export enum MEDIA_TYPE {
 	INPUT = "input",
 	INPUT_AREA = "inputArea",
 	SERVICE_SCHEDULE = "serviceSchedule",
+	SERVICE_BUTTONS = "serviceButtons",
 }
 
 export interface IVideoContent {
@@ -238,6 +239,17 @@ export interface IServiceScheduleContent {
 	format?: string;
 	serviceIds?: string[];
 	emptyLabel?: string;
+}
+
+export interface IServiceButtonsContent {
+	name: string;
+	styles: CSSProperties;
+	buttonStyles: CSSProperties;
+	actions: IInputAction[];
+	serviceIds?: string[];
+	hideClosedService?: boolean;
+	emptyLabel?: string;
+	scrollStep?: number;
 }
 
 export enum INPUT_TYPE {
