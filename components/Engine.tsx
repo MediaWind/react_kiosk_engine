@@ -153,7 +153,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	 *****************/
 
 	useEffect(() => {
-		if (!Variables.W_ID_FLOW) return;
+		if (!("W_ID_FLOW" in Variables) || !Variables.W_ID_FLOW) return;
 
 		const checkDynamicRoute = async () => {
 			try {
