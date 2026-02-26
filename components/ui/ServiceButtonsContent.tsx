@@ -51,24 +51,31 @@ export default function ServiceButtonsContent(props: IServiceButtonsContentProps
 	};
 
 	function clickHandler(serviceId: string) {
-		if (!content.actions || content.actions.length === 0) {
+		let actions = content.actions ?? [];
+
+		if (!actions || actions.length === 0) {
 			return;
 		}
 
-		let updatedActions: IInputAction[] = [...content.actions];
-		const hasSaveServiceAction = updatedActions.some(action => action.type === ACTION_TYPE.SAVESERVICE);
+		actions.unshift({
+			type: ACTION_TYPE.SAVESERVICE,
+			service: {
+				serviceId: parseInt(serviceId, 10),
+			},
+		});
 
-		if (hasSaveServiceAction) {
-			updatedActions = updatedActions.filter(action => action.type !== ACTION_TYPE.SAVESERVICE);
-			updatedActions.push({
-				type: ACTION_TYPE.SAVESERVICE,
-				service: {
-					serviceId: parseInt(serviceId),
-				},
-			});
-		}
+		actions = actions.map(action => {
+			if (action.type !== ACTION_TYPE.CUSTOM) {
+				return action;
+			}
 
-		onActionsTrigger(updatedActions);
+			return {
+				...action,
+				id: `${action.id ?? ""}=${serviceId}`,
+			};
+		});
+
+		onActionsTrigger(actions);
 	}
 
 	function scrollList(direction: "up" | "down") {
