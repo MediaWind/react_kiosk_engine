@@ -3,7 +3,7 @@ import { CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import { Variables } from "../../../variables";
 import classes from "../../styles/ui/ServiceButtonsContent.module.scss";
 
-import { ACTION_TYPE, IInputAction, IServiceButtonsContent } from "../../interfaces";
+import { ACTION_TYPE, IServiceButtonsContent } from "../../interfaces";
 import { useLanguageContext } from "../../contexts/languageContext";
 import fetchRetry from "../../utils/fetchRetry";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -31,6 +31,8 @@ export default function ServiceButtonsContent(props: IServiceButtonsContentProps
 
 	const [services, setServices] = useState<ServiceButtonData[]>([]);
 	const [hasOverflow, setHasOverflow] = useState<boolean>(false);
+	const [atTop, setAtTop] = useState<boolean>(true);
+	const [atBottom, setAtBottom] = useState<boolean>(false);
 
 	const visibleServices = useMemo(() => {
 		if (content.hideClosedService) {
@@ -91,20 +93,32 @@ export default function ServiceButtonsContent(props: IServiceButtonsContentProps
 	}
 
 	useEffect(() => {
-		function updateOverflowState() {
-			if (!listRef.current) {
+		const element = listRef.current;
+
+		function updateScrollState() {
+			if (!element) {
 				setHasOverflow(false);
+				setAtTop(true);
+				setAtBottom(true);
 				return;
 			}
 
-			setHasOverflow(listRef.current.scrollHeight > listRef.current.clientHeight + 1);
+			const { scrollTop, scrollHeight, clientHeight, } = element;
+			const maxScroll = scrollHeight - clientHeight;
+
+			setHasOverflow(scrollHeight > clientHeight + 1);
+			setAtTop(scrollTop <= 1);
+			setAtBottom(scrollTop >= maxScroll - 1);
 		}
 
-		updateOverflowState();
-		window.addEventListener("resize", updateOverflowState);
+		updateScrollState();
+
+		element?.addEventListener("scroll", updateScrollState);
+		window.addEventListener("resize", updateScrollState);
 
 		return () => {
-			window.removeEventListener("resize", updateOverflowState);
+			element?.removeEventListener("scroll", updateScrollState);
+			window.removeEventListener("resize", updateScrollState);
 		};
 	}, [visibleServices.length, content.buttonStyles.height, content.styles.height]);
 
@@ -175,6 +189,7 @@ export default function ServiceButtonsContent(props: IServiceButtonsContentProps
 					onClick={() => scrollList("up")}
 					onTouchEnd={() => scrollList("up")}
 					className={classes.scroll_btn}
+					disabled={atTop}
 				>
 					<FontAwesomeIcon icon={faAngleUp} style={{ fontSize: "35px", }} />
 				</button>
@@ -182,6 +197,7 @@ export default function ServiceButtonsContent(props: IServiceButtonsContentProps
 					onClick={() => scrollList("down")}
 					onTouchEnd={() => scrollList("down")}
 					className={classes.scroll_btn}
+					disabled={atBottom}
 				>
 					<FontAwesomeIcon icon={faAngleDown} style={{ fontSize: "35px", }} />
 				</button>
