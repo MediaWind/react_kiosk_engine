@@ -1,23 +1,12 @@
 import { CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 
-import { Variables } from "../../../variables";
 import classes from "../../styles/ui/ServiceButtonsContent.module.scss";
 
 import { ACTION_TYPE, IServiceButtonsContent } from "../../interfaces";
 import { useLanguageContext } from "../../contexts/languageContext";
-import fetchRetry from "../../utils/fetchRetry";
+import { useServicesCatalogContext } from "../../contexts/servicesCatalogContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleUp, faAngleDown } from "@fortawesome/pro-solid-svg-icons";
-
-type ServiceButtonData = {
-	id: string;
-	name_fr: string;
-	service_is_open?: boolean | number;
-	array_translations?: Record<string, {
-		lang: string;
-		value: string;
-	}>;
-};
 
 interface IServiceButtonsContentProps {
 	content: IServiceButtonsContent;
@@ -27,12 +16,23 @@ interface IServiceButtonsContentProps {
 export default function ServiceButtonsContent(props: IServiceButtonsContentProps): JSX.Element {
 	const { content, onActionsTrigger, } = props;
 	const { language, } = useLanguageContext();
+	const { servicesCatalog, } = useServicesCatalogContext();
 	const listRef = useRef<HTMLDivElement | null>(null);
 
-	const [services, setServices] = useState<ServiceButtonData[]>([]);
 	const [hasOverflow, setHasOverflow] = useState<boolean>(false);
 	const [atTop, setAtTop] = useState<boolean>(true);
 	const [atBottom, setAtBottom] = useState<boolean>(false);
+
+	const services = useMemo(() => {
+		if (!content.serviceIds || content.serviceIds.length === 0) {
+			return servicesCatalog;
+		}
+
+		const servicesById = new Map(servicesCatalog.map(service => [service.id, service]));
+		return content.serviceIds
+			.map(id => servicesById.get(id))
+			.filter((service): service is NonNullable<typeof service> => service !== undefined);
+	}, [servicesCatalog, content.serviceIds?.join(",")]);
 
 	const visibleServices = useMemo(() => {
 		if (content.hideClosedService) {
@@ -122,34 +122,6 @@ export default function ServiceButtonsContent(props: IServiceButtonsContentProps
 		};
 	}, [visibleServices.length, content.buttonStyles.height, content.styles.height]);
 
-	useEffect(() => {
-		async function fetchServices() {
-			const urlObj = new URL(`${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/services.php`);
-			urlObj.searchParams.set("id_project", Variables.W_ID_PROJECT.toString());
-			urlObj.searchParams.set("serial", Variables.SERIAL);
-			urlObj.searchParams.set("all", "1");
-			if (content.serviceIds && content.serviceIds.length > 0) {
-				urlObj.searchParams.set("id_service", content.serviceIds.join(","));
-			}
-
-			try {
-				const response = await fetchRetry(urlObj.toString());
-				const data = await response.json();
-
-				const returnedServices: ServiceButtonData[] = Array.isArray(data)
-					? data
-					: data.array_services ?? [];
-
-				setServices(returnedServices);
-			} catch (error) {
-				console.error("Error fetching services for buttons list:", error);
-				setServices([]);
-			}
-		}
-
-		fetchServices();
-	}, [content.serviceIds?.join(","), content.hideClosedService]);
-
 	return (
 		<div className={classes.main} style={{ ...content.styles, }}>
 			<div
@@ -168,7 +140,6 @@ export default function ServiceButtonsContent(props: IServiceButtonsContentProps
 						<button
 							key={`service_button_${service.id}`}
 							onClick={() => clickHandler(service.id)}
-							onTouchEnd={() => clickHandler(service.id)}
 							style={{ ...content.buttonStyles, flexShrink: 0, }}
 						>
 							<span style={buttonTextStyle}>{label}</span>
@@ -186,7 +157,6 @@ export default function ServiceButtonsContent(props: IServiceButtonsContentProps
 				style={hasOverflow ? undefined : { visibility: "hidden", pointerEvents: "none", }}
 			>
 				<button
-					onClick={() => scrollList("up")}
 					onTouchEnd={() => scrollList("up")}
 					className={classes.scroll_btn}
 					disabled={atTop}
@@ -194,7 +164,6 @@ export default function ServiceButtonsContent(props: IServiceButtonsContentProps
 					<FontAwesomeIcon icon={faAngleUp} style={{ fontSize: "35px", }} />
 				</button>
 				<button
-					onClick={() => scrollList("down")}
 					onTouchEnd={() => scrollList("down")}
 					className={classes.scroll_btn}
 					disabled={atBottom}

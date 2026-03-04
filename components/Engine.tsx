@@ -27,6 +27,7 @@ import useAppointment from "../hooks/useAppointment";
 
 import { Console } from "../utils/console";
 import checkCurrentFlow from "../utils/checkCurrentFlow";
+import fetchRetry from "../utils/fetchRetry";
 
 import ContextsWrapper from "./ContextsWrapper";
 import PageRouter from "../components/PageRouter";
@@ -37,6 +38,7 @@ import EIdBlock from "./ui/EIdBlock";
 import ActivePage from "./ActivePage";
 import birthDateYYYYMMDDFromNiss from "../utils/birthDateFromNiss";
 import getKioskFlowURL from "../utils/getKioskFlowURL";
+import { ServiceCatalogItem } from "../contexts/servicesCatalogContext";
 
 interface IRouterContexts {
 	router: {
@@ -124,6 +126,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	const [printState, dispatchPrintState] = useReducer(printReducer, initialPrintState);
 	const [error, dispatchErrorState] = useReducer(errorReducer, initialErrorState);
 	const [appointmentsState, dispatchAppointmentsState] = useReducer(appointmentsReducer, initialAppointmentsState);
+	const [servicesCatalog, setServicesCatalog] = useState<ServiceCatalogItem[]>([]);
 
 	const [qrCode, writeQrCode, resetQrCode] = useScanner();
 	const [printTicket, isPrinting, checkPrinterStatus] = usePrinter(dispatchErrorState);
@@ -146,6 +149,31 @@ function Engine(props: IEngineProps): JSX.Element {
 				html.style.fontSize = Variables.WIDTH + "px";
 			}
 		}
+	}, []);
+
+	useEffect(() => {
+		async function fetchServicesCatalog() {
+			const urlObj = new URL(`${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/services.php`);
+			urlObj.searchParams.set("id_project", Variables.W_ID_PROJECT.toString());
+			urlObj.searchParams.set("serial", Variables.SERIAL);
+			urlObj.searchParams.set("all", "1");
+
+			try {
+				const response = await fetchRetry(urlObj.toString());
+				const data = await response.json();
+				const returnedServices: ServiceCatalogItem[] = Array.isArray(data)
+					? data
+					: data.array_services ?? [];
+
+				setServicesCatalog(returnedServices);
+			} catch (error) {
+				console.error("Error fetching services catalog:", error);
+				
+				setServicesCatalog([]);
+			}
+		}
+
+		fetchServicesCatalog();
 	}, []);
 
 	/*****************
@@ -664,6 +692,8 @@ function Engine(props: IEngineProps): JSX.Element {
 					eidStatus,
 					appointmentsState,
 					dispatchAppointmentsState,
+					servicesCatalog,
+					setServicesCatalog,
 				}}>
 
 					{props.debug && (
