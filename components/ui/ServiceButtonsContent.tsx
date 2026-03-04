@@ -1,6 +1,7 @@
-import { CSSProperties, useEffect, useMemo, useRef, useState } from "react";
+import { CSSProperties, TouchEvent, useEffect, useMemo, useRef, useState } from "react";
 
 import classes from "../../styles/ui/ServiceButtonsContent.module.scss";
+import { Variables } from "../../../variables";
 
 import { ACTION_TYPE, IServiceButtonsContent } from "../../interfaces";
 import { useLanguageContext } from "../../contexts/languageContext";
@@ -18,21 +19,72 @@ export default function ServiceButtonsContent(props: IServiceButtonsContentProps
 	const { language, } = useLanguageContext();
 	const { servicesCatalog, } = useServicesCatalogContext();
 	const listRef = useRef<HTMLDivElement | null>(null);
+	const touchStartRef = useRef<{ x: number; y: number; } | null>(null);
+	const touchMovedRef = useRef<boolean>(false);
+	const skipNextClickRef = useRef<boolean>(false);
+	const ignoreClicksUntilRef = useRef<number>(0);
 
 	const [hasOverflow, setHasOverflow] = useState<boolean>(false);
 	const [atTop, setAtTop] = useState<boolean>(true);
 	const [atBottom, setAtBottom] = useState<boolean>(false);
 
+	useEffect(() => {
+		// Prevent ghost click from previous page navigation.
+		ignoreClicksUntilRef.current = Date.now() + 400;
+	}, []);
+
+	function normalizeServiceIds(value: unknown): string[] {
+		if (value === undefined || value === null) {
+			return [];
+		}
+
+		if (Array.isArray(value)) {
+			return value
+				.map(item => String(item).trim())
+				.filter(item => item.length > 0);
+		}
+
+		if (typeof value === "number") {
+			return [String(value)];
+		}
+
+		if (typeof value === "string") {
+			const trimmed = value.trim();
+			if (trimmed.length === 0) {
+				return [];
+			}
+
+			const variableMatch = trimmed.match(/^\{([A-Z0-9_]+)\}$/);
+			if (variableMatch) {
+				const variableName = variableMatch[1];
+				const variableValue = (Variables as unknown as Record<string, unknown>)[variableName];
+				return normalizeServiceIds(variableValue);
+			}
+
+			return trimmed
+				.split(",")
+				.map(item => item.trim())
+				.filter(item => item.length > 0);
+		}
+
+		return [];
+	}
+
+	const resolvedServiceIds = useMemo(
+		() => normalizeServiceIds(content.serviceIds as unknown),
+		[content.serviceIds]
+	);
+
 	const services = useMemo(() => {
-		if (!content.serviceIds || content.serviceIds.length === 0) {
+		if (resolvedServiceIds.length === 0) {
 			return servicesCatalog;
 		}
 
 		const servicesById = new Map(servicesCatalog.map(service => [service.id, service]));
-		return content.serviceIds
+		return resolvedServiceIds
 			.map(id => servicesById.get(id))
 			.filter((service): service is NonNullable<typeof service> => service !== undefined);
-	}, [servicesCatalog, content.serviceIds?.join(",")]);
+	}, [servicesCatalog, resolvedServiceIds.join(",")]);
 
 	const visibleServices = useMemo(() => {
 		if (content.hideClosedService) {
@@ -92,6 +144,57 @@ export default function ServiceButtonsContent(props: IServiceButtonsContentProps
 		});
 	}
 
+	function handleButtonTouchStart(event: TouchEvent<HTMLButtonElement>) {
+		const touch = event.changedTouches[0];
+		if (!touch) {
+			return;
+		}
+
+		touchStartRef.current = { x: touch.clientX, y: touch.clientY, };
+		touchMovedRef.current = false;
+	}
+
+	function handleButtonTouchMove(event: TouchEvent<HTMLButtonElement>) {
+		const touch = event.changedTouches[0];
+		const start = touchStartRef.current;
+
+		if (!touch || !start) {
+			return;
+		}
+
+		const deltaX = Math.abs(touch.clientX - start.x);
+		const deltaY = Math.abs(touch.clientY - start.y);
+
+		if (deltaX > 8 || deltaY > 8) {
+			touchMovedRef.current = true;
+		}
+	}
+
+	function handleButtonTouchEnd(serviceId: string) {
+		skipNextClickRef.current = true;
+		window.setTimeout(() => {
+			skipNextClickRef.current = false;
+		}, 400);
+
+		if (touchMovedRef.current) {
+			return;
+		}
+
+		clickHandler(serviceId);
+	}
+
+	function handleButtonClick(serviceId: string) {
+		if (Date.now() < ignoreClicksUntilRef.current) {
+			return;
+		}
+
+		if (skipNextClickRef.current) {
+			return;
+		}
+
+		clickHandler(serviceId);
+	}
+
 	useEffect(() => {
 		const element = listRef.current;
 
@@ -139,8 +242,16 @@ export default function ServiceButtonsContent(props: IServiceButtonsContentProps
 					return (
 						<button
 							key={`service_button_${service.id}`}
-							onClick={() => clickHandler(service.id)}
-							style={{ ...content.buttonStyles, flexShrink: 0, }}
+							type="button"
+							onClick={() => handleButtonClick(service.id)}
+							onTouchStart={handleButtonTouchStart}
+							onTouchMove={handleButtonTouchMove}
+							onTouchEnd={() => handleButtonTouchEnd(service.id)}
+							onTouchCancel={() => {
+								touchStartRef.current = null;
+								touchMovedRef.current = false;
+							}}
+							style={{ ...content.buttonStyles, flexShrink: 0, touchAction: "manipulation", }}
 						>
 							<span style={buttonTextStyle}>{label}</span>
 						</button>

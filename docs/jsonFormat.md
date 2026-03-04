@@ -625,10 +625,33 @@ This media displays a list of services as clickable buttons.
 - `styles`: CSS properties for the main container.
 - `buttonStyles`: CSS properties applied to each button.
 - `serviceIds` (optional): list of service ids to display. If omitted, all services are fetched.
+  You can also reference a variable from `src/variables.ts` with the syntax `"{W_VARIABLE_NAME}"`.
+  Example: `"{W_SERVICES_ID_DESK_OUT}"` resolves to `Variables.W_SERVICES_ID_DESK_OUT`.
+  Supported values are arrays, CSV strings (`"2,6,7"`), and single numbers.
 - `hideClosedService` (optional): hides closed services when true.
 - `emptyLabel` (optional): label shown when no service is available.
 - `scrollStep` (optional): scroll amount (in px) when using the scroll arrows.
 - `actions`: list of actions triggered when a service is clicked.
+
+Example using a variable placeholder:
+
+```json
+{
+	"type": "serviceButtons",
+	"content": {
+		"name": "services-list",
+		"serviceIds": "{W_SERVICES_ID_DESK_OUT}",
+		"styles": {},
+		"buttonStyles": {},
+		"actions": [
+			{
+				"type": "custom",
+				"id": "desk_out"
+			}
+		]
+	}
+}
+```
 
 Specific behaviors:
 
