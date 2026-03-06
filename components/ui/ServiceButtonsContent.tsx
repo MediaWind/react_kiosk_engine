@@ -27,11 +27,86 @@ export default function ServiceButtonsContent(props: IServiceButtonsContentProps
 	const [hasOverflow, setHasOverflow] = useState<boolean>(false);
 	const [atTop, setAtTop] = useState<boolean>(true);
 	const [atBottom, setAtBottom] = useState<boolean>(false);
+	const [timeTick, setTimeTick] = useState<number>(() => Date.now());
 
 	useEffect(() => {
 		// Prevent ghost click from previous page navigation.
 		ignoreClicksUntilRef.current = Date.now() + 400;
 	}, []);
+
+	useEffect(() => {
+		const intervalId = setInterval(() => {
+			setTimeTick(Date.now());
+		}, 30_000);
+
+		return () => {
+			clearInterval(intervalId);
+		};
+	}, []);
+
+	function parseHourToMinutes(value: string | undefined): number | null {
+		if (!value) {
+			return null;
+		}
+
+		const [hoursRaw, minutesRaw] = value.split(":");
+		const hours = Number(hoursRaw);
+		const minutes = Number(minutesRaw);
+
+		if (
+			Number.isNaN(hours)
+			|| Number.isNaN(minutes)
+			|| hours < 0
+			|| hours > 23
+			|| minutes < 0
+			|| minutes > 59
+		) {
+			return null;
+		}
+
+		return hours * 60 + minutes;
+	}
+
+	function isServiceOpenNow(service: typeof servicesCatalog[number], now: Date): boolean {
+		if (Number(service.service_is_disabled)) {
+			return false;
+		}
+
+		if (Number(service.is_closed_day)) {
+			return false;
+		}
+
+		const dayKey = String(now.getDay());
+		const slots = service.schedule?.[dayKey] ?? [];
+
+		if (slots.length === 0) {
+			// Fallback for services without schedule in payload.
+			return Boolean(Number(service.service_is_open));
+		}
+
+		const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+		return slots.some(slot => {
+			const startMinutes = parseHourToMinutes(slot.hour_start);
+			const endMinutes = parseHourToMinutes(slot.hour_end);
+
+			if (startMinutes === null || endMinutes === null) {
+				return false;
+			}
+
+			if (startMinutes === endMinutes) {
+				// Explicit business rule: 00:00 -> 00:00 means always open.
+				return startMinutes === 0;
+			}
+
+			if (endMinutes > startMinutes) {
+				return currentMinutes >= startMinutes && currentMinutes < endMinutes;
+			}
+
+			// Overnight slot, e.g. 22:00 -> 02:00.
+			return currentMinutes >= startMinutes || currentMinutes < endMinutes;
+		});
+	}
 
 	function normalizeServiceIds(value: unknown): string[] {
 		if (value === undefined || value === null) {
@@ -88,10 +163,11 @@ export default function ServiceButtonsContent(props: IServiceButtonsContentProps
 
 	const visibleServices = useMemo(() => {
 		if (content.hideClosedService) {
-			return services.filter(service => Boolean(Number(service.service_is_open)));
+			const now = new Date(timeTick);
+			return services.filter(service => isServiceOpenNow(service, now));
 		}
 		return services;
-	}, [services, content.hideClosedService]);
+	}, [services, content.hideClosedService, timeTick]);
 
 	const buttonTextStyle: CSSProperties = {
 		fontSize: content.buttonStyles.fontSize,
@@ -172,7 +248,7 @@ export default function ServiceButtonsContent(props: IServiceButtonsContentProps
 
 	function handleButtonTouchEnd(serviceId: string) {
 		skipNextClickRef.current = true;
-		window.setTimeout(() => {
+		setTimeout(() => {
 			skipNextClickRef.current = false;
 		}, 400);
 
