@@ -309,6 +309,9 @@ function Engine(props: IEngineProps): JSX.Element {
 					message: t(`${eidError}`, { ns: "errors", }),
 				},
 			});
+
+			setIsLoading(false);
+
 			return;
 		}
 
@@ -342,6 +345,8 @@ function Engine(props: IEngineProps): JSX.Element {
 					message: "ID card reader could not find any data",
 				},
 			});
+
+			setIsLoading(false);
 
 			return;
 		}
