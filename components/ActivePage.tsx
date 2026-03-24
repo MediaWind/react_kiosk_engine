@@ -155,6 +155,7 @@ export default function ActivePage(props: IActivePageProps): JSX.Element {
 				previousPage,
 				homePage,
 			},
+			ticketState,
 			dispatchTicketState,
 			dispatchPrintState,
 			setLanguage,

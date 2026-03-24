@@ -31,6 +31,22 @@ export default function ticketDataReducer(ticketData: ITicketDataState, action: 
 			...ticketData,
 			language: action.payload as string,
 		};
+		case TICKET_DATA_ACTION_TYPE.ADDCONTEXTTAG: {
+			const tag = (action.payload as string | undefined)?.trim();
+
+			if (!tag) {
+				return ticketData;
+			}
+
+			if (ticketData.contextTags.includes(tag)) {
+				return ticketData;
+			}
+
+			return {
+				...ticketData,
+				contextTags: [...ticketData.contextTags, tag],
+			};
+		}
 		case TICKET_DATA_ACTION_TYPE.CLEARDATA: return initialTicketState;
 		default: return {
 			...ticketData,
@@ -43,4 +59,5 @@ export const initialTicketState: ITicketDataState = {
 	textInputDatas: [],
 	service: undefined,
 	language: "",
+	contextTags: [],
 };

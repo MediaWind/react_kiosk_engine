@@ -331,8 +331,10 @@ export interface IInputAction {
 	type: ACTION_TYPE;
 	navigateTo?: string;
 	service?: IService;
+	serviceByContext?: IServiceByContextRule[];
 	language?: string;
 	id?: string;
+	tag?: string;
 	params?: IInputActionParams;
 	onSuccess?: IInputAction[];
 	onFailure?: IInputAction[];
@@ -354,6 +356,7 @@ export enum ACTION_TYPE {
 	PRINTTICKET = "printticket",
 	CREATETICKET = "createticket",
 	SAVESERVICE = "saveservice",
+	ADDCONTEXTTAG = "addcontexttag",
 	CHANGELANGUAGE = "changelanguage",
 	CHECKIN = "checkin",
 	CHECKOUT = "checkout",
@@ -377,6 +380,11 @@ export interface IService {
 	priority?: 1 | 2 | 3
 }
 
+export interface IServiceByContextRule {
+	tags: string[];
+	service: IService;
+}
+
 //* ------------------------- *//
 //* Ticket Data State Reducer *//
 //* ------------------------- *//
@@ -390,12 +398,13 @@ export interface ITicketDataState {
 	eIdDatas: eIdData | null,
 	textInputDatas: IInputField[],
 	service: IService | undefined,
-	language: string
+	language: string,
+	contextTags: string[]
 }
 
 export interface ITicketDataAction {
 	type: TICKET_DATA_ACTION_TYPE
-	payload: eIdData | IInputField | IService | boolean | string | undefined
+	payload: eIdData | IInputField | IService | boolean | string | string[] | undefined
 }
 
 export enum TICKET_DATA_ACTION_TYPE {
@@ -403,6 +412,7 @@ export enum TICKET_DATA_ACTION_TYPE {
 	INPUTTEXTUPDATE = "inputtextupdate",
 	SERVICEUPDATE = "serviceupdate",
 	LANGUAGEUPDATE = "languageupdate",
+	ADDCONTEXTTAG = "addcontexttag",
 	READYTOPRINTUPDATE = "readytoprintupdate",
 	CLEARDATA = "cleardata"
 }

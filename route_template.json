@@ -109,7 +109,7 @@
 					"_row index": {
 						"_key index": [
 							{
-								"type": "nextpage|previouspage|homepage|printticket|saveservice|changelanguage|checkin|checkout...",
+								"type": "nextpage|previouspage|homepage|printticket|saveservice|addcontexttag|changelanguage|checkin|checkout...",
 								"navigateTo": "UUID",
 								"service": {
 									"serviceID": 1,
@@ -229,7 +229,20 @@
 											"devServiceId": 10,
 											"devServiceFlowId": 11,
 											"priority": 0
-										}
+										},
+										"serviceByContext": [
+											{
+												"tags": ["pmr", "consult_radio_interventionnelle"],
+												"service": {
+													"serviceId": 2,
+													"devServiceId": 20
+												}
+											}
+										]
+									},
+									{
+										"type": "addcontexttag",
+										"tag": "pmr"
 									},
 									{
 										"type": "changelanguage",

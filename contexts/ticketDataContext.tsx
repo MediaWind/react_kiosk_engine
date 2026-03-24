@@ -13,6 +13,7 @@ export const TicketDataContext = createContext<ticketDataContent>({
 		textInputDatas: [],
 		service: undefined,
 		language: "fr",
+		contextTags: [],
 	},
 	dispatchTicketState: () => null,
 });

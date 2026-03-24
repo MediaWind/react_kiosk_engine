@@ -116,7 +116,7 @@ Here is a what a full configuration looks like:
 			"0": {
 				"0": [
 					{
-						"type": "nextpage|saveservice|changelanguage|...",
+						"type": "nextpage|saveservice|addcontexttag|changelanguage|...",
 						"navigateTo": "UUID",
 						"service": {
 							"serviceID": 1,

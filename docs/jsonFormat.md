@@ -753,7 +753,20 @@ Here are the different action types available and what they do.
 			"devServiceId": 10,
 			"devServiceFlowId": 11,
 			"priority": 0
-		}
+		},
+		"serviceByContext": [
+			{
+				"tags": ["pmr", "consult_radio_interventionnelle"],
+				"service": {
+					"serviceId": 2,
+					"devServiceId": 20
+				}
+			}
+		]
+	},
+	{
+		"type": "addcontexttag",
+		"tag": "pmr"
 	},
 	{
 		"type": "createticket"
@@ -847,6 +860,8 @@ An `action` is always defined by its `type`. Here is a break down of each type:
 	- An optional `devServiceId`, representing the <ins>development</ins> service id in the dev EasyQueue module instance. This is the one that will be saved during development. This was added so the serviceId doesn't need to be adjusted when switching between dev and prod, reducing potential inattention errors.
 	- An optional `devServiceFlowId`, representing the <ins>development</ins> service flow id in the dev EasyQueue module instance.
 	- An optional `priority`. It can be 1 for `normal` (default), 2 for `high` or 3 for `urgent`.
+	- `serviceByContext` is optional. It lets you override the default `service` when all required tags are present in the current session context. Each rule is defined by a `tags` array and a replacement `service` object. If multiple rules match, the most specific rule wins, meaning the rule with the most tags.
+- `addcontexttag` adds a business tag to the current session context. Tags are cumulative during the session and are reset when the user returns home. This is useful when the saved service depends on earlier user choices, even if those choices happened on the same page.
 - `createticket` sends a request for creating the ticket. To be able to create a ticket, a service id must first be saved.
 - `printticket` sends a request for printing the ticket. To be able to print a ticket, it must be created first. Once the ticket is created and the print is requested, the actual printing is triggered.
 - `changelanguage` must be associated to the `language` property. Switches the current language of the flow globally.

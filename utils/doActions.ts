@@ -8,7 +8,9 @@ import {
 	IInputAction,
 	IPrintAction,
 	IService,
+	IServiceByContextRule,
 	ITicketDataAction,
+	ITicketDataState,
 	PRINT_ACTION_TYPE,
 	TICKET_DATA_ACTION_TYPE,
 	APPOINTMENTS_ACTION_TYPE,
@@ -22,6 +24,7 @@ interface IDispatchers {
 		homePage: CallableFunction
 	},
 	dispatchPrintState: React.Dispatch<IPrintAction>
+	ticketState: ITicketDataState
 	dispatchTicketState: React.Dispatch<ITicketDataAction>
 	setLanguage: React.Dispatch<SetStateAction<string>>
 	dispatchAppointmentState: React.Dispatch<IAppointmentAction>
@@ -34,6 +37,72 @@ interface IDispatchers {
 
 export default function doActions(actions: IInputAction[], dispatchers: IDispatchers) {
 	const conditionsFunc: { [key: string]: CallableFunction } = dispatchers.triggerConditions();
+
+	function resolveDynamicValue(value?: number | string): number | undefined {
+		if (value === undefined) {
+			return undefined;
+		}
+
+		let resolvedValue = value.toString();
+
+		const regex = /^\{.*\}$/;
+		if (regex.test(resolvedValue)) {
+			resolvedValue = resolvedValue.replace(/^\{(.*)\}$/, (_, key) => {
+				return Variables[key as keyof typeof Variables] as string;
+			});
+		}
+
+		if (resolvedValue.includes("|")) {
+			resolvedValue = resolvedValue.split("|")[0];
+		}
+
+		const parsedValue = parseInt(resolvedValue, 10);
+		return Number.isNaN(parsedValue) ? undefined : parsedValue;
+	}
+
+	function resolveService(service?: IService): IService | undefined {
+		if (!service) {
+			return undefined;
+		}
+
+		return {
+			...service,
+			serviceId: resolveDynamicValue(service.serviceId),
+			serviceFlowId: resolveDynamicValue(service.serviceFlowId),
+			devServiceId: resolveDynamicValue(service.devServiceId),
+			devServiceFlowId: resolveDynamicValue(service.devServiceFlowId),
+		};
+	}
+
+	function resolveServiceByContext(
+		defaultService: IService | undefined,
+		serviceByContext: IServiceByContextRule[] | undefined
+	): IService | undefined {
+		const contextTags = dispatchers.ticketState.contextTags;
+
+		if (!serviceByContext || serviceByContext.length === 0) {
+			return resolveService(defaultService);
+		}
+
+		const matchingRules = serviceByContext.filter(rule => {
+			const requiredTags = rule.tags.filter(tag => tag.trim().length > 0);
+			return requiredTags.length > 0 && requiredTags.every(tag => contextTags.includes(tag));
+		});
+
+		if (matchingRules.length === 0) {
+			return resolveService(defaultService);
+		}
+
+		const bestRule = matchingRules.reduce((bestMatch, currentRule) => {
+			if (!bestMatch) {
+				return currentRule;
+			}
+
+			return currentRule.tags.length > bestMatch.tags.length ? currentRule : bestMatch;
+		}, matchingRules[0]);
+
+		return resolveService(bestRule.service);
+	}
 
 	for (const action of actions) {
 		doAction(action);
@@ -53,42 +122,16 @@ export default function doActions(actions: IInputAction[], dispatchers: IDispatc
 			case ACTION_TYPE.HOMEPAGE:
 				dispatchers.router.homePage();
 				break;
+			case ACTION_TYPE.ADDCONTEXTTAG:
+				dispatchers.dispatchTicketState({
+					type: TICKET_DATA_ACTION_TYPE.ADDCONTEXTTAG,
+					payload: action.tag,
+				});
+				break;
 			case ACTION_TYPE.SAVESERVICE: {
-				let serviceId = action.service?.serviceId?.toString();
-				let devServiceId = action.service?.devServiceId?.toString();
-
-				// Check if the serviceId is a dynamic variable and replace it with the actual value
-				const regex = /^\{.*\}$/;
-				if(serviceId && regex.test(serviceId)) {
-					serviceId = serviceId.replace(/^\{(.*)\}$/, (_, key) => {
-						return Variables[key as keyof typeof Variables] as string;
-					});
-				}
-
-				if(devServiceId && regex.test(devServiceId)) {
-					devServiceId = devServiceId.replace(/^\{(.*)\}$/, (_, key) => {
-						return Variables[key as keyof typeof Variables] as string;
-					});
-				}
-
-				// Check if serviceId and devServiceId have | and get the first part
-				if (serviceId && serviceId.includes("|")) {
-					serviceId = serviceId.split("|")[0];
-				}
-
-				if (devServiceId && devServiceId.includes("|")) {
-					devServiceId = devServiceId.split("|")[0];
-				}
-
-				action.service = {
-					...action.service,
-					serviceId: serviceId ? parseInt(serviceId) : undefined,
-					devServiceId: devServiceId ? parseInt(devServiceId) : undefined,
-				};
-
 				dispatchers.dispatchTicketState({
 					type: TICKET_DATA_ACTION_TYPE.SERVICEUPDATE,
-					payload: action.service as IService,
+					payload: resolveServiceByContext(action.service, action.serviceByContext) as IService,
 				});
 				break;
 			}
