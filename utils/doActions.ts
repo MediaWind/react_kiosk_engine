@@ -129,6 +129,38 @@ export default function doActions(actions: IInputAction[], dispatchers: IDispatc
 				});
 				break;
 			case ACTION_TYPE.SAVESERVICE: {
+				let serviceId = action.service?.serviceId?.toString();
+				let devServiceId = action.service?.devServiceId?.toString();
+				
+				// Check if the serviceId is a dynamic variable and replace it with the actual value
+				const regex = /^\{.*\}$/;
+				if(serviceId && regex.test(serviceId)) {
+					serviceId = serviceId.replace(/^\{(.*)\}$/, (_, key) => {
+						return Variables[key as keyof typeof Variables] as string;
+					});
+				}
+
+				if(devServiceId && regex.test(devServiceId)) {
+					devServiceId = devServiceId.replace(/^\{(.*)\}$/, (_, key) => {
+						return Variables[key as keyof typeof Variables] as string;
+					});
+				}
+
+				// Check if serviceId and devServiceId have | and get the first part
+				if (serviceId && serviceId.includes("|")) {
+					serviceId = serviceId.split("|")[0];
+				}
+
+				if (devServiceId && devServiceId.includes("|")) {
+					devServiceId = devServiceId.split("|")[0];
+				}
+
+				action.service = {
+					...action.service,
+					serviceId: serviceId ? parseInt(serviceId) : undefined,
+					devServiceId: devServiceId ? parseInt(devServiceId) : undefined,
+				};
+				
 				dispatchers.dispatchTicketState({
 					type: TICKET_DATA_ACTION_TYPE.SERVICEUPDATE,
 					payload: resolveServiceByContext(action.service, action.serviceByContext) as IService,
