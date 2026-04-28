@@ -181,26 +181,21 @@ export default function ServiceButtonsContent(props: IServiceButtonsContentProps
 	};
 
 	function clickHandler(serviceId: string) {
-		let actions = content.actions ?? [];
+		const contentActions = content.actions ?? [];
 
-		if (!actions || actions.length === 0) {
+		if (contentActions.length === 0) {
 			return;
 		}
-		
-		const filteredAction = actions.filter((a) => a.type === ACTION_TYPE.SAVESERVICE);
-		const saveAction = filteredAction.shift();
-		if (saveAction && saveAction.service) {
-			const saveActionIndex = actions.findIndex((a) => a === saveAction);
-			saveAction.service.serviceId = parseInt(serviceId);
-			actions[saveActionIndex] = saveAction;
-		} else {			
-			actions.unshift({
+
+		let actions = [
+			{
 				type: ACTION_TYPE.SAVESERVICE,
 				service: {
 					serviceId: parseInt(serviceId, 10),
 				},
-			});
-		}
+			},
+			...contentActions
+		];
 
 		actions = actions.map(action => {
 			if (action.type !== ACTION_TYPE.CUSTOM) {
