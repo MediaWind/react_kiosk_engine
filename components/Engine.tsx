@@ -586,6 +586,7 @@ function Engine(props: IEngineProps): JSX.Element {
 	}
 
 	function resetAll() {
+		setIsLoading(false);
 		resetTicketData();
 		resetAppointments();
 		if (qrCode !== "") {
