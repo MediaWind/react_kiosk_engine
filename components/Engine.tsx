@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useRef, useState } from "react";
+import React, { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import "../i18n";
@@ -107,7 +107,7 @@ interface IEngineProps {
 function Engine(props: IEngineProps): JSX.Element {
 	const [route, setRoute] = useState<Route>(props.route);
 
-	const [eIdInserted, eIdReaded, eIdRemoved, eIdError] = useSharedVariables("eid_inserted", "eid_readed", "eid_removed", "eid_error");
+	const [eIdInserted, eIdReaded, eIdRemoved, eIdError, servicesUpdate] = useSharedVariables("eid_inserted", "eid_readed", "eid_removed", "eid_error", "update_service");
 	const [eidStatus, eIdData, eidError] = useEId(eIdInserted, eIdReaded, eIdRemoved, eIdError);
 	const { t, i18n, } = useTranslation();
 
@@ -151,30 +151,30 @@ function Engine(props: IEngineProps): JSX.Element {
 		}
 	}, []);
 
-	useEffect(() => {
-		async function fetchServicesCatalog() {
-			const urlObj = new URL(`${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/services.php`);
-			urlObj.searchParams.set("id_project", Variables.W_ID_PROJECT.toString());
-			urlObj.searchParams.set("serial", Variables.SERIAL);
-			urlObj.searchParams.set("all", "1");
+	const fetchServicesCatalog = useCallback(async () => {
+		const urlObj = new URL(`${Variables.DOMAINE_HTTP}/modules/Modules/QueueManagement/services/services.php`);
+		urlObj.searchParams.set("id_project", Variables.W_ID_PROJECT.toString());
+		urlObj.searchParams.set("serial", Variables.SERIAL);
+		urlObj.searchParams.set("all", "1");
 
-			try {
-				const response = await fetchRetry(urlObj.toString());
-				const data = await response.json();
-				const returnedServices: ServiceCatalogItem[] = Array.isArray(data)
-					? data
-					: data.array_services ?? [];
+		try {
+			const response = await fetchRetry(urlObj.toString());
+			const data = await response.json();
+			const returnedServices: ServiceCatalogItem[] = Array.isArray(data)
+				? data
+				: data.array_services ?? [];
 
-				setServicesCatalog(returnedServices);
-			} catch (error) {
-				console.error("Error fetching services catalog:", error);
-				
-				setServicesCatalog([]);
-			}
+			setServicesCatalog(returnedServices);
+		} catch (error) {
+			console.error("Error fetching services catalog:", error);
+			
+			setServicesCatalog([]);
 		}
-
-		fetchServicesCatalog();
 	}, []);
+
+	useEffect(() => {
+		fetchServicesCatalog();
+	}, [fetchServicesCatalog, servicesUpdate]);
 
 	/*****************
 	 * DYNAMIC ROUTE *
