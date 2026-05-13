@@ -243,11 +243,12 @@ export interface IServiceScheduleContent {
 
 export interface IServiceButtonsContent {
 	name: string;
-	styles: CSSProperties;
-	buttonStyles: CSSProperties;
-	actions: IInputAction[];
+	styles?: CSSProperties;
+	buttonStyles?: CSSProperties;
+	actions?: IInputAction[];
+	closedServiceActions?: IInputAction[];
 	serviceIds?: string[];
-	hideClosedService?: boolean;
+	hideClosedService?: boolean|string;
 	emptyLabel?: string;
 	scrollStep?: number;
 }

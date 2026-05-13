@@ -6,6 +6,7 @@ import { Variables } from "../../../variables";
 import { ACTION_TYPE, IServiceButtonsContent } from "../../interfaces";
 import { useLanguageContext } from "../../contexts/languageContext";
 import { useServicesCatalogContext } from "../../contexts/servicesCatalogContext";
+import resolveBooleanVariable from "../../utils/resolveBooleanVariable";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleUp, faAngleDown } from "@fortawesome/pro-solid-svg-icons";
 
@@ -13,6 +14,31 @@ interface IServiceButtonsContentProps {
 	content: IServiceButtonsContent;
 	onActionsTrigger: CallableFunction;
 }
+
+const defaultStyles: CSSProperties = {
+	top: "35%",
+	left: "28%",
+	width: "50vw",
+	height: "50%",
+	display: "flex",
+	flexDirection: "row",
+	gap: "12px",
+	alignItems: "stretch",
+};
+
+const defaultButtonStyles: CSSProperties = {
+	height: "120px",
+	border: "2px solid #D0D0D0",
+	borderRadius: "999px",
+	backgroundColor: "#FFFFFF",
+	color: "#1F1F1F",
+	fontSize: "30px",
+	fontWeight: "bold",
+	textAlign: "center",
+	display: "flex",
+	justifyContent: "center",
+	alignItems: "center",
+};
 
 export default function ServiceButtonsContent(props: IServiceButtonsContentProps): JSX.Element {
 	const { content, onActionsTrigger, } = props;
@@ -23,11 +49,14 @@ export default function ServiceButtonsContent(props: IServiceButtonsContentProps
 	const touchMovedRef = useRef<boolean>(false);
 	const skipNextClickRef = useRef<boolean>(false);
 	const ignoreClicksUntilRef = useRef<number>(0);
+	const closedServiceActionsTriggeredRef = useRef<boolean>(false);
 
 	const [hasOverflow, setHasOverflow] = useState<boolean>(false);
 	const [atTop, setAtTop] = useState<boolean>(true);
 	const [atBottom, setAtBottom] = useState<boolean>(false);
 	const [timeTick, setTimeTick] = useState<number>(() => Date.now());
+	const styles = useMemo(() => ({ ...defaultStyles, ...content.styles, }), [content.styles]);
+	const buttonStyles = useMemo(() => ({ ...defaultButtonStyles, ...content.buttonStyles, }), [content.buttonStyles]);
 
 	useEffect(() => {
 		// Prevent ghost click from previous page navigation.
@@ -108,6 +137,10 @@ export default function ServiceButtonsContent(props: IServiceButtonsContentProps
 		});
 	}
 
+	function isHideClosedServiceEnabled(): boolean {
+		return resolveBooleanVariable(content.hideClosedService);
+	}
+
 	function normalizeServiceIds(value: unknown): string[] {
 		if (value === undefined || value === null) {
 			return [];
@@ -162,22 +195,24 @@ export default function ServiceButtonsContent(props: IServiceButtonsContentProps
 	}, [servicesCatalog, resolvedServiceIds.join(",")]);
 
 	const visibleServices = useMemo(() => {
-		if (content.hideClosedService) {
+		if (isHideClosedServiceEnabled()) {
 			const now = new Date(timeTick);
 			return services.filter(service => isServiceOpenNow(service, now));
 		}
 		return services;
 	}, [services, content.hideClosedService, timeTick]);
 
+	const allServicesClosed = isHideClosedServiceEnabled() && services.length > 0 && visibleServices.length === 0;
+
 	const buttonTextStyle: CSSProperties = {
-		fontSize: content.buttonStyles.fontSize,
-		fontFamily: content.buttonStyles.fontFamily,
-		fontWeight: content.buttonStyles.fontWeight,
-		fontStyle: content.buttonStyles.fontStyle,
-		lineHeight: content.buttonStyles.lineHeight,
-		letterSpacing: content.buttonStyles.letterSpacing,
-		color: content.buttonStyles.color,
-		textAlign: content.buttonStyles.textAlign,
+		fontSize: buttonStyles.fontSize,
+		fontFamily: buttonStyles.fontFamily,
+		fontWeight: buttonStyles.fontWeight,
+		fontStyle: buttonStyles.fontStyle,
+		lineHeight: buttonStyles.lineHeight,
+		letterSpacing: buttonStyles.letterSpacing,
+		color: buttonStyles.color,
+		textAlign: buttonStyles.textAlign,
 	};
 
 	function clickHandler(serviceId: string) {
@@ -210,6 +245,28 @@ export default function ServiceButtonsContent(props: IServiceButtonsContentProps
 
 		onActionsTrigger(actions);
 	}
+
+	function closedServicesClickHandler() {
+		if (!allServicesClosed || !content.closedServiceActions || content.closedServiceActions.length === 0) {
+			return;
+		}
+
+		onActionsTrigger(content.closedServiceActions);
+	}
+
+	useEffect(() => {
+		if (!allServicesClosed || !content.closedServiceActions || content.closedServiceActions.length === 0) {
+			closedServiceActionsTriggeredRef.current = false;
+			return;
+		}
+
+		if (closedServiceActionsTriggeredRef.current) {
+			return;
+		}
+
+		closedServiceActionsTriggeredRef.current = true;
+		onActionsTrigger(content.closedServiceActions);
+	}, [allServicesClosed, content.closedServiceActions, onActionsTrigger]);
 
 	function scrollList(direction: "up" | "down") {
 		if (!listRef.current || !hasOverflow) {
@@ -302,10 +359,10 @@ export default function ServiceButtonsContent(props: IServiceButtonsContentProps
 			element?.removeEventListener("scroll", updateScrollState);
 			window.removeEventListener("resize", updateScrollState);
 		};
-	}, [visibleServices.length, content.buttonStyles.height, content.styles.height]);
+	}, [visibleServices.length, buttonStyles.height, styles.height]);
 
 	return (
-		<div className={classes.main} style={{ ...content.styles, }}>
+		<div className={classes.main} style={styles}>
 			<div
 				ref={listRef}
 				className={classes.list}
@@ -330,7 +387,7 @@ export default function ServiceButtonsContent(props: IServiceButtonsContentProps
 								touchStartRef.current = null;
 								touchMovedRef.current = false;
 							}}
-							style={{ ...content.buttonStyles, flexShrink: 0, touchAction: "manipulation", }}
+							style={{ ...buttonStyles, flexShrink: 0, touchAction: "manipulation", }}
 						>
 							<span style={buttonTextStyle}>{label}</span>
 						</button>
@@ -338,7 +395,17 @@ export default function ServiceButtonsContent(props: IServiceButtonsContentProps
 				})}
 
 				{visibleServices.length === 0 && (
-					<div style={buttonTextStyle}>{content.emptyLabel ?? ""}</div>
+					<div
+						role={allServicesClosed && content.closedServiceActions?.length ? "button" : undefined}
+						onClick={closedServicesClickHandler}
+						style={{
+							...buttonTextStyle,
+							cursor: allServicesClosed && content.closedServiceActions?.length ? "pointer" : undefined,
+							touchAction: "manipulation",
+						}}
+					>
+						{content.emptyLabel ?? ""}
+					</div>
 				)}
 			</div>
 
