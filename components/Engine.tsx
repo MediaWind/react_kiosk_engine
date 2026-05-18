@@ -167,8 +167,10 @@ function Engine(props: IEngineProps): JSX.Element {
 			setServicesCatalog(returnedServices);
 		} catch (error) {
 			console.error("Error fetching services catalog:", error);
-			
-			setServicesCatalog([]);
+
+			setTimeout(() => {
+				fetchServicesCatalog();
+			}, 60 * 1000);
 		}
 	}, []);
 
