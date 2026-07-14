@@ -87,6 +87,24 @@ export interface INextOpeningHour {
 	[key: string]: string | INextOpeningHourData;
 }
 
+export interface IDynamicHourData {
+	/** CSS applied to the schedule container, including its absolute position. */
+	style: CSSProperties;
+	/** Optional CSS applied to each weekday line. */
+	rowStyle?: CSSProperties;
+	/** dayjs format used for opening and closing times. Defaults to `HH[h]mm`. */
+	format?: string;
+	/** Text displayed for a weekday without any opening slot. */
+	emptyLabel?: string;
+}
+
+export interface IServiceClosedImage {
+	default: string;
+	nextOpeningHour?: INextOpeningHourData;
+	dynamicHour?: IDynamicHourData;
+	noNextOpeningHourImg?: IBackgroundImage;
+}
+
 export interface IErrorNavigateTo {
 	navigateTo: string;
 }
@@ -96,7 +114,7 @@ export interface IErrorManagement {
 	noPaper?: IBackgroundImage;
 	notConnectedToInternet?: IBackgroundImage;
 	serviceClosed?: {
-		[key: string]: IBackgroundImage | INextOpeningHour | IErrorNavigateTo
+		[key: string]: IServiceClosedImage | INextOpeningHour | IErrorNavigateTo
 	}
 	serviceDisabled?: {
 		[key: string]: IBackgroundImage

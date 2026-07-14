@@ -8,13 +8,14 @@ import { Variables } from "../../../variables";
 import { useErrorContext } from "../../contexts/errorContext";
 import { useFlowContext } from "../../contexts/flowContext";
 
-import { ERROR_ACTION_TYPE, IBackgroundImage, IErrorManagement, IErrorNavigateTo, INextOpeningHourData, Route } from "../../interfaces";
+import { ERROR_ACTION_TYPE, IBackgroundImage, IDynamicHourData, IErrorManagement, IErrorNavigateTo, INextOpeningHourData, Route } from "../../interfaces";
 import { ERROR_CODE } from "../../lib/errorCodes";
 
 import BackgroundImage from "./BackgroundImage";
 import fetchRetry from "../../utils/fetchRetry";
 import dayjs from "dayjs";
 import ActivePage from "../ActivePage";
+import DynamicHour from "./DynamicHour";
 
 interface IDisplayErrorProps {
 	route: Route | null
@@ -182,6 +183,9 @@ export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 		const nextOpeningHourData = serviceClosed && "nextOpeningHour" in serviceClosed
 			? serviceClosed.nextOpeningHour as INextOpeningHourData
 			: undefined;
+		const dynamicHourData = serviceClosed && "dynamicHour" in serviceClosed
+			? serviceClosed.dynamicHour as IDynamicHourData
+			: undefined;
 
 		if (serviceClosedPage) {
 			return (
@@ -241,6 +245,10 @@ export default function DisplayError(props: IDisplayErrorProps): JSX.Element {
 				{/* If C500 display next opening hour */}
 				{nextOpeningHour &&
 					<div style={{ ...nextOpeningHourData?.style, position: "absolute", zIndex: 2, }}>{nextOpeningHour}</div>
+				}
+
+				{errorState.errorCode === ERROR_CODE.C500 && serviceId && dynamicHourData &&
+					<DynamicHour serviceId={serviceId} config={dynamicHourData} />
 				}
 
 				{

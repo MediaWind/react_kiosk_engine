@@ -154,6 +154,12 @@ This is an optional property to display error specific custom images. If no `err
 			"nextOpeningHour": {
 				"format": "HH:mm",
 				"style": {}
+			},
+			"dynamicHour": {
+				"format": "HH[h]mm",
+				"emptyLabel": "Fermé",
+				"style": {},
+				"rowStyle": {}
 			}
 		},
 		"10": {}
@@ -196,6 +202,40 @@ The `genericError` key is the only one required if an `errorManagement` is creat
 - **Page mode**: provide a `navigateTo` pointing to a page id in the current flow. In that case the engine displays that page directly instead of rendering the error image layer.
 
 `nextOpeningHour` can be used in image mode to display the next opening hour on top of the service-closed image. It is defined by a `format` following the same [dayjs documentation](https://day.js.org/docs/en/display/format) and a `style` containing CSS properties (positioning, font, color, etc.).
+
+`dynamicHour` can be used in image mode to display the complete weekly schedule of the service that triggered the `serviceClosed` error, above the background image. The engine uses that service's `schedule` data and renders one centered two-column CSS grid: weekday labels are right-aligned in the first column and all time slots align in the second, for example `Lundi : 08h00 - 12h00 / 13h00 - 17h00`.
+
+```json
+"serviceClosed": {
+	"default": {
+		"default": "{widget_folder}/img/service-closed.png",
+		"dynamicHour": {
+			"format": "HH[h]mm",
+			"emptyLabel": "Fermé",
+			"style": {
+				"top": "48%",
+				"left": "44%",
+				"width": "42%",
+				"fontFamily": "Montserrat, sans-serif",
+				"fontSize": "26px",
+				"fontWeight": "600",
+				"lineHeight": "1.6",
+				"color": "#424246"
+			},
+			"rowStyle": {
+				"textAlign": "left"
+			}
+		}
+	}
+}
+```
+
+- `style` is required and styles the absolute-positioned schedule container; use it for `top`, `left`/`right`, `width`, typography and color.
+- `rowStyle` is optional and styles each weekday line.
+- `format` is optional and defaults to `HH[h]mm` (for example `08h00`). It uses [dayjs format tokens](https://day.js.org/docs/en/display/format).
+- `emptyLabel` is optional and is shown after the day name when it has no time slot. It defaults to an empty string.
+- The weekday labels follow the active kiosk language for French, Dutch and English; French is the fallback.
+- It is only rendered for a `serviceClosed` error associated with a concrete service id. It is not available in `navigateTo` page mode because that mode renders the target page instead of the error image.
 
 You can also provide a `noNextOpeningHourImg` object under `serviceClosed.default` to display a fallback image when no next opening hour can be computed:
 

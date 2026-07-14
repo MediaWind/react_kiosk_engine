@@ -441,7 +441,18 @@
 		"serviceClosed": {
 			"_use 'default' or service id": {
 				"default": "required path",
-				"fr|nl|en|es": "optional path"
+				"fr|nl|en|es": "optional path",
+				"dynamicHour": {
+					"format": "HH[h]mm",
+					"emptyLabel": "optional text",
+					"style": {
+						"top": "css property",
+						"left": "css property"
+					},
+					"rowStyle": {
+						"fontSize": "css property"
+					}
+				}
 			}
 		},
 		"eIdTimeout": {

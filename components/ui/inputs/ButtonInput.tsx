@@ -1,4 +1,4 @@
-import { CSSProperties } from "react";
+import { CSSProperties, TouchEvent } from "react";
 
 import { Variables } from "../../../../variables";
 
@@ -14,6 +14,15 @@ export default function ButtonInput(props: IButtonInputProps) {
 		onClick();
 	};
 
+	function touchHandler(event: TouchEvent<HTMLButtonElement>) {
+		// The action can replace the current page immediately.  Without cancelling
+		// the compatibility click generated after touchend, that click may then
+		// land on a control at the same coordinates on the next page.
+		event.preventDefault();
+		event.stopPropagation();
+		clickHandler();
+	}
+
 	function devClick() {
 		if (Variables.PREVIEW) {
 			clickHandler();
@@ -23,7 +32,7 @@ export default function ButtonInput(props: IButtonInputProps) {
 	return (
 		<button
 			onClick={devClick}
-			onTouchEnd={clickHandler}
+			onTouchEnd={touchHandler}
 			style={{
 				position: "absolute",
 				zIndex: 2,
