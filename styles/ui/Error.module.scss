@@ -103,5 +103,18 @@ $font_color: #424246;
 		box-shadow: 0 0 10px 0 #949494;
 
 		background-color: #ffffff;
+
+		p {
+			margin: 0;
+			color: $font_color;
+			font-size: 0.025rem;
+			line-height: 1.2;
+			text-align: center;
+		}
+
+		#error_code {
+			margin-top: 0.005rem;
+			font-size: 0.015rem;
+		}
 	}
 }
