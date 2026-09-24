@@ -33,11 +33,28 @@ function formatHour(value: string, format: string): string {
 	return dayjs(date).format(format);
 }
 
+function resolveServiceId(value: number | string): number | undefined {
+	let resolvedValue = value.toString();
+	const variableMatch = resolvedValue.match(/^\{([^}]+)\}$/);
+
+	if (variableMatch) {
+		const variableValue = Variables[variableMatch[1] as keyof typeof Variables];
+		resolvedValue = variableValue?.toString() ?? "";
+	}
+
+	const serviceId = parseInt(resolvedValue.split("|")[0], 10);
+	return Number.isNaN(serviceId) || serviceId <= 0 ? undefined : serviceId;
+}
+
 export default function ServiceScheduleContent(props: IServiceScheduleContentProps): JSX.Element {
 	const { content, } = props;
 	const { language, } = useLanguageContext();
 
 	const [services, setServices] = useState<ServiceWithSchedule[]>([]);
+	const serviceIds = content.serviceIds
+		?.map(resolveServiceId)
+		.filter((serviceId): serviceId is number => serviceId !== undefined) ?? [];
+	const serviceIdsKey = serviceIds.join(",");
 
 	const timeFormat = content.format ?? "HH:mm";
 	const emptyLabel = content.emptyLabel ?? "";
@@ -61,8 +78,8 @@ export default function ServiceScheduleContent(props: IServiceScheduleContentPro
 			urlObj.searchParams.set("id_project", Variables.W_ID_PROJECT.toString());
 			urlObj.searchParams.set("serial", Variables.SERIAL);
 			urlObj.searchParams.set("all", "1");
-			if (content.serviceIds && content.serviceIds.length > 0) {
-				urlObj.searchParams.set("id_service", content.serviceIds.join(","));
+			if (serviceIdsKey) {
+				urlObj.searchParams.set("id_service", serviceIdsKey);
 			}
 			const url = urlObj.toString();
 
@@ -82,7 +99,7 @@ export default function ServiceScheduleContent(props: IServiceScheduleContentPro
 		}
 
 		fetchSchedules();
-	}, [content.serviceIds?.join(",")]);
+	}, [serviceIdsKey]);
 
 	return (
 		<div style={{ position: "absolute", zIndex: 2, ...content.styles, }}>

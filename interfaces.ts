@@ -255,7 +255,7 @@ export interface IServiceScheduleContent {
 	name: string;
 	styles: CSSProperties;
 	format?: string;
-	serviceIds?: string[];
+	serviceIds?: (number | string)[];
 	emptyLabel?: string;
 }
 

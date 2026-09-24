@@ -723,6 +723,8 @@ This media displays the opening schedule of services for the current day.
 - `styles`: CSS properties for the main container.
 - `format` (optional): hour format (`HH:mm` by default).
 - `serviceIds` (optional): list of service ids to request. When provided, they are passed to the services endpoint through `id_service=...`.
+  Values may be numeric ids or variable placeholders such as `"{W_SERVICE_ID_RECEPTION}"`;
+  placeholders are resolved from `Variables` before the request.
 - `emptyLabel` (optional): label shown when no schedule can be displayed.
 
 The media fetches services from QueueManagement (`services.php`) with `all=1`. Labels are resolved from `array_translations` using the current language when available, with fallback to French.
