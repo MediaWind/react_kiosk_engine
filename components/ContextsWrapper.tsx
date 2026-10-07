@@ -25,6 +25,7 @@ import { PrintContext } from "../contexts/printContext";
 import { TicketDataContext } from "../contexts/ticketDataContext";
 import { AppointmentsContext } from "../contexts/appointmentsContext";
 import { ServiceCatalogItem, ServicesCatalogContext } from "../contexts/servicesCatalogContext";
+import { ScannerContext } from "../contexts/scannerContext";
 
 interface IContextsWrapperProps {
 	children: ReactNode[]
@@ -47,6 +48,8 @@ interface IContextsWrapperProps {
 		dispatchAppointmentsState: React.Dispatch<IAppointmentsAction>
 		servicesCatalog: ServiceCatalogItem[]
 		setServicesCatalog: React.Dispatch<React.SetStateAction<ServiceCatalogItem[]>>
+		scannerValue: string
+		resetScanner: CallableFunction
 	}
 }
 
@@ -62,11 +65,13 @@ export default function ContextsWrapper(props: IContextsWrapperProps): JSX.Eleme
 							<ErrorContext.Provider value={{ errorState: values.error, dispatchErrorState: values.dispatchErrorState, }}>
 								<PrintContext.Provider value={{ printState: values.printState, dispatchPrintState: values.dispatchPrintState, }}>
 									<ServicesCatalogContext.Provider value={{ servicesCatalog: values.servicesCatalog, setServicesCatalog: values.setServicesCatalog, }}>
-										<EIdContext.Provider value={{ status: values.eidStatus, }}>
+										<ScannerContext.Provider value={{ value: values.scannerValue, reset: values.resetScanner, }}>
+											<EIdContext.Provider value={{ status: values.eidStatus, }}>
 
-											{children}
+												{children}
 
-										</EIdContext.Provider>
+											</EIdContext.Provider>
+										</ScannerContext.Provider>
 									</ServicesCatalogContext.Provider>
 								</PrintContext.Provider>
 							</ErrorContext.Provider>

@@ -735,6 +735,9 @@ export type SuperContext = {
 	hooks: {
 		useAppointment: [string, CallableFunction, CallableFunction, CallableFunction],
 	},
+	scanner: {
+		value: string,
+	},
 	print: {
 		state: IPrintState,
 		dispatcher: React.Dispatch<IPrintAction>,

@@ -6,6 +6,7 @@ import { APPOINTMENT_ACTION_TYPE, IInputContent, INPUT_TYPE } from "../../interf
 
 import { useEIdContext } from "../../contexts/eIdContext";
 import { useAppointmentContext } from "../../contexts/appointmentContext";
+import { useScannerContext } from "../../contexts/scannerContext";
 
 import ButtonInput from "./inputs/ButtonInput";
 import NumberInput from "./inputs/NumberInput";
@@ -22,6 +23,7 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 
 	const { status, } = useEIdContext();
 	const { appointmentState, dispatchAppointmentState, } = useAppointmentContext();
+	const { value: scannerValue, reset: resetScanner, } = useScannerContext();
 
 	const [eIdBlock, setEIdBlock] = useState<boolean>(false);
 
@@ -40,12 +42,19 @@ export default function InputContent(props: IInputContentProps): JSX.Element {
 
 	useEffect(() => {
 		if (content.type === INPUT_TYPE.SCANNER) {
+			if (scannerValue) {
+				console.info(`[QR scanner] Scanner input "${content.name}" received value "${scannerValue}"; triggering its actions.`);
+				actionHandler();
+				resetScanner();
+				return;
+			}
+
 			if ((appointmentState.isCheckingIn && appointmentState.isCheckedIn) || (appointmentState.isCheckingOut && appointmentState.isCheckedOut)) {
 				actionHandler();
 				dispatchAppointmentState({ type: APPOINTMENT_ACTION_TYPE.CLEARALL, });
 			}
 		}
-	}, [appointmentState]);
+	}, [appointmentState, scannerValue]);
 
 	function actionHandler() {
 		onActionsTrigger(content.actions);

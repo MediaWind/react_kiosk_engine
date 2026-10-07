@@ -1,27 +1,29 @@
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 import { Console } from "../utils/console";
 
 export default function useScanner(): [string, CallableFunction, CallableFunction] {
-	const [currentQrText, setCurrentQrText] = useState<string>("");
+	const currentQrText = useRef<string>("");
 	const [returnedQrCodeText, setReturnedQrCodeText] = useState<string>("");
 
-	function writeQrCode(key: string) {
-		if (key === "ArrowDown") return;
+	const writeQrCode = useCallback((key: string) => {
+		if (key === "ArrowDown" || key === "Shift" || key === "Control" || key === "Alt") {
+			return;
+		}
 
 		if (key === "Enter") {
-			Console.info("QR code scanned");
-			setReturnedQrCodeText(currentQrText);
-			setCurrentQrText("");
+			Console.info(`QR scanner: keyboard scan completed with value "${currentQrText.current}"`);
+			setReturnedQrCodeText(currentQrText.current);
+			currentQrText.current = "";
 		} else {
-			setCurrentQrText(latest => latest + key);
+			currentQrText.current += key.toLowerCase();
 		}
-	}
+	}, []);
 
-	function resetAll() {
+	const resetAll = useCallback(() => {
 		setReturnedQrCodeText("");
-		setCurrentQrText("");
-	}
+		currentQrText.current = "";
+	}, []);
 
 	return [
 		returnedQrCodeText,

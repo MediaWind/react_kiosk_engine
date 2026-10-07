@@ -583,9 +583,19 @@ function Engine(props: IEngineProps): JSX.Element {
 		});
 	}
 
-	function keydownHandler(e: any) {
-		writeQrCode(e.key);
-	}
+	useEffect(() => {
+		const scannerKeydownHandler = (event: KeyboardEvent) => {
+			writeQrCode(event.key);
+		};
+
+		window.addEventListener("keydown", scannerKeydownHandler);
+		Console.info("QR scanner: global keyboard listener registered");
+
+		return () => {
+			window.removeEventListener("keydown", scannerKeydownHandler);
+			Console.info("QR scanner: global keyboard listener removed");
+		};
+	}, [writeQrCode]);
 
 	function resetAll() {
 		setIsLoading(false);
@@ -623,6 +633,9 @@ function Engine(props: IEngineProps): JSX.Element {
 				},
 				hooks: {
 					useAppointment: [appointmentTicketPDF, checkIn, checkOut, getAppointments],
+				},
+				scanner: {
+					value: qrCode,
 				},
 				print: {
 					state: printState,
@@ -680,8 +693,6 @@ function Engine(props: IEngineProps): JSX.Element {
 			<div
 				onContextMenu={(e: any) => e.preventDefault()}
 				style={{ userSelect: "none", cursor: Variables.PREVIEW ? "auto" : "none", }}
-				onKeyDown={keydownHandler}
-				tabIndex={0}
 			>
 				<ContextsWrapper values={{
 					defaultLanguage,
@@ -702,6 +713,8 @@ function Engine(props: IEngineProps): JSX.Element {
 					dispatchAppointmentsState,
 					servicesCatalog,
 					setServicesCatalog,
+					scannerValue: qrCode,
+					resetScanner: resetQrCode,
 				}}>
 
 					{props.debug && (
